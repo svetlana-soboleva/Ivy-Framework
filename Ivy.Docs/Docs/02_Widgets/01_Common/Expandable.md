@@ -1,0 +1,12 @@
+﻿# Expandable
+
+The Expandable widget allows you to hide and show content interactively, providing a clean and organized way to present information.
+
+## Basic Usage
+
+Here's a simple example of an expandable widget.
+```csharp demo-below
+new Expandable("Title", "Hidden Content")
+```
+
+<WidgetDocs Type="Ivy.Expandable" ExtensionsType="Ivy.ExpandableExtensions"/>

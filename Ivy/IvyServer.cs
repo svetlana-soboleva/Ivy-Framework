@@ -1,0 +1,357 @@
+using System.CommandLine;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using Ivy.Apps;
+using Ivy.Auth;
+using Ivy.Chrome;
+using Ivy.Core;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http; //do not remove - used in RELEASE
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+namespace Ivy;
+
+public record IvyServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId);
+
+public class IvyServer
+{
+    private IContentBuilder? _contentBuilder;
+    private bool _useHotReload;
+    private bool _useHttpRedirection;
+    private readonly int _port;
+    
+    public string? DefaultAppId { get; private set; }
+    public AppRepository AppRepository { get; } = new();
+    public IServiceCollection Services { get; } = new ServiceCollection();
+    public Type? AuthProviderType { get; private set; } = null;
+    public IvyServerArgs Args => _args;
+
+    private readonly IvyServerArgs _args;
+    
+    public IvyServer(int? port = null)
+    {
+        _args = IvyServerUtils.GetArgs();
+        
+        Services.AddSingleton(_args);
+        _port = port ?? int.Parse(Environment.GetEnvironmentVariable("PORT") ?? _args.Port.ToString());
+    }
+    
+    public IvyServer(FuncBuilder viewFactory) : this()
+    {
+        AddApp(new AppDescriptor
+        {
+            Id = AppIds.Default,
+            Title = "Default",
+            ViewFunc = viewFactory,
+            Path = [ "Apps" ],
+            IsVisible = true,
+            RemoveIvyBranding = false
+        });
+        DefaultAppId = AppIds.Default;
+    }
+
+    public void AddApp(Type appType, bool isDefault = false)
+    {
+        AppRepository.AddFactory(() => [AppHelpers.GetApp(appType)]);
+        if (isDefault)
+            DefaultAppId = AppHelpers.GetApp(appType)?.Id;
+    }
+    
+    public void AddApp(AppDescriptor appDescriptor)
+    {
+        AppRepository.AddFactory(() => [appDescriptor]);
+    }
+    
+    public void AddAppsFromAssembly()
+    {
+        AppRepository.AddFactory(AppHelpers.GetApps);
+    }
+    
+    public AppDescriptor GetApp(string id)
+    {
+        return AppRepository.GetAppOrDefault(id);
+    }
+    
+    public IvyServer UseContentBuilder(IContentBuilder contentBuilder)
+    {
+        _contentBuilder = contentBuilder;
+        return this;
+    }
+    
+    public IvyServer UseHotReload()
+    {
+        _useHotReload = true;
+        return this;
+    }
+    
+    public IvyServer UseHttpRedirection()
+    {
+        _useHttpRedirection = true;
+        return this;
+    }
+
+    public IvyServer UseChrome(Func<ViewBase>? viewFactory = null)
+    {
+        AddApp(new AppDescriptor
+        {
+            Id = AppIds.Index,
+            Title = "Index",
+            ViewFactory = viewFactory ?? (() => new DefaultSidebarChrome(ChromeSettings.Default())), 
+            Path = [],
+            IsVisible = false,
+            RemoveIvyBranding = true
+        });
+        DefaultAppId = AppIds.Index;
+        return this;
+    }
+    
+    public IvyServer UseAuth<T>(Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
+    {
+        Services.AddSingleton<IAuthProvider, T>(); //todo: IAuthProvider shouldn't be accessible to apps
+        Services.AddSingleton<IAuthService, AuthService>();
+        AddApp(new AppDescriptor
+        {
+            Id = AppIds.Auth,
+            Title = "Auth",
+            ViewFactory = viewFactory ?? (() => new DefaultAuthApp()), 
+            Path = [],
+            IsVisible = false,
+            RemoveIvyBranding = false
+        });
+        AuthProviderType = typeof(T);
+        return this;
+    }
+    
+    public IvyServer UseDefaultApp(Type appType)
+    {
+        DefaultAppId = AppHelpers.GetApp(appType)?.Id;
+        return this;
+    }
+    
+    public async Task RunAsync()
+    {
+        var cts = new CancellationTokenSource();
+        Console.CancelKeyPress += (_, e) => {
+            e.Cancel = true;
+            cts.Cancel();
+        };
+        
+#if(DEBUG)
+        if (Utils.IsPortInUse(_port))
+        {
+
+            if(_args.IKillForThisPort)
+            {
+                Utils.KillProcessUsingPort(_port);
+            }
+            else
+            {
+                Console.WriteLine($"\u001b[31mPort {_port} is already in use on this machine.\u001b[0m");
+                
+                Console.WriteLine(
+                    "Specify a different port using '--port <number>' or '--i-kill-for-this-port' to just take it.");
+                
+                return;
+            }
+        }
+#endif
+        if (!string.IsNullOrEmpty(_args.DefaultAppId))
+        {
+            DefaultAppId = _args.DefaultAppId;
+        }
+        
+        AppRepository.Reload();
+        
+        var builder = WebApplication.CreateBuilder();
+        
+        builder.Configuration.AddEnvironmentVariables();
+        builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
+        
+        builder.WebHost.UseUrls($"http://*:{_port}");
+        
+        builder.Services.AddSignalR();
+        builder.Services.AddSingleton(this);
+        builder.Services.AddSingleton<IClientNotifier, ClientNotifier>();
+        builder.Services.AddControllers()
+            .AddApplicationPart(Assembly.Load("Ivy"))
+            .AddControllersAsServices();
+        builder.Services.AddSingleton<IContentBuilder>(_contentBuilder ?? new DefaultContentBuilder());
+        builder.Services.AddSingleton(new AppSessionStore());
+        builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.SetIsOriginAllowed(_ => true) 
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials(); // Required for SignalR
+            });
+        });
+        
+        if(_useHttpRedirection)
+        {
+            builder.Services.AddHttpsRedirection(options =>
+            {
+                options.HttpsPort = 443;
+            });      
+        }
+        
+        builder.Logging.ClearProviders(); 
+        builder.Logging.AddConsole();
+
+        builder.Logging.SetMinimumLevel(!_args.Verbose ? LogLevel.Warning : LogLevel.Debug);
+
+        var app = builder.Build();
+
+        if(_useHttpRedirection)
+        {
+            app.UseHttpsRedirection();
+        }       
+
+        app.UseRouting();
+        app.UseCors();
+        
+        app.MapControllers();
+        app.MapHub<AppHub>("/messages");
+        
+        if (_useHotReload)
+        {
+            HotReloadService.UpdateApplicationEvent += (types) =>
+            {
+                AppRepository.Reload();
+                var hubContext = app.Services.GetService<IHubContext<AppHub>>()!;
+                hubContext.Clients.All.SendAsync("HotReload");
+            };
+        }
+        
+        app.UseFrontend();
+        app.UseAssets("Assets");
+        
+        app.Lifetime.ApplicationStarted.Register(() =>
+        {
+            var url = app.Urls.FirstOrDefault() ?? "unknown";
+            var port = new Uri(url).Port;
+            var localUrl = $"http://localhost:{port}";
+            Console.WriteLine($"Ivy is running on {localUrl}. Press Ctrl+C to stop.");
+            
+            if (_args.Browse)
+            {
+                Utils.OpenBrowser(localUrl);
+            }
+        });
+
+        try
+        {
+            await app.StartAsync(cts.Token);
+            await app.WaitForShutdownAsync(cts.Token);
+        }
+        catch (IOException)
+        {
+            Console.WriteLine($"Failed to start Ivy server. Is the port already in use?");
+        }
+    }
+}
+
+public static class WebApplicationExtensions
+{
+    public static WebApplication UseFrontend(this WebApplication app)
+    {
+        var assembly = Assembly.GetExecutingAssembly()!;
+        var embeddedProvider = new EmbeddedFileProvider(
+            assembly,
+            $"{assembly.GetName().Name}"
+        );
+        app.MapGet("/", async context => {
+            var resourceName = $"{assembly.GetName().Name}.index.html";
+            await using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream != null)
+            {
+                context.Response.ContentType = "text/html";
+                await stream.CopyToAsync(context.Response.Body);
+            }
+        });
+        
+        app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
+        
+        return app;
+    }
+
+    public static WebApplication UseAssets(this WebApplication app, string folder)
+    {
+        var assembly = Assembly.GetAssembly(typeof(IvyServer))!;
+        
+        var embeddedProvider = new EmbeddedFileProvider(
+            assembly,
+            assembly.GetName().Name + "." + folder
+        );
+
+        app.UseStaticFiles(GetStaticFileOptions("/" + folder, embeddedProvider, assembly));
+        return app;
+    }
+
+    private static StaticFileOptions GetStaticFileOptions(string path, IFileProvider fileProvider, Assembly assembly)
+    {
+        return new StaticFileOptions
+        {
+            FileProvider = fileProvider,
+            RequestPath = path,
+            OnPrepareResponse = ctx =>
+            {
+#if DEBUG
+                // Disable caching in development so changes are reflected immediately.
+                ctx.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+                ctx.Context.Response.Headers.Pragma = "no-cache";
+                ctx.Context.Response.Headers.Expires = "0";
+#else
+                // Production caching: update these if you need dynamic ETag logic.
+                var headers = ctx.Context.Response.GetTypedHeaders();
+                headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                {
+                    Public = true,
+                    MaxAge = TimeSpan.FromDays(365),
+                    MustRevalidate = true
+                };
+                ctx.Context.Response.Headers.ETag = assembly.GetName().Version + ":" +
+                                                    (!string.IsNullOrEmpty(assembly.Location) &&
+                                                     File.Exists(assembly.Location)
+                                                        ? File.GetLastWriteTimeUtc(assembly.Location).Ticks.ToString()
+                                                        : "");
+#endif
+            }
+        };
+    }
+}
+
+public static class IvyServerUtils
+{
+    public static IvyServerArgs GetArgs()
+    {
+        var portOption = new Option<int>("--port", () => 5000);
+        var verboseOption = new Option<bool>("--verbose", () => false);
+        var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
+        var browseOption = new Option<bool>("--browse", () => false);
+        var argsOption = new Option<string?>("--args", () => null!);
+        var defaultAppIdOption = new Option<string?>("--app", () => null!);
+        
+        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption };
+        
+        var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
+        return new IvyServerArgs(
+            result.GetValueForOption(portOption),
+            result.GetValueForOption(verboseOption),
+            result.GetValueForOption(iKillForThisPortOption),
+            result.GetValueForOption(browseOption),
+            result.GetValueForOption(argsOption),
+            result.GetValueForOption(defaultAppIdOption)
+        );
+        
+    }
+}

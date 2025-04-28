@@ -1,0 +1,1 @@
+export const LoadingWidget = () => <div>Loading...</div>;

@@ -1,0 +1,237 @@
+using System.Runtime.CompilerServices;
+using System.Text;
+using Ivy.Core.Docs;
+using Ivy.Docs.Apps.ApiReference.IvyShared;
+
+namespace Ivy.Docs.Helpers;
+
+using System.Reflection;
+
+public record PropRecord(string Name, object Type, object DefaultValue, object? Helpers);
+
+public record EventRecord(string Name, object Type, object? Helpers);
+
+public static class TypeUtils
+{
+    private static readonly Dictionary<Type, object> _simple = new()
+    {
+        { typeof(bool), "bool" },
+        { typeof(byte), "byte" },
+        { typeof(sbyte), "sbyte" },
+        { typeof(char), "char" },
+        { typeof(decimal), "decimal" },
+        { typeof(double), "double" },
+        { typeof(float), "float" },
+        { typeof(int), "int" },
+        { typeof(uint), "uint" },
+        { typeof(long), "long" },
+        { typeof(ulong), "ulong" },
+        { typeof(object), "object" },
+        { typeof(short), "short" },
+        { typeof(ushort), "ushort" },
+        { typeof(string), "string" },
+        { typeof(void), "void" },
+    };
+
+    private static readonly Dictionary<Type, object> _apps = new()
+    {
+        { typeof(Align), new AlignApp(true)},
+        { typeof(Colors), new ColorsApp(true)},
+        { typeof(Icons), new IconsApp(true)},
+        { typeof(Size), new SizeApp(true)},
+        { typeof(Thickness), new ThicknessApp(true)},
+    };
+
+    private static object GetTypeName(Type type, bool isNullable)
+    {
+        if (Nullable.GetUnderlyingType(type) is { } underlying)
+            return GetTypeName(underlying, true);
+        
+        if (_simple.TryGetValue(type, out var keyword))
+            return isNullable ? $"{keyword}?" : keyword;
+
+        if (_apps.TryGetValue(type, out var app))
+        {
+            var name = type.FullName.EatLeft("Ivy.").EatLeft("Shared.");
+            return new Button(name + (isNullable ? "?" : "")).Inline()
+                .WithSheet(() => app, width:Size.Units(150));
+        }
+
+        if (type.IsEnum)
+        {
+            return new Button(type.Name + (isNullable ? "?" : "")).Inline()
+                .WithSheet(() => new EnumValuesView(type), width:Size.Units(150));
+        }
+        
+        if (type.IsGenericType)
+        {
+            var typeName = type.Name[..type.Name.IndexOf('`')];
+            var genericArgs = string.Join(", ", type.GetGenericArguments().Select(arg => GetTypeName(arg, false)));
+            return $"{typeName}<{genericArgs}>";
+        }
+
+        return isNullable && type.IsClass ? $"{type.Name}?" : type.Name;
+    }
+
+    private static object GetPropertyTypeDescription(PropertyInfo prop)
+    {
+        var isNullable = IsNullableReference(prop);
+        return GetTypeName(prop.PropertyType, isNullable);
+    }
+
+    internal static bool IsNullableReference(PropertyInfo prop)
+    {
+        var attr = prop.GetCustomAttributesData()
+            .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
+
+        if (attr?.ConstructorArguments.Count > 0)
+        {
+            var arg = attr.ConstructorArguments[0];
+
+            if (arg.ArgumentType == typeof(byte) && (byte)arg.Value! == 2)
+                return true;
+
+            if (arg.ArgumentType == typeof(byte[]) &&
+                arg.Value is IReadOnlyCollection<CustomAttributeTypedArgument> { Count: > 0 } items && (byte)items.First().Value! == 2)
+                return true;
+        }
+
+        return false;
+    }
+
+    public static Type? GetTypeFromName(string typeName)
+    {
+        var assembly = typeof(IWidget).Assembly;
+        var type = assembly.GetType(typeName) ?? assembly.GetTypes()
+            .FirstOrDefault(t => t.FullName.StartsWith(typeName+"`") && t.IsGenericTypeDefinition);
+        return type;
+    }
+
+    public static object? TryToActivate(Type type)
+    {
+        if (type.ContainsGenericParameters)
+        {
+            if (type.GetGenericArguments().Length == 1)
+            {
+                type = type.MakeGenericType(typeof(object));
+            }
+            else
+            {
+                return null;
+            }
+        }
+        var constructor = type.GetConstructor(Type.EmptyTypes);
+        if (constructor != null)
+        {
+            return constructor.Invoke([]);
+        }
+        var primaryConstructor = type.GetConstructors().FirstOrDefault(c => c.GetParameters().All(p => p.HasDefaultValue));
+        if (primaryConstructor != null)
+        {
+            var parameters = primaryConstructor.GetParameters();
+            var values = parameters.Select(p => p.DefaultValue).ToArray();
+            return primaryConstructor.Invoke(values);
+        }
+        return null;
+    }
+
+    public static PropRecord GetPropRecord(PropertyInfo prop, object? defaultValueProvider, Type baseType, Type? extensionsType)
+    {
+        object GetDefaultValue()
+        {
+            try
+            {
+                if (defaultValueProvider == null) return null;
+                var defaultValue = prop.GetValue(defaultValueProvider);
+                var literal = CSharpLiteralGenerator.ToCSharpLiteral(defaultValue);
+                literal = literal?.EatLeft("Ivy.").EatLeft("Shared.");
+                return literal != null ? new Code(literal, "csharp").ShowCopyButton(false).ShowBorder(false) : defaultValue.ToString();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        // ReSharper disable once LocalFunctionHidesMethod
+        object GetExtensionMethods()
+        {
+            if (extensionsType == null) return null;
+            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsType);
+            if (!string.IsNullOrEmpty(extensions))
+            {
+                return new Code(extensions, "csharp").ShowCopyButton(false).ShowBorder(false);
+            }
+            return null;
+        }
+        
+        return new PropRecord(prop.Name, GetPropertyTypeDescription(prop), GetDefaultValue(), GetExtensionMethods());
+    }
+
+    public static EventRecord GetEventRecord(PropertyInfo prop, Type baseType, Type? extensionsType)
+    {
+        // ReSharper disable once LocalFunctionHidesMethod
+        object GetExtensionMethods()
+        {
+            if (extensionsType == null) return null;
+            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsType);
+            if (!string.IsNullOrEmpty(extensions))
+            {
+                return new Code(extensions, "csharp").ShowCopyButton(false).ShowBorder(false);
+            }
+            return null;
+        }
+        
+        return new EventRecord(prop.Name, GetPropertyTypeDescription(prop), GetExtensionMethods());
+    }
+    
+    internal static string GetExtensionMethods(PropertyInfo propertyInfo, Type baseType, Type extensionsType)
+    {
+        var sb = new StringBuilder();
+        
+        //In extensionsType find all public static methods:
+        //1) that are extension methods for baseType
+        //2) and either have the same name as the propertyInfo or have an attribute of type RelatedToAttribute with the value of propertyInfo.Name
+        var methods = extensionsType.GetMethods()
+            .Where(m => m is { IsStatic: true, IsPublic: true } && m.GetCustomAttribute<ExtensionAttribute>() != null)
+            .Where(m => m.GetParameters().First().ParameterType == baseType)
+            .Where(m =>
+                m.Name == propertyInfo.Name ||
+                (propertyInfo.Name.StartsWith("On") && m.Name == ("Handle" + propertyInfo.Name[2..])) ||
+                m.GetCustomAttribute<RelatedToAttribute>()?.PropertyName == propertyInfo.Name);
+        
+        foreach (var method in methods)
+        {
+            var parameters = method.GetParameters().Skip(1);
+            var paramSignatures = parameters.Select(p => $"{GetCSharpTypeName(p.ParameterType)} {p.Name}{(p.IsOptional ? " = " + CSharpLiteralGenerator.ToCSharpLiteral(p.DefaultValue).EatLeft("Ivy.Shared.") : "")}");
+            sb.AppendLine($"{method.Name}({string.Join(", ", paramSignatures)})");
+        }
+        
+        return sb.ToString().Trim();
+    }
+    
+    private static string GetCSharpTypeName(Type type)
+    {
+        if (type == typeof(string)) return "string";
+        if (type == typeof(int)) return "int";
+        if (type == typeof(bool)) return "bool";
+        if (type == typeof(double)) return "double";
+        if (type == typeof(float)) return "float";
+        if (type == typeof(long)) return "long";
+        if (type == typeof(short)) return "short";
+        if (type == typeof(byte)) return "byte";
+        if (type == typeof(char)) return "char";
+        if (type == typeof(object)) return "object";
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            return GetCSharpTypeName(type.GetGenericArguments()[0]) + "?";
+        
+        if (type.IsGenericType)
+        {
+            var typeName = type.Name[..type.Name.IndexOf('`')];
+            var genericArgs = string.Join(", ", type.GetGenericArguments().Select(GetCSharpTypeName));
+            return $"{typeName}<{genericArgs}>";
+        }
+        
+        return type.Name;
+    }
+}

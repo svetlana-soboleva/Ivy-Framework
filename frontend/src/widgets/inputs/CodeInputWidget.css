@@ -1,0 +1,61 @@
+.cm-editor {
+  height: 100% !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
+}
+
+.cm-scroller {
+  height: 100% !important;
+  overflow: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.cm-gutters {
+  height: 100%;
+}
+
+.cm-editor {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cm-focused {
+  outline: none !important;
+  border-color: var(--focus-ring-color, #3b82f6);
+}
+
+.cm-content {
+  padding: 10px;
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.cm-line {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  max-width: 100% !important;
+}
+
+.w-tc-editor {
+  height: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+.w-tc-editor-text {
+  flex: 1 !important;
+  overflow: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+} 
