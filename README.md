@@ -62,18 +62,21 @@ You can also run `ivy samples` to see all the components that Ivy offers.
    - [Vite](https://vitejs.dev/)
    - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 2. **Clone this repository**.
-3. **Build the frontend**:
+3. **Run Ivy.Samples backend**:
    ```bash
-   cd Ivy/frontend
-   npm install
-   npm run build
-   ```
-4. **Run the sample**:
-   ```bash
-   cd ../Ivy.Samples
+   cd Ivy.Samples
    dotnet watch
    ```
-5. **Open** [http://localhost:5000](http://localhost:5000) in your browser.
+4. **Build the frontend**:
+   ```bash
+   cd ../frontend
+   npm install
+   npm run build
+   npm run dev
+   ```   
+5. **Open** [http://localhost:5000](http://localhost:5173) in your browser.
+
+Changes in /frontend will be hot-reloaded by Vite and supported changes in /Ivy.Samples will be hot-reloaded by Ivy. 
 
 Ivy is still early in development and we are working on more robust documentation. 
 
