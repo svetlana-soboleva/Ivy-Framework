@@ -2,6 +2,10 @@ CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICult
 var server = new IvyServer();
 server.UseHotReload();
 server.AddAppsFromAssembly();
-server.UseChrome();
+var chromeSettings = new ChromeSettings()
+    .Header(
+        Layout.Vertical().Padding(2) | new IvyLogo()
+    );
+server.UseChrome(() => new DefaultSidebarChrome(chromeSettings));
 server.Services.AddSingleton<SampleDbContextFactory>();
 await server.RunAsync();

@@ -120,6 +120,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontFamily: {
+        mono: [
+          'IBM Plex Mono',
+          'monospace'
+        ],
   			sans: [
   				'Inter',
   				'sans-serif'

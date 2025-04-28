@@ -14,8 +14,33 @@ public class TextInputApp : SampleBase
         var onChangedState = UseState("");
         var onChangeLabel = UseState("");
         var onBlurState = UseState(""); 
-        var onBlurLabel = UseState(""); 
+        var onBlurLabel = UseState("");
 
+        var stringState = UseState("");
+        var nullStringState = UseState<string?>();
+
+        var dataBinding = Layout.Grid().Columns(3)
+
+                          | Text.InlineCode("string")
+                          | (Layout.Vertical()
+                             | stringState.ToTextInput()
+                             | stringState.ToTextAreaInput()
+                             | stringState.ToPasswordInput()
+                             | stringState.ToSearchInput()
+                          )
+                          | stringState
+                          
+                          | Text.InlineCode("string?")
+                          | (Layout.Vertical()
+                             | nullStringState.ToTextInput()
+                             | nullStringState.ToTextAreaInput()
+                             | nullStringState.ToPasswordInput()
+                             | nullStringState.ToSearchInput()
+                          )
+                          | nullStringState
+            ;
+        
+        
         return Layout.Vertical()
                | Text.H1("Text Inputs")
                | Text.H2("Variants")
@@ -50,6 +75,11 @@ public class TextInputApp : SampleBase
                   | withValue.ToSearchInput().Disabled()
                   | withValue.ToSearchInput().Invalid("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros")
                )
+               
+               //Data Binding:
+               
+               | Text.H2("Data Binding")
+               | dataBinding
                
                //Events: 
                

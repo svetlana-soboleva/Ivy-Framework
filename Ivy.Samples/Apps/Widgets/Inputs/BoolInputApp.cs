@@ -10,11 +10,8 @@ public class BoolInputApp : SampleBase
         var falseState = this.UseState(false);
         var trueState = this.UseState(true);
         var nullState = this.UseState((bool?)null);
-        var intState = this.UseState(0);
         
-        return intState.ToBoolInput();
-        
-        return Layout.Grid().Columns(6)
+        var variants =  Layout.Grid().Columns(6)
                | null!
                | Text.Block("True")
                | Text.Block("False")
@@ -51,9 +48,9 @@ public class BoolInputApp : SampleBase
                | new Box("Not Implemented")
                
                | Text.InlineCode("BoolInputs.Toggle")
-               | trueState.ToToggleInput().Label("Label").Description("Description")
-               | falseState.ToToggleInput().Label("Label").Description("Description")
-               | trueState.ToToggleInput().Label("Label").Description("Description").Disabled()
+               | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description")
+               | falseState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description")
+               | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description").Disabled()
                | new Box("Not Implemented")
                | new Box("Not Implemented")
                
@@ -63,7 +60,66 @@ public class BoolInputApp : SampleBase
                | trueState.ToToggleInput(Icons.Baby).Label("Label").Disabled()
                | new Box("Not Implemented")
                | new Box("Not Implemented")
-               
-            ; 
+            ;
+        
+
+            var intState = this.UseState(0);
+            var nullableIntState = this.UseState<int?>((int?)null);
+            var floatState = this.UseState(0.0f);
+            var nullableFloatState = this.UseState<float?>((float?)null);
+            var boolState = this.UseState(false);
+            var nullableBoolState = this.UseState(false);
+
+            var dataBinding = Layout.Grid().Columns(3)
+                              
+                              | Text.InlineCode("int")
+                              | (Layout.Vertical() 
+                                    | intState.ToBoolInput()
+                                    | intState.ToBoolInput().Variant(BoolInputs.Switch)
+                                    | intState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
+                                )
+                              | intState
+                              
+                              | Text.InlineCode("int? (NOT WORKING)")
+                              | (Layout.Vertical() 
+                                 | nullableIntState.ToBoolInput()
+                                 | nullableIntState.ToBoolInput().Variant(BoolInputs.Switch)
+                                 | nullableIntState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
+                              )
+                              | nullableIntState
+                              
+                              | Text.InlineCode("bool")
+                              | (Layout.Vertical() 
+                                 | boolState.ToBoolInput()
+                                 | boolState.ToBoolInput().Variant(BoolInputs.Switch)
+                                 | boolState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
+                              )
+                              | boolState
+                              
+                              | Text.InlineCode("bool?")
+                              | (Layout.Vertical() 
+                                 | nullableBoolState.ToBoolInput()
+                                 | nullableBoolState.ToBoolInput().Variant(BoolInputs.Switch)
+                                 | nullableBoolState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
+                              )
+                              | nullableBoolState
+                              
+                              
+                              
+                              ;
+
+
+
+        
+                              
+
+        return Layout.Vertical()
+               | Text.H1("BoolInput")
+               | Text.H2("Variants")
+               | variants
+               | Text.H2("Data Binding")
+               | dataBinding
+               ;
+        
     }
 }

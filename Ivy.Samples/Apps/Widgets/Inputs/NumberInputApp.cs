@@ -7,14 +7,31 @@ public class NumberInputApp : SampleBase
 {
     protected override object? BuildSample()
     {
-        var nullIntValue = UseState((int?)null);
+        var nullIntValue = UseState<int?>();
         var intValue = UseState(12345);
         
         var onChangedState = UseState(0);
         var onChangeLabel = UseState("");
         var onBlurState = UseState(0); 
-        var onBlurLabel = UseState(""); 
+        var onBlurLabel = UseState("");
 
+        var dataBinding = Layout.Grid().Columns(3)
+
+                          | Text.InlineCode("int")
+                          | (Layout.Vertical()
+                             | intValue.ToNumberInput()
+                             | intValue.ToSliderInput()
+                          )
+                          | intValue
+                          
+                          | Text.InlineCode("int?")
+                          | (Layout.Vertical()
+                             | nullIntValue.ToNumberInput()
+                             | nullIntValue.ToSliderInput()
+                          )
+                          | nullIntValue
+            ;
+        
         return Layout.Vertical()
                | Text.H1("Number Inputs")
                | Text.H2("Variants")
@@ -23,7 +40,7 @@ public class NumberInputApp : SampleBase
                   | Text.Block("Null")
                   | Text.Block("With Value")
                   | Text.Block("Disabled")
-                  | Text.Block("Invalid")
+                  | Text.Block("Invalid (NOT IMPLEMENTED)")
 
                   | Text.InlineCode("ToNumberInput()")
                   | nullIntValue.ToNumberInput().Placeholder("Placeholder")
@@ -37,6 +54,11 @@ public class NumberInputApp : SampleBase
                   | intValue.ToSliderInput().Disabled()
                   | intValue.ToSliderInput().Invalid("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros")
                )
+               
+               //Data Binding:
+               
+               | Text.H2("Data Binding")
+               | dataBinding
                
                //Events: 
                

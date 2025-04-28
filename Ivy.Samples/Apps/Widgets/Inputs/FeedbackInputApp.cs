@@ -16,25 +16,25 @@ public class FeedbackInputApp : SampleBase
                | Text.Block("Zero")
                | Text.Block("Two")
                | Text.Block("Disabled")
-               | Text.Block("Invalid")
+               | Text.Block("Invalid (NOT IMPLEMENTED)")
 
                | Text.InlineCode("FeedbackInputs.Stars")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Stars)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars).Disabled()
-               | new Box("Not Implemented")
+               | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars).Invalid("Invalid feedback")
                
                | Text.InlineCode("FeedbackInputs.Emojis")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Emojis)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis).Disabled()
-               | new Box("Not Implemented")
+               | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis).Invalid("Invalid feedback")
                
                | Text.InlineCode("FeedbackInputs.Thumbs")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs).Disabled()
-               | new Box("Not Implemented")
+               | twoState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs).Invalid("Invalid feedback")
             ;
 
         var intState = this.UseState(0);
@@ -42,6 +42,7 @@ public class FeedbackInputApp : SampleBase
         var floatState = this.UseState(0.0f);
         var nullableFloatState = this.UseState<float?>((float?)null);
         var boolState = this.UseState(false);
+        var nullableBoolState = this.UseState(false);
         
         var dataBinding = Layout.Grid().Columns(3)
                           | Text.InlineCode("int")
@@ -60,9 +61,13 @@ public class FeedbackInputApp : SampleBase
                           | nullableFloatState.ToFeedbackInput()
                           | (nullableFloatState.Value == null ? Text.InlineCode("null") : nullableFloatState.Value.ToString())!
                           
-                          | Text.InlineCode("bool")
+                          | Text.InlineCode("bool (NOT WORKING)")
                           | boolState.ToFeedbackInput()
                           | boolState
+                          
+                          | Text.InlineCode("bool? (NOT WORKING)")
+                          | nullableBoolState.ToFeedbackInput()
+                          | nullableBoolState
                           
             ;
         
