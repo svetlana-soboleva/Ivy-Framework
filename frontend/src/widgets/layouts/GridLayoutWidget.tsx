@@ -59,7 +59,7 @@ export const GridLayoutWidget: React.FC<GridLayoutWidgetProps> = ({
   width,
   height,
   gap = 16,
-  padding = 0,
+  padding,
   childColumn = [],
   childColumnSpan = [],
   childRow = [],
