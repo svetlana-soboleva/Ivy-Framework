@@ -37,7 +37,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots
 }) => {
   return (
-    <div className="h-screen w-screen"> 
+    <div className="h-screen w-screen remove-parent-padding"> 
       <SidebarProvider>
         <Sidebar>
           {slots?.SidebarHeader && <SidebarHeader>

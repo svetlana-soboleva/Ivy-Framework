@@ -8,7 +8,7 @@ import rehypeRaw from 'rehype-raw';
 import 'katex/dist/katex.min.css';
 import { cn } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
-import { coldarkCold } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ivyPrismTheme from '@/lib/ivy-prism-theme';
 import { ChevronRight } from 'lucide-react';
 
 // Lazy load only the syntax highlighter component
@@ -114,7 +114,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
               </div>
               <SyntaxHighlighter 
                 language={match[1]}
-                style={coldarkCold}>
+                style={ivyPrismTheme}>
                 customStyle={{margin:0}}
                 {content}
               </SyntaxHighlighter>

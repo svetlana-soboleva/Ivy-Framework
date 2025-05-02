@@ -15,11 +15,6 @@ public static class ClientExtensions
         client.Sender.Send("OpenUrl", url);
     }
     
-    public static void OpenTab(this IClientProvider client, string url)
-    {
-        client.Sender.Send("OpenTab", url);
-    }
-    
     public static void Redirect(this IClientProvider client, string url)
     {
         client.Sender.Send("Redirect", url);

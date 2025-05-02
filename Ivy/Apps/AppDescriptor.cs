@@ -7,7 +7,7 @@ namespace Ivy.Apps;
 public static class AppIds
 {
     public const string Auth = "$auth";
-    public const string Index = "$index";
+    public const string Chrome = "$chrome";
     public const string Default = "$default";
 }
 
@@ -36,6 +36,8 @@ public class AppDescriptor : IAppRepositoryNode
     public required bool IsVisible { get; init; }
     
     public bool IsIndex { get; set; } = false;
+
+    public bool IsChrome => Id == AppIds.Chrome;
 
     public required bool RemoveIvyBranding { get; init; }
     

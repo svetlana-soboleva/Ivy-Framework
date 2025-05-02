@@ -8,6 +8,7 @@ using Ivy.Client;
 using Ivy.Core;
 using Ivy.Core.Hooks;
 using Ivy.Helpers;
+using Ivy.Hooks;
 using Ivy.Shared;
 using Microsoft.AspNetCore.Authentication;
 
@@ -32,7 +33,18 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         var currentPage = UseState<string?>();
         var search = UseState<string>("");
         var menuItems = UseState(() => appRepository.GetMenuItems());
+        var args = UseService<AppArgs>();
+        var navigate = Context.UseSignal<NavigateSignal, NavigateArgs, Unit>();
             
+        UseEffect(() =>
+        {
+            return navigate.Receive(navigateArgs =>
+            {
+                OpenApp(navigateArgs);
+                return default!;
+            });
+        });
+        
         UseEffect(() =>
         {
             if (string.IsNullOrWhiteSpace(search.Value))
@@ -60,22 +72,22 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             return cleanup;
         }, [ isIvyAgentStarting ]);
         //////////////////////////////////////////////////////////
-
-        void OpenApp(string appId)
+        
+        void OpenApp(NavigateArgs navigateArgs)
         {
-            var app = appRepository!.GetAppOrDefault(appId);
+            var app = appRepository!.GetAppOrDefault(navigateArgs.AppId);
             if(settings.Navigation == ChromeNavigation.Pages)
             {
-                currentPage.Set(app.Url);
+                currentPage.Set(navigateArgs.GetUrl(args.ConnectionId));
             }
             else
             {
-                tabs.Set(tabs.Value.Add(new TabState(app.Title, app.Url, app.Icon, DateTime.UtcNow.Ticks)));
+                tabs.Set(tabs.Value.Add(new TabState(app.Title, navigateArgs.GetUrl(args.ConnectionId), app.Icon, DateTime.UtcNow.Ticks)));
                 selectedIndex.Set(tabs.Value.Length - 1);
             }
         }
         
-        this.UseEffect(async () => 
+        UseEffect(async () => 
         {
             if (auth != null)
             {
@@ -83,7 +95,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             }
             if (!string.IsNullOrEmpty(settings.DefaultAppId))
             {
-                OpenApp(settings.DefaultAppId);
+                OpenApp(new NavigateArgs(settings.DefaultAppId));
             }
         });
         
@@ -91,7 +103,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             if (@event.Value is string appId)
             {
-               OpenApp(appId);
+                OpenApp(new NavigateArgs(appId));
             }
         }
         
@@ -99,8 +111,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             if (@event.Value is string appId)
             {
-                var app = appRepository!.GetAppOrDefault(appId);
-                client?.OpenUrl(app.Url);
+                client?.OpenUrl(new NavigateArgs(appId).GetUrl());
             }
         }
         
@@ -137,7 +148,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             body = new TabsLayout(OnTabSelect, OnTabClose, OnTabRefresh, selectedIndex.Value,
                 tabs.Value.ToArray().Select(e => e.ToTab()).ToArray()
-            ).RemoveParentPadding().Variant(TabsVariant.Ux).Padding(0);
+            ).RemoveParentPadding().Variant(TabsVariant.Tabs).Padding(0);
         }
 
         var searchInput = search.ToSearchInput().ShortcutKey("CTRL+K");

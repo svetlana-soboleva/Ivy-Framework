@@ -1,4 +1,7 @@
-﻿namespace Ivy.Core.Hooks;
+﻿using Ivy.Core;
+using Ivy.Core.Hooks;
+
+namespace Ivy.Hooks;
 
 public class RefreshToken(IState<(Guid, object?, bool)> state) : IEffectTriggerConvertible
 {

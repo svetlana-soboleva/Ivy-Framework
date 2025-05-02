@@ -2,7 +2,7 @@ import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import { getHeight, getWidth } from '@/lib/styles';
 import React, { CSSProperties, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ivyPrismTheme from '@/lib/ivy-prism-theme';
 
 interface CodeWidgetProps {
   id: string;
@@ -41,7 +41,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = ({ id, content, language, showCopy
     <SyntaxHighlighter 
       language={language} 
       customStyle={styles}
-      style={vs} 
+      style={ivyPrismTheme} 
       showLineNumbers={showLineNumbers}
       key={id} >
       {content}

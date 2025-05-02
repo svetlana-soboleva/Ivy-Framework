@@ -74,21 +74,6 @@ public abstract class ViewBase() : IView, IViewContextOwner
         (_disposables as IDisposable)?.Dispose();
     }
     
-    protected void OpenTab<T>(object args) where T : IView
-    {
-        var repository = this.Context.UseService<IAppRepository>();
-        var appId = repository.GetApp(typeof(T))?.Id;
-        if(appId == null)
-        {
-            throw new InvalidOperationException($"App '{typeof(T).FullName}' not found.");
-        }
-        var jsonArgs = JsonSerializer.Serialize(args);
-        var encodedArgs = System.Web.HttpUtility.UrlEncode(jsonArgs);
-        var client = this.Context.UseService<IClientProvider>();
-        var url = "app.html?appId=" + appId + "&appArgs=" + encodedArgs;
-        client.OpenTab(url);
-    }
-
     protected void CreateContext<T>(Func<T> factory) => 
         this.Context.CreateContext(factory);
     

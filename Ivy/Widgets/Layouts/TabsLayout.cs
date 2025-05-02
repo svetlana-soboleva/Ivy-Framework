@@ -6,7 +6,7 @@ namespace Ivy;
 
 public enum TabsVariant
 {
-    Ux,
+    Tabs,
     Content
 }
 

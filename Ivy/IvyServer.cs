@@ -5,6 +5,7 @@ using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Chrome;
 using Ivy.Core;
+using Ivy.Hooks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http; //do not remove - used in RELEASE
@@ -100,14 +101,14 @@ public class IvyServer
     {
         AddApp(new AppDescriptor
         {
-            Id = AppIds.Index,
-            Title = "Index",
+            Id = AppIds.Chrome,
+            Title = "Chrome",
             ViewFactory = viewFactory ?? (() => new DefaultSidebarChrome(ChromeSettings.Default())), 
             Path = [],
             IsVisible = false,
             RemoveIvyBranding = true
         });
-        DefaultAppId = AppIds.Index;
+        DefaultAppId = AppIds.Chrome;
         return this;
     }
     
@@ -136,6 +137,8 @@ public class IvyServer
     
     public async Task RunAsync()
     {
+        var sessionStore = new AppSessionStore();
+        
         var cts = new CancellationTokenSource();
         Console.CancelKeyPress += (_, e) => {
             e.Cancel = true;
@@ -143,6 +146,18 @@ public class IvyServer
         };
         
 #if(DEBUG)
+        _ = Task.Run(() =>
+        {
+            while (!cts.Token.IsCancellationRequested)
+            {
+                var key = Console.ReadKey(intercept: true);
+                if (key is { Modifiers: ConsoleModifiers.Control, Key: ConsoleKey.S })
+                {
+                    sessionStore.Dump();
+                }
+            }
+        }, cts.Token);
+        
         if (Utils.IsPortInUse(_port))
         {
 
@@ -182,7 +197,7 @@ public class IvyServer
             .AddApplicationPart(Assembly.Load("Ivy"))
             .AddControllersAsServices();
         builder.Services.AddSingleton<IContentBuilder>(_contentBuilder ?? new DefaultContentBuilder());
-        builder.Services.AddSingleton(new AppSessionStore());
+        builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         
         builder.Services.AddCors(options =>
@@ -228,7 +243,7 @@ public class IvyServer
             {
                 AppRepository.Reload();
                 var hubContext = app.Services.GetService<IHubContext<AppHub>>()!;
-                hubContext.Clients.All.SendAsync("HotReload");
+                hubContext.Clients.All.SendAsync("HotReload", cancellationToken: cts.Token);
             };
         }
         

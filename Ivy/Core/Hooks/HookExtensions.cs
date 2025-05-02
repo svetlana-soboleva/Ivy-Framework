@@ -3,7 +3,6 @@ namespace Ivy.Core.Hooks;
 
 public static class HookExtensions
 {
-    [Obsolete("Not sure we need this")]
     public static (T value, Func<string, T> dispatch) UseReducer<TView, T>(this TView view, Func<T,string,T> reducer, T initialState) where TView : ViewBase
     {
         var state = view.Context.UseState(initialState);
@@ -32,7 +31,6 @@ public static class HookExtensions
         public readonly Func<T>? Callback = callback;
     }
     
-    [Obsolete("Not sure we need this")]
     public static Func<T> UseCallback<TView, T>(
         this TView view, 
         Func<T> callback, 

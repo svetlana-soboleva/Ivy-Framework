@@ -1,13 +1,17 @@
-﻿using Ivy.Chrome;
+﻿using System.Reflection;
+using Ivy.Chrome;
 
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 var server = new IvyServer();
 server.AddAppsFromAssembly();
 server.UseHotReload();
 
+var version = typeof(IvyServer).Assembly.GetName().Version!.ToString();
 var chromeSettings = new ChromeSettings()
     .Header(
-        Layout.Vertical().Padding(2) | new IvyLogo()
+        Layout.Vertical().Padding(2) 
+            | new IvyLogo()
+            | Text.Muted($"Version {version}")
     )
     .DefaultApp<Ivy.Docs.Apps.Onboarding.GettingStarted.IntroductionApp>()
     .UsePages();

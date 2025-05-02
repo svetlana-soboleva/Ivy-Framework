@@ -9,16 +9,17 @@ public class LinksApp : SampleBase
 {
     protected override object? BuildSample()
     {
-        LinksAppArgs? args = this.UseArgs<LinksAppArgs>();
+        LinksAppArgs? args = UseArgs<LinksAppArgs>();
+        var navigate = this.UseNavigation();
         
         if(args != null)
         {
-            return args;
+            return args.ToDetails();
         }
         
         return new Button("Go").HandleClick(() =>
         {
-            this.OpenTab<LinksApp>(new LinksAppArgs("Niels", 123));
+            navigate(typeof(LinksApp), new LinksAppArgs("Niels", 123));
         });
 
     }

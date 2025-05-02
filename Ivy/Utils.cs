@@ -13,6 +13,8 @@ namespace Ivy;
 
 public static class Utils
 {
+    public static string? NullIfEmpty(this string? input) => string.IsNullOrWhiteSpace(input) ? null : input;
+    
     public static void PrintDetailedException(Exception? ex)
     {
         while (ex != null)

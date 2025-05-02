@@ -30,7 +30,7 @@ TabWidget.displayName = 'TabWidget';
 
 interface TabsLayoutWidgetProps {
   id: string;
-  variant?: "Ux" | "Content";
+  variant?: "Tabs" | "Content";
   removeParentPadding?: boolean;
   selectedIndex?: number;
   children: React.ReactElement<TabWidgetProps>[];
@@ -60,7 +60,7 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
     (child.type as any)?.displayName === 'TabWidget'
   );
 
-  if(tabWidgets.length === 0) return <div className='remove-ancestor-padding'></div>;
+  if(tabWidgets.length === 0) return <div className='remove-parent-padding'></div>;
 
   var activeTab = selectedIndex != null && React.isValidElement(tabWidgets[selectedIndex]) ? tabWidgets[selectedIndex].props.id : null;
 
@@ -82,13 +82,13 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
   return (
     <Tabs value={activeTab} style={styles} className={
       cn(
-        removeParentPadding && 'remove-ancestor-padding',
+        removeParentPadding && 'remove-parent-padding',
         'flex flex-col'
       )}>
       <ScrollArea>
         <TabsList className={cn(
           "relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border flex justify-start",
-          variant === "Ux" && "",
+          variant === "Tabs" && "",
           variant === "Content" && ""
           )}>
           {tabWidgets.map((tabWidget, index) => {
@@ -102,8 +102,8 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
                     onMouseDown={(e) => handleMouseDown(e, index)}
                     className={cn(
                       "group overflow-hidden rounded-b-none py-2 data-[state=active]:z-10 data-[state=active]:shadow-none",
-                      (variant === "Ux" && index === 0) && "ml-12",
-                      variant === "Ux" && "border-x border-t border-border bg-muted",
+                      (variant === "Tabs" && index === 0) && "ml-12",
+                      variant === "Tabs" && "border-x border-t border-border bg-muted",
                       variant === "Content" && "border-b-2 data-[state=active]:border-b-primary"
                     )}
                     >

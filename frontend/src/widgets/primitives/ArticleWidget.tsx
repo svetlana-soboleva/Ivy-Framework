@@ -16,8 +16,11 @@ const TableOfContents = ({ className }: { className?: string }) => {
 
   useEffect(() => {
     // Get all headings from the article
-    const elements = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+    const articleElement = document.querySelector('article');
+    const elements = articleElement ? Array.from(articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')) : [];
     
+    console.log(elements);
+
     // Process headings and add IDs if they don't exist
     const items = elements.map((element) => {
       // Generate ID if doesn't exist
@@ -104,42 +107,42 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({ children, previous
               <div className="flex flex-col gap-6">
                 <div className="flex justify-between items-center">
                   <div className="flex-1">
-                  {previous && (
-                    <a
-                      href={previous.appId}
-                      className="group flex flex-col gap-2 hover:text-primary transition-colors"
-                    >
-                      <div className="text-sm">← Previous</div>
-                      <div className="font-medium text-muted-foreground">{previous.title}</div>
-                    </a>
-                  )}
+                    {previous && (
+                      <a
+                        href={previous.appId}
+                        className="group flex flex-col gap-2 hover:text-primary transition-colors"
+                      >
+                        <div className="text-sm">← Previous</div>
+                        <div className="font-medium text-muted-foreground">{previous.title}</div>
+                      </a>
+                    )}
+                  </div>
+                  <div className="flex-1 flex justify-end">
+                    {next && (
+                      <a
+                        href={next.appId}
+                        className="group flex flex-col text-right gap-2 hover:text-primary transition-colors"
+                      >
+                        <div className="text-sm">Next →</div>
+                        <div className="font-medium text-muted-foreground">{next.title}</div>
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 flex justify-end">
-                  {next && (
+                {documentSource && (
+                  <div className="flex justify-center">
                     <a
-                      href={next.appId}
-                      className="group flex flex-col text-right gap-2 hover:text-primary transition-colors"
+                      href={documentSource}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
-                      <div className="text-sm">Next →</div>
-                      <div className="font-medium text-muted-foreground">{next.title}</div>
+                      <Github className="w-4 h-4" />
+                      Edit this document
                     </a>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-              {documentSource && (
-                <div className="flex justify-center">
-                  <a
-                    href={documentSource}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Github className="w-4 h-4" />
-                    Edit this document
-                  </a>
-                </div>
-              )}
-            </div>
             </footer>
           )}
         </article>

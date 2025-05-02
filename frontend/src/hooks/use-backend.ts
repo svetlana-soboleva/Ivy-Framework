@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast'
-import { getIvyAppId, getIvyHost } from '@/lib/utils';
+import { getAppArgs, getAppId, getIvyHost, getMachineId, getParentId } from '@/lib/utils';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
 
@@ -51,7 +51,10 @@ export const useBackend = () => {
   const [disconnected, setDisconnected] = useState(false);
   const [removeIvyBranding, setRemoveIvyBranding] = useState(false);
   const { toast } = useToast();
-  const appId = getIvyAppId();
+  const appId = getAppId();
+  const appArgs = getAppArgs();
+  const parentId = getParentId();
+  const machineId = getMachineId();
 
   useEffect(() => {
     if (widgetTree) {
@@ -135,7 +138,7 @@ export const useBackend = () => {
 
   useEffect(() => {
     const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${getIvyHost()}/messages?appId=${appId ?? ""}`)
+        .withUrl(`${getIvyHost()}/messages?appId=${appId ?? ""}&appArgs=${appArgs ?? ""}&machineId=${machineId}&parentId=${parentId ?? ""}`)
         .withAutomaticReconnect()
         .build();
     setConnection(newConnection);

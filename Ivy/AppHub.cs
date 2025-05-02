@@ -1,9 +1,9 @@
-using System.Collections.Concurrent;
 using System.Text.Json.Nodes;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Core;
 using Ivy.Helpers;
+using Ivy.Hooks;
 using Ivy.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
@@ -12,17 +12,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-public class AppSessionStore
-{
-    public readonly ConcurrentDictionary<string, AppSession> Sessions = new();
-}
+//todo: we need to know: 1) what apps belong to the user 2) what apps are children of other apps (iframes)
 
 public class AppHub(
     IvyServer server, 
-    IClientNotifier clientNotifier, 
+    IClientNotifier clientNotifier,
     IContentBuilder contentBuilder,
     AppSessionStore sessionStore,
-    ILogger<AppHub> logger) : Hub
+    ILogger<AppHub> logger
+    ) : Hub
 {
     public static string GetAppId(IvyServer ivyServer, HttpContext httpContext)
     {
@@ -41,23 +39,43 @@ public class AppHub(
         return appId;
     }
 
-    public AppArgs GetAppArgs(string appId, HttpContext httpContext)
+    public static string GetMachineId(HttpContext httpContext)
+    {
+        if(httpContext!.Request.Query.ContainsKey("machineId"))
+        {
+            return httpContext!.Request.Query["machineId"].ToString().NullIfEmpty() ?? throw new Exception("Missing machineId in request.");
+        }
+        
+        throw new Exception("Missing machineId in request.");
+    }
+    
+    public static string? GetParentId(HttpContext httpContext)
+    {
+        if(httpContext!.Request.Query.ContainsKey("parentId"))
+        {
+            return httpContext!.Request.Query["parentId"].ToString().NullIfEmpty();
+        }
+
+        return null;
+    }
+
+    public AppArgs GetAppArgs(string connectionId, string appId, HttpContext httpContext)
     {
         string? appArgs = null;
         if(httpContext!.Request.Query.ContainsKey("appArgs"))
         {
-            appArgs = httpContext!.Request.Query["appArgs"].ToString();
+            appArgs = httpContext!.Request.Query["appArgs"].ToString().NullIfEmpty();
         }
-        return new AppArgs(appId, appArgs ?? server.Args?.Args);
+        return new AppArgs(connectionId, appId, appArgs ?? server.Args?.Args);
     }
     
     public override async Task OnConnectedAsync()
     {
         var httpContext = Context.GetHttpContext()!;
         var appId = GetAppId(server, httpContext);
-        var appArgs = GetAppArgs(appId, httpContext);
+        var appArgs = GetAppArgs(Context.ConnectionId, appId, httpContext);
         var appDescriptor = server.GetApp(appId);
-
+        
         logger.LogInformation($"Connected: {Context.ConnectionId} [{appId}]");
         
         var clientProvider = new ClientProvider(new ClientSender(clientNotifier, Context.ConnectionId));
@@ -69,6 +87,7 @@ public class AppHub(
         appServices.AddSingleton(typeof(IClientProvider), clientProvider);
         appServices.AddSingleton(appDescriptor);
         appServices.AddSingleton(appArgs);
+        appServices.AddTransient<SignalRouter>(_ => new SignalRouter(sessionStore));
         
         var isAuthProtected = server.AuthProviderType != null;
         if (isAuthProtected)
@@ -99,12 +118,15 @@ public class AppHub(
         var appState = new AppSession
         {
             AppId = appId,
+            MachineId = GetMachineId(httpContext),
+            ParentId = GetParentId(httpContext),
             AppDescriptor = appDescriptor,
             App = app,
             ConnectionId = Context.ConnectionId,
             WidgetTree = widgetTree,
             ContentBuilder = contentBuilder,
-            AppServices = serviceProvider
+            AppServices = serviceProvider,
+            LastInteraction = DateTime.UtcNow
         };
 
         async void OnWidgetTreeChanged(WidgetTreeChanged[] changes)
@@ -153,12 +175,13 @@ public class AppHub(
     
     public void HotReload()
     {
-        if (sessionStore.Sessions.TryGetValue(Context.ConnectionId, out var appState))
+        if (sessionStore.Sessions.TryGetValue(Context.ConnectionId, out var appSession))
         {
-            logger.LogInformation($"HotReload: {Context.ConnectionId} [{appState.AppId}]");
+            appSession.LastInteraction = DateTime.UtcNow;
+            logger.LogInformation($"HotReload: {Context.ConnectionId} [{appSession.AppId}]");
             try
             {
-                appState.WidgetTree.HotReload();
+                appSession.WidgetTree.HotReload();
             }
             catch (Exception e)
             {
@@ -176,9 +199,9 @@ public class AppHub(
         try
         {
             logger.LogInformation($"Event: {eventName} {widgetId} {args}");
-            var appState = sessionStore.Sessions[Context.ConnectionId];
-
-            if (!appState.WidgetTree.TriggerEvent(widgetId, eventName, args ?? new JsonArray()))
+            var appSession = sessionStore.Sessions[Context.ConnectionId];
+            appSession.LastInteraction = DateTime.UtcNow;
+            if (!appSession.WidgetTree.TriggerEvent(widgetId, eventName, args ?? new JsonArray()))
             {
                 logger.LogWarning($"Event '{eventName}' for Widget '{widgetId}' not found.");
             }

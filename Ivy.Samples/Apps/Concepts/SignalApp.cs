@@ -1,4 +1,5 @@
-﻿using Ivy.Shared;
+﻿using Ivy.Hooks;
+using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
@@ -33,8 +34,6 @@ public class ChildView : ViewBase
 {
     public override object? Build()
     {
-        Console.WriteLine("Building ChildView");
-        
         var signal = Context.UseSignal<MySignal,int,string>();
         var counter = UseState(0);
 
