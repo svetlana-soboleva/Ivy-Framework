@@ -39,4 +39,4 @@ public class XmlConfigView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Xml" ExtensionsType="Ivy.XmlExtensions"/> 
+<WidgetDocs Type="Ivy.Xml" ExtensionTypes="Ivy.XmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Xml.cs"/> 

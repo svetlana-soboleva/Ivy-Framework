@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, memo } from 'react';
+import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -11,7 +11,6 @@ import CopyToClipboardButton from './CopyToClipboardButton';
 import ivyPrismTheme from '@/lib/ivy-prism-theme';
 import { ChevronRight } from 'lucide-react';
 
-// Lazy load only the syntax highlighter component
 const SyntaxHighlighter = lazy(() => import('react-syntax-highlighter').then(mod => ({ default: mod.Prism })));
 
 interface MarkdownRendererProps {
@@ -32,106 +31,138 @@ const MemoizedImage = memo(
   (prevProps, nextProps) => prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
 );
 
-const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClick }) => {
+const MemoizedH1 = memo(({ children }: { children: React.ReactNode }) => (
+  <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+    {children}
+  </h1>
+));
 
-  const hasMath = content.includes('$') || content.includes('\\begin{');
-  const hasCodeBlocks = content.includes('```');
+const MemoizedH2 = memo(({ children }: { children: React.ReactNode }) => (
+  <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+    {children}
+  </h2>
+));
 
-  const remarkPlugins: any[] = [remarkGfm, remarkGemoji];
-  if (hasMath) remarkPlugins.push(remarkMath);
+const MemoizedH3 = memo(({ children }: { children: React.ReactNode }) => (
+  <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+    {children}
+  </h3>
+));
+
+const MemoizedH4 = memo(({ children }: { children: React.ReactNode }) => (
+  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+    {children}
+  </h4>
+));
+
+const hasContentFeature = (content: string, feature: RegExp): boolean => {
+  return feature.test(content);
+};
+
+const CodeBlock = memo(({
+  className,
+  children,
+  hasCodeBlocks,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  inline?: boolean;
+  hasCodeBlocks: boolean;
+}) => {
+  const match = /language-(\w+)/.exec(className || '');
+  const content = String(children).replace(/\n$/, '');
   
-  const rehypePlugins: any[] = [rehypeRaw];
-  if (hasMath) rehypePlugins.push(rehypeKatex);
+  if (match && hasCodeBlocks) {
+    return (
+      <Suspense fallback={<pre className="p-4 bg-muted rounded-md overflow-x-auto">{content}</pre>}>
+        <div className="relative">
+          <div className="absolute top-2 right-2 z-10">
+            <CopyToClipboardButton textToCopy={content} />
+          </div>
+          <SyntaxHighlighter 
+            language={match[1]}
+            style={ivyPrismTheme}
+            customStyle={{margin: 0}}
+          >
+            {content}
+          </SyntaxHighlighter>
+        </div>
+      </Suspense>
+    );
+  }
+  
+  return (
+    <code className={cn("relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm", className)}>
+      {children}
+    </code>
+  );
+});
 
-  const components: any = {
-    h1: ({ children }: { children: React.ReactNode }) => (
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-        {children}
-      </h1>
-    ),
-    h2: ({ children }: { children: React.ReactNode }) => (
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        {children}
-      </h2>
-    ),
-    h3: ({ children }: { children: React.ReactNode }) => (
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-        {children}
-      </h3>
-    ),
-    h4: ({ children }: { children: React.ReactNode }) => (
-      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        {children}
-      </h4>
-    ),
+const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClick }) => {
+  const contentFeatures = useMemo(() => ({
+    hasMath: hasContentFeature(content, /(\$|\\\(|\\\[|\\begin\{)/),
+    hasCodeBlocks: hasContentFeature(content, /```/),
+  }), [content]);
+  
+  const plugins = useMemo(() => {
+    const remarkPlugins: any[] = [remarkGfm, remarkGemoji];
+    if (contentFeatures.hasMath) remarkPlugins.push(remarkMath);
+    
+    const rehypePlugins: any[] = [rehypeRaw];
+    if (contentFeatures.hasMath) rehypePlugins.push(rehypeKatex);
+    
+    return { remarkPlugins, rehypePlugins };
+  }, [contentFeatures.hasMath]);
+  
+  const handleLinkClick = useCallback((href: string, event: React.MouseEvent<HTMLAnchorElement>) => {
+    const isExternalLink = href?.match(/^(https?:\/\/|mailto:|tel:)/i);
+    if (!isExternalLink && onLinkClick && href) {
+      event.preventDefault();
+      onLinkClick(href);
+    }
+  }, [onLinkClick]);
+
+  const components = useMemo(() => ({
+    // Headings
+    h1: MemoizedH1,
+    h2: MemoizedH2,
+    h3: MemoizedH3,
+    h4: MemoizedH4,
 
     // Paragraphs and text
-    p: ({ children }: { children: React.ReactNode }) => (
+    p: memo(({ children }: { children: React.ReactNode }) => (
       <p className="scroll-m-20 text-md leading-8">{children}</p>
-    ),
-    strong: ({ children }: { children: React.ReactNode }) => (
+    )),
+    strong: memo(({ children }: { children: React.ReactNode }) => (
       <strong className="font-semibold">{children}</strong>
-    ),
-    em: ({ children }: { children: React.ReactNode }) => (
+    )),
+    em: memo(({ children }: { children: React.ReactNode }) => (
       <em className="italic">{children}</em>
-    ),
+    )),
     
     // Lists
-    ul: ({ children }: { children: React.ReactNode }) => (
+    ul: memo(({ children }: { children: React.ReactNode }) => (
       <ul className="ml-6 list-disc [&>li:first-child]:mt-0">{children}</ul>
-    ),
-    ol: ({ children }: { children: React.ReactNode }) => (
+    )),
+    ol: memo(({ children }: { children: React.ReactNode }) => (
       <ol className="ml-6 list-decimal [&>li:first-child]:mt-0">{children}</ol>
-    ),
-    li: ({ children }: { children: React.ReactNode }) => (
+    )),
+    li: memo(({ children }: { children: React.ReactNode }) => (
       <li className="mt-3">{children}</li>
-    ),
+    )),
 
-    // Code blocks - only render syntax highlighter if needed
-    code: ({
-      className,
-      children,
-      ...props
-    }: {
-      className?: string;
-      inline?: boolean;
-      children: React.ReactNode;
-    }) => {
-      const match = /language-(\w+)/.exec(className || '');
-      const content = String(children).replace(/\n$/, '');
-      
-      if (match && hasCodeBlocks) {
-        return (
-          <Suspense fallback={<pre>{content}</pre>}>
-            <div className="relative">
-              <div className="absolute top-2 right-2 z-10">
-                <CopyToClipboardButton textToCopy={content} />
-              </div>
-              <SyntaxHighlighter 
-                language={match[1]}
-                style={ivyPrismTheme}>
-                customStyle={{margin:0}}
-                {content}
-              </SyntaxHighlighter>
-            </div>
-          </Suspense>
-        );
-      }
-      
-      return (
-        <code className={cn("relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm", className)} {...props}>
-          {children}
-        </code>
-      );
-    },
+    // Code blocks - with memoization and optimized rendering
+    code: (props: any) => (
+      <CodeBlock {...props} hasCodeBlocks={contentFeatures.hasCodeBlocks} />
+    ),
 
     // Pre tag (for code blocks)
-    pre: ({ children }: { children: React.ReactNode }) => (
+    pre: memo(({ children }: { children: React.ReactNode }) => (
       <>{children}</>
-    ),
+    )),
 
-    // Links
-    a: ({
+    // Links with memoized click handler
+    a: memo(({
       children,
       href,
       ...props
@@ -145,56 +176,50 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
           href={href || '#'}
           target={isExternalLink ? "_blank" : undefined}
           rel={isExternalLink ? "noopener noreferrer" : undefined}
-          onClick={(e) => {
-            if (!isExternalLink && onLinkClick && href) {
-              e.preventDefault();
-              onLinkClick(href);
-            }
-          }}
+          onClick={(e) => href && handleLinkClick(href, e)}
         >
           {children}
         </a>
       );
-    },
+    }),
 
     // Blockquotes
-    blockquote: ({
+    blockquote: memo(({
       children,
     }: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) => (
       <blockquote className="border-l-2 pl-6 italic">{children}</blockquote>
-    ),
+    )),
 
     // Tables
-    table: ({ children }: { children: React.ReactNode }) => (
+    table: memo(({ children }: { children: React.ReactNode }) => (
       <table className="w-full border-collapse border border-border">
         {children}
       </table>
-    ),
-    thead: ({ children }: { children: React.ReactNode }) => (
+    )),
+    thead: memo(({ children }: { children: React.ReactNode }) => (
       <thead className="bg-muted">{children}</thead>
-    ),
-    tr: ({ children }: { children: React.ReactNode }) => (
+    )),
+    tr: memo(({ children }: { children: React.ReactNode }) => (
       <tr className="border border-border">{children}</tr>
-    ),
-    th: ({ children }: { children: React.ReactNode }) => (
+    )),
+    th: memo(({ children }: { children: React.ReactNode }) => (
       <th className="border border-border px-4 py-2 text-left font-bold">
         {children}
       </th>
-    ),
-    td: ({ children }: { children: React.ReactNode }) => (
+    )),
+    td: memo(({ children }: { children: React.ReactNode }) => (
       <td className="border border-border px-4 py-2">{children}</td>
-    ),
+    )),
 
-    // Details and Summary
-    details: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+    details: memo(({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
       <details
         {...props}
         className="group border rounded-lg border-border p-4"
         >
-      {children}
-    </details>
-    ),
-    summary: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+        {children}
+      </details>
+    )),
+    summary: memo(({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
       <summary 
         className="flex items-center gap-2 cursor-pointer font-medium text-lg hover:text-primary [&::-webkit-details-marker]:hidden" 
         {...props}
@@ -202,21 +227,25 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
         <ChevronRight className="h-4 w-4 transition-transform duration-200 group-open:rotate-90" />
         {children}
       </summary>
-    ),
+    )),
 
-    // Images
-    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
-      <MemoizedImage {...props} />
-    ),
-  };
+    img: MemoizedImage,
+  }), [contentFeatures.hasCodeBlocks, handleLinkClick]);
+
+  const urlTransform = useCallback((url: string) => {
+    if (url.startsWith('app://')) {
+      return url;
+    }
+    return defaultUrlTransform(url);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
       <ReactMarkdown
         key={content}
-        components={components}
-        remarkPlugins={remarkPlugins}
-        rehypePlugins={rehypePlugins}
+        components={components as any} 
+        remarkPlugins={plugins.remarkPlugins}
+        rehypePlugins={plugins.rehypePlugins}
         urlTransform={urlTransform}
       >
         {content}
@@ -225,11 +254,4 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
   );
 };
 
-const urlTransform = (url: string) => {
-  if (url.startsWith('app://')) {
-    return url;
-  }
-  return defaultUrlTransform(url);
-}
-
-export default MarkdownRenderer;
+export default memo(MarkdownRenderer);

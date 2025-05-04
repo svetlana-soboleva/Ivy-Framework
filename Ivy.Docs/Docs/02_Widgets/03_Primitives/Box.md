@@ -25,4 +25,4 @@ public class StatusDashboardView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Box" ExtensionsType="Ivy.BoxExtensions"/> 
+<WidgetDocs Type="Ivy.Box" ExtensionTypes="Ivy.BoxExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Box.cs"/> 

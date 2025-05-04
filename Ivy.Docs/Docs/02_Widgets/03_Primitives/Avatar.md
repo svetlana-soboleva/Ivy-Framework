@@ -8,4 +8,4 @@ Layout.Horizontal()
     | new Avatar("Renco Smeding")
 ```
 
-<WidgetDocs Type="Ivy.Avatar" ExtensionsType="Ivy.AvatarExtensions"/> 
+<WidgetDocs Type="Ivy.Avatar" ExtensionTypes="Ivy.AvatarExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Avatar.cs"/> 

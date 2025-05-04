@@ -8,4 +8,4 @@ Layout.Horizontal() |
     new Kbd("Shift + Ctrl + C")
 ```
 
-<WidgetDocs Type="Ivy.Kbd" ExtensionsType="Ivy.KbdExtensions"/> 
+<WidgetDocs Type="Ivy.Kbd" ExtensionTypes="Ivy.KbdExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Kbd.cs"/> 

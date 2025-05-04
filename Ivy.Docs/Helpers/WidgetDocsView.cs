@@ -4,12 +4,16 @@ using Newtonsoft.Json;
 
 namespace Ivy.Docs.Helpers;
 
-public class WidgetDocsView(string typeName, string? extensionsTypeName) : ViewBase
+public class WidgetDocsView(string typeName, string? extensionsTypeName, string sourceUrl) : ViewBase
 {
     public override object? Build()
     {
         var type = TypeUtils.GetTypeFromName(typeName);
-        var extensionsType = TypeUtils.GetTypeFromName(extensionsTypeName);
+        Type[] extensionTypes =
+        [
+            ..extensionsTypeName.Split(';').Select(TypeUtils.GetTypeFromName).ToArray()!,
+            typeof(WidgetBaseExtensions)
+        ];
         
         if(type == null) return Text.Danger($"WidgetDocsView:Unable to find type {typeName}.");
         
@@ -17,21 +21,21 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName) : ViewB
         
         var properties = type.GetProperties()
             .Where(p => p.GetCustomAttribute<PropAttribute>() != null)
-            .Select(e => TypeUtils.GetPropRecord(e, defaultValueProvider, type, extensionsType))
+            .Select(e => TypeUtils.GetPropRecord(e, defaultValueProvider, type, extensionTypes))
             .OrderBy(e => e.Name);
 
         var events = type.GetProperties()
             .Where(p => p.GetCustomAttribute<EventAttribute>() != null)
-            .Select(e => TypeUtils.GetEventRecord(e, type, extensionsType))
+            .Select(e => TypeUtils.GetEventRecord(e, type, extensionTypes))
             .OrderBy(e => e.Name)
             .ToList();
 
         return Layout.Vertical().Gap(8)
                | Text.H2("API")
                | Text.H3("Properties")
-               | properties.ToTable()
+               | properties.ToTable().Width(Size.Full())
                | (events.Any() ? Text.H3("Events") : null)
-               | events.ToTable()
+               | events.ToTable().Width(Size.Full())
             ;
     }
 }

@@ -58,9 +58,9 @@ public class TypeUtilsTests
             """ 
             );
     
-    private void GetExtensionMethods_ReturnsExpected(Type baseType, Type extensionsType, PropertyInfo propertyInfo, string expectedResult)
+    private void GetExtensionMethods_ReturnsExpected(Type baseType, Type extensionTypes, PropertyInfo propertyInfo, string expectedResult)
     {
-        string result = TypeUtils.GetExtensionMethods(propertyInfo, baseType, extensionsType);
+        string result = TypeUtils.GetExtensionMethods(propertyInfo, baseType, [extensionTypes]);
         Assert.Equal(expectedResult, result);
     }
 }

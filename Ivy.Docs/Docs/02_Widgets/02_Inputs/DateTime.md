@@ -56,4 +56,4 @@ dateState.ToDateTimeInput()
 dateState.ToDateTimeInput().Disabled()
 ```
 
-<WidgetDocs Type="Ivy.DateTimeInput" ExtensionsType="Ivy.DateTimeInputExtensions"/> 
+<WidgetDocs Type="Ivy.DateTimeInput" ExtensionTypes="Ivy.DateTimeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateTimeInput.cs"/> 

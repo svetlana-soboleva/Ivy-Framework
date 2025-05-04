@@ -69,4 +69,4 @@ public class ApiResponseViewer : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Json" ExtensionsType="Ivy.JsonExtensions"/> 
+<WidgetDocs Type="Ivy.Json" ExtensionTypes="Ivy.JsonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Json.cs"/> 

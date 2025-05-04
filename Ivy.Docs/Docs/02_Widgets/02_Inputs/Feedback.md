@@ -54,4 +54,4 @@ new FeedbackInput<int>(0)
     .Disabled(false)
 ```
 
-<WidgetDocs Type="Ivy.FeedbackInput" ExtensionsType="Ivy.FeedbackInputExtensions"/>
+<WidgetDocs Type="Ivy.FeedbackInput" ExtensionTypes="Ivy.FeedbackInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/FeedbackInput.cs"/>

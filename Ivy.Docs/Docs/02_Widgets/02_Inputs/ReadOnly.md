@@ -35,4 +35,4 @@ var readOnlyInput = new ReadOnlyInput<string>("ReadOnly Text")
     .ShowCopyButton(true);
 ```
 
-<WidgetDocs Type="Ivy.ReadOnlyInput" ExtensionsType="Ivy.ReadOnlyInputExtensions"/> 
+<WidgetDocs Type="Ivy.ReadOnlyInput" ExtensionTypes="Ivy.ReadOnlyInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ReadOnlyInput.cs"/> 

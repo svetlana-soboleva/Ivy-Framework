@@ -122,5 +122,6 @@ export const widgetMap: WidgetMap = {
   // Internal
   "Ivy.Widgets.Internal.DbmlCanvas": React.lazy(() => import('@/widgets/internal/DbmlCanvasWidget')),
   "Ivy.Widgets.Internal.Terminal": React.lazy(() => import('@/widgets/internal/TerminalWidget')),
+  "Ivy.Widgets.Internal.SidebarNews": React.lazy(() => import('@/widgets/internal/SidebarNewsWidget')),
 };
 

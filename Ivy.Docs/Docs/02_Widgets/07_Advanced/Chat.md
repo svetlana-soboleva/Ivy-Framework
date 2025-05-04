@@ -1,3 +1,3 @@
 ﻿# Chat
 
-<WidgetDocs Type="Ivy.Chat" ExtensionsType="Ivy.ChatExtensions"/>
+<WidgetDocs Type="Ivy.Chat" ExtensionTypes="Ivy.ChatExtensions"/>

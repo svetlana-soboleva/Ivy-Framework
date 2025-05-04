@@ -33,4 +33,4 @@ Badges can include icons to enhance their visual appearance and meaning.
 new Badge("With Icon", icon:Icons.Bell)
 ```
 
-<WidgetDocs Type="Ivy.Badge" ExtensionsType="Ivy.BadgeExtensions"/>
+<WidgetDocs Type="Ivy.Badge" ExtensionTypes="Ivy.BadgeExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Badge.cs"/>

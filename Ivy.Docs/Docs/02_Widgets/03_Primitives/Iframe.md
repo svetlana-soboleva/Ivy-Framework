@@ -37,4 +37,4 @@ public class ToolsDashboardView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Iframe" ExtensionsType="Ivy.IframeExtensions"/> 
+<WidgetDocs Type="Ivy.Iframe" ExtensionTypes="Ivy.IframeExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Iframe.cs"/> 

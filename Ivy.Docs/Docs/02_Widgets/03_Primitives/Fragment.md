@@ -26,4 +26,4 @@ public class ConditionalRenderingView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Fragment" ExtensionsType="Ivy.FragmentExtensions"/> 
+<WidgetDocs Type="Ivy.Fragment" ExtensionTypes="Ivy.FragmentExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Fragment.cs"/> 

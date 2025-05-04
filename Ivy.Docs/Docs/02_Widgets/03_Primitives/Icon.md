@@ -39,4 +39,4 @@ Layout.Horizontal()
     | new Icon(Icons.Cloud).Large()
 ```
 
-<WidgetDocs Type="Ivy.Icon" ExtensionsType="Ivy.IconExtensions"/> 
+<WidgetDocs Type="Ivy.Icon" ExtensionTypes="Ivy.IconExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Icon.cs"/> 

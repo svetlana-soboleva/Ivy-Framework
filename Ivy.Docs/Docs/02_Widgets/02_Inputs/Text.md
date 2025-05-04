@@ -46,7 +46,7 @@ new TextInput<string>(withoutValue, placeholder: "Styled Input")
     .Invalid("Invalid input")
 ```
 
-<WidgetDocs Type="Ivy.TextInput" ExtensionsType="Ivy.TextInputExtensions"/>
+<WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
 
 ## Examples
 

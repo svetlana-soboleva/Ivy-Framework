@@ -53,4 +53,4 @@ public class HeaderWithSpacerView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Spacer" ExtensionsType="Ivy.SpacerExtensions"/> 
+<WidgetDocs Type="Ivy.Spacer" ExtensionTypes="Ivy.SpacerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Spacer.cs"/> 

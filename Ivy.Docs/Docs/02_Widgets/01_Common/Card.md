@@ -38,4 +38,4 @@ Cards can be customized with titles, icons, and dimensions to fit the applicatio
 new Card().Title("Styled Card").Icon(Icons.ChartBarStacked).Width(1/2f)
 ```
 
-<WidgetDocs Type="Ivy.Card" ExtensionsType="Ivy.CardExtensions"/>
+<WidgetDocs Type="Ivy.Card" ExtensionTypes="Ivy.CardExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Card.cs"/>

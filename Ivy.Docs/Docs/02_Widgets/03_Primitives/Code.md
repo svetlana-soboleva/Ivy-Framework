@@ -28,4 +28,4 @@ public class CodeSamplesView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Code" ExtensionsType="Ivy.CodeExtensions"/> 
+<WidgetDocs Type="Ivy.Code" ExtensionTypes="Ivy.CodeExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Code.cs"/> 

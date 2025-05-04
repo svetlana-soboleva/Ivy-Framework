@@ -15,4 +15,4 @@ Here's a simple example of a progress bar initialized at 50%.
 new Progress(50)
 ```
 
-<WidgetDocs Type="Ivy.Progress" ExtensionsType="Ivy.ProgressExtensions"/>
+<WidgetDocs Type="Ivy.Progress" ExtensionTypes="Ivy.ProgressExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Progress.cs"/>

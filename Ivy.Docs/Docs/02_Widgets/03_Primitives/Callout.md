@@ -25,4 +25,4 @@ public class UserGuideView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Callout" ExtensionsType="Ivy.CalloutExtensions"/> 
+<WidgetDocs Type="Ivy.Callout" ExtensionTypes="Ivy.CalloutExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Callout.cs"/> 

@@ -58,7 +58,7 @@ var colorInput = colorState.ToSelectInput(typeof(Color).ToOptions())
     .Invalid("Invalid selection");
 ```
 
-<WidgetDocs Type="Ivy.SelectInput" ExtensionsType="Ivy.SelectInputExtensions"/>
+<WidgetDocs Type="Ivy.SelectInput" ExtensionTypes="Ivy.SelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/SelectInput.cs"/>
 
 ## Examples
 

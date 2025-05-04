@@ -49,7 +49,7 @@ new FileInput(fileState)
     .Disabled(false)
 ```
 
-<WidgetDocs Type="Ivy.FileInput" ExtensionsType="Ivy.FileInputExtensions"/>
+<WidgetDocs Type="Ivy.FileInput" ExtensionTypes="Ivy.FileInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/FileInput.cs"/>
 
 ## Examples
 

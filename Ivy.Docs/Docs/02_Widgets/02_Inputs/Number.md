@@ -67,4 +67,4 @@ intValue.ToNumberInput().Placeholder("Enter a number")
     .FormatStyle(NumberFormatStyle.Decimal);
 ``` 
 
-<WidgetDocs Type="Ivy.NumberInput" ExtensionsType="Ivy.NumberInputExtensions"/>
+<WidgetDocs Type="Ivy.NumberInput" ExtensionTypes="Ivy.NumberInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/NumberInput.cs"/>

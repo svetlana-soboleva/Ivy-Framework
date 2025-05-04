@@ -1,3 +1,3 @@
 ﻿# Confetti
 
-<WidgetDocs Type="Ivy.Confetti" ExtensionsType="Ivy.ConfettiExtensions"/>
+<WidgetDocs Type="Ivy.Confetti" ExtensionTypes="Ivy.ConfettiExtensions"/>

@@ -10,6 +10,7 @@ using Ivy.Core.Hooks;
 using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Shared;
+using Ivy.Widgets.Internal;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Ivy.Chrome;
@@ -241,6 +242,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 | searchInput
             ,
             Layout.Vertical(
+                new SidebarNews("https://getivy.net/news.json"),
                 settings.Footer,
                 footer
             )

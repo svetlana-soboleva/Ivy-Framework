@@ -57,4 +57,4 @@ public class BlogPostView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Markdown" ExtensionsType="Ivy.MarkdownExtensions"/> 
+<WidgetDocs Type="Ivy.Markdown" ExtensionTypes="Ivy.MarkdownExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Markdown.cs"/> 

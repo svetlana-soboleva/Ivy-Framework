@@ -135,7 +135,7 @@ public static class TypeUtils
         return null;
     }
 
-    public static PropRecord GetPropRecord(PropertyInfo prop, object? defaultValueProvider, Type baseType, Type? extensionsType)
+    public static PropRecord GetPropRecord(PropertyInfo prop, object? defaultValueProvider, Type baseType, Type[] extensionsTypes)
     {
         object GetDefaultValue()
         {
@@ -156,8 +156,8 @@ public static class TypeUtils
         // ReSharper disable once LocalFunctionHidesMethod
         object GetExtensionMethods()
         {
-            if (extensionsType == null) return null;
-            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsType);
+            if (extensionsTypes.Length == 0) return null;
+            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsTypes);
             if (!string.IsNullOrEmpty(extensions))
             {
                 return new Code(extensions, "csharp").ShowCopyButton(false).ShowBorder(false);
@@ -168,13 +168,13 @@ public static class TypeUtils
         return new PropRecord(prop.Name, GetPropertyTypeDescription(prop), GetDefaultValue(), GetExtensionMethods());
     }
 
-    public static EventRecord GetEventRecord(PropertyInfo prop, Type baseType, Type? extensionsType)
+    public static EventRecord GetEventRecord(PropertyInfo prop, Type baseType, Type[] extensionsTypes)
     {
         // ReSharper disable once LocalFunctionHidesMethod
         object GetExtensionMethods()
         {
-            if (extensionsType == null) return null;
-            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsType);
+            if (extensionsTypes.Length == 0) return null;
+            var extensions = TypeUtils.GetExtensionMethods(prop, baseType, extensionsTypes);
             if (!string.IsNullOrEmpty(extensions))
             {
                 return new Code(extensions, "csharp").ShowCopyButton(false).ShowBorder(false);
@@ -185,14 +185,15 @@ public static class TypeUtils
         return new EventRecord(prop.Name, GetPropertyTypeDescription(prop), GetExtensionMethods());
     }
     
-    internal static string GetExtensionMethods(PropertyInfo propertyInfo, Type baseType, Type extensionsType)
+    internal static string GetExtensionMethods(PropertyInfo propertyInfo, Type baseType, Type[] extensionsTypes)
     {
         var sb = new StringBuilder();
         
-        //In extensionsType find all public static methods:
+        //In extensionsTypes find all public static methods:
         //1) that are extension methods for baseType
         //2) and either have the same name as the propertyInfo or have an attribute of type RelatedToAttribute with the value of propertyInfo.Name
-        var methods = extensionsType.GetMethods()
+        var methods = extensionsTypes
+            .SelectMany(t => t.GetMethods())
             .Where(m => m is { IsStatic: true, IsPublic: true } && m.GetCustomAttribute<ExtensionAttribute>() != null)
             .Where(m => m.GetParameters().First().ParameterType == baseType)
             .Where(m =>

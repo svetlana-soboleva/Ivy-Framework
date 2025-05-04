@@ -14,4 +14,4 @@ public class ResourcesView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Embed" ExtensionsType="Ivy.EmbedExtensions"/> 
+<WidgetDocs Type="Ivy.Embed" ExtensionTypes="Ivy.EmbedExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Embed.cs"/> 

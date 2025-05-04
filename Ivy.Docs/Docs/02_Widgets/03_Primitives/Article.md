@@ -27,4 +27,4 @@ public class GettingStartedApp : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Article" ExtensionsType="Ivy.ArticleExtensions"/> 
+<WidgetDocs Type="Ivy.Article" ExtensionTypes="Ivy.ArticleExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Article.cs"/> 

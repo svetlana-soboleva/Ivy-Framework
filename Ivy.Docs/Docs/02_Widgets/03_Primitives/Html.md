@@ -41,4 +41,4 @@ public class HtmlContentView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Html" ExtensionsType="Ivy.HtmlExtensions"/> 
+<WidgetDocs Type="Ivy.Html" ExtensionTypes="Ivy.HtmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Html.cs"/> 

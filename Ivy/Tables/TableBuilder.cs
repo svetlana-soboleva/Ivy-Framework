@@ -52,7 +52,7 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         }
     }
     
-    //_width = width;
+    private Size? _width;
     private readonly IEnumerable<TModel> _records;
     private readonly Dictionary<string, TableBuilderColumn> _columns;
     private readonly BuilderFactory<TModel> _builderFactory;
@@ -118,6 +118,12 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         }
     }
     
+    public TableBuilder<TModel> Width(Size width)
+    {
+        _width = width;
+        return this;
+    }
+    
     private TableBuilderColumn GetField(Expression<Func<TModel, object>> field)
     {
         var name = Utils.GetNameFromMemberExpression(field.Body);
@@ -160,13 +166,6 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         hint.Align = align;
         return this;
     }
-
-    // public TableBuilder<TModel> Width(Expression<Func<TModel, object>> field, string width)
-    // {
-    //     var hint = GetField(field);
-    //     hint.Width = width;
-    //     return this;
-    // }
 
     public TableBuilder<TModel> Order(params Expression<Func<TModel, object>>[] fields)
     {
@@ -263,7 +262,7 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         
         Table RenderTable(TableRow[] tableRows)
         {
-            var table = new Table(tableRows);
+            var table = new Table(tableRows).Width(_width);
             return table;
         }
         

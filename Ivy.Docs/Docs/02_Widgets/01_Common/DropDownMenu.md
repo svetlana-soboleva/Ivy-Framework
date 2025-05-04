@@ -59,4 +59,4 @@ return new DropDownMenu(@evt =>
     | MenuItem.Default("Advanced Item").Icon(Icons.Advanced);
 ```
 
-<WidgetDocs Type="Ivy.DropDownMenu" ExtensionsType="Ivy.DropDownMenuExtensions"/>
+<WidgetDocs Type="Ivy.DropDownMenu" ExtensionTypes="Ivy.DropDownMenuExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/DropDownMenu.cs"/>

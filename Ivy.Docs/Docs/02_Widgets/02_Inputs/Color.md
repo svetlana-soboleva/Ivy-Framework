@@ -54,7 +54,7 @@ new ColorInput<string>("#ff0000")
     .Disabled(false);
 ```
 
-<WidgetDocs Type="Ivy.ColorInput" ExtensionsType="Ivy.ColorInputExtensions"/>
+<WidgetDocs Type="Ivy.ColorInput" ExtensionTypes="Ivy.ColorInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ColorInput.cs"/>
 
 ## Examples
 

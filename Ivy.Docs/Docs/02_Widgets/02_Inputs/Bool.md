@@ -11,4 +11,4 @@ var state = this.UseState(false);
 new BoolInput<bool>(state).Label("Accept Terms");
 ```
 
-<WidgetDocs Type="Ivy.BoolInput" ExtensionsType="Ivy.BoolInputExtensions"/> 
+<WidgetDocs Type="Ivy.BoolInput" ExtensionTypes="Ivy.BoolInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/BoolInput.cs"/> 

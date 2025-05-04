@@ -51,4 +51,4 @@ public class DataLoadingView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Error" ExtensionsType="Ivy.ErrorExtensions"/> 
+<WidgetDocs Type="Ivy.Error" ExtensionTypes="Ivy.ErrorExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Error.cs"/> 

@@ -68,7 +68,7 @@ new Button("Styled Button")
     .Large()
 ```
 
-<WidgetDocs Type="Ivy.Button" ExtensionsType="Ivy.ButtonExtensions"/>
+<WidgetDocs Type="Ivy.Button" ExtensionTypes="Ivy.ButtonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Button.cs"/>
 
 ## Examples
 

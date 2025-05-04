@@ -1,6 +1,6 @@
 import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import { getHeight, getWidth } from '@/lib/styles';
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState, useMemo, memo, useCallback } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import ivyPrismTheme from '@/lib/ivy-prism-theme';
 
@@ -15,38 +15,68 @@ interface CodeWidgetProps {
   height?: string;
 }
 
-const CodeWidget: React.FC<CodeWidgetProps> = ({ id, content, language, showCopyButton, showLineNumbers, showBorder, width, height }) => {
+const MemoizedCopyButton = memo(({ textToCopy }: { textToCopy: string }) => (
+  <div className="absolute top-2 right-2 z-10">
+    <CopyToClipboardButton textToCopy={textToCopy} />
+  </div>
+));
+
+const CodeWidget: React.FC<CodeWidgetProps> = memo(({ 
+  id, 
+  content, 
+  language, 
+  showCopyButton = false, 
+  showLineNumbers = false, 
+  showBorder = true, 
+  width, 
+  height 
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  var styles: CSSProperties = { 
-    ...getWidth(width),
-    ...getHeight(height),
-    margin: 0,
-    overflow: isHovered ? 'auto' : 'hidden',
-  };
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
-  if(!showBorder) {
-    styles.border = 'none';
-    styles.padding = '0';
-  }
+  const styles = useMemo<CSSProperties>(() => {
+    const baseStyles: CSSProperties = { 
+      ...getWidth(width),
+      ...getHeight(height),
+      margin: 0,
+      overflow: isHovered ? 'auto' : 'hidden',
+    };
 
-  return (<div 
-    className="relative" 
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
-  >
-    {showCopyButton && <div className="absolute top-2 right-2 z-10">
-      <CopyToClipboardButton textToCopy={content} />
-    </div>}
-    <SyntaxHighlighter 
-      language={language} 
-      customStyle={styles}
-      style={ivyPrismTheme} 
-      showLineNumbers={showLineNumbers}
-      key={id} >
-      {content}
-    </SyntaxHighlighter>
-  </div>);
-};
+    if (!showBorder) {
+      baseStyles.border = 'none';
+      baseStyles.padding = '0';
+    }
+
+    return baseStyles;
+  }, [width, height, isHovered, showBorder]);
+
+  const highlighterKey = useMemo(() => 
+    `${id}-${language}-${showLineNumbers}-${showBorder}`, 
+    [id, language, showLineNumbers, showBorder]
+  );
+
+  return (
+    <div 
+      className="relative" 
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
+      <SyntaxHighlighter 
+        language={language} 
+        customStyle={styles}
+        style={ivyPrismTheme} 
+        showLineNumbers={showLineNumbers}
+        key={highlighterKey}
+      >
+        {content}
+      </SyntaxHighlighter>
+    </div>
+  );
+});
+
+CodeWidget.displayName = 'CodeWidget';
 
 export default CodeWidget;

@@ -1,3 +1,3 @@
 ﻿# Animation
 
-<WidgetDocs Type="Ivy.Animation" ExtensionsType="Ivy.AnimationExtensions"/>
+<WidgetDocs Type="Ivy.Animation" ExtensionTypes="Ivy.AnimationExtensions"/>

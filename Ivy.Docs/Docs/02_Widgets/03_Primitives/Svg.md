@@ -54,4 +54,4 @@ public class SvgDashboardView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Svg" ExtensionsType="Ivy.SvgExtensions"/> 
+<WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/> 

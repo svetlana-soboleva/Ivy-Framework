@@ -51,7 +51,7 @@ The AsyncSelectInput can be customized with various styling options, such as set
 var input = state.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder:"Select Category", disabled: true);
 ```
 
-<WidgetDocs Type="Ivy.AsyncSelectInput" ExtensionsType="Ivy.AsyncSelectInputExtensions"/>
+<WidgetDocs Type="Ivy.AsyncSelectInput" ExtensionTypes="Ivy.AsyncSelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/AsyncSelectInput.cs"/>
 
 ## Examples
 

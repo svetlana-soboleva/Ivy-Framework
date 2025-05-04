@@ -61,7 +61,7 @@ codeState.ToCodeInput()
     .Placeholder("Enter your code here...")
 ```
 
-<WidgetDocs Type="Ivy.CodeInput" ExtensionsType="Ivy.CodeInputExtensions"/>
+<WidgetDocs Type="Ivy.CodeInput" ExtensionTypes="Ivy.CodeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/CodeInput.cs"/>
 
 ## Examples
 

@@ -118,7 +118,7 @@ public static class MarkdownConverter
         if (document.Any(e => e is not YamlFrontMatterBlock))
         {
             codeBuilder.AppendTab(2).AppendLine("var appDescriptor = this.UseService<AppDescriptor>();");
-            codeBuilder.AppendTab(2).AppendLine("var onLinkClick = this.UseMarkdownLinks();");
+            codeBuilder.AppendTab(2).AppendLine("var onLinkClick = this.UseLinks();");
             codeBuilder.AppendTab(2).AppendLine("var article = new Article().ShowToc(!onlyBody).ShowFooter(!onlyBody).Previous(appDescriptor.Previous).Next(appDescriptor.Next).DocumentSource(appDescriptor.DocumentSource).HandleLinkClick(onLinkClick)");
             
             HandleBlocks(document, codeBuilder, markdownContent, viewBuilder, usedClassNames, referencedApps, linkConverter);
@@ -236,8 +236,9 @@ public static class MarkdownConverter
     private static void HandleWidgetDocsBlock(StringBuilder codeBuilder, XElement xml)
     {
         string typeName = xml.Attribute("Type")?.Value ?? throw new Exception("WidgetDocs block must have a Type attribute.");
-        string? extension = xml.Attribute("ExtensionsType")?.Value;
-        codeBuilder.AppendTab(3).AppendLine($"""| new WidgetDocsView("{typeName}", {(!string.IsNullOrEmpty(extension) ? $"\"{extension}\"" : "null")})""");
+        string? extensionTypes = xml.Attribute("ExtensionTypes")?.Value;
+        string? sourceUrl = xml.Attribute("SourceUrl")?.Value;
+        codeBuilder.AppendTab(3).AppendLine($"""| new WidgetDocsView("{typeName}", {(!string.IsNullOrEmpty(extensionTypes) ? $"\"{extensionTypes}\"" : "null")}, {(!string.IsNullOrEmpty(sourceUrl) ? $"\"{sourceUrl}\"" : "null")})""");
     }
 
     private static void HandleCalloutBlock(StringBuilder codeBuilder, XElement xml)
@@ -322,7 +323,7 @@ public static class MarkdownConverter
             codeBuilder.AppendTab(3).AppendLine("| Tabs( ");
             codeBuilder.AppendTab(4).AppendLine($"new Tab(\"Demo\", {insertCode}),");
             AppendAsMultiLineStringIfNecessary(4, codeContent, codeBuilder, "new Tab(\"Code\", new Code(", $",\"{language}\"))");
-            codeBuilder.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 4)");
+            codeBuilder.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 8, 0, 0)");
         }
         else if(arguments is "demo-below")
         {
