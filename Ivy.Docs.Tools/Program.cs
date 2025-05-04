@@ -8,7 +8,7 @@ public static class Program
         var app = new CommandApp();
         app.Configure(config =>
         {
-            config.SetApplicationName("MdToIvy");
+            config.SetApplicationName("Ivy.Docs.Tools");
             config.AddCommand<ConvertCommand>("convert")
                 .WithDescription("Converts markdown files to Ivy C# App.");
             config.PropagateExceptions();

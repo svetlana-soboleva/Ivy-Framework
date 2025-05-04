@@ -10,7 +10,7 @@ public class LinksApp : SampleBase
     protected override object? BuildSample()
     {
         LinksAppArgs? args = UseArgs<LinksAppArgs>();
-        var navigate = this.UseNavigation();
+        var navigator = this.UseNavigation();
         
         if(args != null)
         {
@@ -18,8 +18,8 @@ public class LinksApp : SampleBase
         }
         
         return new Button("Go").HandleClick(() =>
-        {
-            navigate(typeof(LinksApp), new LinksAppArgs("Niels", 123));
+        { 
+            navigator.Navigate(typeof(LinksApp), new LinksAppArgs("Niels", 123)); 
         });
 
     }

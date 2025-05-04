@@ -183,4 +183,3 @@ public class ValidationExample : ViewBase
 
 - [State Management](./State.md)
 - [Effects](./Effects.md)
-- [Observables](./Observables.md)

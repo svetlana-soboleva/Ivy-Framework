@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
 using Markdig;
 using Markdig.Extensions.Yaml;
@@ -10,7 +9,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Ivy.Docs.Tools;
 
-public static class MdToIvyConverter
+public static class MarkdownConverter
 {
     public class AppMeta
     {
@@ -22,14 +21,6 @@ public static class MdToIvyConverter
         public bool GroupExpanded { get; set; } = false;
     }
 
-    private static string GetShortHash(string input, int length = 8)
-    {
-        using var sha256 = SHA256.Create();
-        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-        string base64 = System.Convert.ToBase64String(hash);
-        return new string(base64.Replace("+", "-").Replace("/", "_").ToLower().Where(char.IsLetterOrDigit).ToArray())[..length];
-    }
-    
     static AppMeta ParseYamlAppMeta(string yaml)
     {
         string withoutDashes = RemoveFirstAndLastLine(yaml);
@@ -41,26 +32,26 @@ public static class MdToIvyConverter
         return deserializer.Deserialize<AppMeta>(withoutDashes);
     }
     
-    public static async Task ConvertAsync(string name, string inputFile, string outputFile, string @namespace, bool skipIfNotChanged,
+    public static async Task ConvertAsync(string name, string relativePath, string absolutePath, string outputFile, string @namespace, bool skipIfNotChanged,
         int? order)
     {
         string className = name + "App";
         
-        string markdownContent = await File.ReadAllTextAsync(inputFile);
+        string markdownContent = await File.ReadAllTextAsync(absolutePath);
 
-        string hash = GetShortHash(markdownContent);
+        string hash = Utils.GetShortHash(markdownContent);
         
         if (File.Exists(outputFile) && skipIfNotChanged)
         {
             var oldHash = FileHashMetadata.ReadHash(outputFile);
             if (oldHash != null && oldHash == hash)
             {
-                Console.WriteLine("Skipping {0}", inputFile);
+                Console.WriteLine("Skipping {0}", absolutePath);
                 return;
             }
         }
 
-        Console.WriteLine("Converting {0} to {1}", inputFile, outputFile);
+        Console.WriteLine("Converting {0} to {1}", absolutePath, outputFile);
         
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
@@ -70,7 +61,7 @@ public static class MdToIvyConverter
         
         var document = Markdown.Parse(markdownContent, pipeline);
 
-        var documentSource = Utils.GetGitFileUrl(inputFile);
+        var documentSource = Utils.GetGitFileUrl(absolutePath);
         
         AppMeta appMeta = new();
         
@@ -89,7 +80,10 @@ public static class MdToIvyConverter
         StringBuilder codeBuilder = new();
         StringBuilder viewBuilder = new();
         HashSet<string> usedClassNames = new();
+        HashSet<string> referencedApps = new();
+        var linkConverter = new LinkConverter(relativePath);
 
+        codeBuilder.AppendLine("using System;");
         codeBuilder.AppendLine("using Ivy;");
         codeBuilder.AppendLine("using Ivy.Apps;");
         codeBuilder.AppendLine("using Ivy.Shared;");
@@ -124,11 +118,20 @@ public static class MdToIvyConverter
         if (document.Any(e => e is not YamlFrontMatterBlock))
         {
             codeBuilder.AppendTab(2).AppendLine("var appDescriptor = this.UseService<AppDescriptor>();");
-            codeBuilder.AppendTab(2).AppendLine("return new Article().ShowToc(!onlyBody).ShowFooter(!onlyBody).Previous(appDescriptor.Previous).Next(appDescriptor.Next).DocumentSource(appDescriptor.DocumentSource)");
+            codeBuilder.AppendTab(2).AppendLine("var onLinkClick = this.UseMarkdownLinks();");
+            codeBuilder.AppendTab(2).AppendLine("var article = new Article().ShowToc(!onlyBody).ShowFooter(!onlyBody).Previous(appDescriptor.Previous).Next(appDescriptor.Next).DocumentSource(appDescriptor.DocumentSource).HandleLinkClick(onLinkClick)");
             
-            HandleBlocks(document, codeBuilder, markdownContent, viewBuilder, usedClassNames);
-
+            HandleBlocks(document, codeBuilder, markdownContent, viewBuilder, usedClassNames, referencedApps, linkConverter);
+            
             codeBuilder.AppendTab(3).AppendLine(";");
+            
+            if (referencedApps.Count > 0)
+            {
+                codeBuilder.AppendTab(2).AppendLine("// Build errors here indicates that one or more referenced apps don't exist. Check markdown links.");
+                codeBuilder.AppendTab(2).Append("Type[] _ = [").Append(string.Join(", ", referencedApps.Select(e => "typeof(" + e + ")").ToArray())).AppendLine("]; ");
+            }
+            
+            codeBuilder.AppendTab(2).AppendLine("return article;");
         }
         else
         {
@@ -139,13 +142,18 @@ public static class MdToIvyConverter
         codeBuilder.AppendTab(0).AppendLine("}");
 
         codeBuilder.AppendLine(viewBuilder.ToString());
+
+        await using (var stream = File.Open(outputFile, FileMode.Create, FileAccess.Write, FileShare.None))
+        await using (var writer = new StreamWriter(stream))
+        {
+            await writer.WriteAsync(codeBuilder.ToString());
+        }
         
-        await File.WriteAllTextAsync(outputFile, codeBuilder.ToString());
         FileHashMetadata.WriteHash(outputFile, hash);
     }
 
     private static void HandleBlocks(MarkdownDocument document, StringBuilder codeBuilder, string markdownContent,
-        StringBuilder viewBuilder, HashSet<string> usedClassNames)
+        StringBuilder viewBuilder, HashSet<string> usedClassNames, HashSet<string> referencedApps, LinkConverter linkConverter)
     {
         var sectionBuilder = new StringBuilder();
         
@@ -153,7 +161,9 @@ public static class MdToIvyConverter
         {
             if (sectionBuilder.Length > 0)
             {
-                AppendAsMultiLineStringIfNecessary(3, sectionBuilder.ToString().Trim(), codeBuilder, "| Markdown(", ")");
+                var (types, convertedMarkdown) = linkConverter.Convert(sectionBuilder.ToString().Trim());
+                referencedApps.UnionWith(types);
+                AppendAsMultiLineStringIfNecessary(3, convertedMarkdown, codeBuilder, "| new Markdown(", ").HandleLinkClick(onLinkClick)");
                 sectionBuilder.Clear();
             }
         }

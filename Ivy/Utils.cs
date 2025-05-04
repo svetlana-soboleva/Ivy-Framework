@@ -2,12 +2,10 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace Ivy;
 
@@ -381,7 +379,7 @@ public static class Utils
         };
     }
     
-        public static string EatRight(this string input, char food)
+    public static string EatRight(this string input, char food)
     {
         return EatRight(input, c => c == food);
     }

@@ -34,24 +34,24 @@ public class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         var projectFile = GetProjectFile(inputFolder);
         var rootNamespace = GetRootNamespace(projectFile);
         
-        var tasks = Directory.GetFiles(inputFolder, pattern, SearchOption.AllDirectories).Select(async markdownInput =>
+        var tasks = Directory.GetFiles(inputFolder, pattern, SearchOption.AllDirectories).Select(async absoluteInputPath =>
         {
-            var (order, name) = Utils.GetOrderFromFileName(markdownInput);
+            var (order, name) = Utils.GetOrderFromFileName(absoluteInputPath);
 
             if (name == "_Index")
             {
-                (order, _) = Utils.GetOrderFromFileName(Path.GetFileName(Path.GetDirectoryName(markdownInput))!);
+                (order, _) = Utils.GetOrderFromFileName(Path.GetFileName(Path.GetDirectoryName(absoluteInputPath))!);
             }
-            
-            string relativePath = Utils.GetRelativeFolderWithoutOrder(inputFolder, markdownInput);
+            string relativeInputPath = Path.GetRelativePath(inputFolder, absoluteInputPath);
+            string relativeOutputPath = Utils.GetRelativeFolderWithoutOrder(inputFolder, absoluteInputPath);
 
-            string folder = Path.GetFullPath(Path.Combine(outputFolder, relativePath));
+            string folder = Path.GetFullPath(Path.Combine(outputFolder, relativeOutputPath));
             
             Directory.CreateDirectory(folder);
             
             string ivyOutput = Path.Combine(folder, $"{name}.g.cs");
 
-            var namespaceSuffix = relativePath
+            var namespaceSuffix = relativeOutputPath
                 .Replace(Path.DirectorySeparatorChar, '.')
                 .Replace(Path.AltDirectorySeparatorChar, '.').Trim('.');
             
@@ -61,7 +61,7 @@ public class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             
             string @namespace = $"{rootNamespace}.Apps.{namespaceSuffix}";
             
-            await MdToIvyConverter.ConvertAsync(name, markdownInput, ivyOutput, @namespace, settings.SkipIfNotChanged, order);
+            await MarkdownConverter.ConvertAsync(name, relativeInputPath, absoluteInputPath, ivyOutput, @namespace, settings.SkipIfNotChanged, order);
         });
         
         await Task.WhenAll(tasks);

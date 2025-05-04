@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>Ivy.MdToIvy.Test</RootNamespace>
+    <RootNamespace>Ivy.Docs.Tools.Test</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

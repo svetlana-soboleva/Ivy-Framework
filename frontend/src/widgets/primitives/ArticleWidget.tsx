@@ -1,8 +1,82 @@
+import { useEventHandler } from '@/components/EventHandlerContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { InternalLink } from '@/types/widgets';
 import { Github } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+
+interface ArticleWidgetProps {
+  id: string;
+  children: React.ReactNode[];
+  showToc?: boolean;
+  showFooter?: boolean;
+  previous: InternalLink;
+  next: InternalLink;
+  documentSource?: string;
+}
+
+export const ArticleWidget: React.FC<ArticleWidgetProps> = ({ id, children, previous, next, documentSource, showFooter, showToc }) => {
+  const eventHandler = useEventHandler();
+  return (
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8">
+      <div className="flex gap-8">
+        <article className="w-[48rem] gap-8 flex flex-col">
+          {children}
+          {showFooter && (
+            <footer className="border-t py-8">
+              <div className="flex flex-col gap-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex-1">
+                    {previous && (
+                      <a
+                        onClick={() => eventHandler("OnLinkClick", id, ["app://" + previous.appId])}
+                        href={"app://" + previous.appId}
+                        className="group flex flex-col gap-2 hover:text-primary transition-colors"
+                      >
+                        <div className="text-sm">← Previous</div>
+                        <div className="font-medium text-muted-foreground">{previous.title}</div>
+                      </a>
+                    )}
+                  </div>
+                  <div className="flex-1 flex justify-end">
+                    {next && (
+                      <a
+                        onClick={() => eventHandler("OnLinkClick", id, ["app://" + next.appId])}
+                        href={"app://" + next.appId}
+                        className="group flex flex-col text-right gap-2 hover:text-primary transition-colors"
+                      >
+                        <div className="text-sm">Next →</div>
+                        <div className="font-medium text-muted-foreground">{next.title}</div>
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {documentSource && (
+                  <div className="flex justify-center">
+                    <a
+                      href={documentSource}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Github className="w-4 h-4" />
+                      Edit this document
+                    </a>
+                  </div>
+                )}
+              </div>
+            </footer>
+          )}
+        </article>
+        {showToc && (
+          <div className="hidden lg:block">
+            <TableOfContents className="sticky top-8 h-[calc(100vh-2rem)]" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 type TocItem = {
   id: string;
@@ -15,13 +89,9 @@ const TableOfContents = ({ className }: { className?: string }) => {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    // Get all headings from the article
     const articleElement = document.querySelector('article');
     const elements = articleElement ? Array.from(articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')) : [];
-    
-    console.log(elements);
 
-    // Process headings and add IDs if they don't exist
     const items = elements.map((element) => {
       // Generate ID if doesn't exist
       if (!element.id) {
@@ -83,75 +153,6 @@ const TableOfContents = ({ className }: { className?: string }) => {
           ))}
         </nav>
       </ScrollArea>
-    </div>
-  );
-};
-
-interface ArticleWidgetProps {
-  children: React.ReactNode[];
-  showToc?: boolean;
-  showFooter?: boolean;
-  previous: InternalLink;
-  next: InternalLink;
-  documentSource?: string;
-}
-
-export const ArticleWidget: React.FC<ArticleWidgetProps> = ({ children, previous, next, documentSource, showFooter, showToc }) => {
-  return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-      <div className="flex gap-8">
-        <article className="w-[48rem] gap-8 flex flex-col">
-          {children}
-          {showFooter && (
-            <footer className="border-t py-8">
-              <div className="flex flex-col gap-6">
-                <div className="flex justify-between items-center">
-                  <div className="flex-1">
-                    {previous && (
-                      <a
-                        href={previous.appId}
-                        className="group flex flex-col gap-2 hover:text-primary transition-colors"
-                      >
-                        <div className="text-sm">← Previous</div>
-                        <div className="font-medium text-muted-foreground">{previous.title}</div>
-                      </a>
-                    )}
-                  </div>
-                  <div className="flex-1 flex justify-end">
-                    {next && (
-                      <a
-                        href={next.appId}
-                        className="group flex flex-col text-right gap-2 hover:text-primary transition-colors"
-                      >
-                        <div className="text-sm">Next →</div>
-                        <div className="font-medium text-muted-foreground">{next.title}</div>
-                      </a>
-                    )}
-                  </div>
-                </div>
-                {documentSource && (
-                  <div className="flex justify-center">
-                    <a
-                      href={documentSource}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Github className="w-4 h-4" />
-                      Edit this document
-                    </a>
-                  </div>
-                )}
-              </div>
-            </footer>
-          )}
-        </article>
-        {showToc && (
-          <div className="hidden lg:block">
-            <TableOfContents className="sticky top-8 h-[calc(100vh-2rem)]" />
-          </div>
-        )}
-      </div>
     </div>
   );
 };

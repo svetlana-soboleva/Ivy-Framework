@@ -130,5 +130,3 @@ UseEffect(async () => {
 ## See Also
 
 - [State Management](./State.md)
-- [Observables](./Observables.md)
-- [View Lifecycle](./ViewLifecycle.md)

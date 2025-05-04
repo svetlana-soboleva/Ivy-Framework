@@ -10,39 +10,46 @@ public static class FileHashMetadata
 
     public static void WriteHash(string filePath, string hash)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        try
         {
-            var adsPath = filePath + ":" + StreamName;
-            File.WriteAllText(adsPath, hash);
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            var psi = new ProcessStartInfo
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                FileName = "xattr",
-                Arguments = $"-w {AttributeName} \"{hash.Replace("\"", "\\\"")}\" \"{filePath}\"",
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            using var proc = Process.Start(psi);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
-                throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
-        }
-        else // Linux
-        {
-            var escapedHash = hash.Replace("\"", "\\\""); // escape quotes for shell
-            var psi = new ProcessStartInfo
+                var adsPath = filePath + ":" + StreamName;
+                File.WriteAllText(adsPath, hash);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                FileName = "setfattr",
-                Arguments = $"-n {AttributeName} -v \"{escapedHash}\" \"{filePath}\"",
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            using var proc = Process.Start(psi);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
-                throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "xattr",
+                    Arguments = $"-w {AttributeName} \"{hash.Replace("\"", "\\\"")}\" \"{filePath}\"",
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                using var proc = Process.Start(psi);
+                proc.WaitForExit();
+                if (proc.ExitCode != 0)
+                    throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
+            }
+            else // Linux
+            {
+                var escapedHash = hash.Replace("\"", "\\\""); // escape quotes for shell
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "setfattr",
+                    Arguments = $"-n {AttributeName} -v \"{escapedHash}\" \"{filePath}\"",
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                using var proc = Process.Start(psi);
+                proc.WaitForExit();
+                if (proc.ExitCode != 0)
+                    throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Failed to write hash. Exception: " + e);
         }
     }
 

@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, memo } from 'react';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
 import remarkMath from 'remark-math';
@@ -34,21 +34,16 @@ const MemoizedImage = memo(
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClick }) => {
 
-  // Check if the content contains math blocks
   const hasMath = content.includes('$') || content.includes('\\begin{');
-  // Check if the content contains code blocks
   const hasCodeBlocks = content.includes('```');
 
-  // Dynamically select plugins based on content
   const remarkPlugins: any[] = [remarkGfm, remarkGemoji];
   if (hasMath) remarkPlugins.push(remarkMath);
   
-  // Always include rehypeRaw to properly handle HTML elements
   const rehypePlugins: any[] = [rehypeRaw];
   if (hasMath) rehypePlugins.push(rehypeKatex);
 
   const components: any = {
-    // Headers
     h1: ({ children }: { children: React.ReactNode }) => (
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         {children}
@@ -146,8 +141,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
       return (
         <a
           {...props}
-          href={href}
           className="text-primary underline brightness-90 hover:brightness-100"
+          href={href || '#'}
           target={isExternalLink ? "_blank" : undefined}
           rel={isExternalLink ? "noopener noreferrer" : undefined}
           onClick={(e) => {
@@ -222,11 +217,19 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
         components={components}
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}
+        urlTransform={urlTransform}
       >
         {content}
       </ReactMarkdown>
     </div>
   );
 };
+
+const urlTransform = (url: string) => {
+  if (url.startsWith('app://')) {
+    return url;
+  }
+  return defaultUrlTransform(url);
+}
 
 export default MarkdownRenderer;

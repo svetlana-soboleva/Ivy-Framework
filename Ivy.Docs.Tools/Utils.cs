@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -8,11 +10,86 @@ namespace Ivy.Docs.Tools;
 
 public static class Utils
 {
+    public static string GetPathForLink(string source, string link)
+    {
+        var sourceDir = Path.GetDirectoryName(source) ?? "";
+        var combined = Path.Combine(sourceDir, link);
+        var normalized = Path.GetFullPath(combined, Directory.GetCurrentDirectory());
+        var cwd = Path.GetFullPath(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar);
+
+        if (normalized.StartsWith(cwd, StringComparison.OrdinalIgnoreCase))
+            return normalized.Substring(cwd.Length).Replace('\\', '/');
+    
+        return normalized.Replace('\\', '/');
+    }
+
+    public static string GetTypeNameFromPath(string path)
+    {
+        path = path.EatRight(".md");
+        var parts = path
+            .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+            .Select(p => Regex.Replace(p, @"^\d+_", ""))
+            .Where(p => !string.IsNullOrWhiteSpace(p))
+            .ToArray();
+        return string.Join(".", [..parts[..^1], parts[^1] + "App"]);
+    }
+    
+    public static string GetAppIdFromTypeName(string typeName)
+    {
+        var ns = typeName.Split(".");
+        if(ns.Contains("Apps"))
+        {
+            ns = ns[(Array.IndexOf(ns, "Apps") + 1)..];
+        }
+        return string.Join("/", ns.Select(Utils.TitleCaseToFriendlyUrl));
+    }
+    
+    /// <summary>
+    /// FooBar => foo-bar
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static string TitleCaseToFriendlyUrl(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+        
+        // if (input.EndsWith("app", StringComparison.InvariantCultureIgnoreCase))
+        // {
+        //     input = input[..^3];
+        // }
+
+        bool hadUnderscore = input.StartsWith("_");
+        if (hadUnderscore)
+        {
+            input = input[1..];
+        }
+        
+        StringBuilder sb = new();
+        
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (char.IsUpper(input[i]) && i > 0)
+            {
+                sb.Append('-');
+            }
+            
+            sb.Append(char.ToLower(input[i]));
+        }
+        
+        if (hadUnderscore)
+        {
+            sb.Insert(0, '_');
+        }
+        
+        return sb.ToString();
+    }
+    
     public static string GetRelativeFolderWithoutOrder(string inputFolder, string inputFile)
     {
         var relativePath = Path.GetRelativePath(inputFolder, Path.GetDirectoryName(inputFile)!);
         var parts = relativePath
-            .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+            .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
             .Select(p => Regex.Replace(p, @"^\d+_", ""))
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .ToArray();
@@ -33,24 +110,6 @@ public static class Utils
         }
         return (null, nameWithoutExtension);
     }
-    
-    // public static string? ExtractClassName(string code)
-    // {
-    //     // Pattern to match "public class [ClassName] :"
-    //     string pattern = @"public\s+class\s+(\w+)\s*:";
-    //     
-    //     // Create regex and find match
-    //     Regex regex = new Regex(pattern);
-    //     Match match = regex.Match(code);
-    //     
-    //     if (match is { Success: true, Groups.Count: > 1 })
-    //     {
-    //         // Return the captured class name
-    //         return match.Groups[1].Value;
-    //     }
-    //
-    //     return null;
-    // }
     
     public static bool IsView(string code, out string? className)
     {
@@ -206,5 +265,63 @@ public static class Utils
         }
         
         return gitUrl;
+    }
+
+    public static string GetShortHash(string input, int length = 8)
+    {
+        using var sha256 = SHA256.Create();
+        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        string base64 = System.Convert.ToBase64String(hash);
+        return new string(base64.Replace("+", "-").Replace("/", "_").ToLower().Where(char.IsLetterOrDigit).ToArray())[..length];
+    }
+    
+    public static string EatRight(this string input, char food)
+    {
+        return EatRight(input, c => c == food);
+    }
+
+    public static string EatRight(this string input, Func<char, bool> foodType)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        int i = input.Length - 1;
+        while (i >= 0)
+        {
+            if (foodType(input[i]))
+            {
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return input.Substring(0, i + 1);
+    }
+    
+    public static string EatRight(this string input, string food, StringComparison stringComparison = StringComparison.CurrentCulture)
+    {
+        if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(food)) return input;
+
+        int cursor = input.Length;
+        while (true)
+        {
+            if (cursor - food.Length >= 0)
+            {
+                if (input.Substring(cursor - food.Length, food.Length).Equals(food, stringComparison))
+                {
+                    cursor = cursor - food.Length;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return input.Substring(0, cursor);
     }
 }

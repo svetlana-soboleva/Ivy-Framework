@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using Ivy.Apps;
+using Ivy.Client;
 using Ivy.Core;
+using Ivy.Core.Hooks;
 using Ivy.Hooks;
 
 namespace Ivy.Chrome;
@@ -43,8 +45,6 @@ public static class ChromeSettingsExtensions
 [Signal(BroadcastType.Chrome)]
 public class NavigateSignal : AbstractSignal<NavigateArgs,Unit> { }
 
-public delegate void NavigateDelegate(Type type, object? appArgs = null);
-
 public record NavigateArgs(string AppId, object? AppArgs = null)
 {
     public string GetUrl(string? parentId = null)
@@ -66,17 +66,47 @@ public record NavigateArgs(string AppId, object? AppArgs = null)
 
 public static class NavigateSignalExtensions
 {
-    public static NavigateDelegate UseNavigation(this IView view)
+    public static INavigator UseNavigation(this IViewContext context)
     {
-        var signal = view.Context.CreateSignal<NavigateSignal, NavigateArgs, Unit>();
-        var repository = view.Context.UseService<IAppRepository>();
-        return (type, appArgs) =>
+        var signal = context.CreateSignal<NavigateSignal, NavigateArgs, Unit>();
+        var repository = context.UseService<IAppRepository>();
+        var client = context.UseService<IClientProvider>();
+        return new Navigator(signal, repository, client);
+    }
+    
+    public static INavigator UseNavigation(this IView view)
+    {
+        return view.Context.UseNavigation();
+    }
+
+    private class Navigator(ISignalSender<NavigateArgs, Unit> signal, IAppRepository repository, IClientProvider client) : INavigator
+    {
+        public void Navigate(Type type, object? appArgs = null)
         {
             var appId = repository.GetApp(type)?.Id ??
                         throw new InvalidOperationException($"App '{type.FullName}' not found.");
             signal.Send(new NavigateArgs(appId, appArgs));
-        };
+        }
+
+        public void Navigate(string uri, object? appArgs = null)
+        {
+            if (uri.StartsWith("http://") || uri.StartsWith("https://"))
+            {
+                client.OpenUrl(uri);
+            }
+            else if (uri.StartsWith("app://"))
+            {
+                var appId = uri[6..];
+                signal.Send(new NavigateArgs(appId, appArgs));
+            }
+        }
     }
+}
+
+public interface INavigator
+{
+    public void Navigate(Type type, object? appArgs = null);
+    public void Navigate(string uri, object? appArgs = null);
 }
 
 

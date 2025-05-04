@@ -7,7 +7,7 @@ prepare: |
 
 This page gives an introduction to the most common concepts that you will use when building Ivy apps.
 
-First make sure you have [installed](Installation.md) Ivy on your development machine.
+First, make sure you have [installed](./02_Installation.md) Ivy on your development machine.
 
 ## Create a new project
 
