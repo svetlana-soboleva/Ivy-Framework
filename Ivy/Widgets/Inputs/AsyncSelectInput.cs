@@ -20,6 +20,8 @@ public delegate Task<Option<T>?> AsyncSelectLookupDelegate<T>(T id);
 
 public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, IInput<TValue>
 {
+    public Type[] SupportedStateTypes() => [];
+    
     public AsyncSelectInputView(IAnyState state, AsyncSelectQueryDelegate<TValue> query, AsyncSelectLookupDelegate<TValue> lookup,  string? placeholder = null, bool disabled = false) 
         : this(query, lookup, placeholder, disabled)
     {

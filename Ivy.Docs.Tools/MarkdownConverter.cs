@@ -227,10 +227,21 @@ public static class MarkdownConverter
         {
             HandleWidgetDocsBlock(codeBuilder, xml);
         }
+        else if (xml.Name.LocalName.ToLower() == "details")
+        {
+            HandleDetailsBlock(codeBuilder, xml);
+        }
         else
         {
             throw new Exception($"Unknown HTML block: {xml.Name.LocalName}");
         }
+    }
+
+    private static void HandleDetailsBlock(StringBuilder codeBuilder, XElement xml)
+    {
+        string summary = xml.Element("Summary")?.Value ?? throw new Exception("Details block must have a Summary element.");
+        string content = xml.Element("Body")?.Value.Trim() ?? throw new Exception("Details block must have a Body element.");
+        AppendAsMultiLineStringIfNecessary(3, content, codeBuilder, $"""| new Expandable("{summary}", new Markdown(""", ").HandleLinkClick(onLinkClick))");
     }
 
     private static void HandleWidgetDocsBlock(StringBuilder codeBuilder, XElement xml)

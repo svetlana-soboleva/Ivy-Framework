@@ -1,5 +1,5 @@
 import React from 'react';
-import { Align, getGap, getHeight, getAlign, getPadding, getWidth, Orientation, getBackground, getMargin } from '@/lib/styles';
+import { Align, getGap, getHeight, getAlign, getPadding, getWidth, Orientation, getColor, getMargin } from '@/lib/styles';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface StackLayoutWidgetProps {
@@ -38,7 +38,7 @@ export const StackLayoutWidget: React.FC<StackLayoutWidgetProps> = ({
       ...getWidth(width),
       ...getHeight(height),
       ...getAlign(orientation, align),
-      ...getBackground(background)
+      ...getColor(background, 'backgroundColor', 'background'),
     }
 
     if (!visible) {

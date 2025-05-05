@@ -51,18 +51,35 @@ public class TypeUtilsTests
     [Fact]
     public void GetExtensionMethods_ReturnsExpected0() => 
         GetExtensionMethods_ReturnsExpected(
-            typeof(Bar), typeof(BarExtensions), typeof(Bar).GetProperty(nameof(Bar.Name))!, 
+            typeof(Bar), typeof(BarExtensions), typeof(XYZ).GetProperty(nameof(Bar.Name))!, 
             """
             Name(string name)
             Uppercase(string name = "foo")
             """ 
             );
     
+    [Fact]
+    public void GetExtensionMethods_ReturnsExpected1() => 
+        GetExtensionMethods_ReturnsExpected(
+            typeof(XYZ), typeof(WidgetBaseExtensions), typeof(XYZ).GetProperty("Width")!, 
+            """
+            Width(Size width)
+            Width(int units)
+            Width(float units)
+            Width(double units)
+            Width(string percent)
+            """ 
+        );
+    
     private void GetExtensionMethods_ReturnsExpected(Type baseType, Type extensionTypes, PropertyInfo propertyInfo, string expectedResult)
     {
         string result = TypeUtils.GetExtensionMethods(propertyInfo, baseType, [extensionTypes]);
         Assert.Equal(expectedResult, result);
     }
+}
+
+public record XYZ : WidgetBase<XYZ>
+{
 }
 
 public record Bar

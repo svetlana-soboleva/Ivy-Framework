@@ -15,7 +15,7 @@ export const IconWidget: React.FC<IconWidgetProps> = ({ id, name, color, height,
   var styles = {
     ...getWidth(width), 
     ...getHeight(height),
-    ...getColor(color)
+    ...getColor(color, 'color', 'background')
   };
 
   return (

@@ -9,33 +9,13 @@ The Card widget is a versatile container used to group related content and actio
 
 ## Basic Usage
 
-Here's a simple example of a card containing text and a button that shows a toast message when clicked:
+Here's a simple example of a card containing text and a button that shows a toast message when clicked.
 
-```csharp
-var client = this.UseService<IClientProvider>();
+```csharp demo-below
 new Card(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
     new Button("Sign Me Up", _ => client.Toast("You have signed up!"))
-).Title("Card App").Description("This is a card app.");
-```
-
-## Layout and Composition
-
-Cards can be part of complex layouts, such as grids or vertical stacks, and can be combined with other UI elements:
-
-```csharp demo-tabs
-Layout.Vertical().Width(Size.Units(100))
-   | new Card("Card 1")
-   | new Card("Card 2")
-   | new Card("Card 3")
-```
-
-## Styling
-
-Cards can be customized with titles, icons, and dimensions to fit the application's theme:
-
-```csharp
-new Card().Title("Styled Card").Icon(Icons.ChartBarStacked).Width(1/2f)
+).Title("Card App").Description("This is a card app.").Width(Size.Units(100))
 ```
 
 <WidgetDocs Type="Ivy.Card" ExtensionTypes="Ivy.CardExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Card.cs"/>

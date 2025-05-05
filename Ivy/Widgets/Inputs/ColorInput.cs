@@ -16,7 +16,8 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Prop] public string? Placeholder { get; set; }
-    [Prop] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ typeof(string) ];
 } 
 
 public record ColorInput<TColor> : ColorInputBase, IInput<TColor>

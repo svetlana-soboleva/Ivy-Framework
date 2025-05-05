@@ -37,6 +37,7 @@ public abstract record CodeInputBase : WidgetBase<CodeInputBase>, IAnyCodeInput
     [Prop] public CodeInputs Variant { get; set; }
     [Prop] public Languages? Language { get; set; } = null;
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ typeof(string) ];
 }
 
 public record CodeInput<TString> : CodeInputBase, IInput<TString>

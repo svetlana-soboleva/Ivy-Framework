@@ -39,6 +39,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
     [Prop] public string? Accept { get; set; }
     [Prop] public bool Multiple { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput

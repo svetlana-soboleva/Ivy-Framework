@@ -28,6 +28,7 @@ public abstract record SelectInputBase : WidgetBase<SelectInputBase>, IAnySelect
     [Prop] public bool SelectMany { get; set; } = false;
     [Prop] public char Separator { get; set; } = ';';
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectInput

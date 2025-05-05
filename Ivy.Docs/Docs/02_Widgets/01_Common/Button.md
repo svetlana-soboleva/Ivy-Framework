@@ -22,7 +22,7 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 
 ## Variants
 
-Buttons come in several variants to suit different use cases:
+Buttons come in several variants to suit different use cases.
 
 ```csharp demo-tabs
 Layout.Horizontal()
@@ -32,49 +32,25 @@ Layout.Horizontal()
     | new Button("Outline").Outline()
     | new Button("Ghost").Ghost()
     | new Button("Link").Link()
-
-```
-
-## Icons
-
-Buttons can include icons to enhance their visual appearance and meaning:
-
-```csharp demo-tabs
-new Button("Button With Icon")
-    .Icon(Icons.ArrowRight, Align.Right)
-```
-
-## Event Handling
-
-Buttons can handle click events using the `onClick` parameter:
-
-```csharp
-var label = this.UseState("Click a button"); 
-var eventHandler = (Event<Button> e) =>
-{
-    label.Set($"Button {e.Sender.Title} was clicked.");
-};
-return new Button("Click Me", eventHandler);
 ```
 
 ## Styling
 
-Buttons can be customized with various styling options:
+Buttons can be customized with various styling options.
 
-```csharp
+```csharp demo-below
 new Button("Styled Button")
     .Icon(Icons.ArrowRight, Align.Right)
     .BorderRadius(BorderRadius.Full)
     .Large()
 ```
 
-<WidgetDocs Type="Ivy.Button" ExtensionTypes="Ivy.ButtonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Button.cs"/>
+## States
 
-## Examples
-
-### Navigation
-
-```csharp
-new Button("Delete").Destructive()
-    .WithSheet(() => new ConfirmationView())
+```csharp demo-tabs
+Layout.Horizontal()
+    | new Button("Disabled").Disabled()
+    | new Button("Loading").Loading()
 ```
+
+<WidgetDocs Type="Ivy.Button" ExtensionTypes="Ivy.ButtonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Button.cs"/>

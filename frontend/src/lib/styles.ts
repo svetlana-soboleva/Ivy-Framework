@@ -435,38 +435,15 @@ export const getAlign = (orientation:Orientation, align?: Align):React.CSSProper
   return styles;
 }
 
-export const getBorderColor = (color?: string, percentage: number|undefined = undefined):React.CSSProperties => {
+export const getColor = (color?:string, cssProperty:'color'|'backgroundColor'|'borderColor' = 'color',  role:'background'|'foreground' = 'background', percentage: number|undefined = undefined) => {
   if (!color) return {}
-  if(percentage && percentage > 0 && percentage < 100) {
+  const varName = color.toLowerCase() + (role === 'background' ? '' : '-foreground')
+  if(percentage && percentage > -100 && percentage < 100) {
     return {
-      borderColor: "color-mix(in srgb, var(--"+color.toLowerCase()+") "+percentage+"%, transparent)"
+      [cssProperty]: `color-mix(in srgb, var(--${varName}),${percentage > 0 ? 'white' : 'black'} ${Math.abs(percentage)}%)`
     }
   }
   return {
-    borderColor: "var(--"+color.toLowerCase()+"-foreground)"
-  }
-}
-
-export const getBackground = (color?: string, percentage: number|undefined = undefined):React.CSSProperties => {
-  if (!color) return {}
-  if(percentage && percentage > 0 && percentage < 100) {
-    return {
-      backgroundColor: "color-mix(in srgb, var(--"+color.toLowerCase()+") "+percentage+"%, transparent)"
-    }
-  }
-  return {
-    backgroundColor: "var(--"+color.toLowerCase()+")"
-  }
-}
-
-export const getColor = (color?: string, percentage: number|undefined = undefined):React.CSSProperties => {
-  if (!color) return {}
-  if(percentage && percentage > 0 && percentage < 100) {
-    return {
-      color: "color-mix(in srgb, var(--"+color.toLowerCase()+") "+percentage+"%, transparent)"
-    }
-  }
-  return {
-    color: "var(--"+color.toLowerCase()+")"
+    [cssProperty]: "var(--"+varName+")"
   }
 }

@@ -87,8 +87,8 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
       )}>
       <ScrollArea>
         <TabsList className={cn(
-          "relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border flex justify-start",
-          variant === "Tabs" && "",
+          "relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px  flex justify-start",
+          variant === "Tabs" && "before:bg-border",
           variant === "Content" && ""
           )}>
           {tabWidgets.map((tabWidget, index) => {

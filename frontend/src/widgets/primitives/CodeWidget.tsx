@@ -47,6 +47,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(({
     if (!showBorder) {
       baseStyles.border = 'none';
       baseStyles.padding = '0';
+      baseStyles.borderRadius = '0';
     }
 
     return baseStyles;
@@ -69,6 +70,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(({
         customStyle={styles}
         style={ivyPrismTheme} 
         showLineNumbers={showLineNumbers}
+        wrapLines={true}
         key={highlighterKey}
       >
         {content}

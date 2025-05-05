@@ -6,6 +6,16 @@
 Also known as Admin Panels / Internal business tools / CRUD-applications / Line-of-business applications / Dashboards.
 </Callout>
 
+<Details>
+<Summary>Why is Ivy so awesome?</Summary>
+<Body>
+```charp
+Foo bar
+```
+</Body>
+</Details>
+
+
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit, purus in fringilla porttitor, risus sem pulvinar tellus, eu euismod ex massa at urna. Ut mollis nibh non leo imperdiet, quis tristique est pretium. Aenean efficitur enim elit, id feugiat sapien molestie et. Sed scelerisque tellus nec tincidunt ultricies. Nulla id ipsum at velit interdum facilisis vitae id tortor. Aenean maximus, odio sit amet scelerisque scelerisque, nunc mauris mattis mauris, efficitur mollis leo justo a velit. Nulla et velit nulla. Praesent bibendum justo sem, et suscipit lorem maximus eu. Fusce sapien risus, aliquam eget urna et, porta semper ipsum. Aenean eu ultrices elit. Cras vel aliquet quam, non tempor nunc. Vestibulum ut urna in nunc pulvinar fringilla. Curabitur sodales, odio vitae molestie pulvinar, risus lectus malesuada tortor, nec vehicula mi ipsum vel quam.
 

@@ -28,6 +28,7 @@ public abstract record DateTimeInputBase : WidgetBase<DateTimeInputBase>, IAnyDa
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
@@ -67,33 +68,10 @@ public static class DateTimeInputExtensions
         return input;
     }
     
-    public static DateTimeInputBase Title(this DateTimeInputBase widget, string title)
-    {
-        return widget with { Placeholder = title };
-    }
-    
-    public static DateTimeInputBase Disabled(this DateTimeInputBase widget, bool disabled = true)
-    {
-        return widget with { Disabled = disabled };
-    }
-    
-    public static DateTimeInputBase Variant(this DateTimeInputBase widget, DateTimeInputs variant)
-    {
-        return widget with { Variant = variant };
-    }
-
-    public static DateTimeInputBase Placeholder(this DateTimeInputBase widget, string placeholder)
-    {
-        return widget with { Placeholder = placeholder };
-    }
-    
-    public static DateTimeInputBase Format(this DateTimeInputBase widget, string format)
-    {
-        return widget with { Format = format };
-    }
-    
-    public static DateTimeInputBase Invalid(this DateTimeInputBase widget, string? invalid)
-    {
-        return widget with { Invalid = invalid };
-    }
+    public static DateTimeInputBase Title(this DateTimeInputBase widget, string title) => widget with { Placeholder = title };
+    public static DateTimeInputBase Disabled(this DateTimeInputBase widget, bool disabled = true) => widget with { Disabled = disabled };
+    public static DateTimeInputBase Variant(this DateTimeInputBase widget, DateTimeInputs variant) => widget with { Variant = variant };
+    public static DateTimeInputBase Placeholder(this DateTimeInputBase widget, string placeholder) => widget with { Placeholder = placeholder };
+    public static DateTimeInputBase Format(this DateTimeInputBase widget, string format) => widget with { Format = format };
+    public static DateTimeInputBase Invalid(this DateTimeInputBase widget, string? invalid) => widget with { Invalid = invalid };
 }

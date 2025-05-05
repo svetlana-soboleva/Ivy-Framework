@@ -19,6 +19,7 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange>

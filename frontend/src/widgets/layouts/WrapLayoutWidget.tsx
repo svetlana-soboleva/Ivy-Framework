@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
-import { getBackground, getGap, getHeight, getPadding, getWidth, getMargin } from '@/lib/styles';
+import { getColor, getGap, getHeight, getPadding, getWidth, getMargin } from '@/lib/styles';
 
 interface WrapLayoutWidgetProps {
   gap?: number;
@@ -27,7 +27,7 @@ export const WrapLayoutWidget: React.FC<WrapLayoutWidgetProps> = ({
       ...getPadding(padding),
       ...getMargin(margin),
       ...getGap(gap),
-      ...getBackground(background)
+      ...getColor(background, 'backgroundColor', 'background'),
     };
 
     return (

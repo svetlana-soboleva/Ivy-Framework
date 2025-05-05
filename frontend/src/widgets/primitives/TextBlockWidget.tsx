@@ -50,7 +50,7 @@ export const TextBlockWidget: React.FC<TextBlockWidgetProps> = ({
 
   const styles:React.CSSProperties = {
     ...getWidth(width),
-    ...getColor(color),
+    ...getColor(color, 'color', 'background'),
     ...getOverflow(overflow)
   };
 

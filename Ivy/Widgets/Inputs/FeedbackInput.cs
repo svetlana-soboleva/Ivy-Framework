@@ -27,6 +27,7 @@ public abstract record FeedbackInputBase : WidgetBase<FeedbackInputBase>, IAnyFe
     [Prop] public string? Placeholder { get; set; }
     [Prop] public FeedbackInputs Variant { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record FeedbackInput<TNumber> : FeedbackInputBase, IInput<TNumber>
@@ -71,23 +72,8 @@ public static class FeedbackInputExtensions
         return input;
     }
     
-    public static FeedbackInputBase Placeholder(this FeedbackInputBase widget, string placeholder) 
-    {
-        return widget with { Placeholder = placeholder };
-    }
-
-    public static FeedbackInputBase Disabled(this FeedbackInputBase widget, bool enabled = true)
-    {
-        return widget with { Disabled = enabled };
-    }
-    
-    public static FeedbackInputBase Variant(this FeedbackInputBase widget, FeedbackInputs variant)
-    {
-        return widget with { Variant = variant };
-    }
-    
-    public static FeedbackInputBase Invalid(this FeedbackInputBase widget, string invalid)
-    {
-        return widget with { Invalid = invalid };
-    }
+    public static FeedbackInputBase Placeholder(this FeedbackInputBase widget, string placeholder) => widget with { Placeholder = placeholder };
+    public static FeedbackInputBase Disabled(this FeedbackInputBase widget, bool enabled = true) => widget with { Disabled = enabled };
+    public static FeedbackInputBase Variant(this FeedbackInputBase widget, FeedbackInputs variant) => widget with { Variant = variant };
+    public static FeedbackInputBase Invalid(this FeedbackInputBase widget, string invalid) => widget with { Invalid = invalid };
 }

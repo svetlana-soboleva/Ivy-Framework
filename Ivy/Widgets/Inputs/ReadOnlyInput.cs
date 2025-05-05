@@ -31,6 +31,7 @@ public record ReadOnlyInput<TValue> : WidgetBase<ReadOnlyInput<TValue>>, IInput<
     [Prop] public bool ShowCopyButton { get; set; } = true;
     [Event] public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ typeof(object) ];
 }
 
 public static class ReadOnlyInputExtensions

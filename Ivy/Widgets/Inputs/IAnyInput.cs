@@ -6,15 +6,13 @@ namespace Ivy.Widgets.Inputs;
 public interface IAnyInput
 {
     [Prop] public bool Disabled { get; set; }
-    
     [Prop] public string? Invalid { get; set; }
-    
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes();
 }
 
 public static class AnyInputExtensions
 {
-    
     public static IAnyInput Disabled(this IAnyInput input, bool disabled = true) 
     {
         input.Disabled = disabled;

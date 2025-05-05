@@ -31,6 +31,7 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
     [Prop] public BoolInputs Variant { get; set; }
     [Prop] public Icons Icon { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [typeof(bool), typeof(bool?), typeof(int), typeof(int?)];
 }
 
 public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
@@ -72,11 +73,9 @@ public static class BoolInputExtensions
         return input;
     }
     
-    public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false)
-    {
-        return state.ToBoolInput(label, disabled, BoolInputs.Switch);
-    }
-    
+    public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false) 
+        => state.ToBoolInput(label, disabled, BoolInputs.Switch);
+
     public static BoolInputBase ToToggleInput(this IAnyState state, Icons? icon = null, string? label = null, bool disabled = false)
     {
         var input = state.ToBoolInput(label, disabled, BoolInputs.Toggle);
@@ -96,33 +95,10 @@ public static class BoolInputExtensions
         return input;
     }
     
-    public static BoolInputBase Label(this BoolInputBase widget, string label)
-    {
-        return widget with { Label = label };
-    }
-    
-    public static BoolInputBase Disabled(this BoolInputBase widget, bool disabled = true)
-    {
-        return widget with { Disabled = disabled };
-    }
-    
-    public static BoolInputBase Variant(this BoolInputBase widget, BoolInputs variant)
-    {
-        return widget with { Variant = variant };
-    }
-    
-    public static BoolInputBase Icon(this BoolInputBase widget, Icons icon)
-    {
-        return widget with { Icon = icon };
-    }
-    
-    public static BoolInputBase Description(this BoolInputBase widget, string description)
-    {
-        return widget with { Description = description };
-    }
-    
-    public static BoolInputBase Invalid(this BoolInputBase widget, string? invalid)
-    {
-        return widget with { Invalid = invalid };
-    }
+    public static BoolInputBase Label(this BoolInputBase widget, string label) => widget with { Label = label };
+    public static BoolInputBase Disabled(this BoolInputBase widget, bool disabled = true) => widget with { Disabled = disabled };
+    public static BoolInputBase Variant(this BoolInputBase widget, BoolInputs variant) => widget with { Variant = variant };
+    public static BoolInputBase Icon(this BoolInputBase widget, Icons icon) => widget with { Icon = icon };
+    public static BoolInputBase Description(this BoolInputBase widget, string description) => widget with { Description = description };
+    public static BoolInputBase Invalid(this BoolInputBase widget, string? invalid) => widget with { Invalid = invalid };
 }

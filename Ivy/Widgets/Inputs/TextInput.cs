@@ -31,6 +31,7 @@ public abstract record TextInputBase : WidgetBase<TextInputBase>, IAnyTextInput
     [Prop] public TextInputs Variant { get; set; }
     [Prop] public string? ShortcutKey { get; set; } 
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Type[] SupportedStateTypes() => [ ];
 }
 
 public record TextInput<TString> : TextInputBase, IInput<TString>
@@ -71,43 +72,16 @@ public static class TextInputExtensions
         return input;
     }
     
-    public static TextInputBase ToTextAreaInput(this IAnyState state, string? placeholder = null, bool disabled = false)
-    {
-        return state.ToTextInput(placeholder, disabled, TextInputs.Textarea);
-    }
-    
+    public static TextInputBase ToTextAreaInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Textarea);
     public static TextInputBase ToSearchInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Search);
-
     public static TextInputBase ToPasswordInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Password);
-
     public static TextInputBase ToEmailInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Email);
-
     public static TextInputBase ToUrlInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Url);
-    
     public static TextInputBase ToTelInput(this IAnyState state, string? placeholder = null, bool disabled = false) => state.ToTextInput(placeholder, disabled, TextInputs.Tel);
     
-    public static TextInputBase Placeholder(this TextInputBase widget, string placeholder)
-    {
-        return widget with { Placeholder = placeholder };
-    }
-    
-    public static TextInputBase Disabled(this TextInputBase widget, bool disabled = true)
-    {
-        return widget with { Disabled = disabled };
-    }
-    
-    public static TextInputBase Variant(this TextInputBase widget, TextInputs variant)
-    {
-        return widget with { Variant = variant };
-    }
-    
-    public static TextInputBase Invalid(this TextInputBase widget, string invalid)
-    {
-        return widget with { Invalid = invalid };
-    }
-    
-    public static TextInputBase ShortcutKey(this TextInputBase widget, string shortcutKey)
-    {
-        return widget with { ShortcutKey = shortcutKey };
-    }
+    public static TextInputBase Placeholder(this TextInputBase widget, string placeholder) => widget with { Placeholder = placeholder };
+    public static TextInputBase Disabled(this TextInputBase widget, bool disabled = true) => widget with { Disabled = disabled };
+    public static TextInputBase Variant(this TextInputBase widget, TextInputs variant) => widget with { Variant = variant };
+    public static TextInputBase Invalid(this TextInputBase widget, string invalid) => widget with { Invalid = invalid };
+    public static TextInputBase ShortcutKey(this TextInputBase widget, string shortcutKey) => widget with { ShortcutKey = shortcutKey };
 }
