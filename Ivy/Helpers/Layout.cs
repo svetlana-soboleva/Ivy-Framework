@@ -9,13 +9,19 @@ public static class Layout
         return (new LayoutView()).Horizontal(elements.Where(e => e != null).Cast<object>().ToArray())
             .Height(Size.Full());
     }
-
+    
     public static LayoutView Vertical(params IEnumerable<object?> elements)
     {
         return (new LayoutView()).Vertical(elements.Where(e => e != null).Cast<object>().ToArray())
             .Width(Size.Full());
     }
 
+    public static LayoutView Center(params IEnumerable<object?> elements)
+    {
+        return Horizontal(elements.Where(e => e != null).Cast<object>().ToArray())
+            .Height(Size.Screen()).RemoveParentPadding().Align(Align.Center);
+    }
+    
     public static LayoutView Wrap(params IEnumerable<object?> elements)
     {
         return (new LayoutView()).Wrap(elements.Where(e => e != null).Cast<object>().ToArray());

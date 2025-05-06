@@ -16,3 +16,4 @@ export { EmptyWidget } from './EmptyWidget';
 export { AvatarWidget } from './AvatarWidget';
 export { IvyLogoWidget } from './IvyLogoWidget';
 export { SpacerWidget } from './SpacerWidget';
+export { LoadingWidget } from './LoadingWidget';

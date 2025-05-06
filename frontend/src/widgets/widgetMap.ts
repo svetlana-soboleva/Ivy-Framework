@@ -38,6 +38,7 @@ export const widgetMap: WidgetMap = {
   "Ivy.Avatar": Primitives.AvatarWidget,
   "Ivy.IvyLogo": Primitives.IvyLogoWidget,
   "Ivy.Spacer": Primitives.SpacerWidget,
+  "Ivy.Loading": Primitives.LoadingWidget,
 
   // Widgets
   "Ivy.Button": Widgets.ButtonWidget,
