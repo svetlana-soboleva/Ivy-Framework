@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
+import React, { lazy, Suspense, memo, useMemo, useCallback, useState } from 'react';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -17,20 +17,61 @@ interface MarkdownRendererProps {
   onLinkClick?: (url: string) => void;
 }
 
+const ImageOverlay = ({ src, alt, onClose }: { src: string | undefined; alt: string | undefined; onClose: () => void }) => {
+  // Handle click on the overlay background to close it
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 cursor-zoom-out" 
+      onClick={handleBackdropClick}
+    >
+      <div className="relative max-w-[90vw] max-h-[90vh]">
+        <img 
+          src={src} 
+          alt={alt} 
+          className="max-w-full max-h-[90vh] object-contain" 
+        />
+        <button 
+          className="absolute top-4 right-4 bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const MemoizedImage = memo(
   ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    const [showOverlay, setShowOverlay] = useState(false);
     const imageSrc = src && !src.match(/^(https?:\/\/|data:|blob:|app:)/i) 
       ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
       : src;
       
     return (
-      <img
-        src={imageSrc}
-        alt={alt}
-        className="max-w-full h-auto"
-        loading="lazy"
-        {...props}
-      />
+      <>
+        <img
+          src={imageSrc}
+          alt={alt}
+          className="max-w-full h-auto cursor-zoom-in"
+          loading="lazy"
+          onClick={() => setShowOverlay(true)}
+          {...props}
+        />
+        {showOverlay && (
+          <ImageOverlay 
+            src={imageSrc} 
+            alt={alt} 
+            onClose={() => setShowOverlay(false)} 
+          />
+        )}
+      </>
     );
   },
   (prevProps, nextProps) => prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
