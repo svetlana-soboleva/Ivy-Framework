@@ -247,9 +247,24 @@ export const getBorderStyle = (borderStyle: BorderStyle
   }
 }
 
-export const getBorderThickness = (borderThickness: number):React.CSSProperties => {
+export const getBorderThickness = (getBorderThickness?: string):React.CSSProperties => {
+  if (!getBorderThickness) return {}
+  
+  if (typeof getBorderThickness === 'string' && getBorderThickness.indexOf(',') > -1) {
+    const [left, top, right, bottom] = getBorderThickness.split(',').map(val => 
+      val ? `${parseFloat(val)}px` : '0'
+    );
+    
+    return {
+      borderWidth: left,
+      borderTopWidth: top,
+      borderRightWidth: right,  
+      borderBottomWidth: bottom
+    };
+  }
+
   return {
-    borderWidth: borderThickness
+    borderWidth: `${parseFloat(getBorderThickness)}px`
   }
 }
 

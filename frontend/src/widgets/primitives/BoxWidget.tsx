@@ -1,4 +1,4 @@
-import { Align, BorderRadius, BorderStyle, getAlign, getBorderRadius, getBorderStyle, getBorderThickness, getColor, getHeight, getPadding, getWidth } from '@/lib/styles';
+import { Align, BorderRadius, BorderStyle, getAlign, getBorderRadius, getBorderStyle, getBorderThickness, getColor, getHeight, getMargin, getPadding, getWidth } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -7,22 +7,24 @@ interface BoxWidgetProps {
   children?: React.ReactNode;
   color?: string | undefined;
   borderRadius: BorderRadius;
-  borderThickness: number;
+  borderThickness: string;
   borderStyle: BorderStyle;
+  padding?: string;
+  margin?: string;
   width?: string;
   height?: string;
-  padding: string;
-  align: Align;
+  contentAlign: Align;
 }
 
 export const BoxWidget: React.FC<BoxWidgetProps> = ({ 
-  children, width, height, borderStyle, borderRadius, borderThickness, color, padding, align }) => {
+  children, width, height, borderStyle, borderRadius, borderThickness, color, padding, margin, contentAlign }) => {
     const styles = { 
       ...getBorderStyle(borderStyle), 
       ...getBorderThickness(borderThickness), 
       ...getBorderRadius(borderRadius),
       ...getPadding(padding),
-      ...getAlign('Vertical', align),
+      ...getMargin(margin),
+      ...getAlign('Vertical', contentAlign),
       ...getWidth(width),
       ...getHeight(height),
       ...getColor(color, 'backgroundColor', 'background'),

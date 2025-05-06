@@ -13,7 +13,7 @@ public class AlignView : ViewBase
         var wideBox = new Box().Width(7).Height(5);
         var widestBox = new Box().Width(10).Height(5);
 
-        var container = new Box().Width(32).Height(32).Color(Colors.Pink).Padding(0).Align(null);
+        var container = new Box().Width(32).Height(32).Color(Colors.Pink).Padding(0).ContentAlign(null);
 
         object AlignHorizontalTest(Align align) =>
             container.Content(

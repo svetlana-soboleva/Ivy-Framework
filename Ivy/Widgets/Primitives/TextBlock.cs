@@ -55,3 +55,7 @@ public record TextBlock : WidgetBase<TextBlock>
     [Prop] public bool StrikeThrough { get; set; }
     [Prop] public Colors? Color { get; set; }
 }
+
+public static class TextBlockExtensions
+{
+};

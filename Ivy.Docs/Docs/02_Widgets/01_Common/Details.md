@@ -1,0 +1,3 @@
+﻿# Details
+
+Detail widgets are never used directly but produced by...
