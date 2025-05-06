@@ -19,8 +19,6 @@ export const IvyLogoWidget: React.FC<IvyLogoWidgetProps> = ({
       (color, 'color', 'background')
   };
 
-  console.log(styles)
-
   return (
       <IvyLogo 
           style={styles}
