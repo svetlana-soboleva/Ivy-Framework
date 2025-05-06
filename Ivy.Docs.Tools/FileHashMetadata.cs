@@ -26,7 +26,7 @@ public static class FileHashMetadata
                     RedirectStandardError = true,
                     UseShellExecute = false
                 };
-                using var proc = Process.Start(psi);
+                using var proc = Process.Start(psi)!;
                 proc.WaitForExit();
                 if (proc.ExitCode != 0)
                     throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());

@@ -19,7 +19,7 @@ public class DatabaseGenerator
         {
             var connectionStringPrompt = new TextPrompt<string>("Connection string:");
             var defaultConnectionString = DatabaseProviderFactory.Create(providerChoice.Value)
-                .GetDefaultConnectionString(projectDirectory);
+                .GetDefaultConnectionString(projectDirectory ?? "");
 
             if (defaultConnectionString != null)
             {
