@@ -62,4 +62,20 @@ public class LinkConverterTests
         Assert.Equal(expectedMarkdown, markdown);
         Assert.Equal(expectedTypes.ToHashSet(), types);
     }
+    
+    
+    [Theory]
+    [InlineData(
+        "01_Onboarding/01_Introduction.md",
+        "![Foo](./images/Foo.png)",
+        "![Foo](./images/Foo.png)",
+        new string[] { })]
+    public void Convert_Images_Works(string sourcePath, string input, string expectedMarkdown, string[] expectedTypes)
+    {
+        var converter = new LinkConverter(sourcePath);
+        var (types, markdown) = converter.Convert(input);
+
+        Assert.Equal(expectedMarkdown, markdown);
+        Assert.Equal(expectedTypes.ToHashSet(), types);
+    }
 }

@@ -2,10 +2,6 @@
 
 Ivy is a full-stack open-source web framework optimized for rapidly building interactive data-centric applications.
 
-<Callout Icon="Info">
-Also known as Admin Panels / Internal business tools / CRUD-applications / Line-of-business applications / Dashboards.
-</Callout>
-
 <Embed Url="https://www.youtube.com/watch?v=pQKSQR9BfD8"/>
 
 ## Motivation Behind Ivy
@@ -16,7 +12,7 @@ We want these applications to be built as cheaply and quickly as possible. Every
 
 Developers prefer open-source frameworks, which can be hosted in any cloud, preferably in a Docker container. Many existing solutions in this space are closed-source and/or force you to their hosting offering. 
 
-Many low-code SaaS products are limited and expensive in the long run and have substantial graduation risks and just add to your technical debt. 
+Many low-code SaaS products are limited and expensive in the long run and have significant graduation risks and just add to your technical debt. 
 
 Existing SPA solutions (including WASM-based frameworks) require both a front-end and back-end that communicates through an API. This results in lots of boilerplate code. We want to present “anonymous” data results and CRUD operations with as little ceremony as possible.
 

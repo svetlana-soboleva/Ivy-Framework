@@ -11,6 +11,7 @@ public partial class LinkConverter(string currentFilePath)
         var matches = regex.Matches(markdown);
         foreach (Match match in matches)
         {
+            if (match.Value.StartsWith("!")) continue; //this is an image
             var (type, linkReplacement) = ConvertLink(match);
             if (type == null) continue;
             types.Add(type);
@@ -37,6 +38,6 @@ public partial class LinkConverter(string currentFilePath)
         return (type, $"[{text}](app://{appId})");
     }
 
-    [GeneratedRegex(@"\[(.*?)\]\((.*?)\)")]
+    [GeneratedRegex(@"!?\[(.*?)\]\((.*?)\)")]
     private static partial Regex MyRegex();
 }

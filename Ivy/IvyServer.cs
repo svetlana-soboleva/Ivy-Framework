@@ -301,13 +301,13 @@ public static class WebApplicationExtensions
 
     public static WebApplication UseAssets(this WebApplication app, string folder)
     {
-        var assembly = Assembly.GetAssembly(typeof(IvyServer))!;
+        var assembly = Assembly.GetEntryAssembly();
         
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
             assembly.GetName().Name + "." + folder
         );
-
+        
         app.UseStaticFiles(GetStaticFileOptions("/" + folder, embeddedProvider, assembly));
         return app;
     }

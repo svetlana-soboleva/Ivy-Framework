@@ -227,7 +227,7 @@ public static class MarkdownConverter
         {
             HandleWidgetDocsBlock(codeBuilder, xml);
         }
-        else if (xml.Name.LocalName.ToLower() == "details")
+        else if (xml.Name.LocalName ==  "Details")
         {
             HandleDetailsBlock(codeBuilder, xml);
         }
