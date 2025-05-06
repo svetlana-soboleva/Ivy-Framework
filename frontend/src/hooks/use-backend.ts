@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast';
 import { getAppArgs, getAppId, getIvyHost, getMachineId, getParentId } from '@/lib/utils';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
@@ -15,6 +15,16 @@ type UpdateMessage = Array<{
 type RefreshMessage = {
   widgets: WidgetNode,
   removeIvyBranding: boolean
+}
+
+// Moved outside the hook to prevent recreating on each render
+const escapeXml = (str: string) => {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;') 
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 const widgetTreeToXml = (node: WidgetNode) => {
@@ -36,48 +46,41 @@ const widgetTreeToXml = (node: WidgetNode) => {
   }
 }
 
-const escapeXml = (str: string) => {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;') 
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
 export const useBackend = () => {
-  const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
+  // Use refs for values that don't need to trigger re-renders
+  const connectionRef = useRef<signalR.HubConnection | null>(null);
   const [widgetTree, setWidgetTree] = useState<WidgetNode | null>(null);
   const [disconnected, setDisconnected] = useState(false);
   const [removeIvyBranding, setRemoveIvyBranding] = useState(false);
   const { toast } = useToast();
-  const appId = getAppId();
-  const appArgs = getAppArgs();
-  const parentId = getParentId();
-  const machineId = getMachineId();
+  
+  // Store these in refs since they're static and don't change
+  const appIdRef = useRef(getAppId());
+  const appArgsRef = useRef(getAppArgs());
+  const parentIdRef = useRef(getParentId());
+  const machineIdRef = useRef(getMachineId());
+  const ivyHostRef = useRef(getIvyHost());
 
+  // Parse and log XML only when widgetTree changes
   useEffect(() => {
-    if (widgetTree) {
+    if (!widgetTree) return;
+    
+    try {
+      const xmlString = widgetTreeToXml(widgetTree);
+      if (!xmlString) return;
+      
       const parser = new DOMParser();
-      let xml;
-      try {
-        const xmlString = widgetTreeToXml(widgetTree);
-        if (!xmlString) {
-          return;
-        }
-        xml = parser.parseFromString(xmlString, 'application/xml');
-        const parserError = xml.querySelector('parsererror');
-        if (parserError) {
-          return;
-        }
-      } catch (error) {
-        //ignore
-        return;
-      }
+      const xml = parser.parseFromString(xmlString, 'application/xml');
+      const parserError = xml.querySelector('parsererror');
+      if (parserError) return;
+      
       console.log(xml);
+    } catch (error) {
+      // Silently ignore errors
     }
   }, [widgetTree]);
 
+  // Memoize handlers to prevent recreation on each render
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     console.log("Refresh", message);
     setRemoveIvyBranding(message.removeIvyBranding);
@@ -88,42 +91,52 @@ export const useBackend = () => {
     console.log("Update", message);
     setWidgetTree(currentTree => {
       if (!currentTree) return null;
-      var newWidgetTree = { ...currentTree };
+      
+      // Create a shallow copy to trigger React's state update
+      const newWidgetTree = { ...currentTree };
+      
       message.forEach((update) => {
-        let parent = newWidgetTree;
-        if(update.indices.length === 0) {
+        if (update.indices.length === 0) {
+          // Apply patch to root node
           applyPatch(newWidgetTree, update.patch);
-        }
-        else
-        {
-          update.indices.forEach((index, i) => {
-            if (i === update.indices.length - 1) {
-              applyPatch(parent.children![index], update.patch);
-            } else {
-              parent = parent.children![index];
-            }
-          });
+        } else {
+          // Navigate to the target node
+          let parent = newWidgetTree;
+          const lastIndex = update.indices.length - 1;
+          
+          for (let i = 0; i < lastIndex; i++) {
+            parent = parent.children![update.indices[i]];
+          }
+          
+          // Apply patch to the target node
+          applyPatch(parent.children![update.indices[lastIndex]], update.patch);
         }
       });
+      
       return newWidgetTree;
     });
   }, []);
 
   const handleHotReloadMessage = useCallback(() => {
     console.log("HotReload");
-    connection?.invoke("HotReload")
+    connectionRef.current?.invoke("HotReload")
       .catch((err) => console.error("SignalR Error:", err));
-  }, [connection]);
+  }, []);
 
-  const handleSetJwt = useCallback(async (jwt: string|null) => {
-    const response = await fetch(`${getIvyHost()}/auth/set-jwt`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(jwt),
-      credentials: 'include'
-    });   
-    if (response.ok) {
-      window.location.reload();  
+  const handleSetJwt = useCallback(async (jwt: string | null) => {
+    try {
+      const response = await fetch(`${ivyHostRef.current}/auth/set-jwt`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jwt),
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error setting JWT:", error);
     }
   }, []);
 
@@ -136,72 +149,80 @@ export const useBackend = () => {
     }
   }, []);
 
+  // Setup connection once
   useEffect(() => {
     const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${getIvyHost()}/messages?appId=${appId ?? ""}&appArgs=${appArgs ?? ""}&machineId=${machineId}&parentId=${parentId ?? ""}`)
-        .withAutomaticReconnect()
-        .build();
-    setConnection(newConnection);
-  }, [appId]);
+      .withUrl(`${ivyHostRef.current}/messages?appId=${appIdRef.current ?? ""}&appArgs=${appArgsRef.current ?? ""}&machineId=${machineIdRef.current}&parentId=${parentIdRef.current ?? ""}`)
+      .withAutomaticReconnect()
+      .build();
+    
+    connectionRef.current = newConnection;
+    
+    // Connect and setup event handlers
+    newConnection.start()
+      .then(() => {
+        console.log("Connected!");
+        
+        // Setup event handlers
+        newConnection.on("Refresh", handleRefreshMessage);
+        newConnection.on("Update", handleUpdateMessage);
+        newConnection.on("Toast", (message) => {
+          console.log("Toast", message);
+          toast(message);
+        });
+        newConnection.on("$SetChatPanelUrl", (chatPanelUrl: string | null) => {
+          window.parent.postMessage({ type: '$SetChatPanelUrl', url: chatPanelUrl }, '*');
+        });
+        newConnection.on("SetJwt", handleSetJwt);
+        newConnection.on("SetTheme", handleSetTheme);
+        newConnection.on("CopyToClipboard", (text: string) => {
+          navigator.clipboard.writeText(text);
+        });
+        newConnection.on("OpenUrl", (url: string) => {
+          window.open(url, '_blank');
+        });
+        newConnection.on("HotReload", handleHotReloadMessage);
+        
+        // Connection status handlers
+        newConnection.onreconnecting(() => setDisconnected(true));
+        newConnection.onreconnected(() => setDisconnected(false));
+        newConnection.onclose(() => setDisconnected(true));
+      })
+      .catch((err) => console.error("Connection failed: ", err));
+    
+    // Cleanup function
+    return () => {
+      const conn = connectionRef.current;
+      if (conn) {
+        conn.off("Refresh");
+        conn.off("Update");
+        conn.off("Toast");
+        conn.off("CopyToClipboard");
+        conn.off("HotReload");
+        conn.off("$SetChatPanelUrl");
+        conn.off("SetJwt");
+        conn.off("SetTheme");
+        conn.off("OpenUrl");
+        conn.off("reconnecting");
+        conn.off("reconnected");
+        conn.off("close");
+        conn.stop().catch(console.error);
+      }
+    };
+  }, []); // Empty dependency array ensures this runs only once
 
-  useEffect(() => {
-    if (connection) {
-      connection
-        .start()
-        .then(() => {
-          console.log("Connected!");
-          connection.on("Refresh", handleRefreshMessage);
-          connection.on("Update", handleUpdateMessage);
-          connection.on("Toast", (message) => {
-            console.log("Toast", message);
-            toast(message);
-          });
-          connection.on("$SetChatPanelUrl", (chatPanelUrl: string|null) => {
-            window.parent.postMessage({ type: '$SetChatPanelUrl', url: chatPanelUrl }, '*');  
-          });
-          connection.on("SetJwt", handleSetJwt);
-          connection.on("SetTheme", handleSetTheme);
-          connection.on("CopyToClipboard", (text: string) => {
-            navigator.clipboard.writeText(text);
-          });
-          connection.on("OpenUrl", (url: string) => {
-            window.open(url, '_blank');
-          });
-          connection.on("HotReload", handleHotReloadMessage);
-          connection.onreconnecting(() => {
-            setDisconnected(true);
-          });
-          connection.onreconnected(() => {
-            setDisconnected(false);
-          });
-          connection.onclose(() => {
-            setDisconnected(true);
-          });
-        })
-        .catch((e) => console.log("Connection failed: ", e));
-
-      return () => {
-        connection.off("Refresh");
-        connection.off("Update");
-        connection.off("Toast");
-        connection.off("CopyToClipboard");
-        connection.off("HotReload");
-        connection.off("reconnecting");
-        connection.off("reconnected");
-        connection.off("close");
-        connection.off("$SetChatPanelUrl");
-        connection.off("SetJwt");
-        connection.off("SetTheme");
-        connection.off("OpenUrl");
-      };
-    }
-  }, [connection, handleRefreshMessage, handleUpdateMessage, handleHotReloadMessage, toast]);
-
-  const eventHandler: WidgetEventHandlerType = useCallback((eventName, widgetId, args) => {
+  // Create a stable event handler reference
+  const eventHandler = useCallback<WidgetEventHandlerType>((eventName, widgetId, args) => {
     console.log("Event", eventName, widgetId, args);
-    connection?.invoke("Event", eventName, widgetId, args)
+    connectionRef.current?.invoke("Event", eventName, widgetId, args)
       .catch((err) => console.error("SignalR Error:", err));
-  }, [connection]);
+  }, []);
 
-  return { connection, widgetTree, eventHandler, disconnected, removeIvyBranding };
+  return { 
+    connection: connectionRef.current, 
+    widgetTree, 
+    eventHandler, 
+    disconnected, 
+    removeIvyBranding 
+  };
 };

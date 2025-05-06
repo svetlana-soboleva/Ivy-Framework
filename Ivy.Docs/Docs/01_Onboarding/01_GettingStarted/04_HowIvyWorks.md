@@ -6,6 +6,6 @@ Ivy takes inspirations from React. Views are similar to Components in React. Vie
 
 After the initial rendering the widget tree is sent over websocket to a React based rendering frontend. This frontend is included in the Ivy framework and is something a user never have to modify. 
 
-On the the frontend side widgets can trigger events. Ivy auto-detects state changes and rerenders subset of the view tree. 
+On the frontend side widgets can trigger events. Ivy auto-detects state changes and rerenders subset of the view tree. 
 
 ![Foo](/Assets/niels.jpg)

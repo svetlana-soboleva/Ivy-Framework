@@ -6,10 +6,9 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
 import 'katex/dist/katex.min.css';
-import { cn } from '@/lib/utils';
+import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import ivyPrismTheme from '@/lib/ivy-prism-theme';
-import { ChevronRight } from 'lucide-react';
 
 const SyntaxHighlighter = lazy(() => import('react-syntax-highlighter').then(mod => ({ default: mod.Prism })));
 
@@ -19,15 +18,21 @@ interface MarkdownRendererProps {
 }
 
 const MemoizedImage = memo(
-  ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
-    <img
-      src={src}
-      alt={alt}
-      className="max-w-full h-auto"
-      loading="lazy"
-      {...props}
-    />
-  ),
+  ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    const imageSrc = src && !src.match(/^(https?:\/\/|data:|blob:|app:)/i) 
+      ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
+      : src;
+      
+    return (
+      <img
+        src={imageSrc}
+        alt={alt}
+        className="max-w-full h-auto"
+        loading="lazy"
+        {...props}
+      />
+    );
+  },
   (prevProps, nextProps) => prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
 );
 
@@ -99,6 +104,7 @@ const CodeBlock = memo(({
 });
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClick }) => {
+
   const contentFeatures = useMemo(() => ({
     hasMath: hasContentFeature(content, /(\$|\\\(|\\\[|\\begin\{)/),
     hasCodeBlocks: hasContentFeature(content, /```/),
@@ -211,24 +217,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
       <td className="border border-border px-4 py-2">{children}</td>
     )),
 
-    details: memo(({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-      <details
-        {...props}
-        className="group border rounded-lg border-border p-4"
-        >
-        {children}
-      </details>
-    )),
-    summary: memo(({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-      <summary 
-        className="flex items-center gap-2 cursor-pointer font-medium text-lg hover:text-primary [&::-webkit-details-marker]:hidden" 
-        {...props}
-        >
-        <ChevronRight className="h-4 w-4 transition-transform duration-200 group-open:rotate-90" />
-        {children}
-      </summary>
-    )),
-
     img: MemoizedImage,
   }), [contentFeatures.hasCodeBlocks, handleLinkClick]);
 
@@ -242,7 +230,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onLinkClic
   return (
     <div className="flex flex-col gap-8">
       <ReactMarkdown
-        key={content}
         components={components as any} 
         remarkPlugins={plugins.remarkPlugins}
         rehypePlugins={plugins.rehypePlugins}

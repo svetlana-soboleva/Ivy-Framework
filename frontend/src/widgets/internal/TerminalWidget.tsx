@@ -18,7 +18,6 @@ const TerminalWidget = ({
   title,
   showHeader
 }: TerminalWidgetProps) => {
-    
   const promptColor = "text-green-400";
   const commandColor = "text-white";
   const outputColor = "text-gray-300";
