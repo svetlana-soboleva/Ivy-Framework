@@ -172,7 +172,20 @@ function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 
   React.useEffect(() => {
+    listeners.push(setState)
+    
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) {
+        listeners.splice(index, 1)
+      }
+    }
+  }, [])
+
+  React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
+      if (state.toasts.length === 0) return
+      
       const toastElements = document.querySelectorAll('[role="alert"]')
       let clickedToast = false
       
@@ -188,7 +201,7 @@ function useToast() {
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && state.toasts.length > 0) {
         dispatch({ type: "DISMISS_TOAST" })
       }
     }
@@ -196,17 +209,11 @@ function useToast() {
     document.addEventListener("click", handleClick)
     document.addEventListener("keydown", handleKeyDown)
 
-    listeners.push(setState)
-
     return () => {
       document.removeEventListener("click", handleClick)
       document.removeEventListener("keydown", handleKeyDown)
-      const index = listeners.indexOf(setState)
-      if (index > -1) {
-        listeners.splice(index, 1)
-      }
     }
-  }, [state])
+  }, [state.toasts])
 
   return {
     ...state,

@@ -42,6 +42,7 @@ function ConnectionModal() {
 
 function App() {
   const { widgetTree, eventHandler, disconnected, removeIvyBranding } = useBackend();
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="ivy-ui-theme">
       <ErrorBoundary>
