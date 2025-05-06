@@ -20,7 +20,7 @@ interface VariantMap {
 const variantMap: VariantMap = {
   Literal: ({ children, className, style }) => <span className={className} style={style}>{children}</span>,
   H1: ({ children, className, style }) => <h1 className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl", className)} style={style}>{children}</h1>,
-  H2: ({ children, className, style }) => <h2 className={cn("scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0", className)} style={style}>{children}</h2>,
+  H2: ({ children, className, style }) => <h2 className={cn("scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0", className)} style={style}>{children}</h2>,
   H3: ({ children, className, style }) => <h3 className={cn("scroll-m-20 text-2xl font-semibold tracking-tight", className)} style={style}>{children}</h3>,
   H4: ({ children, className, style }) => <h4 className={cn("scroll-m-20 text-xl font-semibold tracking-tight", className)} style={style}>{children}</h4>,
   Block: ({ children, className, style }) => <div className={className} style={style}>{children}</div>,

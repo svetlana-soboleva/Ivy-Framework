@@ -1,6 +1,6 @@
 ﻿# Installation
 
-Ivy is installed using the `dotnet` command line tool. 
+Ivy is installed using the dotnet command line tool. 
 
 ```terminal
 > dotnet tool install -g Ivy.Console

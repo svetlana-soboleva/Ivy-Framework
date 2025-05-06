@@ -1,4 +1,5 @@
 ﻿---
 groupExpanded: false
-title: Ivy CLI
+title: CLI
+icon: Terminal
 ---

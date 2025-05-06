@@ -32,9 +32,9 @@ public class CounterApp : ViewBase
 }
 ```
 
-Ivy is heavily inspired by React. A view is similar to a component in React and needs to implement a `Build` function that can return any object and Ivy will figure out how to render it (almost anything). 
+Ivy is heavily inspired by React. A view is similar to a component in React and needs to implement a `Build` function that can return any `object` and Ivy will figure out how to render it (see [ContentBuilders](../02_Concepts/ContentBuilders.md)).
 
-This is usually another view or a widget. Widgets are the smallest building blocks in Ivy and are rendered on the client as a React component.
+The result from `Build` is usually another view or a widget. Widgets are the smallest building blocks in Ivy and are rendered on the client as a React component.
 
 Now let's make it a little more interesting by returning a button widget that shows a toast when clicked.
 
@@ -50,7 +50,7 @@ public class CounterApp : ViewBase
 ```
 
 <Callout Icon="Info">
-These pages are implemented in Ivy so try to click on the button above.
+These pages are implemented in Ivy so try to click on the button above. You should get a toast with the text "Hello!"
 </Callout>
 
 ## State Management

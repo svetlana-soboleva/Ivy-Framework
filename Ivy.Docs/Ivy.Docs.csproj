@@ -38,7 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\" />
     <Folder Include="Generated/" />
+    <Folder Include="Samples\Todo\" />
   </ItemGroup>
 
   <Target Name="TransformMarkdown" BeforeTargets="CoreCompile">
@@ -53,7 +55,11 @@
   </ItemGroup>
   
   <ItemGroup>
-      <InternalsVisibleTo Include="Ivy.Docs.Test" />
+    <InternalsVisibleTo Include="Ivy.Docs.Test" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Samples\**\*.*" />
   </ItemGroup>
   
 </Project>

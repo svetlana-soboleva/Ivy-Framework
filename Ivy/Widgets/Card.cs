@@ -8,9 +8,9 @@ public record Card : WidgetBase<Card>
 {
     public Card(object? content = null, object? footer = null) : base([new Slot("Content",content), new Slot("Footer", footer!)])
     {
+        Width = Size.Full();
     }
-
-    [Prop] public new Size Width { get; set; } = Size.Full();
+    
     [Prop] public string? Title { get; set; }
     [Prop] public string? Description { get; set; }
     [Prop] public Icons? Icon { get; set; }
