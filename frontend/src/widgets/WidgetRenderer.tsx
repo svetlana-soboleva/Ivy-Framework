@@ -49,7 +49,6 @@ export const renderWidgetTree = (
     </Component>
   );
 
-  // Render with Suspense if the component is lazy-loaded
   return isLazyComponent(Component) ? (
     <Suspense key={node.id}>
       {content}

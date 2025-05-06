@@ -1,4 +1,3 @@
-export { LoadingWidget } from './LoadingWidget';
 export { ButtonWidget } from './ButtonWidget';
 export { ProgressWidget } from './ProgressWidget';
 export { TooltipWidget } from './TooltipWidget';

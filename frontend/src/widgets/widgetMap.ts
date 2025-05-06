@@ -10,9 +10,10 @@ import * as Lists from '@/widgets/lists';
 import * as Details from '@/widgets/details';
 import * as Primitives from '@/widgets/primitives';
 import React from 'react';
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export const widgetMap: WidgetMap = {
-  "$loading": Widgets.LoadingWidget,
+  "$loading": LoadingScreen,
   
   // Primitives
   "Ivy.TextBlock": Primitives.TextBlockWidget,
