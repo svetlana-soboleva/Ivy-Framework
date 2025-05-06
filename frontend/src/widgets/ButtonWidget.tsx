@@ -55,8 +55,8 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       ...getBorderRadius(borderRadius),
     }
  
-    var buttonSize: "icon" | "default" | "sm" | "lg" | null | undefined = "default";
-    var iconSize: number = 4;
+    let buttonSize: "icon" | "default" | "sm" | "lg" | null | undefined = "default";
+    let iconSize: number = 4;
 
     if(icon && icon!="None" && !title) {
       buttonSize = "icon";
@@ -72,7 +72,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       iconSize = 5;
     }
 
-    var iconStyles = {
+    const iconStyles = {
       width: `${iconSize*0.25}rem`,
       height: `${iconSize*0.25}rem`
     }
@@ -88,7 +88,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       eventHandler("OnClick", id, []);
     }, [id, disabled, url]);
 
-    var hasChildren = !!children;
+    const hasChildren = !!children;
 
     return (
       <ButtonWithTooltip

@@ -13,7 +13,7 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
   width
 }) => {
 
-  var styles = {
+  const styles = {
     ...getWidth(width)
   };
   

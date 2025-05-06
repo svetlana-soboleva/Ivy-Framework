@@ -13,14 +13,11 @@ interface SeparatorWidgetProps {
 
 export const SeparatorWidget: React.FC<SeparatorWidgetProps> = ({ orientation, text, width, height }) => {
   
-  var styles = {}
-  if(orientation === 'Vertical') {
-    styles = {...styles, ...getWidth(width)}
-  } else {
-    styles = {...styles, ...getHeight(height)}
-  }
+  const styles = orientation === 'Vertical' 
+    ? getWidth(width)
+    : getHeight(height);
 
-  var separator = <Separator
+  const separator = <Separator
     orientation={orientation === 'Vertical' ? 'vertical' : 'horizontal'}
     className={cn(
       orientation === 'Vertical' && 'h-full'

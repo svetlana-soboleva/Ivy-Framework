@@ -62,7 +62,7 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
 
   if(tabWidgets.length === 0) return <div className='remove-parent-padding'></div>;
 
-  var activeTab = selectedIndex != null && React.isValidElement(tabWidgets[selectedIndex]) ? tabWidgets[selectedIndex].props.id : null;
+  const activeTab = selectedIndex != null && React.isValidElement(tabWidgets[selectedIndex]) ? tabWidgets[selectedIndex].props.id : null;
 
   const showClose = events.includes("OnClose");
   const showRefresh = events.includes("OnRefresh");
@@ -74,7 +74,7 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
     }
   };
 
-  var styles:CSSProperties = { 
+  const styles:CSSProperties = { 
     ...getWidth(width),
     ...getHeight(height),
   };

@@ -18,7 +18,7 @@ export const TableCellWidget: React.FC<TableCellWidgetProps> = ({
   align,
 }) => {
 
-    var alignStyles = {
+    const alignStyles = {
       ...getAlign('Horizontal', align),
       ...getAlign('Vertical', align)
     }

@@ -8,7 +8,7 @@ interface MarkdownWidgetProps {
 }
 
 const MarkdownWidget: React.FC<MarkdownWidgetProps> = ({ id, content }) => {
-  var eventHandler = useEventHandler();
+  const eventHandler = useEventHandler();
   return (
     <MarkdownRenderer content={content} key={id} onLinkClick={href => eventHandler("OnLinkClick", id, [href])}/>
   );

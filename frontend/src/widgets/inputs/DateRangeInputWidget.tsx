@@ -78,7 +78,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
     to: endOfYear(subYears(today, 1)),
   };
 
-  var date: DateRange = {
+  const date: DateRange = {
     from: new Date(value.item1),
     to: new Date(value.item2),
   };

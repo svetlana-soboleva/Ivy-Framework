@@ -12,7 +12,7 @@ interface IconWidgetProps {
 
 export const IconWidget: React.FC<IconWidgetProps> = ({ id, name, color, height, width }) => { 
 
-  var styles = {
+  const styles = {
     ...getWidth(width), 
     ...getHeight(height),
     ...getColor(color, 'color', 'background')

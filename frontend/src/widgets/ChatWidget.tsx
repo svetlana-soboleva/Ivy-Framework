@@ -47,7 +47,7 @@ interface ChatWidgetProps {
 }
 
 export const ChatWidget: React.FC<ChatWidgetProps> = ({ id, children, placeholder }) => {
-  var eventHandler = useEventHandler();
+  const eventHandler = useEventHandler();
 
   const messageWidgets = React.Children.toArray(children).filter((child) => 
     React.isValidElement(child) && 

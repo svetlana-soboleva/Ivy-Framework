@@ -265,7 +265,7 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({ dbml, width,
       setEdges(layoutedEdges);
     } catch (errors: any) {
 
-      var error = errors.diags[0];
+      const error = errors.diags[0];
 
       console.error('Failed to parse DBML:', error);
       
