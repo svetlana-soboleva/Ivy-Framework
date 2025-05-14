@@ -6,7 +6,6 @@ using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
 using Ivy.Shared;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Ivy.Charts;
 
