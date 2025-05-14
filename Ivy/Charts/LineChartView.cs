@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Ivy.Charts;
 

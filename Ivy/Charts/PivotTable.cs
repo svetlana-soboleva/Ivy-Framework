@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ivy.Charts;
 
@@ -77,7 +76,7 @@ public class PivotTable<T>
 
             var grouped = data.GroupBy(keySelectorLambda);
             // Convert to list asynchronously
-            var groups = await grouped.ToListAsync(cancellationToken);
+            var groups = await grouped.ToListAsync2(cancellationToken);
             
             foreach (var group in groups)
             {
