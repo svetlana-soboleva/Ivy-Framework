@@ -12,8 +12,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-//todo: we need to know: 1) what apps belong to the user 2) what apps are children of other apps (iframes)
-
 public class AppHub(
     IvyServer server, 
     IClientNotifier clientNotifier,
@@ -66,7 +64,8 @@ public class AppHub(
         {
             appArgs = httpContext!.Request.Query["appArgs"].ToString().NullIfEmpty();
         }
-        return new AppArgs(connectionId, appId, appArgs ?? server.Args?.Args);
+
+        return new AppArgs(connectionId, appId, appArgs ?? server.Args?.Args, httpContext.Request.Host.Value!);
     }
     
     public override async Task OnConnectedAsync()
@@ -85,6 +84,7 @@ public class AppHub(
         appServices.AddSingleton(typeof(IAppRepository), server.AppRepository);
         appServices.AddSingleton(typeof(IDownloadService), new DownloadService(Context.ConnectionId));
         appServices.AddSingleton(typeof(IClientProvider), clientProvider);
+        appServices.AddTransient<IWebhookRegistry, WebhookController>();
         appServices.AddSingleton(appDescriptor);
         appServices.AddSingleton(appArgs);
         appServices.AddTransient<SignalRouter>(_ => new SignalRouter(sessionStore));
