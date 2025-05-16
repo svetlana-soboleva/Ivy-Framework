@@ -83,94 +83,98 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
     <Tabs value={activeTab} style={styles} className={
       cn(
         removeParentPadding && 'remove-parent-padding',
-        'flex flex-col'
+        'flex flex-col h-full'
       )}>
-      <ScrollArea>
-        <TabsList className={cn(
-          "relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px  flex justify-start",
-          variant === "Tabs" && "before:bg-border",
-          variant === "Content" && ""
-          )}>
-          {tabWidgets.map((tabWidget, index) => {
-            if (React.isValidElement(tabWidget)) {
-              const { title, id, icon, badge  } = tabWidget.props as TabWidgetProps;
-                return (
-                  <TabsTrigger
-                    key={id}
-                    value={id}
-                    onClick={() => eventHandler("OnSelect", tabsLayoutId, [index])}
-                    onMouseDown={(e) => handleMouseDown(e, index)}
-                    className={cn(
-                      "group overflow-hidden rounded-b-none py-2 data-[state=active]:z-10 data-[state=active]:shadow-none",
-                      (variant === "Tabs" && index === 0) && "ml-12",
-                      variant === "Tabs" && "border-x border-t border-border bg-muted",
-                      variant === "Content" && "border-b-2 data-[state=active]:border-b-primary"
-                    )}
-                    >
+      <div className="flex-shrink-0">
+        <div className="relative">
+          <ScrollArea className="w-full">
+            <TabsList className={cn(
+              "relative h-auto w-max min-w-full gap-0.5 mt-3 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px flex justify-start",
+              variant === "Tabs" && "before:bg-border",
+              variant === "Content" && ""
+              )}>
+              {tabWidgets.map((tabWidget, index) => {
+                if (React.isValidElement(tabWidget)) {
+                  const { title, id, icon, badge  } = tabWidget.props as TabWidgetProps;
+                    return (
+                      <TabsTrigger
+                        key={id}
+                        value={id}
+                        onClick={() => eventHandler("OnSelect", tabsLayoutId, [index])}
+                        onMouseDown={(e) => handleMouseDown(e, index)}
+                        className={cn(
+                          "group overflow-hidden rounded-b-none py-2 data-[state=active]:z-10 data-[state=active]:shadow-none",
+                          (variant === "Tabs" && index === 0) && "ml-12",
+                          variant === "Tabs" && "border-x border-t border-border bg-muted",
+                          variant === "Content" && "border-b-2 data-[state=active]:border-b-primary"
+                        )}
+                        >
 
-                    {icon && <Icon
-                      name={icon}
-                      className="-ms-0.5 me-1.5 opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                      />
-                    }
-                    
-                    <span>{title}</span>
+                        {icon && <Icon
+                          name={icon}
+                          className="-ms-0.5 me-1.5 opacity-60"
+                          size={16}
+                          aria-hidden="true"
+                          />
+                        }
+                        
+                        <span>{title}</span>
 
-                    {badge && <Badge
-                    variant="default"
-                    className={cn(
-                      "ml-2",
-                      "w-min",
-                      "whitespace-nowrap",
-                      "visible",
-                      (showClose || showRefresh) && "group-hover:hidden"
-                    )}
-                      >{badge}</Badge>}
+                        {badge && <Badge
+                        variant="default"
+                        className={cn(
+                          "ml-2",
+                          "w-min",
+                          "whitespace-nowrap",
+                          "visible",
+                          (showClose || showRefresh) && "group-hover:hidden"
+                        )}
+                          >{badge}</Badge>}
 
-                    {(showClose || showRefresh) && <div className="absolute ml-2 items-center flex gap-0 invisible group-hover:visible group-hover:relative">
-                    {showRefresh && <a
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        eventHandler("OnRefresh", tabsLayoutId, [index])
-                      }}
-                      className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
-                    >
-                      <RotateCw className="w-3 h-3" />
-                    </a>}
-                    {showClose && <a
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        eventHandler("OnClose", tabsLayoutId, [index])
-                      }}
-                      className="opacity-60 p-1 rounded-full  hover:bg-gray-200 hover:opacity-100 transition-colors"
-                    >
-                      <X className="w-3 h-3" />
-                    </a>}
-                    </div>}
+                        {(showClose || showRefresh) && <div className="absolute ml-2 items-center flex gap-0 invisible group-hover:visible group-hover:relative">
+                        {showRefresh && <a
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            eventHandler("OnRefresh", tabsLayoutId, [index])
+                          }}
+                          className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
+                        >
+                          <RotateCw className="w-3 h-3" />
+                        </a>}
+                        {showClose && <a
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            eventHandler("OnClose", tabsLayoutId, [index])
+                          }}
+                          className="opacity-60 p-1 rounded-full  hover:bg-gray-200 hover:opacity-100 transition-colors"
+                        >
+                          <X className="w-3 h-3" />
+                        </a>}
+                        </div>}
 
-                  </TabsTrigger>
-                );
-              }
-              return null;
-          })}
+                      </TabsTrigger>
+                    );
+                  }
+                  return null;
+              })}
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+      </div>
 
-        </TabsList>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-
-      <div className='flex-1 flex'>
+      <div className="flex-1 overflow-hidden">
         {tabWidgets.map((tabWidget, _) => {
           if (React.isValidElement(tabWidget)) {
             const { id } = tabWidget.props as TabWidgetProps;
             return (
               <div 
                 key={id} 
-                className='flex-1'
+                className={cn(
+                  'h-full overflow-auto',
+                  activeTab === id ? 'block' : 'hidden'
+                )}
                 style={{ 
-                  display: activeTab === id ? 'block' : 'none',
-                  height: '100%',
                   ...getPadding(padding)
                 }}
               >
@@ -181,7 +185,6 @@ export const TabsLayoutWidget: React.FC<TabsLayoutWidgetProps> = ({
           return null;
         })}
       </div>
-
     </Tabs>
   );
 };
