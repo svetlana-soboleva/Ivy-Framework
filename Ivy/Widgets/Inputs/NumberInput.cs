@@ -93,8 +93,8 @@ public static class NumberInputExtensions
         return input;
     }
 
-    public static NumberInputBase ToMoneyInput(this IAnyState state, string? placeholder = null, bool disabled = false, NumberInputs variant = NumberInputs.Number, NumberFormatStyle formatStyle = NumberFormatStyle.Currency) 
-        => state.ToNumberInput(placeholder, disabled, variant, formatStyle);
+    public static NumberInputBase ToMoneyInput(this IAnyState state, string? placeholder = null, bool disabled = false, NumberInputs variant = NumberInputs.Number, string currency = "USD") 
+        => state.ToNumberInput(placeholder, disabled, variant, NumberFormatStyle.Currency).Currency(currency);
 
     internal static IAnyNumberInput ScaffoldDefaults(this IAnyNumberInput input, string? name, Type type)
     {
@@ -102,6 +102,13 @@ public static class NumberInputExtensions
         input.Step ??= type.SuggestStep();
         input.Min ??= type.SuggestMin();
         input.Max ??= type.SuggestMax();
+        
+        // Add default currency for Currency style inputs
+        if (input.FormatStyle == NumberFormatStyle.Currency && string.IsNullOrEmpty(input.Currency))
+        {
+            input.Currency = "USD";
+        }
+        
         return input;
     }
     

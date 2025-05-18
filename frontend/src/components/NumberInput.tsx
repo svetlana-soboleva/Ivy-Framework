@@ -66,7 +66,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     }
   }, [formatter, isFocused]);
 
-  const parseValue = useCallback((input: string): number | null => {
+  const parseValue = useCallback((input: string, shouldRound = true): number | null => {
     if (!input) return null;
     
     const cleaned = input.replace(/[^\d.-]/g, '');
@@ -79,7 +79,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     if (min !== undefined && parsed < min) return min;
     if (max !== undefined && parsed > max) return max;
     
-    if (step) {
+    if (step && shouldRound) {
       const rounded = Math.round(parsed / step) * step;
       return Number(rounded.toFixed(10));
     }
@@ -91,7 +91,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     if (disabled) return;
     
     const current = value ?? 0;
-    const newValue = parseValue((current + (step * multiplier)).toString());
+    const newValue = parseValue((current + (step * multiplier)).toString(), true);
     
     if (newValue !== null) {
       if (max !== undefined && newValue > max) return;
@@ -107,14 +107,13 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     const direction = distance >= 0 ? 1 : -1;
     const absoluteDistance = Math.abs(distance);
     
-    // Increase step size based on distance
     let multiplier = 1;
     if (absoluteDistance > 100) multiplier = 5;
     if (absoluteDistance > 200) multiplier = 10;
     if (absoluteDistance > 300) multiplier = 20;
     
     const stepChange = Math.floor(absoluteDistance / 5) * direction * step * multiplier;
-    return parseValue((startValue + stepChange).toString());
+    return parseValue((startValue + stepChange).toString(), true);
   }, [parseValue, step]);
 
   const handleMouseDown = useCallback((e: MouseEvent) => {
@@ -128,13 +127,10 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
       lastValue: startValue,
     });
     
-    // Prevent text selection during drag
     e.preventDefault();
     
-    // Set cursor
     document.body.style.cursor = 'ew-resize';
     
-    // Focus input
     inputRef.current.focus();
   }, [disabled, value]);
 
@@ -199,7 +195,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
       return;
     }
 
-    const newValue = parseValue(inputValue);
+    const newValue = parseValue(inputValue, false);
     setDisplayValue(inputValue);
     setIsValid(newValue !== null);
     
@@ -233,7 +229,6 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     <div className="relative">
       <Input
         ref={(node) => {
-          // Handle both refs
           inputRef.current = node;
           if (typeof ref === 'function') {
             ref(node);
@@ -249,7 +244,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         onWheel={handleWheel}
-        onMouseDown={handleMouseDown}
+        min={min}
+        max={max}
+        step={step}
         disabled={disabled}
         placeholder={placeholder}
         className={`${className} pr-8 ${!isValid ? 'border-red-500' : ''} ${dragState?.isDragging ? 'select-none' : ''}`}
