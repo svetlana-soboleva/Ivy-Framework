@@ -116,24 +116,23 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     return parseValue((startValue + stepChange).toString(), true);
   }, [parseValue, step]);
 
-  // todo OM: 
-  // const handleMouseDown = useCallback((e: MouseEvent) => {
-  //   if (disabled || !inputRef.current) return;
+  const handleMouseDown = useCallback((e: MouseEvent) => {
+    if (disabled || !inputRef.current) return;
     
-  //   const startValue = value ?? 0;
-  //   setDragState({
-  //     isDragging: true,
-  //     startX: e.clientX,
-  //     startValue,
-  //     lastValue: startValue,
-  //   });
+    const startValue = value ?? 0;
+    setDragState({
+      isDragging: true,
+      startX: e.clientX,
+      startValue,
+      lastValue: startValue,
+    });
     
-  //   e.preventDefault();
+    e.preventDefault();
     
-  //   document.body.style.cursor = 'ew-resize';
+    document.body.style.cursor = 'ew-resize';
     
-  //   inputRef.current.focus();
-  // }, [disabled, value]);
+    inputRef.current.focus();
+  }, [disabled, value]);
 
   useEffect(() => {
     if (!dragState?.isDragging) return;
