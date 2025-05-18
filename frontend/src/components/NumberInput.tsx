@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, ChangeEvent, FocusEvent, WheelEvent, MouseEvent } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, ChangeEvent, FocusEvent, WheelEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
@@ -116,23 +116,24 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     return parseValue((startValue + stepChange).toString(), true);
   }, [parseValue, step]);
 
-  const handleMouseDown = useCallback((e: MouseEvent) => {
-    if (disabled || !inputRef.current) return;
+  // todo OM: 
+  // const handleMouseDown = useCallback((e: MouseEvent) => {
+  //   if (disabled || !inputRef.current) return;
     
-    const startValue = value ?? 0;
-    setDragState({
-      isDragging: true,
-      startX: e.clientX,
-      startValue,
-      lastValue: startValue,
-    });
+  //   const startValue = value ?? 0;
+  //   setDragState({
+  //     isDragging: true,
+  //     startX: e.clientX,
+  //     startValue,
+  //     lastValue: startValue,
+  //   });
     
-    e.preventDefault();
+  //   e.preventDefault();
     
-    document.body.style.cursor = 'ew-resize';
+  //   document.body.style.cursor = 'ew-resize';
     
-    inputRef.current.focus();
-  }, [disabled, value]);
+  //   inputRef.current.focus();
+  // }, [disabled, value]);
 
   useEffect(() => {
     if (!dragState?.isDragging) return;
