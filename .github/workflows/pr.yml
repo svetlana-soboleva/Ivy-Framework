@@ -1,4 +1,4 @@
-name: PR Build
+name: Ivy-Framework PR Build
 
 on:
   pull_request:
@@ -13,12 +13,17 @@ jobs:
       - name: Checkout Ivy-Framework
         uses: actions/checkout@v4
         with:
+          repository: Ivy-Interactive/Ivy-Framework
+          token: ${{ secrets.IVY_FRAMEWORK_TOKEN }}
           path: Ivy-Framework
 
-      - name: Setup .NET
+      - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
+
+      - name: Workload update
+        run: dotnet workload update
 
       - name: Build Projects
         run: |
