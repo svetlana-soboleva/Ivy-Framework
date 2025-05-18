@@ -245,6 +245,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
         min={min}
         max={max}
         step={step}
