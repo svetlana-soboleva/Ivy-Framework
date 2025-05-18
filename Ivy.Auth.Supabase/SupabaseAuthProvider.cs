@@ -1,12 +1,16 @@
 ﻿using System.Reflection;
+using Ivy.Shared;
 using Microsoft.Extensions.Configuration;
 using Supabase;
+using Supabase.Gotrue;
 
 namespace Ivy.Auth.Supabase;
 
 public class SupabaseAuthProvider : IAuthProvider
 {
     private readonly global::Supabase.Client _client;
+    
+    private readonly List<AuthOption> _authOptions = new();
     
     public SupabaseAuthProvider()
     {
@@ -31,6 +35,22 @@ public class SupabaseAuthProvider : IAuthProvider
     {
         var session = await _client.Auth.SignIn(email, password);
         return session?.AccessToken;
+    }
+    
+    public async Task<Uri> GetOAuthUri(string optionId, string callbackUrl)
+    {
+        var provider = optionId switch
+        {
+            "google" => Constants.Provider.Google,
+            _ => throw new ArgumentException($"Unknown OAuth provider: {optionId}"),
+        };
+        
+        var providerAuthState = await _client.Auth.SignIn(provider, new SignInOptions
+        {
+            RedirectTo = callbackUrl
+        });
+
+        return providerAuthState.Uri;
     }
     
     public async Task LogoutAsync(string _)
@@ -67,11 +87,34 @@ public class SupabaseAuthProvider : IAuthProvider
         return new UserInfo(
             user.Id,
             user.Email,
-            user.UserMetadata != null && user.UserMetadata.ContainsKey("full_name")
-                ? user.UserMetadata["full_name"].ToString()
+            user.UserMetadata != null && user.UserMetadata.TryGetValue("full_name", out var value)
+                ? value.ToString()
                 : string.Empty,
             null
         );
+    }
+    
+    public AuthOption[] GetAuthOptions()
+    {
+        return _authOptions.ToArray();
+    }
+
+    public SupabaseAuthProvider UseEmailPassword()
+    {
+        _authOptions.Add(new AuthOption(AuthFlow.EmailPassword));
+        return this;
+    }
+    
+    public SupabaseAuthProvider UseGoogle()
+    {
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Google", nameof(Constants.Provider.Google).ToLower(), Icons.Google));
+        return this;
+    }
+    
+    public SupabaseAuthProvider UseApple()
+    {
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Apple", nameof(Constants.Provider.Apple).ToLower(), Icons.Microsoft));
+        return this;
     }
 }
 

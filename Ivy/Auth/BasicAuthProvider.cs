@@ -104,4 +104,9 @@ public class BasicAuthProvider : IAuthProvider
             return Task.FromResult<UserInfo?>(null);
         }
     }
+
+    public AuthOption[] GetAuthOptions()
+    {
+        return [new AuthOption(AuthFlow.EmailPassword)];
+    }
 }

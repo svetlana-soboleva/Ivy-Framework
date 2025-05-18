@@ -1,0 +1,28 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Ivy-Framework
+        uses: actions/checkout@v4
+        with:
+          path: Ivy-Framework
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Build Projects
+        run: |
+          dotnet build Ivy-Framework/Ivy/Ivy.csproj --configuration Release 
+          dotnet build Ivy-Framework/Ivy.Database.Generator.Toolkit/Ivy.Database.Generator.Toolkit.csproj --configuration Release
+          dotnet build Ivy-Framework/Ivy.Auth.Supabase/Ivy.Auth.Supabase.csproj --configuration Release
+          dotnet build Ivy-Framework/Ivy.Auth.Authelia/Ivy.Auth.Authelia.csproj --configuration Release

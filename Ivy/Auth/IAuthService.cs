@@ -7,4 +7,6 @@ public interface IAuthService
     Task LogoutAsync();
     
     Task<UserInfo?> GetUserInfoAsync();
+    
+    AuthOption[] GetAuthOptions();
 }

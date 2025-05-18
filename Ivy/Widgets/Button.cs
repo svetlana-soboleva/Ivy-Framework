@@ -91,7 +91,7 @@ public static class ButtonExtensions
         return button with { Disabled = disabled };
     }
     
-    public static Button Icon(this Button button, Icons icon, Align position = Align.Left)
+    public static Button Icon(this Button button, Icons? icon, Align position = Align.Left)
     {
         return button with { Icon = icon, IconPosition = position };
     }

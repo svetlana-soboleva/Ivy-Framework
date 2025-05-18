@@ -1,4 +1,6 @@
-﻿namespace Ivy.Auth;
+﻿using Ivy.Shared;
+
+namespace Ivy.Auth;
 
 public class AuthService(IAuthProvider authProvider, string? jwt) : IAuthService
 {
@@ -28,4 +30,10 @@ public class AuthService(IAuthProvider authProvider, string? jwt) : IAuthService
         
         return await authProvider.GetUserInfoAsync(jwt);
     }
+
+    public AuthOption[] GetAuthOptions()
+    {
+        return authProvider.GetAuthOptions();
+    }
 }
+

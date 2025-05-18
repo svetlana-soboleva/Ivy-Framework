@@ -16,6 +16,28 @@ public static class IconsHelper
 public enum Icons
 {
     None,
+ 
+    // Extras:
+    Google, //<FaGoogle />
+    Azure,  //<VscAzure />
+    Amazon, //<FaAmazon />
+    Microsoft, //<FaMicrosoft />
+    //Gitlab, //<FaGitlab />
+    Bitbucket, //<FaBitbucket />
+    Discord, //<FaDiscord />
+    //Twitter, //<FaTwitter />
+    //Instagram, //<FaInstagram />
+    //Facebook, //<FaFacebook />
+    //Linkedin, //<FaLinkedin />
+    //Youtube, //<FaYoutube />
+    Vimeo, //<FaVimeo />
+    //Slack, //<FaSlack />
+    Spotify, //<FaSpotify />
+    Notion, //<FaNotion />
+    //Apple, //<FaApple />
+    //Github, //<FaGithub />
+    
+    // Lucide Icons:
     AArrowDown,
     AArrowUp,
     ALargeSmall,

@@ -72,6 +72,11 @@ public class AutheliaAuthProvider : IAuthProvider
             return null;
         return new UserInfo(user.Id, user.Email, user.DisplayName, null);
     }
+    
+    public AuthOption[] GetAuthOptions()
+    {
+        return [new AuthOption(AuthFlow.EmailPassword)];
+    }
 }
 
 public class AutheliaUser

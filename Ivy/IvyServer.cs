@@ -111,7 +111,7 @@ public class IvyServer
         return this;
     }
     
-    public IvyServer UseAuth<T>(Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
+    public IvyServer UseAuth<T>(Action<T>? config = null, Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
     {
         Services.AddSingleton<IAuthProvider, T>(); //todo: IAuthProvider shouldn't be accessible to apps
         Services.AddSingleton<IAuthService, AuthService>();
@@ -125,6 +125,7 @@ public class IvyServer
             RemoveIvyBranding = false
         });
         AuthProviderType = typeof(T);
+        config?.Invoke(Services.BuildServiceProvider().GetRequiredService<T>());
         return this;
     }
     
