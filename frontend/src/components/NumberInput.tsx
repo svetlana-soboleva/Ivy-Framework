@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, ChangeEvent, FocusEvent, WheelEvent } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, ChangeEvent, FocusEvent, WheelEvent, MouseEvent as ReactMouseEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
@@ -116,7 +116,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
     return parseValue((startValue + stepChange).toString(), true);
   }, [parseValue, step]);
 
-  const handleMouseDown = useCallback((e: MouseEvent) => {
+  const handleMouseDown = useCallback((e: ReactMouseEvent<HTMLInputElement>) => {
     if (disabled || !inputRef.current) return;
     
     const startValue = value ?? 0;
