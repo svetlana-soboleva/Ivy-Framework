@@ -13,8 +13,6 @@ jobs:
       - name: Checkout Ivy-Framework
         uses: actions/checkout@v4
         with:
-          repository: Ivy-Interactive/Ivy-Framework
-          token: ${{ secrets.IVY_FRAMEWORK_TOKEN }}
           path: Ivy-Framework
 
       - name: Set up .NET
