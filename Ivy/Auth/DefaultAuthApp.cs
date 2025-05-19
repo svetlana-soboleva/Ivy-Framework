@@ -2,7 +2,10 @@
 using Ivy.Client;
 using Ivy.Core;
 using Ivy.Helpers;
+using Ivy.Hooks;
 using Ivy.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ivy.Auth;
 
@@ -32,8 +35,9 @@ public class DefaultAuthApp : ViewBase
         return
             Layout.Horizontal().Align(Align.Center).Height(Size.Screen())
             | (new Card().Width(100).Title("Login")
-               | renderedOptions.SelectMany(x => new[] { x, new Separator("OR") }).Take(renderedOptions.Count * 2 - 1)
-                   .ToArray());
+               | (Layout.Vertical() | renderedOptions.SelectMany(x => new[] { x, new Separator("OR") }).Take(renderedOptions.Count * 2 - 1)
+                   .ToArray())
+               );
     }
 }
 
@@ -48,7 +52,7 @@ public class PasswordEmailFlowView(AuthOption option) : ViewBase
         var auth = this.UseService<IAuthService>();
         var client = this.UseService<IClientProvider>();
         
-        var login = new Action(async void () =>
+        var login = async () =>
         {
             try
             {
@@ -59,22 +63,18 @@ public class PasswordEmailFlowView(AuthOption option) : ViewBase
                     client.SetJwt(token);
                 }
             }
-            catch (Exception e)
-            {
-                result.Set(e.Message);
-            }
             finally
             {
                 loading.Set(false);
             }
-        });
+        };
 
         return Layout.Vertical()
          | Text.Label("User:")
          | user.ToTextInput().Disabled(loading.Value)
          | Text.Label("Password:")
          | password.ToPasswordInput().Disabled(loading.Value)
-         | new Button("Login").Width(Size.Full()).HandleClick(login).Loading(loading.Value).Disabled(loading.Value)
+         | new Button("Login").Width(Size.Full()).HandleClick(login.HandleError(this)).Loading(loading.Value).Disabled(loading.Value)
          | result
          ;
     }
@@ -85,7 +85,21 @@ public class OAuthFlowView(AuthOption option) : ViewBase
 {
     public override object? Build()
     {
-        return new Button(option.Name).Icon(option.Icon);
+        var client = this.UseService<IClientProvider>();
+        var auth = this.UseService<IAuthService>();
+        var callback = this.UseWebhook((request) =>
+        {
+            var token = auth.HandleOAuthCallback(request);
+            client.SetJwt(token);
+            return new OkResult();
+        });
+        
+        var login = async () =>
+        {
+            client.OpenUrl(await auth.GetOAuthUriAsync(option.Id!, callback));
+        };
+
+        return new Button(option.Name).Secondary().Icon(option.Icon).Width(Size.Full()).HandleClick(login.HandleError(this));
     }
 }
 

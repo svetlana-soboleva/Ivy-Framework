@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Ivy.Shared;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Supabase;
 using Supabase.Gotrue;
@@ -37,22 +39,30 @@ public class SupabaseAuthProvider : IAuthProvider
         return session?.AccessToken;
     }
     
-    public async Task<Uri> GetOAuthUri(string optionId, string callbackUrl)
+    public async Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
     {
         var provider = optionId switch
         {
             "google" => Constants.Provider.Google,
+            "apple" => Constants.Provider.Apple,
+            "github" => Constants.Provider.Github,
             _ => throw new ArgumentException($"Unknown OAuth provider: {optionId}"),
         };
         
         var providerAuthState = await _client.Auth.SignIn(provider, new SignInOptions
         {
-            RedirectTo = callbackUrl
+            RedirectTo = callbackUri.ToString()
         });
 
         return providerAuthState.Uri;
     }
-    
+
+    public string HandleOAuthCallback(HttpRequest request)
+    {
+        var code = request.Query["code"];
+        return code.ToString();
+    }
+
     public async Task LogoutAsync(string _)
     {
         await _client.Auth.SignOut();

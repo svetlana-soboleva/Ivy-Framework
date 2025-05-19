@@ -14,6 +14,10 @@ public static class ClientExtensions
     {
         client.Sender.Send("OpenUrl", url);
     }
+    public static void OpenUrl(this IClientProvider client, Uri uri)
+    {
+        client.Sender.Send("OpenUrl", uri.ToString());
+    }
     
     public static void Redirect(this IClientProvider client, string url)
     {

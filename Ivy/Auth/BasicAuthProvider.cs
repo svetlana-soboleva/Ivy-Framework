@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -54,6 +56,16 @@ public class BasicAuthProvider : IAuthProvider
     public Task LogoutAsync(string jwt)
     {
         return Task.CompletedTask;
+    }
+
+    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string HandleOAuthCallback(HttpRequest request)
+    {
+        throw new NotImplementedException();
     }
 
     public Task<bool> ValidateJwtAsync(string jwt)

@@ -1,4 +1,6 @@
 ﻿using Ivy.Shared;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ivy.Auth;
 
@@ -7,6 +9,16 @@ public class AuthService(IAuthProvider authProvider, string? jwt) : IAuthService
     public async Task<string?> LoginAsync(string email, string password)
     {
         return await authProvider.LoginAsync(email, password);
+    }
+
+    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    {
+        return authProvider.GetOAuthUriAsync(optionId, callbackUri);
+    }
+
+    public string HandleOAuthCallback(HttpRequest request)
+    { 
+        return authProvider.HandleOAuthCallback(request);
     }
 
     public Task LogoutAsync()

@@ -70,31 +70,17 @@ public class AppHub(
     
     public override async Task OnConnectedAsync()
     {
+        var appServices = new ServiceCollection();
+        
         var httpContext = Context.GetHttpContext()!;
         var appId = GetAppId(server, httpContext);
-        var appArgs = GetAppArgs(Context.ConnectionId, appId, httpContext);
-        var appDescriptor = server.GetApp(appId);
-        
-        logger.LogInformation($"Connected: {Context.ConnectionId} [{appId}]");
-        
-        var clientProvider = new ClientProvider(new ClientSender(clientNotifier, Context.ConnectionId));
-        
-        var appServices = new ServiceCollection();
-        appServices.AddSingleton(typeof(IContentBuilder), contentBuilder);
-        appServices.AddSingleton(typeof(IAppRepository), server.AppRepository);
-        appServices.AddSingleton(typeof(IDownloadService), new DownloadService(Context.ConnectionId));
-        appServices.AddSingleton(typeof(IClientProvider), clientProvider);
-        appServices.AddTransient<IWebhookRegistry, WebhookController>();
-        appServices.AddSingleton(appDescriptor);
-        appServices.AddSingleton(appArgs);
-        appServices.AddTransient<SignalRouter>(_ => new SignalRouter(sessionStore));
         
         var isAuthProtected = server.AuthProviderType != null;
         if (isAuthProtected)
         {
             var authProvider = server.Services.BuildServiceProvider().GetService<IAuthProvider>() ?? throw new Exception("IAuthProvider not found");
-            var jwt = httpContext.Request.Cookies["jwt"];
-            if(!string.IsNullOrEmpty(jwt))
+            var jwt = httpContext.Request.Cookies["jwt"].NullIfEmpty();
+            if(string.IsNullOrEmpty(jwt))
             {
                 appId = AppIds.Auth;
             }
@@ -108,6 +94,22 @@ public class AppHub(
             }
             appServices.AddSingleton<IAuthService>(s => new AuthService(authProvider, jwt));
         }
+        
+        var appArgs = GetAppArgs(Context.ConnectionId, appId, httpContext);
+        var appDescriptor = server.GetApp(appId);
+        
+        logger.LogInformation($"Connected: {Context.ConnectionId} [{appId}]");
+        
+        var clientProvider = new ClientProvider(new ClientSender(clientNotifier, Context.ConnectionId));
+        
+        appServices.AddSingleton(typeof(IContentBuilder), contentBuilder);
+        appServices.AddSingleton(typeof(IAppRepository), server.AppRepository);
+        appServices.AddSingleton(typeof(IDownloadService), new DownloadService(Context.ConnectionId));
+        appServices.AddSingleton(typeof(IClientProvider), clientProvider);
+        appServices.AddTransient<IWebhookRegistry, WebhookController>();
+        appServices.AddSingleton(appDescriptor);
+        appServices.AddSingleton(appArgs);
+        appServices.AddTransient<SignalRouter>(_ => new SignalRouter(sessionStore));
         
         var serviceProvider = new CompositeServiceProvider(appServices, server.Services); 
         

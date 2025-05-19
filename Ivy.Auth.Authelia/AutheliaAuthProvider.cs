@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace Ivy.Auth.Authelia;
@@ -49,7 +51,17 @@ public class AutheliaAuthProvider : IAuthProvider
         };
         _cookieContainer.Add(new Uri(_baseUrl), expired);
     }
-    
+
+    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string HandleOAuthCallback(HttpRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<bool> ValidateJwtAsync(string jwt)
     {
         // Send a request with the session cookie to /api/user/info.

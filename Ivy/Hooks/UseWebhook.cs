@@ -9,24 +9,24 @@ namespace Ivy.Hooks;
 
 public static class UseWebhookExtensions
 {
-    public static string UseWebhook<TView>(this TView view, Func<HttpRequest, IActionResult> handler) where TView : ViewBase =>
+    public static Uri UseWebhook<TView>(this TView view, Func<HttpRequest, IActionResult> handler) where TView : ViewBase =>
         view.Context.UseWebhook(handler);
     
-    public static string UseWebhook<TView>(this TView view, Action<HttpRequest> handler) where TView : ViewBase =>
+    public static Uri UseWebhook<TView>(this TView view, Action<HttpRequest> handler) where TView : ViewBase =>
         view.Context.UseWebhook(e =>
         {
             handler(e);
             return new OkResult();
         });
 
-    public static string UseWebhook(this IViewContext context, Action<HttpRequest> handler) =>
+    public static Uri UseWebhook(this IViewContext context, Action<HttpRequest> handler) =>
         context.UseWebhook(e =>
         {
             handler(e);
             return new OkResult();
         });
 
-    public static string UseWebhook(this IViewContext context, Func<HttpRequest, IActionResult> handler)
+    public static Uri UseWebhook(this IViewContext context, Func<HttpRequest, IActionResult> handler)
     {
         var webhookId = context.UseState(() => Guid.NewGuid().ToString(), false);
         var webhookController = context.UseService<IWebhookRegistry>();
@@ -34,7 +34,7 @@ public static class UseWebhookExtensions
         
         context.UseEffect(() => webhookController.Register(webhookId.Value, handler), [EffectTrigger.AfterInit()]);
         
-        return $"{args.Host}/webhook/{webhookId.Value}";
+        return new Uri($"{args.Host}/webhook/{webhookId.Value}");
     }
 }
 

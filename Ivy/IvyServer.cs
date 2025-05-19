@@ -113,8 +113,14 @@ public class IvyServer
     
     public IvyServer UseAuth<T>(Action<T>? config = null, Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
     {
-        Services.AddSingleton<IAuthProvider, T>(); //todo: IAuthProvider shouldn't be accessible to apps
-        Services.AddSingleton<IAuthService, AuthService>();
+        Services.AddSingleton<T>();
+        Services.AddSingleton<IAuthProvider, T>(s =>
+        {
+            T provider = s.GetRequiredService<T>();
+            config?.Invoke(provider);
+            return provider;
+        });
+        
         AddApp(new AppDescriptor
         {
             Id = AppIds.Auth,
@@ -125,7 +131,6 @@ public class IvyServer
             RemoveIvyBranding = false
         });
         AuthProviderType = typeof(T);
-        config?.Invoke(Services.BuildServiceProvider().GetRequiredService<T>());
         return this;
     }
     
@@ -301,7 +306,7 @@ public static class WebApplicationExtensions
 
     public static WebApplication UseAssets(this WebApplication app, string folder)
     {
-        var assembly = Assembly.GetEntryAssembly();
+        var assembly = Assembly.GetEntryAssembly()!;
         
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
