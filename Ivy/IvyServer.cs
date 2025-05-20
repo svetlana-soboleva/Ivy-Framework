@@ -3,6 +3,7 @@ using System.Reflection;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Chrome;
+using Ivy.Connections;
 using Ivy.Core;
 using Ivy.Hooks;
 using Microsoft.AspNetCore.Builder;
@@ -276,6 +277,20 @@ public class IvyServer
         catch (IOException)
         {
             Console.WriteLine($"Failed to start Ivy server. Is the port already in use?");
+        }
+    }
+
+    public void AddConnectionsFromAssembly()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        
+        var connections = assembly!.GetTypes()
+            .Where(t => t.IsClass && typeof(IConnection).IsAssignableFrom(t));
+
+        foreach (var type in connections)
+        {
+            var connection = (IConnection)Activator.CreateInstance(type)!;
+            connection.RegisterServices(this.Services);
         }
     }
 }
