@@ -31,6 +31,10 @@ public static class AppHelpers
             
             string GetId()
             {
+                if (type.Namespace == null)
+                {
+                    return Utils.TitleCaseToFriendlyUrl(type.Name);
+                }
                 var ns = type.Namespace!.Split(".");
                 if(ns.Contains("Apps"))
                 {
