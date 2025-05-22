@@ -62,16 +62,16 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         }, [ search ]);
             
         //////////////////////////////////////////////////////////
-        var isIvyAgentStarting = UseState(false);
-        var isIvyAgentRunning = UseState(false);
-        //todo: remove the ivy agent server -> replace with something else
-        UseEffect(async () =>
-        {
-            var cleanup = await IvyAgentServer.StartAsync(); 
-            client?.SetChatPanelUrl("http://localhost:5001");
-            isIvyAgentRunning.Set(true);
-            return cleanup;
-        }, [ isIvyAgentStarting ]);
+        // var isIvyAgentStarting = UseState(false);
+        // var isIvyAgentRunning = UseState(false);
+        // //todo: remove the ivy agent server -> replace with something else
+        // UseEffect(async () =>
+        // {
+        //     var cleanup = await IvyAgentServer.StartAsync(); 
+        //     client?.SetChatPanelUrl("http://localhost:5001");
+        //     isIvyAgentRunning.Set(true);
+        //     return cleanup;
+        // }, [ isIvyAgentStarting ]);
         //////////////////////////////////////////////////////////
         
         void OpenApp(NavigateArgs navigateArgs)
@@ -165,7 +165,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             MenuItem.Default("Star on Github").Icon(Icons.Github)
                 .HandleSelect(() => client.OpenUrl(Resources.IvyGitHubUrl)),
-            MenuItem.Default("Edit").Icon(Icons.Sparkles).HandleSelect(() => isIvyAgentStarting.Set(true)).Disabled(isIvyAgentStarting.Value),
+            //MenuItem.Default("Edit").Icon(Icons.Sparkles).HandleSelect(() => isIvyAgentStarting.Set(true)).Disabled(isIvyAgentStarting.Value),
             MenuItem.Default("Theme")
                 .Icon(Icons.SunMoon)
                 .Children(
