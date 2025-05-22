@@ -18,9 +18,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-public record IvyServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId);
+public record ServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId);
 
-public class IvyServer
+public class Server
 {
     private IContentBuilder? _contentBuilder;
     private bool _useHotReload;
@@ -31,11 +31,11 @@ public class IvyServer
     public AppRepository AppRepository { get; } = new();
     public IServiceCollection Services { get; } = new ServiceCollection();
     public Type? AuthProviderType { get; private set; } = null;
-    public IvyServerArgs Args => _args;
+    public ServerArgs Args => _args;
 
-    private readonly IvyServerArgs _args;
+    private readonly ServerArgs _args;
     
-    public IvyServer(int? port = null)
+    public Server(int? port = null)
     {
         _args = IvyServerUtils.GetArgs();
         
@@ -43,7 +43,7 @@ public class IvyServer
         _port = port ?? int.Parse(Environment.GetEnvironmentVariable("PORT") ?? _args.Port.ToString());
     }
     
-    public IvyServer(FuncBuilder viewFactory) : this()
+    public Server(FuncBuilder viewFactory) : this()
     {
         AddApp(new AppDescriptor
         {
@@ -79,25 +79,25 @@ public class IvyServer
         return AppRepository.GetAppOrDefault(id);
     }
     
-    public IvyServer UseContentBuilder(IContentBuilder contentBuilder)
+    public Server UseContentBuilder(IContentBuilder contentBuilder)
     {
         _contentBuilder = contentBuilder;
         return this;
     }
     
-    public IvyServer UseHotReload()
+    public Server UseHotReload()
     {
         _useHotReload = true;
         return this;
     }
     
-    public IvyServer UseHttpRedirection()
+    public Server UseHttpRedirection()
     {
         _useHttpRedirection = true;
         return this;
     }
 
-    public IvyServer UseChrome(Func<ViewBase>? viewFactory = null)
+    public Server UseChrome(Func<ViewBase>? viewFactory = null)
     {
         AddApp(new AppDescriptor
         {
@@ -112,7 +112,7 @@ public class IvyServer
         return this;
     }
     
-    public IvyServer UseAuth<T>(Action<T>? config = null, Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
+    public Server UseAuth<T>(Action<T>? config = null, Func<ViewBase>? viewFactory = null) where T : class, IAuthProvider
     {
         Services.AddSingleton<T>();
         Services.AddSingleton<IAuthProvider, T>(s =>
@@ -135,7 +135,7 @@ public class IvyServer
         return this;
     }
     
-    public IvyServer UseDefaultApp(Type appType)
+    public Server UseDefaultApp(Type appType)
     {
         DefaultAppId = AppHelpers.GetApp(appType)?.Id;
         return this;
@@ -367,7 +367,7 @@ public static class WebApplicationExtensions
 
 public static class IvyServerUtils
 {
-    public static IvyServerArgs GetArgs()
+    public static ServerArgs GetArgs()
     {
         var portOption = new Option<int>("--port", () => 5000);
         var verboseOption = new Option<bool>("--verbose", () => false);
@@ -379,7 +379,7 @@ public static class IvyServerUtils
         var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption };
         
         var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
-        return new IvyServerArgs(
+        return new ServerArgs(
             result.GetValueForOption(portOption),
             result.GetValueForOption(verboseOption),
             result.GetValueForOption(iKillForThisPortOption),

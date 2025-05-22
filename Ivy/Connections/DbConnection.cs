@@ -11,5 +11,10 @@ public abstract class DbConnection : IConnection
 
     public abstract string GetName();
     
+    public ConnectionEntity[] GetEntities()
+    {
+        throw new NotImplementedException();
+    }
+
     public abstract void RegisterServices(IServiceCollection services);
 }

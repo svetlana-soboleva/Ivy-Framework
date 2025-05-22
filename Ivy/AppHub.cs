@@ -13,16 +13,16 @@ using Microsoft.Extensions.Logging;
 namespace Ivy;
 
 public class AppHub(
-    IvyServer server, 
+    Server server, 
     IClientNotifier clientNotifier,
     IContentBuilder contentBuilder,
     AppSessionStore sessionStore,
     ILogger<AppHub> logger
     ) : Hub
 {
-    public static string GetAppId(IvyServer ivyServer, HttpContext httpContext)
+    public static string GetAppId(Server server, HttpContext httpContext)
     {
-        string? appId = ivyServer.DefaultAppId;
+        string? appId = server.DefaultAppId;
             
         if(httpContext!.Request.Query.ContainsKey("appId"))
         {
@@ -31,7 +31,7 @@ public class AppHub(
         
         if (string.IsNullOrEmpty(appId))
         {
-            appId = ivyServer.DefaultAppId ?? ivyServer.AppRepository.GetAppOrDefault(null).Id;
+            appId = server.DefaultAppId ?? server.AppRepository.GetAppOrDefault(null).Id;
         }
 
         return appId;
