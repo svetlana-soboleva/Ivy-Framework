@@ -1,5 +1,5 @@
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-var server = new IvyServer();
+var server = new Server();
 server.UseHotReload();
 server.AddAppsFromAssembly();
 var chromeSettings = new ChromeSettings()

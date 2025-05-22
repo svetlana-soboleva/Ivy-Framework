@@ -2,11 +2,11 @@
 using Ivy.Chrome;
 
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-var server = new IvyServer();
+var server = new Server();
 server.AddAppsFromAssembly();
 server.UseHotReload();
 
-var version = typeof(IvyServer).Assembly.GetName().Version!.ToString();
+var version = typeof(Server).Assembly.GetName().Version!.ToString();
 var chromeSettings = new ChromeSettings()
     .Header(
         Layout.Vertical().Padding(2) 
