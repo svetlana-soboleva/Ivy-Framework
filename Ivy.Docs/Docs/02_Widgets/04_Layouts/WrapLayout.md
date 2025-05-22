@@ -3,7 +3,7 @@
 WrapLayout arranges children in rows that wrap when they reach the end of the
 available space.
 
-```csharp demo
+```csharp
 new WrapLayout([
     Text.Literal("One"),
     Text.Literal("Two"),

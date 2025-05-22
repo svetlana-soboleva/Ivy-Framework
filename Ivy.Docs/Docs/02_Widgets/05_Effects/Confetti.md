@@ -3,7 +3,7 @@
 Confetti adds a fun celebratory effect to any widget. The confetti can be
 triggered automatically, on click or when the mouse hovers the widget.
 
-```csharp demo
+```csharp
 var onClick = new Button("Click")
     .HandleClick(() => client.Toast("Did you see the confetti?"))
     .WithConfetti(AnimationTrigger.Click);

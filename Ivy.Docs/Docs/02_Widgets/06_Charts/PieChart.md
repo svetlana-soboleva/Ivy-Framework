@@ -2,7 +2,7 @@
 
 Pie charts represent parts of a whole. Each slice is drawn from the provided data.
 
-```csharp demo
+```csharp
 var data = new[]
 {
     new { Month = "January", Desktop = 186, Mobile = 100 },

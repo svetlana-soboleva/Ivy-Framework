@@ -3,7 +3,7 @@
 Bar charts compare values across categories. The sample below shows a stacked bar
 chart with two series.
 
-```csharp demo
+```csharp
 var data = new[]
 {
     new { Month = "Jan", Desktop = 186, Mobile = 100 },

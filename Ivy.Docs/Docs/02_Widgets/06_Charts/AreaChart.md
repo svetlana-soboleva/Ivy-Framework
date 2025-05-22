@@ -3,7 +3,7 @@
 Area charts display quantitative data over time. Multiple series can be stacked
 with different colors.
 
-```csharp demo
+```csharp
 var data = new[]
 {
     new { Month = "Jan", Desktop = 186, Mobile = 80 },

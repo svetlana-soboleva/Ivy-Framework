@@ -3,7 +3,7 @@
 Line charts show trends over a period of time. The example below renders desktop
 and mobile metrics.
 
-```csharp demo
+```csharp
 var data = new[]
 {
     new { Month = "January", Desktop = 186, Mobile = 100 },

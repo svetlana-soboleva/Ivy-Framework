@@ -4,7 +4,7 @@ The Chat widget renders a conversation between a user and an assistant. Messages
 are supplied as `ChatMessage` objects and new messages are sent through the
 `OnSendMessage` event.
 
-```csharp demo
+```csharp
 var messages = UseState(ImmutableArray.Create<ChatMessage>());
 void OnSendMessage(Event<Chat,string> e)
 {

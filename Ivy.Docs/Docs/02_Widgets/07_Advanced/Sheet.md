@@ -4,7 +4,7 @@ Sheets slide in from the side of the screen and display additional content while
 allowing the user to dismiss them. The `WithSheet` extension on a `Button`
 provides an easy way to open a sheet.
 
-```csharp demo
+```csharp
 new Button("Open Sheet").WithSheet(
     () => new SheetView(),
     title: "This is a sheet",

@@ -3,7 +3,7 @@
 ResizeablePanelGroup arranges panels with draggable handles for resizable
 layouts. Panels can be placed horizontally or vertically.
 
-```csharp demo
+```csharp
 new ResizeablePanelGroup(
     new ResizeablePanel(25, "Left"),
     new ResizeablePanel(75,
