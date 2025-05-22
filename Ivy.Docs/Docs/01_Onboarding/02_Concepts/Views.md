@@ -211,3 +211,42 @@ public class DashboardView : ViewBase
 - [Effects](./Effects.md)
 - [Signals](./Signals.md)
 - [Widgets](./Widgets.md)
+
+----------------------------------------------------------------
+
+# Views
+
+A view is the fundamental unit of an Ivy application.  Every view derives from `ViewBase` and overrides the `Build()` method.  The `Build()` method returns either another view or a widget.  Widgets are provided by the `Ivy.Widgets` library and cover common UI elements such as buttons, forms and layout containers.
+
+## A minimal example
+
+```csharp
+public class OrdersApp : ViewBase
+{
+    public override object? Build()
+    {
+        return this.UseBlades(() => new OrderListBlade(), "Search");
+    }
+}
+```
+
+The framework instantiates `OrdersApp` and calls `Build()` to obtain the UI to display.  Hooks like `UseBlades`, `UseRefreshToken` and `UseService` can be called inside `Build()` to access shared services, open dialogs or manage navigation.
+
+Views can be nested.  For example `OrderListBlade` uses `FilteredListView` to show search results and opens other blades when the user selects an item.
+
+## Returning arbitrary objects
+
+If `Build()` returns a plain C# object (for example a `List<T>`), Ivy will attempt to choose a suitable widget automatically.  Returning a list of records renders a table with the properties as columns.
+
+## Layout
+
+Complex interfaces are composed using layout widgets.  The database generator application demonstrates a typical pattern:
+
+```csharp
+return Layout.Horizontal().Align(Align.Center).Height(Size.Screen()).RemoveParentPadding()
+       | (Layout.Vertical().Width(150)
+          | new IvyLogo()
+          | ...);
+```
+
+The pipe (`|`) operator combines widgets into containers and results in concise, readable view code.

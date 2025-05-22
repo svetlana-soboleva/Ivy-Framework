@@ -177,3 +177,28 @@ public class LiveDataView : ViewBase
 - [Effects](./Effects.md)
 - [Signals](./Signals.md)
 - [Memoization](./Memoization.md)
+
+------------------------------------------------
+
+State in Ivy is represented by the generic `IState<T>` interface.  Views obtain state via the `UseState` hook:
+
+```csharp
+var count = UseState(0);
+```
+
+The hook returns an `IState<int>` which exposes the current `Value` and a `Set(...)` method to update it.  When `Set` is called Ivy schedules a re-render of the view that owns the state.
+
+State is scoped to the view instance.  Re-instantiating a view (for example by navigating away and back) will create fresh state values unless they are explicitly passed in as props.
+
+You can react to changes with the `UseEffect` hook.  The following example taken from `OrderDetailsBlade.cs` loads data when the view is first created or when a refresh token changes:
+
+```csharp
+UseEffect(async () =>
+{
+    var db = factory.CreateDbContext();
+    order.Set(await db.Orders.Include(e => e.Customer)
+        .SingleOrDefaultAsync(e => e.Id == orderId));
+}, [EffectTrigger.AfterInit(), refreshToken]);
+```
+
+Effects run after the view has been rendered.  Ivy automatically tracks the dependencies supplied in the array and only reruns the effect when one of them has changed.
