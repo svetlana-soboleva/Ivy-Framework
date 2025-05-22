@@ -9,5 +9,7 @@ public abstract class DbConnection : IConnection
         throw new NotImplementedException();
     }
 
+    public abstract string GetName();
+    
     public abstract void RegisterServices(IServiceCollection services);
 }
