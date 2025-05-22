@@ -1,6 +1,11 @@
-﻿HEADERnamespace a;
+# HeaderLayout
 
-public class HeaderLayout_md
-{
-    
-}
+HeaderLayout places header content above scrollable content. Use it to keep
+toolbars or navigation visible while the rest of the page scrolls.
+
+```csharp demo
+new HeaderLayout(
+    Text.H2("Header"),
+    Text.Paragraph("Content goes here")
+);
+```
