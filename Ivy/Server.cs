@@ -141,11 +141,11 @@ public class Server
         return this;
     }
     
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationTokenSource? cts = null)
     {
         var sessionStore = new AppSessionStore();
         
-        var cts = new CancellationTokenSource();
+        cts ??= new CancellationTokenSource();
         Console.CancelKeyPress += (_, e) => {
             e.Cancel = true;
             cts.Cancel();
