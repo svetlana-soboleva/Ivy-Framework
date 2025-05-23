@@ -1,5 +1,5 @@
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-var server = new IvyServer();
+var server = new Server();
 #if !DEBUG
 server.UseHttpRedirection();
 #endif

@@ -60,7 +60,7 @@ public class CustomContentBuilder : IContentBuilder
 Content Builders are typically used through the Ivy server configuration:
 
 ```csharp
-var server = new IvyServer()
+var server = new Server()
     .UseContentBuilder(new CustomContentBuilder());
 ```
 
