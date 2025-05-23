@@ -36,7 +36,7 @@ public class Program
 {
     public static void Main()
     {
-        var server = new IvyServer()
+        var server = new Server()
             .UseService<IMyService, MyService>()
             .UseService<IDataService, DataService>(ServiceLifetime.Singleton)
             .UseService<IAuthService, AuthService>();
@@ -264,4 +264,3 @@ public class CacheService : ICacheService
     }
 }
 ```
-
