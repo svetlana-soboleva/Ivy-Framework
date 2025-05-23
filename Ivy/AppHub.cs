@@ -200,25 +200,29 @@ public class AppHub(
     {
         try
         {
-            if (server.AuthProviderType != null)
-            {
-                var authProvider = server.Services.BuildServiceProvider()
-                    .GetService<IAuthProvider>() ??
-                    throw new Exception("IAuthProvider not found");
-
-                var jwt = Context.GetHttpContext()!.Request.Cookies["jwt"].NullIfEmpty();
-                if (string.IsNullOrEmpty(jwt) || !await authProvider.ValidateJwtAsync(jwt))
-                {
-                    logger.LogWarning(
-                        "Invalid JWT for event from {ConnectionId}. Aborting.",
-                        Context.ConnectionId);
-                    Context.Abort();
-                    return;
-                }
-            }
-
             logger.LogInformation($"Event: {eventName} {widgetId} {args}");
             var appSession = sessionStore.Sessions[Context.ConnectionId];
+            
+            if (server.AuthProviderType != null)
+            {
+                if (appSession.AppId != AppIds.Auth)
+                {
+                    var authProvider = server.Services.BuildServiceProvider()
+                                           .GetService<IAuthProvider>() ??
+                                       throw new Exception("IAuthProvider not found");
+
+                    var jwt = Context.GetHttpContext()!.Request.Cookies["jwt"].NullIfEmpty();
+                    if (string.IsNullOrEmpty(jwt) || !await authProvider.ValidateJwtAsync(jwt))
+                    {
+                        logger.LogWarning(
+                            "Invalid JWT for event from {ConnectionId}. Aborting.",
+                            Context.ConnectionId);
+                        Context.Abort();
+                        return;
+                    }
+                }
+            }
+            
             appSession.LastInteraction = DateTime.UtcNow;
             if (!appSession.WidgetTree.TriggerEvent(widgetId, eventName, args ?? new JsonArray()))
             {

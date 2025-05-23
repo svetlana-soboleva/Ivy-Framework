@@ -341,12 +341,10 @@ public static class WebApplicationExtensions
             OnPrepareResponse = ctx =>
             {
 #if DEBUG
-                // Disable caching in development so changes are reflected immediately.
                 ctx.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
                 ctx.Context.Response.Headers.Pragma = "no-cache";
                 ctx.Context.Response.Headers.Expires = "0";
 #else
-                // Production caching: update these if you need dynamic ETag logic.
                 var headers = ctx.Context.Response.GetTypedHeaders();
                 headers.CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
                 {

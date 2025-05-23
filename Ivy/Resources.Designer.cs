@@ -60,7 +60,7 @@ namespace Ivy {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/Ivy-Interactive/Ivy.
+        ///   Looks up a localized string similar to https://github.com/Ivy-Interactive/Ivy-Framework.
         /// </summary>
         internal static string IvyGitHubUrl {
             get {

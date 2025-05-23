@@ -12,7 +12,7 @@ public interface IWidgetTree : IDisposable
     
     public void RefreshView(string nodeId);
 
-    public bool TriggerEvent(string viewId, string eventName, JsonArray args);
+    public bool TriggerEvent(string widgetId, string eventName, JsonArray args);
 
     void HotReload();
 }
