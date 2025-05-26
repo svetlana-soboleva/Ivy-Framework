@@ -231,7 +231,7 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         var hint = GetField(field);
         object FooterAggregate(IEnumerable<TModel> rows)
         {
-            return rows.Select(e => hint.GetValue(e)).Where(e => e != null).Aggregate((a, b) => (dynamic)a + (dynamic)b);
+            return rows.Select(e => hint.GetValue(e)).Where(e => e != null).Aggregate((a, b) => (dynamic)a! + (dynamic)b!) ?? 0;
         }
         return Totals(field, FooterAggregate);
     }

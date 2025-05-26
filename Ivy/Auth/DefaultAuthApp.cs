@@ -23,7 +23,7 @@ public class DefaultAuthApp : ViewBase
         if(options.Any(e => e.Flow == AuthFlow.EmailPassword))
         {
             var emailOption = options.First(e => e.Flow == AuthFlow.EmailPassword);
-            renderedOptions.Add(new PasswordEmailFlowView(emailOption));
+            renderedOptions.Add(new PasswordEmailFlowView());
         }
 
         if (options.Any(e => e.Flow == AuthFlow.OAuth))
@@ -41,7 +41,7 @@ public class DefaultAuthApp : ViewBase
     }
 }
 
-public class PasswordEmailFlowView(AuthOption option) : ViewBase
+public class PasswordEmailFlowView() : ViewBase
 {
     public override object Build()
     {

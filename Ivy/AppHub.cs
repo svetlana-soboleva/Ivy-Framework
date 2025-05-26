@@ -238,7 +238,7 @@ public class AppHub(
 
 public class ClientSender(IClientNotifier clientNotifier, string connectionId) : IClientSender
 {
-    public void Send(string method, object data)
+    public void Send(string method, object? data)
     {
         _ = clientNotifier.NotifyClientAsync(connectionId, method, data);
     }

@@ -70,10 +70,6 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     
     [Prop] public TValue Value { get; } = default!;
     
-    [Prop] public string Accept { get; set; } = "*";
-    
-    [Prop] public bool Multiple { get; set; } = false;
-    
     [Event] public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
 }
 
