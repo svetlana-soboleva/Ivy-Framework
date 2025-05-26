@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.Reflection;
+using System.Text;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Chrome;
@@ -18,7 +19,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-public record ServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId);
+public record ServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId, bool Silent);
 
 public class Server
 {
@@ -261,8 +262,11 @@ public class Server
             var url = app.Urls.FirstOrDefault() ?? "unknown";
             var port = new Uri(url).Port;
             var localUrl = $"http://localhost:{port}";
-            Console.WriteLine($"Ivy is running on {localUrl}. Press Ctrl+C to stop.");
-            
+            if (!_args.Silent)
+            {
+                Console.WriteLine($"Ivy is running on {localUrl}. Press Ctrl+C to stop.");
+            }
+
             if (_args.Browse)
             {
                 Utils.OpenBrowser(localUrl);
@@ -369,6 +373,7 @@ public static class IvyServerUtils
     {
         var portOption = new Option<int>("--port", () => 5000);
         var verboseOption = new Option<bool>("--verbose", () => false);
+        var silentOption = new Option<bool>("--silent", () => false);
         var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
         var browseOption = new Option<bool>("--browse", () => false);
         var argsOption = new Option<string?>("--args", () => null!);
@@ -383,7 +388,8 @@ public static class IvyServerUtils
             result.GetValueForOption(iKillForThisPortOption),
             result.GetValueForOption(browseOption),
             result.GetValueForOption(argsOption),
-            result.GetValueForOption(defaultAppIdOption)
+            result.GetValueForOption(defaultAppIdOption),
+            result.GetValueForOption(silentOption)
         );
         
     }
