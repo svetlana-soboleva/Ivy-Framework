@@ -242,7 +242,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 | searchInput
             ,
             Layout.Vertical(
-                new SidebarNews("https://getivy.net/news.json"),
+                new SidebarNews("https://ivy.app/news.json"),
                 settings.Footer,
                 footer
             )
