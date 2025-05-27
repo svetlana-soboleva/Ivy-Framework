@@ -266,12 +266,14 @@ function NewsCard({
         </div>
         <div className="relative mt-3 aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted">
           {image && (
-            <img
-              src={BASE_URL + image}
-              alt=""
-              className="h-full w-full rounded object-cover object-center"
-              draggable={false}
-            />
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              <img
+                src={BASE_URL + image}
+                alt=""
+                className="h-full w-full rounded object-cover object-center"
+                draggable={false}
+              />
+            </a>
           )}
         </div>
         <div
