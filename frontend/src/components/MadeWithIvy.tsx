@@ -26,7 +26,7 @@ export default function MadeWithIvy() {
           ${isHovered ? "bg-primary-foreground" : "bg-primary"}
         `}
         onClick={() => {
-          window.open("https://github.com/Ivy-Interactive/Ivy", "_blank")
+          window.open("https://github.com/Ivy-Interactive/Ivy-Framework", "_blank")
         }}
       >
         <div

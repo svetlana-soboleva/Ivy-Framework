@@ -8,15 +8,7 @@ export interface SidebarNewsWidgetProps {
   feedUrl: string;
 }
 
-const DEMO_ARTICLES: NewsArticle[] = [
-  {
-    id: "204a1d00-0570-42d8-81d3-e6f73344ac1f",
-    href: "https://github.com/Ivy-Interactive/Ivy",
-    title: "Star Ivy on GitHub",
-    summary: "Please help us get Ivy noticed by more developers!",
-    image: "https://placehold.co/600x400",
-  }
-];
+const BASE_URL = "https://ivy.app/news/"
 
 const SidebarNewsWidget = ({
   feedUrl
@@ -25,12 +17,12 @@ const SidebarNewsWidget = ({
   const [articles, setArticles] = useState<NewsArticle[]>([]);
 
   useEffect(() => {
-    // const fetchArticles = async () => {
-    //     const response = await fetch(feedUrl);
-    //     const data = await response.json();
-    //     setArticles(data);
-    // };
-    setArticles(DEMO_ARTICLES);
+    const fetchArticles = async () => {
+      const response = await fetch(BASE_URL + "news.json");
+      const data = await response.json();
+      setArticles(data);
+    };
+    fetchArticles();
   }, [feedUrl]);
   
   if (articles.length === 0) return null;
@@ -275,7 +267,7 @@ function NewsCard({
         <div className="relative mt-3 aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted">
           {image && (
             <img
-              src={image}
+              src={BASE_URL + image}
               alt=""
               className="h-full w-full rounded object-cover object-center"
               draggable={false}
