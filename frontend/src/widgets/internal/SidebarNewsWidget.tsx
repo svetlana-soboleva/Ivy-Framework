@@ -47,10 +47,36 @@ interface NewsArticle {
 const OFFSET_FACTOR = 4;
 const SCALE_FACTOR = 0.03;
 const OPACITY_FACTOR = 0.1;
+const STORAGE_KEY = "dismissed-news";
 
 function News({ articles }: { articles: NewsArticle[] }) {
   const [dismissedNews, setDismissedNews] = React.useState<string[]>([]);
-  const cards = articles.filter(({ href }) => !dismissedNews.includes(href));
+
+  // Load dismissed ids from localStorage on mount
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setDismissedNews(JSON.parse(stored));
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }, []);
+
+  // Purge ids that are no longer present in the feed
+  React.useEffect(() => {
+    setDismissedNews((prev) => {
+      const validIds = new Set(articles.map((a) => a.id));
+      const filtered = prev.filter((id) => validIds.has(id));
+      if (filtered.length !== prev.length) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      }
+      return filtered;
+    });
+  }, [articles]);
+
+  const cards = articles.filter(({ id }) => !dismissedNews.includes(id));
   const cardCount = cards.length;
   const [showCompleted, setShowCompleted] = React.useState(cardCount > 0);
 
@@ -67,9 +93,9 @@ function News({ articles }: { articles: NewsArticle[] }) {
       data-active={cardCount !== 0}
     >
       <div className="relative size-full">
-        {[...cards].reverse().map(({ href, title, summary, image }, idx) => (
+        {[...cards].reverse().map(({ id, href, title, summary, image }, idx) => (
           <div
-            key={href}
+            key={id}
             className={cn(
               "absolute left-0 top-0 size-full scale-[var(--scale)] transition-[opacity,transform] duration-200",
               cardCount - idx > 3
@@ -98,9 +124,11 @@ function News({ articles }: { articles: NewsArticle[] }) {
               href={href}
               hideContent={cardCount - idx > 2}
               active={idx === cardCount - 1}
-              onDismiss={() =>
-                setDismissedNews([href, ...dismissedNews.slice(0, 50)])
-              }
+              onDismiss={() => {
+                const updated = [id, ...dismissedNews.filter((d) => d !== id)].slice(0, 50)
+                setDismissedNews(updated)
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+              }}
             />
           </div>
         ))}
