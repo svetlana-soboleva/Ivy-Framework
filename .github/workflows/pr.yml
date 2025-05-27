@@ -10,10 +10,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout Ivy
+        uses: actions/checkout@v4
+        with:
+          repository: Ivy-Interactive/Ivy
+          token: ${{ secrets.IVY_FRAMEWORK_TOKEN }}
+          path: Ivy
+
       - name: Checkout Ivy-Framework
         uses: actions/checkout@v4
         with:
           path: Ivy-Framework
+
+      - name: Ensure Directory.Build.props is available
+        run: |
+          New-Item -ItemType Directory -Path "Ivy-Framework/Ivy" -Force
+          Copy-Item -Path "Ivy/Directory.Build.props" -Destination "Ivy-Framework/Ivy/Directory.Build.props" -Force
+        shell: pwsh
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
