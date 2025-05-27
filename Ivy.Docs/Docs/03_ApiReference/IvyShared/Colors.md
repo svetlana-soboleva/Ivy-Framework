@@ -10,7 +10,7 @@ public class ColorsView : ViewBase
         //Get all colors:
         Colors[] colors = (Colors[])Enum.GetValues(typeof(Colors));
 
-        var colorView = Layout.Wrap(
+        var colorView = Layout.Vertical(
             colors.Select(color =>
                 new Box(color.ToString())
                     .Width(Size.Auto())

@@ -12,13 +12,12 @@ interface CalloutWidgetProps {
   icon?: string
 }
 
-const variantClasses = 
-  {
-    'Info': 'bg-blue-100 text-blue-800 border-blue-800',
-    'Success': 'bg-green-100 text-green-800 border-green-800',
-    'Warning': 'bg-yellow-100 text-yellow-800 border-yellow-800',
-    'Error': 'bg-red-100 text-red-800 border-red-800'
-  };
+const backgroundColors = {
+  'Info': 'cyan',
+  'Success': 'primary',
+  'Warning': 'yellow',
+  'Error': 'destructive'
+}
 
 const defaultIcons = {
   'Info': 'Info',
@@ -39,6 +38,7 @@ export const CalloutWidget: React.FC<CalloutWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    backgroundColor: "var(--" + backgroundColors[variant || 'Info'] + "-light)"
   };
 
   if (!icon) {
@@ -48,14 +48,13 @@ export const CalloutWidget: React.FC<CalloutWidgetProps> = ({
   return (
     <div style={styles} className={
       cn(
-        "flex items-center p-4 text-sm border rounded-sm",
-        variantClasses[variant || 'Info']
+        "flex items-center p-4 text-sm"
       )} role="alert">
-      {icon && <Icon size="30" name={icon} className="mr-4"/>}
+      {icon && <Icon size="30" name={icon} className="mr-4 opacity-50"/>}
       <span className="sr-only">{variant}</span>
       <div className="flex flex-col">
         {title && <div className="font-medium">{title}</div>}
-        {children && <div>{children}</div>}
+        {children && <div className="opacity-50">{children}</div>}
       </div>
     </div>
   );
