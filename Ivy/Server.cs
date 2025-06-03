@@ -19,14 +19,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-public record ServerArgs(int Port, bool Verbose, bool IKillForThisPort, bool Browse, string? Args, string? DefaultAppId, bool Silent);
+public class ServerArgs
+{
+    public int Port { get; set; } = 5000;
+    public bool Verbose { get; set; } = false;
+    public bool IKillForThisPort { get; set; } = false;
+    public bool Browse { get; set; } = false;
+    public string? Args { get; set; } = null;
+    public string? DefaultAppId { get; set; } = null;
+    public bool Silent { get; set; } = false;
+}
 
 public class Server
 {
     private IContentBuilder? _contentBuilder;
     private bool _useHotReload;
     private bool _useHttpRedirection;
-    private readonly int _port;
     
     public string? DefaultAppId { get; private set; }
     public AppRepository AppRepository { get; } = new();
@@ -36,12 +44,14 @@ public class Server
 
     private readonly ServerArgs _args;
     
-    public Server(int? port = null)
+    public Server(ServerArgs? args = null) 
     {
-        _args = IvyServerUtils.GetArgs();
-        
+        _args = args ?? IvyServerUtils.GetArgs();
+        if (int.TryParse(Environment.GetEnvironmentVariable("PORT"), out int parsedPort))
+        {
+            _args.Port = parsedPort;
+        }
         Services.AddSingleton(_args);
-        _port = port ?? int.Parse(Environment.GetEnvironmentVariable("PORT") ?? _args.Port.ToString());
     }
     
     public Server(FuncBuilder viewFactory) : this()
@@ -165,16 +175,15 @@ public class Server
             }
         }, cts.Token);
         
-        if (Utils.IsPortInUse(_port))
+        if (Utils.IsPortInUse(_args.Port))
         {
-
             if(_args.IKillForThisPort)
             {
-                Utils.KillProcessUsingPort(_port);
+                Utils.KillProcessUsingPort(_args.Port);
             }
             else
             {
-                Console.WriteLine($"\u001b[31mPort {_port} is already in use on this machine.\u001b[0m");
+                Console.WriteLine($"\u001b[31mPort {_args.Port} is already in use on this machine.\u001b[0m");
                 
                 Console.WriteLine(
                     "Specify a different port using '--port <number>' or '--i-kill-for-this-port' to just take it.");
@@ -195,7 +204,7 @@ public class Server
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
         
-        builder.WebHost.UseUrls($"http://*:{_port}");
+        builder.WebHost.UseUrls($"http://*:{_args.Port}");
         
         builder.Services.AddSignalR();
         builder.Services.AddSingleton(this);
@@ -382,15 +391,15 @@ public static class IvyServerUtils
         var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption };
         
         var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
-        return new ServerArgs(
-            result.GetValueForOption(portOption),
-            result.GetValueForOption(verboseOption),
-            result.GetValueForOption(iKillForThisPortOption),
-            result.GetValueForOption(browseOption),
-            result.GetValueForOption(argsOption),
-            result.GetValueForOption(defaultAppIdOption),
-            result.GetValueForOption(silentOption)
-        );
-        
+        return new ServerArgs()
+        {
+            Port = result.GetValueForOption(portOption),
+            Verbose = result.GetValueForOption(verboseOption),
+            IKillForThisPort = result.GetValueForOption(iKillForThisPortOption),
+            Browse = result.GetValueForOption(browseOption),
+            Args = result.GetValueForOption(argsOption),
+            DefaultAppId = result.GetValueForOption(defaultAppIdOption),
+            Silent = result.GetValueForOption(silentOption)
+        };
     }
 }
