@@ -282,7 +282,7 @@ export const TabsLayoutWidget = ({
         {badge && (
           <Badge
             variant="default"
-            className={cn("ml-2 w-min whitespace-nowrap", (showClose || showRefresh) && "group-hover:hidden")}
+            className="ml-2 w-min whitespace-nowrap"
           >
             {badge}
           </Badge>
