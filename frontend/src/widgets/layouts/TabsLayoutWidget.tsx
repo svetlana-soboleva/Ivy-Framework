@@ -147,6 +147,7 @@ export const TabsLayoutWidget = ({
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const [tabsOverflowing, setTabsOverflowing] = React.useState(false);
   const [hoveredTabId, setHoveredTabId] = React.useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   // Tab management
   const tabIds = React.useMemo(() => tabWidgets.map(tab => (tab as any).props.id), [tabWidgets.length]);
@@ -227,6 +228,7 @@ export const TabsLayoutWidget = ({
   const handleTabSelect = (tabId: string) => {
     setLoadedTabs(prev => new Set(prev).add(tabId));
     setActiveTabId(tabId);
+    setDropdownOpen(false);
     eventHandler("OnSelect", id, [tabOrder.indexOf(tabId)]);
   };
 
@@ -357,7 +359,7 @@ export const TabsLayoutWidget = ({
           </ScrollArea>
           
           {tabsOverflowing && (
-            <DropdownMenu>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
