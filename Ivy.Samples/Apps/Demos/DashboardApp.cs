@@ -41,8 +41,8 @@ public class MetricView(string title) : ViewBase
         return new Card(
                 (Layout.Horizontal().Align(Align.Left).Gap(2) 
                  | Text.H3("$84,250") 
-                 | Icons.TrendingUp.ToIcon().Color(Colors.Green) 
-                 | Text.Small("21%").Color(Colors.Green)),
+                 | Icons.TrendingUp.ToIcon().Color(Colors.Emerald) 
+                 | Text.Small("21%").Color(Colors.Emerald)),
                 new Progress(21).Goal(800_000.ToString("C0"))
             ).Title(title).Icon(Icons.DollarSign)
             ;

@@ -348,7 +348,7 @@ export const TabsLayoutWidget = ({
                         onMouseDown={(e: React.MouseEvent) => handleMouseDown(e, tabOrder.indexOf(id))}
                         className={cn(
                           "group overflow-hidden rounded-b-none py-2 data-[state=active]:z-10 data-[state=active]:shadow-none border-x border-t border-border",
-                          variant === "Tabs" && "bg-muted data-[state=active]:bg-background",
+                          variant === "Tabs" && "data-[state=active]:bg-background",
                           variant === "Content" && "border-b-2 border-b-transparent data-[state=active]:border-b-primary data-[state=active]:bg-background/50"
                         )}
                       >

@@ -54,7 +54,7 @@ public class DashboardBarChartStyle<TSource> : IBarChartStyle<TSource>
     {
         return new BarChart(data)
                 .Vertical()
-                .ColorScheme(ColorScheme.Emerald)
+                .ColorScheme(ColorScheme.Default)
                 .Bar(measures.Select(m => 
                     new Bar(m.Name, 1).Radius(8).FillOpacity(0.8)
                         .LabelList(new LabelList(dimension.Name).Position(Positions.InsideLeft).Offset(8).Fill(Colors.White))

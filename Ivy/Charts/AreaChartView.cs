@@ -52,7 +52,7 @@ public class DashboardAreaChartStyle<TSource> : IAreaChartStyle<TSource>
     public AreaChart Design(ExpandoObject[] data, Dimension<TSource> dimension, Measure<TSource>[] measures)
     {
         return new AreaChart(data)
-            .ColorScheme(ColorScheme.Emerald)
+            .ColorScheme(ColorScheme.Default)
             .Area(measures.Select(m => new Area(m.Name, 1)).ToArray())
             .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
             .CartesianGrid(new CartesianGrid().Horizontal())

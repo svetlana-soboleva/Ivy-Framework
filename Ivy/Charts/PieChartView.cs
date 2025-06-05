@@ -53,7 +53,7 @@ public class DashboardPieChartStyle<TSource> : IPieChartStyle<TSource>
                     .InnerRadius(total != null ? "50%" : (string?)null!)
                 )
                 .Total(total)
-                .ColorScheme(ColorScheme.Emerald)
+                .ColorScheme(ColorScheme.Default)
                 .Legend(new Legend().IconType(Legend.IconTypes.Rect))
                 .Tooltip(new Tooltip().Animated(true))
             ;

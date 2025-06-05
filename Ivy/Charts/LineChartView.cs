@@ -52,7 +52,7 @@ public class DashboardLineChartStyle<TSource> : ILineChartStyle<TSource>
     public LineChart Design(ExpandoObject[] data, Dimension<TSource> dimension, Measure<TSource>[] measures, TableCalculation[] calculations)
     {
         return new LineChart(data)
-                .ColorScheme(ColorScheme.Emerald)
+                .ColorScheme(ColorScheme.Default)
                 .CartesianGrid(new CartesianGrid().Horizontal())
                 .Line(measures.Select(m => new Line(m.Name).CurveType(CurveTypes.Natural).StrokeWidth(2)).ToArray())
                 .Line(calculations.Select(c => new Line(c.Name).CurveType(CurveTypes.Natural)).ToArray())

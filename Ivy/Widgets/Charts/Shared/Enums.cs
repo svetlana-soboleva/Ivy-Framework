@@ -2,7 +2,7 @@
 // ReSharper disable once CheckNamespace
 namespace Ivy.Charts;
 
-public enum ColorScheme { Default, Rainbow, Emerald, EmeraldGradient }
+public enum ColorScheme { Default, Rainbow }
 public enum Positions { Top, Left, Right, Bottom, Inside, Outside, InsideLeft, InsideRight, InsideTop, InsideBottom, InsideTopLeft, InsideBottomLeft, InsideTopRight, InsideBottomRight, InsideStart, InsideEnd, End, Center }
 public enum Layouts { Horizontal, Vertical }
 public enum CurveTypes { Basis, BasisClosed, BasisOpen, BumpX, BumpY, Bump, Linear, LinearClosed, Natural, MonotoneX, MonotoneY, Monotone, Step, StepBefore, StepAfter }
