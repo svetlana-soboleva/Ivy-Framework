@@ -108,6 +108,11 @@ public class Server
         return this;
     }
 
+    public Server UseChrome(ChromeSettings settings)
+    {
+       return UseChrome(() => new DefaultSidebarChrome(settings));
+    }
+    
     public Server UseChrome(Func<ViewBase>? viewFactory = null)
     {
         AddApp(new AppDescriptor
