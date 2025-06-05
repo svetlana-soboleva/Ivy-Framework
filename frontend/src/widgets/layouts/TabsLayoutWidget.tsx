@@ -49,7 +49,6 @@ interface TabsLayoutWidgetProps {
   padding?: string;
 }
 
-// Sortable tab trigger component
 function SortableTabTrigger({ id, value, onClick, onMouseDown, className, children, ...props }: {
   id: string;
   value: string;
@@ -84,7 +83,6 @@ function SortableTabTrigger({ id, value, onClick, onMouseDown, className, childr
   );
 }
 
-// Sortable dropdown menu item
 function SortableDropdownMenuItem({ id, children, onClick, isActive }: {
   id: string;
   children: React.ReactNode;
@@ -216,13 +214,20 @@ export const TabsLayoutWidget = ({
   }, [activeTabId]);
 
   // Sync with selectedIndex prop
-  const prevSelRef = React.useRef<number | null>(null);
   React.useEffect(() => {
-    if (selectedIndex != null && selectedIndex !== prevSelRef.current) {
-      prevSelRef.current = selectedIndex;
-      if (tabOrder[selectedIndex]) setActiveTabId(tabOrder[selectedIndex]);
+    // Ensure selectedIndex is a valid number, tabOrder is populated,
+    // and selectedIndex is within the bounds of the current tabOrder.
+    if (selectedIndex != null && selectedIndex >= 0 && selectedIndex < tabOrder.length) {
+      const newTargetTabId = tabOrder[selectedIndex];
+      // Only update state if the target tab ID is actually different from the current active one.
+      if (newTargetTabId !== activeTabId) {
+        setActiveTabId(newTargetTabId);
+      }
     }
-  }, [selectedIndex]);
+    // If selectedIndex becomes out of bounds (e.g., after a tab removal where parent doesn't update selectedIndex,
+    // or if parent sends an invalid index initially), activeTabId will not be changed by this effect.
+    // It will retain its previous value.
+  }, [selectedIndex, tabOrder]);
 
   // Event handlers
   const handleTabSelect = (tabId: string) => {
@@ -246,7 +251,6 @@ export const TabsLayoutWidget = ({
     }
   };
 
-  // Global event listeners
   React.useEffect(() => {
     const handleTabEvent = (eventType: string) => (e: any) => {
       if (!e.detail?.id) return;
@@ -288,7 +292,7 @@ export const TabsLayoutWidget = ({
           </Badge>
         )}
         {activeTabId === tabId && (
-          <div className="absolute ml-2 items-center flex gap-0 relative">
+          <div className="ml-2 items-center flex gap-0 relative">
             {showRefresh && (
               <a
                 onClick={(e) => {
