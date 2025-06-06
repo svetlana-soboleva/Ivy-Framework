@@ -8,19 +8,19 @@ public class DropDownMenuApp : SampleBase
     protected override object? BuildSample()
     {
         var client = this.UseService<IClientProvider>();
-        
+
+        var trigger = new Button("Open Menu");
+
         Action<Event<DropDownMenu, object>> onSelect = @evt =>
         {
             client.Toast(@evt.Value?.ToString() ?? throw new Exception("Missing value in event."));
         };
 
-        var trigger = new Button("Open Menu");
-        
         return new DropDownMenu(onSelect, trigger)
                    .Header(
                        Layout.Vertical().Gap(0) | Text.Muted("Signed in as") | Text.Small("niels@bosmainteractive.se")
                    )
-                   .Left()
+                   .Bottom()
                | MenuItem.Separator()
                | MenuItem.Default("Ivy Github").Icon(Icons.Github)
                | MenuItem.Default("Theme")

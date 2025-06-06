@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.PanelLeft, path: ["Concepts"])]
+[App(icon:Icons.PanelLeft)]
 public class BladesApp : SampleBase
 {
     protected override object? BuildSample()

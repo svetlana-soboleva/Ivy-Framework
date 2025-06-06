@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.Paintbrush, path: ["Concepts"])]
+[App(icon:Icons.Paintbrush)]
 public class DefaultContentBuilderApp : SampleBase
 {
     protected override object? BuildSample()

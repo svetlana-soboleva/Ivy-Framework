@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.Check, path: ["Concepts"])]
+[App(icon:Icons.Check)]
 public class TaskApp : SampleBase
 {
     protected override async Task<object?> BuildSample()

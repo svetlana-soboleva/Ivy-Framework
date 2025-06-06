@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.Hourglass, path:["Concepts"])]
+[App(icon:Icons.Hourglass)]
 public class DebounceApp : SampleBase
 {
     protected override object? BuildSample()

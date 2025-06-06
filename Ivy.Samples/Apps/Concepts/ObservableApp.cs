@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon: Icons.RefreshCw, path: ["Concepts"])]
+[App(icon: Icons.RefreshCw)]
 public class ObservableApp : SampleBase
 {
     protected override object? BuildSample()

@@ -37,7 +37,7 @@ public class ProductsListBlade: ViewBase
         var onItemClicked = new Action<Event<ListItem>>(e =>
         {
             var product = (ProductListRecord)e.Sender.Tag!;
-            blades.Push(this, new ProductDetailsBlade(product.Id), product.Name, width:Size.Units(32)); // by setting the width we avoid jank when different blades are opened   
+            blades.Push(this, new ProductDetailsBlade(product.Id), product.Name, width:Size.Units(100)); // by setting the width we avoid jank when different blades are opened   
         });
         
         ListItem CreateItem(ProductListRecord record) => 
