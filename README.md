@@ -1,4 +1,6 @@
-# Ivy: Build Internal Applications with AI and Pure C\#
+![logo](https://cdn.ivy.app/logo_green_w200.png)
+
+# Build Internal Applications with AI and Pure C\#
 
 Ivy - The ultimate framework for building internal tools with LLM code generation by unifying front-end and back-end into a single C# codebase. With Ivy, you can build robust internal tools and dashboards using C# and AI assistance based on your existing database.
 
