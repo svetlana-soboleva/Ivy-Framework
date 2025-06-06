@@ -280,7 +280,6 @@ public class Server
             {
                 Console.WriteLine($"Ivy is running on {localUrl}. Press Ctrl+C to stop.");
             }
-
             if (_args.Browse)
             {
                 Utils.OpenBrowser(localUrl);
@@ -393,7 +392,7 @@ public static class IvyServerUtils
         var argsOption = new Option<string?>("--args", () => null!);
         var defaultAppIdOption = new Option<string?>("--app", () => null!);
         
-        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption };
+        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption, silentOption };
         
         var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
         return new ServerArgs()

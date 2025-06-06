@@ -2,33 +2,18 @@ import { XAxisProps, YAxisProps, LineProps, LabelProps, LegendProps, LegendType,
 import { CurveType } from 'recharts/types/shape/Curve';
 import { camelCase } from '@/lib/utils';
 import DataFormatter from 'excel-style-dataformatter';
-import React from 'react';
 
-export type ColorScheme = 'Default' | 'Rainbow' | 'Emerald' | 'EmeraldGradient'
+export type ColorScheme = 'Default' | 'Rainbow'
 
 const defaultColors = ["chart-1","chart-2","chart-3","chart-4","chart-5"];
 const rainbowColors = ["blue", "cyan", "yellow", "red", "orange", "purple", "lime", "indigo", "rose", "green", "pink", "teal", "amber", "violet", "emerald", "fuchsia", "sky"];
-const emeraldColors = ["emerald-1", "emerald-2", "emerald-3", "emerald-4", "emerald-5"];
 
 export const getColorGenerator = (scheme: ColorScheme): [((index: number) => string), JSX.Element | null] => {
   switch (scheme) {
-    case 'Default':
-      return [(index: number) => "var(--"+defaultColors[index % defaultColors.length]+")", null];
     case 'Rainbow':
       return [(index: number) => "var(--"+rainbowColors[index % rainbowColors.length]+")", null];
-    case 'Emerald':
-      return [(index: number) => "var(--"+emeraldColors[index % emeraldColors.length]+")", null];
-    case 'EmeraldGradient':
-      return [
-        (index: number) => `url(#--emerald-gradient-${index % emeraldColors.length})`,
-        React.createElement('defs', null,
-          emeraldColors.map((color: string, i: number) =>
-            React.createElement('linearGradient', { key: i, id: `--emerald-gradient-${i}`, x1: '0', y1: '0', x2: '0', y2: '1' },
-              React.createElement('stop', { offset: '5%', stopColor: `var(--${color})`, stopOpacity: 0.8 }),
-              React.createElement('stop', { offset: '95%', stopColor: `var(--${color})`, stopOpacity: 0.1 })
-            )
-          ))
-      ];
+    default:
+      return [(index: number) => "var(--"+defaultColors[index % defaultColors.length]+")", null];
   }
 };
 
