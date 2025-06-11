@@ -8,7 +8,8 @@ import { CornerDownLeft } from 'lucide-react';
 import React, { FormEvent, useState, KeyboardEvent, ReactNode } from 'react';
 import { User, LucideStars } from 'lucide-react'
 import { TextShimmer } from '@/components/TextShimmer';
-
+import { getHeight, getWidth } from '@/lib/styles';
+  
 interface ChatMessageWidgetProps {
   id: number;
   children?: ReactNode[];
@@ -44,9 +45,11 @@ interface ChatWidgetProps {
   id: string;
   placeholder?: string;
   children: React.ReactElement<ChatMessageWidgetProps>[];
-}
+  width?: string;
+  height?: string;  
+}1
 
-export const ChatWidget: React.FC<ChatWidgetProps> = ({ id, children, placeholder }) => {
+export const ChatWidget: React.FC<ChatWidgetProps> = ({ id, children, placeholder, width, height }) => {
   const eventHandler = useEventHandler();
 
   const messageWidgets = React.Children.toArray(children).filter((child) => 
@@ -70,8 +73,13 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ id, children, placeholde
     }
   };
 
+  const style = {
+    ...getWidth(width),
+    ...getHeight(height)
+  }
+
   return (
-    <div className="flex flex-col h-screen remove-ancestor-margin">
+    <div className="flex flex-col" style={style}>
       <div className="flex-1 overflow-hidden">
         <ChatMessageList>
           {messageWidgets}

@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.BellRing, path: ["Concepts"])]
+[App(icon:Icons.BellRing)]
 public class ToastApp : SampleBase
 {
     protected override object? BuildSample()

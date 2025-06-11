@@ -1,4 +1,5 @@
 ﻿using Ivy.Core;
+using Ivy.Shared;
 
 // ReSharper disable once CheckNamespace
 namespace Ivy;
@@ -14,6 +15,8 @@ public record Chat : WidgetBase<Chat>
     public Chat(ChatMessage[] messages, Action<Event<Chat, string>> onSendMessage) : base(messages.Cast<object>().ToArray())
     {
         OnSendMessage = onSendMessage;
+        Width = Size.Full();
+        Height = Size.Full();
     }
     
     [Event] public Action<Event<Chat,string>> OnSendMessage { get; set; }

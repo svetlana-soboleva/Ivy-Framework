@@ -52,8 +52,7 @@ const STORAGE_KEY = "dismissed-news";
 function News({ articles }: { articles: NewsArticle[] }) {
   const [dismissedNews, setDismissedNews] = React.useState<string[]>([]);
 
-  // Load dismissed ids from localStorage on mount
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -64,8 +63,7 @@ function News({ articles }: { articles: NewsArticle[] }) {
     }
   }, []);
 
-  // Purge ids that are no longer present in the feed
-  React.useEffect(() => {
+  useEffect(() => {
     setDismissedNews((prev) => {
       const validIds = new Set(articles.map((a) => a.id));
       const filtered = prev.filter((id) => validIds.has(id));
@@ -78,6 +76,9 @@ function News({ articles }: { articles: NewsArticle[] }) {
 
   const cards = articles.filter(({ id }) => !dismissedNews.includes(id));
   const cardCount = cards.length;
+
+  const [hasDismissedNews, setHasDismissedNews] = React.useState(false);
+
   const [showCompleted, setShowCompleted] = React.useState(cardCount > 0);
 
   React.useEffect(() => {
@@ -86,6 +87,8 @@ function News({ articles }: { articles: NewsArticle[] }) {
       timeout = setTimeout(() => setShowCompleted(false), 2700);
     return () => clearTimeout(timeout);
   }, [cardCount]);
+
+  if(cards.length === 0 && !hasDismissedNews) return null;
 
   return cards.length || showCompleted ? (
     <div
@@ -127,6 +130,7 @@ function News({ articles }: { articles: NewsArticle[] }) {
               onDismiss={() => {
                 const updated = [id, ...dismissedNews.filter((d) => d !== id)].slice(0, 50)
                 setDismissedNews(updated)
+                setHasDismissedNews(true)
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
               }}
             />

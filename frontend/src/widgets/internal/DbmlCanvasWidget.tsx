@@ -193,8 +193,23 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({ dbml, width,
   const parseDbml = useCallback(() => {
     try {
       setError(null);
+      
+      // Handle empty or whitespace-only input
+      if (!dbml || !dbml.trim()) {
+        setNodes([]);
+        setEdges([]);
+        return;
+      }
+
       const parsed = Parser.parse(dbml, 'dbml');
       
+      // Validate that we have a schema and tables
+      if (!parsed?.schemas?.[0]?.tables) {
+        setNodes([]);
+        setEdges([]);
+        return;
+      }
+
       // First, collect all relationships to mark fields that are part of relationships
       const relationships = new Map();
       parsed.schemas[0].refs.forEach((ref: any) => {

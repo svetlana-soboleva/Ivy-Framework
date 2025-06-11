@@ -165,7 +165,6 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             MenuItem.Default("Star on Github").Icon(Icons.Github)
                 .HandleSelect(() => client.OpenUrl(Resources.IvyGitHubUrl)),
-            //MenuItem.Default("Edit").Icon(Icons.Sparkles).HandleSelect(() => isIvyAgentStarting.Set(true)).Disabled(isIvyAgentStarting.Value),
             MenuItem.Default("Theme")
                 .Icon(Icons.SunMoon)
                 .Children(

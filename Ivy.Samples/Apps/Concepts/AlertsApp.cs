@@ -2,23 +2,19 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.Bell, path: ["Concepts"])]
+[App(icon:Icons.Bell)]
 public class AlertsApp : SampleBase
 {
     protected override object? BuildSample()
     {
-        var (alertView, alertResult, showAlert) = this.UseAlert();
+        var (alertView, showAlert) = this.UseAlert();
+        var client = UseService<IClientProvider>();
 
         return Layout.Vertical(
-            new Button("YesNoCancel", _ => showAlert("Hello, World!", "Alert Title", AlertButtonSet.YesNoCancel)),
-            alertResult switch
+            new Button("YesNoCancel", _ => showAlert("Hello, World!", result =>
             {
-                AlertResult.Ok => "You clicked OK!",
-                AlertResult.Cancel => "You clicked Cancel!",
-                AlertResult.Yes => "You clicked Yes!",
-                AlertResult.No => "You clicked No!",
-                _ => "You didn't click anything!"
-            },
+                client.Toast(result.ToString());
+            }, "Alert Title", AlertButtonSet.YesNoCancel)),
             alertView
         );
     }

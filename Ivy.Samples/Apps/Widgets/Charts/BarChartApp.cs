@@ -33,7 +33,7 @@ public class BarChart0 : ViewBase
 
         return new Card(
                 new BarChart(data)
-                    .ColorScheme(ColorScheme.Emerald)
+                    .ColorScheme(ColorScheme.Default)
                     .Bar(new Bar("Desktop",1).Radius(8))
                     .CartesianGrid(new CartesianGrid().Horizontal())
                     .Tooltip()
@@ -60,7 +60,7 @@ public class BarChart1 : ViewBase
 
         return new Card(
                 new BarChart(data)
-                    .ColorScheme(ColorScheme.Emerald)
+                    .ColorScheme(ColorScheme.Default)
                     .Bar(new Bar("Mobile",1).Radius(0,8).LegendType(LegendTypes.Square))
                     .Bar(new Bar("Desktop",1).Radius(8,0).LegendType(LegendTypes.Square))
                     .CartesianGrid(new CartesianGrid().Horizontal())
@@ -88,7 +88,7 @@ public class BarChart2 : ViewBase
 
         return new Card(
                 new BarChart(data)
-                    .ColorScheme(ColorScheme.Emerald)
+                    .ColorScheme(ColorScheme.Default)
                     .Bar(new Bar("Mobile",1).Radius(8).LegendType(LegendTypes.Square))
                     .Bar(new Bar("Desktop",2).Radius(8).LegendType(LegendTypes.Square))
                     .CartesianGrid(new CartesianGrid().Horizontal())
@@ -117,7 +117,7 @@ public class BarChart3 : ViewBase
         return new Card(
                 new BarChart(data)
                     .Vertical()
-                    .ColorScheme(ColorScheme.Emerald)
+                    .ColorScheme(ColorScheme.Default)
                     .Bar(new Bar("Desktop",1).Radius(4).LegendType(LegendTypes.Square)
                         .LabelList(new LabelList("Month").Fill(Colors.White).Position(Positions.InsideLeft).Offset(8).FontSize(12))
                         .LabelList(new LabelList("Desktop").Fill(Colors.Black).Position(Positions.Right).Offset(8).FontSize(12))

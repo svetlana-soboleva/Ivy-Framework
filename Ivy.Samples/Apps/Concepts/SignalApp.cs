@@ -5,7 +5,7 @@ namespace Ivy.Samples.Apps.Concepts;
 
 public class MySignal() : AbstractSignal<int, string> {}
 
-[App(icon: Icons.Signal, path: ["Concepts"])]
+[App(icon: Icons.Signal)]
 public class SignalApp : SampleBase
 {
     protected override object? BuildSample()

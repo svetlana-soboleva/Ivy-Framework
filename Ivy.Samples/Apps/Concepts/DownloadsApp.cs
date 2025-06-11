@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Ivy.Samples.Apps.Concepts;
 
-[App(icon:Icons.Download, path:[ "Concepts" ])]
+[App(icon:Icons.Download)]
 public class DownloadsApp : SampleBase
 {
     protected override object? BuildSample()

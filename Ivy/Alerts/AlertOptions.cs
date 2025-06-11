@@ -60,6 +60,11 @@ public enum AlertResult
     No
 }
 
+public static class AlertResultExtensions
+{
+    public static bool IsOk(this AlertResult result) => result == AlertResult.Ok;
+}
+
 public enum AlertButtonSet
 {
     Ok,

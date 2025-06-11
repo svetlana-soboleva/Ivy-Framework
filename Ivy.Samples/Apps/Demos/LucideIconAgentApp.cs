@@ -5,12 +5,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 namespace Ivy.Samples.Apps.Demos;
 
 [App(icon:Icons.Sparkles)]
-public class LucideIconAgentApp : SampleBase
+public class LucideIconAgentApp() : SampleBase(Align.TopRight)
 {
-    public LucideIconAgentApp() : base(Align.TopRight)
-    {
-    }
-    
     protected override object? BuildSample()
     {
         var client = UseService<IClientProvider>();
@@ -50,7 +46,8 @@ public class LucideIconAgentApp : SampleBase
             }
         }
 
-        return new Chat(messages.Value.ToArray(), OnSendMessage);
+        return Layout.Center().Padding(0,10,0,10)
+            | new Chat(messages.Value.ToArray(), OnSendMessage).Width(Size.Full().Max(200));
     }
 }
 
