@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq.Expressions;
@@ -12,6 +13,68 @@ namespace Ivy;
 public static class Utils
 {
     public static string? NullIfEmpty(this string? input) => string.IsNullOrWhiteSpace(input) ? null : input;
+    
+    public static Type? GetCollectionTypeParameter(this Type type)
+    {
+        if (type == null) return null;
+
+        // Handle arrays
+        if (type.IsArray)
+        {
+            return type.GetElementType();
+        }
+
+        // Handle Dictionary separately if you want both key and value types
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            return typeof(KeyValuePair<,>).MakeGenericType(type.GetGenericArguments());
+        }
+
+        // Handle generic collections
+        if (type.IsGenericType)
+        {
+            var genericArgs = type.GetGenericArguments();
+            if (genericArgs.Length == 1)
+            {
+                return genericArgs[0];
+            }
+        }
+
+        // Try to infer from IEnumerable<T>
+        var enumerableInterface = type.GetInterfaces()
+            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+        return enumerableInterface?.GetGenericArguments()[0];
+    }
+    
+    public static bool IsCollectionType(this Type? type)
+    {
+        if (type == null) return false;
+
+        // Handle arrays
+        if (type.IsArray) return true;
+
+        // Handle common generic collection types
+        if (type.IsGenericType)
+        {
+            var genericTypeDef = type.GetGenericTypeDefinition();
+            if (genericTypeDef == typeof(List<>) ||
+                genericTypeDef == typeof(IList<>) ||
+                genericTypeDef == typeof(IEnumerable<>) ||
+                genericTypeDef == typeof(ICollection<>))
+            {
+                return true;
+            }
+        }
+
+        // Handle non-generic collections like ArrayList, Hashtable, etc.
+        if (typeof(IEnumerable).IsAssignableFrom(type))
+        {
+            return true;
+        }
+
+        return false;
+    }
     
     public static void PrintDetailedException(Exception? ex)
     {

@@ -71,7 +71,7 @@ public static class SelectInputExtensions
     public static SelectInputBase ToSelectInput(this IAnyState state, IEnumerable<IAnyOption>? options = null, string? placeholder = null, bool disabled = false, SelectInputs variant = SelectInputs.Select)
     {
         var type = state.GetStateType();
-        bool selectMany = type.IsArray || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+        bool selectMany = type.IsCollectionType();
         Type genericType = typeof(SelectInput<>).MakeGenericType(type);
         
         if (options == null)
@@ -79,6 +79,10 @@ public static class SelectInputExtensions
             if (type.IsEnum)
             {
                 options = type.ToOptions();
+            }
+            else if(selectMany && type.GetCollectionTypeParameter() is {} itemType)
+            {
+                options = itemType.ToOptions();
             }
             else
             {

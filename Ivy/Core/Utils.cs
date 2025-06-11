@@ -27,7 +27,36 @@ public static class Utils
         {
             return BestGuessConvert(ConvertJsonNodeToObject(jsonNode), valueType);
         }
-        
+
+        if (valueType.IsCollectionType() && valueType.GetCollectionTypeParameter() is {} itemType)
+        {
+            if (jsonNode is JsonArray jsonArray)
+            {
+                var items = jsonArray.Select(e => ConvertJsonNode(e, itemType)).ToList();
+                if (valueType.IsArray)
+                {
+                    var array = Array.CreateInstance(itemType, items.Count);
+                    for (int i = 0; i < items.Count; i++)
+                        array.SetValue(items[i], i);
+                    return array;
+                }
+
+                if (valueType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var list = (IList)Activator.CreateInstance(valueType)!;
+                    foreach (var item in items)
+                        list.Add(item);
+                    return list;
+                }
+
+                var listType = typeof(List<>).MakeGenericType(itemType);
+                var genericList = (IList)Activator.CreateInstance(listType)!;
+                foreach (var item in items)
+                    genericList.Add(item);
+                return genericList;
+            }
+        }
+
         if (t.IsEnum && jsonNode is JsonValue enumVal && enumVal.TryGetValue(out string? enumStr))
             return Enum.Parse(t, enumStr, true);
 

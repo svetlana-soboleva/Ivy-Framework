@@ -35,45 +35,58 @@ public class SelectInputApp : SampleBase
         new Option<string>("Julia"),
         new Option<string>("Olivia")
     ];
+
+    private enum Features
+    {
+        AllowOverage,
+        RemoveBranding
+    }
     
     protected override object? BuildSample()
     {
-        var intArrayState = this.UseState<int[]>();
-        var intArrayInput = intArrayState.ToSelectInput(IntOptions).List();
+        var enumArrayState = this.UseState<List<Features>>();
 
-        var intState = this.UseState(1);
-        var intInput = intState.ToSelectInput(IntOptions);
-        
-        var stringArrayState = this.UseState<string[]>();
-        var stringArrayInput = stringArrayState.ToSelectInput(StringOptions).List();
-        
-        var stringState = this.UseState("Niels");
-        var stringInput = stringState.ToSelectInput(StringOptions);
-        
-        var guidArrayState = this.UseState<Guid[]>();
-        var guidArrayInput = guidArrayState.ToSelectInput(GuidOptions).List();
-        
-        var guidState = this.UseState<Guid>(GuidOptions[0].TypedValue);
-        var guidInput = guidState.ToSelectInput(GuidOptions);
-        
-        var colorState = this.UseState(Color.Red);
+        return Layout.Vertical()
+               | enumArrayState.ToSelectInput().List()
+               | enumArrayState;
 
-        var options = typeof(Color).ToOptions();
-        
-        return Layout.Vertical(
-            intArrayInput,
-            intInput,
-            stringArrayInput,
-            stringInput,
-            guidArrayInput,
-            guidInput,
 
-            colorState.ToSelectInput(options),
-            colorState.ToSelectInput(options).Disabled(),
-            colorState.ToSelectInput(options).Variant(SelectInputs.List),
-            colorState.ToSelectInput(options).Variant(SelectInputs.List).Disabled(),
-            colorState.ToSelectInput(options).Variant(SelectInputs.Toggle),
-            colorState.ToSelectInput(options).Variant(SelectInputs.Toggle).Disabled()
-        );
+        // var intArrayState = this.UseState<int[]>();
+        // var intArrayInput = intArrayState.ToSelectInput(IntOptions).List();
+        //
+        // var intState = this.UseState(1);
+        // var intInput = intState.ToSelectInput(IntOptions);
+        //
+        // var stringArrayState = this.UseState<string[]>();
+        // var stringArrayInput = stringArrayState.ToSelectInput(StringOptions).List();
+        //
+        // var stringState = this.UseState("Niels");
+        // var stringInput = stringState.ToSelectInput(StringOptions);
+        //
+        // var guidArrayState = this.UseState<Guid[]>();
+        // var guidArrayInput = guidArrayState.ToSelectInput(GuidOptions).List();
+        //
+        // var guidState = this.UseState<Guid>(GuidOptions[0].TypedValue);
+        // var guidInput = guidState.ToSelectInput(GuidOptions);
+        //
+        // var colorState = this.UseState(Color.Red);
+        //
+        // var options = typeof(Color).ToOptions();
+        //
+        // return Layout.Vertical(
+        //     intArrayInput,
+        //     intInput,
+        //     stringArrayInput,
+        //     stringInput,
+        //     guidArrayInput,
+        //     guidInput,
+        //
+        //     colorState.ToSelectInput(options),
+        //     colorState.ToSelectInput(options).Disabled(),
+        //     colorState.ToSelectInput(options).Variant(SelectInputs.List),
+        //     colorState.ToSelectInput(options).Variant(SelectInputs.List).Disabled(),
+        //     colorState.ToSelectInput(options).Variant(SelectInputs.Toggle),
+        //     colorState.ToSelectInput(options).Variant(SelectInputs.Toggle).Disabled()
+        // );
     }
 }

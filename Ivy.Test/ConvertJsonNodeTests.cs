@@ -59,6 +59,27 @@ public class ConvertJsonNodeTests
         Console.WriteLine(BitConverter.ToString(deserializedInput.Content));
     }
     
+    [Fact]
+    public void TestEnumArray()
+    {
+        var json = """["Value1", "Value2"]""";
+        JsonArray jsonArray = JsonNode.Parse(json) as JsonArray;
+        var result = Core.Utils.ConvertJsonNode(jsonArray, typeof(TestEnum[]));
+        Assert.NotNull(result);
+        //make sure result is of type TestEnum[]
+        Assert.IsType<TestEnum[]>(result);
+    }
+    
+    [Fact]
+    public void TestEnumList()
+    {
+        var json = """["Value1", "Value2"]""";
+        JsonArray jsonArray = JsonNode.Parse(json) as JsonArray;
+        var result = Core.Utils.ConvertJsonNode(jsonArray, typeof(List<TestEnum>));
+        Assert.NotNull(result);
+        //make sure result is of type TestEnum[]
+        Assert.IsType<List<TestEnum>>(result);
+    }
     
     [Fact]
     public void ConvertFileInput()
