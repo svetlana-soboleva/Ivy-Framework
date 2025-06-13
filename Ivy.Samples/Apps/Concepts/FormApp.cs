@@ -9,8 +9,17 @@ public enum Gender
     Other
 }
 
+public enum Fruits
+{
+    Banana,
+    Apple,
+    Orange,
+    Pear,
+    Strawberry
+}
+
 public record UserModel(
-    string Name, string Password, bool IsAwesome, DateTime BirthDate, int Height, int UserId = 123, Gender Gender = Gender.Male, string Json = "{////////////////////////////////////////////////////////////////////////////////////////////////////////////////////}");
+    string Name, string Password, bool IsAwesome, DateTime BirthDate, int Height, int UserId = 123, Gender Gender = Gender.Male, string Json = "{}", List<Fruits> FavoriteFruits = null!);
 
 [App(icon: Icons.Clipboard)]
 public class FormApp : SampleBase

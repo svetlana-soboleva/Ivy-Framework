@@ -178,6 +178,11 @@ public class FormBuilder<TModel> : ViewBase
         {
             return (state) => state.ToSelectInput();
         }
+        
+        if(type.IsCollectionType() && type.GetCollectionTypeParameter() is { IsEnum: true })
+        {
+            return (state) => state.ToSelectInput().List();
+        }
 
         if (type.IsNumeric())
         {

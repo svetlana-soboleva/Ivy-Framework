@@ -51,7 +51,7 @@ public static class OptionExtensions
             var description = enumType.GetField(e.ToString()!)?
                 .GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .Cast<DescriptionAttribute>()
-                .FirstOrDefault()?.Description ?? e.ToString();
+                .FirstOrDefault()?.Description ?? Utils.SplitPascalCase(e.ToString());
             
             return (IAnyOption)Activator.CreateInstance(
                 typeof(Option<>).MakeGenericType(enumType),
