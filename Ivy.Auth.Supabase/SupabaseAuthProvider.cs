@@ -54,6 +54,7 @@ public class SupabaseAuthProvider : IAuthProvider
             "google" => Constants.Provider.Google,
             "apple" => Constants.Provider.Apple,
             "discord" => Constants.Provider.Discord,
+            "twitch" => Constants.Provider.Twitch,
             "figma" => Constants.Provider.Figma,
             "notion" => Constants.Provider.Notion,
             "azure" => Constants.Provider.Azure,
@@ -70,7 +71,7 @@ public class SupabaseAuthProvider : IAuthProvider
         };
 
         // Set scopes. These are necessary for Discord, but some providers return errors if they're provided.
-        if (provider != Constants.Provider.Gitlab && provider != Constants.Provider.Figma)
+        if (provider != Constants.Provider.Gitlab && provider != Constants.Provider.Figma && provider != Constants.Provider.Twitch)
         {
             signInOptions.Scopes = "email openid";
         }
@@ -194,6 +195,12 @@ public class SupabaseAuthProvider : IAuthProvider
     public SupabaseAuthProvider UseDiscord()
     {
         _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Discord", nameof(Constants.Provider.Discord).ToLower(), Icons.Discord));
+        return this;
+    }
+
+    public SupabaseAuthProvider UseTwitch()
+    {
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Twitch", nameof(Constants.Provider.Twitch).ToLower(), Icons.Twitch));
         return this;
     }
 
