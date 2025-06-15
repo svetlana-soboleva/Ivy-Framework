@@ -50,3 +50,6 @@ See: https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy.Docs/Docs/01
 * It's ok to use AI tools to help you write, but make sure you review the output and ensure it is correct.
 * All Ivy C# code needs to work!
 * Use the `Ivy.Samples` project to learn how to use Ivy.
+* Report any Ivy bugs on https://github.com/Ivy-Interactive/Ivy-Framework/issues. 
+
+**Do not submit PRs if `Ivy.Samples` does not compile.**
