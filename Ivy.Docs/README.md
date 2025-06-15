@@ -15,7 +15,7 @@ We write our documentation in Markdown. Work is tracked in this Google Sheet:
 https://docs.google.com/spreadsheets/d/1d3QWH53ayadDYPu4kl3Bq7F5ZElVfzqIAv02C7vE9-E/edit?usp=sharing
 (you will need to request write access)
 
-You are free to work on anything with status `Todo`. Submit a PR for each Markdown document. When you have submitted a PR set status `PR Submitted` and also enter the URL to the PR in the `PR` column. 
+You are free to work on anything with status `Todo`. Submit a PR for each Markdown document. When you have submitted a PR set status `PR Submitted` and also enter the URL to the PR in the `PR` column. While working on a document, set the status to `In Progress`. When you are done with a document, set the status to `Finished` and enter the URL to the PR in the `PR` column.
 
 **Review the pages marked as `Finished` to get an idea of what is expected of you.**
 
