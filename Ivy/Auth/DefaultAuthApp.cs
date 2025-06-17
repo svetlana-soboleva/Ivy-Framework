@@ -96,7 +96,7 @@ public class OAuthFlowView(AuthOption option) : ViewBase
         
         var login = async () =>
         {
-            client.OpenUrl(await auth.GetOAuthUriAsync(option.Id!, callback));
+            client.OpenUrl(await auth.GetOAuthUriAsync(option, callback));
         };
 
         return new Button(option.Name).Secondary().Icon(option.Icon).Width(Size.Full()).HandleClick(login.HandleError(this));

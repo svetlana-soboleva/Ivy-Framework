@@ -57,7 +57,7 @@ public class AutheliaAuthProvider : IAuthProvider
 
     public Task<AuthToken?> RefreshJwtAsync(AuthToken jwt) => Task.FromResult<AuthToken?>(jwt);
 
-    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    public Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
     {
         throw new NotImplementedException();
     }

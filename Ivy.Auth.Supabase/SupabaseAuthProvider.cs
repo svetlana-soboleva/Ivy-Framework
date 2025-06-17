@@ -47,9 +47,9 @@ public class SupabaseAuthProvider : IAuthProvider
         return authToken;
     }
     
-    public async Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    public async Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
     {
-        var provider = optionId switch
+        var provider = option.Id switch
         {
             "google" => Constants.Provider.Google,
             "apple" => Constants.Provider.Apple,
@@ -58,10 +58,11 @@ public class SupabaseAuthProvider : IAuthProvider
             "figma" => Constants.Provider.Figma,
             "notion" => Constants.Provider.Notion,
             "azure" => Constants.Provider.Azure,
+            "workos" => Constants.Provider.WorkOS,
             "github" => Constants.Provider.Github,
             "gitlab" => Constants.Provider.Gitlab,
             "bitbucket" => Constants.Provider.Bitbucket,
-            _ => throw new ArgumentException($"Unknown OAuth provider: {optionId}"),
+            _ => throw new ArgumentException($"Unknown OAuth provider: {option.Id}"),
         };
 
         var signInOptions = new SignInOptions
@@ -71,9 +72,22 @@ public class SupabaseAuthProvider : IAuthProvider
         };
 
         // Set scopes. These are necessary for Discord, but some providers return errors if they're provided.
-        if (provider != Constants.Provider.Gitlab && provider != Constants.Provider.Figma && provider != Constants.Provider.Twitch)
+        if (provider != Constants.Provider.Gitlab && provider != Constants.Provider.Figma && provider != Constants.Provider.Twitch && provider != Constants.Provider.WorkOS)
         {
             signInOptions.Scopes = "email openid";
+        }
+
+        if (provider == Constants.Provider.WorkOS)
+        {
+            if (option is not WorkOSAuthOption workOSOption || string.IsNullOrEmpty(workOSOption.ConnectionId))
+            {
+                throw new ArgumentException("WorkOS connection ID not provided.");
+            }
+
+            signInOptions.QueryParams = new()
+            {
+                ["connection"] = workOSOption.ConnectionId,
+            };
         }
 
         var providerAuthState = await _client.Auth.SignIn(provider, signInOptions);
@@ -219,6 +233,12 @@ public class SupabaseAuthProvider : IAuthProvider
     public SupabaseAuthProvider UseAzure()
     {
         _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Azure", nameof(Constants.Provider.Azure).ToLower(), Icons.Azure));
+        return this;
+    }
+
+    public SupabaseAuthProvider UseWorkOS(string connectionId)
+    {
+        _authOptions.Add(new WorkOSAuthOption(AuthFlow.OAuth, "WorkOS", nameof(Constants.Provider.WorkOS).ToLower(), Icons.None, connectionId));
         return this;
     }
 

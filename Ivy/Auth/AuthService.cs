@@ -11,9 +11,9 @@ public class AuthService(IAuthProvider authProvider, AuthToken? token) : IAuthSe
         return await authProvider.LoginAsync(email, password);
     }
 
-    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    public Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
     {
-        return authProvider.GetOAuthUriAsync(optionId, callbackUri);
+        return authProvider.GetOAuthUriAsync(option, callbackUri);
     }
 
     public Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
