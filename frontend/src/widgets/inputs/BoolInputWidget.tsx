@@ -136,7 +136,7 @@ const VariantComponents = {
     <div
       className="flex items-start space-x-2"
       onClick={(e) => e.stopPropagation()}
-      title={invalid} // Display invalid message on hover
+      title={invalid}
     >
       <Toggle
         id={id}
@@ -144,7 +144,7 @@ const VariantComponents = {
         onPressedChange={onPressedChange}
         disabled={disabled}
         aria-label={label}
-        className={cn(invalid && inputStyles.invalid)} // Apply invalid style
+        className={cn(invalid && inputStyles.invalid)}
       >
         {icon && <Icon className="h-4 w-4" name={icon} />}
       </Toggle>
