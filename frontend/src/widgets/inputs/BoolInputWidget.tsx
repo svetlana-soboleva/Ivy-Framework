@@ -6,7 +6,6 @@ import { Toggle } from "@/components/ui/toggle";
 import Icon from '@/components/Icon';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import NullableCheckbox from '@/components/NullableCheckbox';
-import { InvalidIcon } from '@/components/InvalidIcon';
 import { inputStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
@@ -47,23 +46,13 @@ interface ToggleVariantProps extends BaseVariantProps {
   onPressedChange: (pressed: boolean) => void;
 }
 
-const InputLabel: React.FC<{ id: string; label?: string; description?: string; invalid?: string }> = React.memo(
-  ({ id, label, description, invalid }) => {
-    if (!label && !description && !invalid) return null;
+const InputLabel: React.FC<{ id: string; label?: string; description?: string }> = React.memo(
+  ({ id, label, description }) => {
+    if (!label && !description) return null;
 
     return (
       <div className="grid gap-1.5 leading-none">
-        <div className="flex items-center space-x-2">
-          {label && (
-            <Label
-              htmlFor={id}
-              className={cn(invalid && inputStyles.invalid)}
-            >
-              {label}
-            </Label>
-          )}
-          {invalid && <InvalidIcon message={invalid} />}
-        </div>
+        {label && <Label htmlFor={id}>{label}</Label>}
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
@@ -83,13 +72,18 @@ const VariantComponents = {
     invalid,
     onCheckedChange
   }: CheckboxVariantProps) => (
-    <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex items-start space-x-2"
+      onClick={(e) => e.stopPropagation()}
+      title={invalid}
+    >
       {nullable ? (
         <NullableCheckbox
           id={id}
           checked={value}
           onCheckedChange={onCheckedChange}
           disabled={disabled}
+          className={cn(invalid && inputStyles.invalid)} 
         />
       ) : (
         <Checkbox
@@ -97,9 +91,10 @@ const VariantComponents = {
           checked={!!value}
           onCheckedChange={checked => onCheckedChange(checked ? true : false)}
           disabled={disabled}
+          className={cn(invalid && inputStyles.invalid)}
         />
       )}
-      <InputLabel id={id} label={label} description={description} invalid={invalid} />
+      <InputLabel id={id} label={label} description={description} />
     </div>
   )),
 
@@ -112,14 +107,19 @@ const VariantComponents = {
     invalid,
     onCheckedChange
   }: SwitchVariantProps) => (
-    <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex items-start space-x-2"
+      onClick={(e) => e.stopPropagation()}
+      title={invalid}
+    >
       <Switch
         id={id}
         checked={!!value}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
+        className={cn(invalid && inputStyles.invalid)}
       />
-      <InputLabel id={id} label={label} description={description} invalid={invalid} />
+      <InputLabel id={id} label={label} description={description} />
     </div>
   )),
 
@@ -133,17 +133,22 @@ const VariantComponents = {
     invalid,
     onPressedChange
   }: ToggleVariantProps) => (
-    <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex items-start space-x-2"
+      onClick={(e) => e.stopPropagation()}
+      title={invalid} // Display invalid message on hover
+    >
       <Toggle
         id={id}
         pressed={!!value}
         onPressedChange={onPressedChange}
         disabled={disabled}
         aria-label={label}
+        className={cn(invalid && inputStyles.invalid)} // Apply invalid style
       >
         {icon && <Icon className="h-4 w-4" name={icon} />}
       </Toggle>
-      <InputLabel id={id} label={label} description={description} invalid={invalid} />
+      <InputLabel id={id} label={label} description={description} />
     </div>
   ))
 };
