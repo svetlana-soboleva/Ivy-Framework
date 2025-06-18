@@ -145,7 +145,7 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
   const handleChange = useCallback((newValue: boolean | null) => {
     if (disabled) return;
     eventHandler("OnChange", id, [newValue]);
-  }, [eventHandler, id]);
+  }, [disabled, eventHandler, id]);
 
   const VariantComponent = useMemo(() => VariantComponents[variant], [variant]);
 

@@ -38,7 +38,7 @@ public class BoolInputApp : SampleBase
                | falseState.ToSwitchInput().Label("Label").Description("Description")
                | trueState.ToSwitchInput().Label("Label").Description("Description").Disabled()
                | new Box("Not Implemented")
-               | new Box("Not Implemented")
+               | nullState.ToSwitchInput().Label("Label").Description("Description")
                
                | null!
                | trueState.ToSwitchInput().Label("Label")
@@ -52,14 +52,14 @@ public class BoolInputApp : SampleBase
                | falseState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description")
                | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description").Disabled()
                | new Box("Not Implemented")
-               | new Box("Not Implemented")
+               | nullState.ToSwitchInput().Label("Label").Description("Description")
                
                | null!
                | trueState.ToToggleInput(Icons.Baby).Label("Label")
                | falseState.ToToggleInput(Icons.Baby).Label("Label")
                | trueState.ToToggleInput(Icons.Baby).Label("Label").Disabled()
                | new Box("Not Implemented")
-               | new Box("Not Implemented")
+               | nullState.ToSwitchInput().Label("Label").Description("Description")
             ;
         
 
