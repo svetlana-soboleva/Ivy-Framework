@@ -6,6 +6,9 @@ import { Toggle } from "@/components/ui/toggle";
 import Icon from '@/components/Icon';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import NullableCheckbox from '@/components/NullableCheckbox';
+import { InvalidIcon } from '@/components/InvalidIcon';
+import { inputStyles } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 
 type VariantType = 'Checkbox' | 'Switch' | 'Toggle';
 
@@ -16,6 +19,7 @@ interface BoolInputWidgetProps {
   value: boolean | null;
   disabled?: boolean;
   nullable?: boolean;
+  invalid?: string;
   variant: VariantType;
   icon?: string;
 }
@@ -24,6 +28,7 @@ interface BaseVariantProps {
   id: string;
   label?: string;
   description?: string;
+  invalid?: string;
   value: boolean | null;
   disabled: boolean;
 }
@@ -42,13 +47,23 @@ interface ToggleVariantProps extends BaseVariantProps {
   onPressedChange: (pressed: boolean) => void;
 }
 
-const InputLabel: React.FC<{ id: string; label?: string; description?: string }> = React.memo(
-  ({ id, label, description }) => {
-    if (!label && !description) return null;
-    
+const InputLabel: React.FC<{ id: string; label?: string; description?: string; invalid?: string }> = React.memo(
+  ({ id, label, description, invalid }) => {
+    if (!label && !description && !invalid) return null;
+
     return (
       <div className="grid gap-1.5 leading-none">
-        {label && <Label htmlFor={id}>{label}</Label>}
+        <div className="flex items-center space-x-2">
+          {label && (
+            <Label
+              htmlFor={id}
+              className={cn(invalid && inputStyles.invalid)}
+            >
+              {label}
+            </Label>
+          )}
+          {invalid && <InvalidIcon message={invalid} />}
+        </div>
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
@@ -65,6 +80,7 @@ const VariantComponents = {
     value,
     disabled,
     nullable,
+    invalid,
     onCheckedChange
   }: CheckboxVariantProps) => (
     <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
@@ -83,7 +99,7 @@ const VariantComponents = {
           disabled={disabled}
         />
       )}
-      <InputLabel id={id} label={label} description={description} />
+      <InputLabel id={id} label={label} description={description} invalid={invalid} />
     </div>
   )),
 
@@ -93,6 +109,7 @@ const VariantComponents = {
     description,
     value,
     disabled,
+    invalid,
     onCheckedChange
   }: SwitchVariantProps) => (
     <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
@@ -102,7 +119,7 @@ const VariantComponents = {
         onCheckedChange={onCheckedChange}
         disabled={disabled}
       />
-      <InputLabel id={id} label={label} description={description} />
+      <InputLabel id={id} label={label} description={description} invalid={invalid} />
     </div>
   )),
 
@@ -113,6 +130,7 @@ const VariantComponents = {
     value,
     disabled,
     icon,
+    invalid,
     onPressedChange
   }: ToggleVariantProps) => (
     <div className="flex items-start space-x-2" onClick={(e) => e.stopPropagation()}>
@@ -125,7 +143,7 @@ const VariantComponents = {
       >
         {icon && <Icon className="h-4 w-4" name={icon} />}
       </Toggle>
-      <InputLabel id={id} label={label} description={description} />
+      <InputLabel id={id} label={label} description={description} invalid={invalid} />
     </div>
   ))
 };
@@ -136,12 +154,13 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
   description,
   value,
   disabled = false,
+  invalid,
   nullable = false,
   variant,
   icon
 }) => {
   const eventHandler = useEventHandler();
-  
+
   const handleChange = useCallback((newValue: boolean | null) => {
     if (disabled) return;
     eventHandler("OnChange", id, [newValue]);
@@ -158,6 +177,7 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
       disabled={disabled}
       nullable={nullable}
       icon={icon}
+      invalid={invalid}
       onCheckedChange={handleChange}
       onPressedChange={handleChange}
     />
