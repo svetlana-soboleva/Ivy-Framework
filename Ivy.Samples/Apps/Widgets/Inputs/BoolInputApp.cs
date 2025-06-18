@@ -24,42 +24,42 @@ public class BoolInputApp : SampleBase
                | falseState.ToBoolInput().Label("Label").Description("Description")
                | trueState.ToBoolInput().Label("Label").Description("Description").Disabled()
                | trueState.ToBoolInput().Label("Label").Description("Description").Invalid("Invalid")
-               | nullState.ToBoolInput().Label("Label").Description("Description")
+               | new Box("Not Implemented")
                
                | null!
                | trueState.ToBoolInput().Label("Label")
                | falseState.ToBoolInput().Label("Label")
                | trueState.ToBoolInput().Label("Label").Disabled()
                | trueState.ToBoolInput().Label("Label").Description("Description").Invalid("Invalid")
-               | nullState.ToBoolInput().Label("Label")
+               | new Box("Not Implemented")
                
                | Text.InlineCode("BoolInputs.Switch")
                | trueState.ToSwitchInput().Label("Label").Description("Description")
                | falseState.ToSwitchInput().Label("Label").Description("Description")
                | trueState.ToSwitchInput().Label("Label").Description("Description").Disabled()
                | trueState.ToSwitchInput().Label("Label").Description("Description").Invalid("Invalid")
-               | nullState.ToSwitchInput().Label("Label").Description("Description")
+               | new Box("Not Implemented")
                
                | null!
                | trueState.ToSwitchInput().Label("Label")
                | falseState.ToSwitchInput().Label("Label")
                | trueState.ToSwitchInput().Label("Label").Disabled()
                | trueState.ToSwitchInput().Label("Label").Invalid("Invalid")
-               | nullState.ToSwitchInput().Label("Label")
+               | new Box("Not Implemented")
                
                | Text.InlineCode("BoolInputs.Toggle")
                | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description")
                | falseState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description")
                | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description").Disabled()
                | trueState.ToToggleInput(Icons.Magnet).Label("Label").Description("Description").Invalid("Invalid")
-               | nullState.ToSwitchInput().Label("Label").Description("Description")
+               | new Box("Not Implemented")
                
                | null!
                | trueState.ToToggleInput(Icons.Baby).Label("Label")
                | falseState.ToToggleInput(Icons.Baby).Label("Label")
                | trueState.ToToggleInput(Icons.Baby).Label("Label").Disabled()
                | trueState.ToToggleInput(Icons.Baby).Label("Label").Invalid("Invalid")
-               | nullState.ToSwitchInput().Label("Label").Description("Description")
+               | new Box("Not Implemented")
             ;
         
 
