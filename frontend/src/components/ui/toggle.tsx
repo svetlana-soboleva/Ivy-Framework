@@ -30,13 +30,19 @@ const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
     VariantProps<typeof toggleVariants>
->(({ className, variant, size, ...props }, ref) => (
-  <TogglePrimitive.Root
-    ref={ref}
-    className={cn(toggleVariants({ variant, size, className }))}
-    {...props}
-  />
-))
+>(({ className, variant, size, ...props }, ref) => {
+  let toggleClass = toggleVariants({ variant, size, className });
+  if (className?.includes('bg-red-50')) {
+    toggleClass = toggleClass.replace('data-[state=on]:bg-accent', '');
+  }
+  return (
+    <TogglePrimitive.Root
+      ref={ref}
+      className={cn(toggleClass, className)}
+      {...props}
+    />
+  );
+})
 
 Toggle.displayName = TogglePrimitive.Root.displayName
 
