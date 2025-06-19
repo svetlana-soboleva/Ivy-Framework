@@ -101,6 +101,19 @@ public class SupabaseAuthProvider : IAuthProvider
     public async Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
     {
         var code = request.Query["code"];
+
+        var error = request.Query["error"];
+        var errorCode = request.Query["error_code"];
+        var errorDescription = request.Query["error_description"];
+        if (error.Count > 0 || errorCode.Count > 0 || errorDescription.Count > 0)
+        {
+            throw new Exception($"Supabase error: '{error}', code: '{errorCode}', message: {errorDescription}");
+        }
+        else if (code.Count == 0)
+        {
+            throw new Exception("Received no recognized query parameters from Supabase.");
+        }
+
         Console.WriteLine($"[{DateTimeOffset.Now}] in oauth callback handler. got code {code}");
         var session = await _client.Auth.ExchangeCodeForSession(_pkceCodeVerifier!, code.ToString());
         var authToken = MakeAuthToken(session);
