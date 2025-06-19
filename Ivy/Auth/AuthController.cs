@@ -12,12 +12,10 @@ public class AuthController() : Controller
     {
         if (string.IsNullOrEmpty(token?.Jwt))
         {
-            Console.WriteLine($"[{DateTimeOffset.Now}] Deleting JWT cookie because passed-in JWT is null.");
             HttpContext.Response.Cookies.Delete("jwt");
         }
         else
         {
-            Console.WriteLine($"[{DateTimeOffset.Now}] Adding JWT cookie: {token}.");
             HttpContext.Response.Cookies.Append("jwt", JsonSerializer.Serialize(token), new CookieOptions
             {
                 HttpOnly = true,
