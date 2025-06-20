@@ -48,7 +48,7 @@ Make sure you have the .Net 9 SDK installed.
     ```
 3. **Add a data provider**: 
    ```
-   ivy db add
+   ivy connect db
    ```
 4. **Run**:
    ```
@@ -64,20 +64,20 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
    - [Node & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
    - [Vite](https://vitejs.dev/)
    - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-2. **Clone this repository**.
-3. **Run Ivy.Samples backend**:
-   ```bash
-   cd Ivy.Samples
-   dotnet watch
-   ```
-4. **Build the frontend**:
+2. **Fork and clone this repository**.
+3. **Build the frontend**:
    ```bash
    cd ../frontend
    npm install
    npm run build
    npm run dev
-   ```   
-5. **Open** [http://localhost:5000](http://localhost:5173) in your browser.
+   ```
+4. **Run Ivy.Samples backend**:
+   ```bash
+   cd Ivy.Samples
+   dotnet watch
+   ```
+5. **Open** [http://localhost:5137](http://localhost:5173) in your browser.
 
 Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy. 
 

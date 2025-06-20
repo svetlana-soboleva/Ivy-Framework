@@ -31,7 +31,11 @@ const NullableCheckbox = ({
       checked={checked === null ? "indeterminate" : checked}
       onClick={handleClick}
       disabled={disabled}
-      className={`${checked === null ? "data-[state=checked]:bg-gray-500" : ""} ${className}`}
+      className={`
+        ${checked === null ? "data-[state=checked]:bg-gray-500" : ""}
+        ${className}
+        ${className?.includes('bg-red-50') ? '!bg-red-50 data-[state=checked]:!bg-red-50' : ''}
+      `}
     />
   );
 };

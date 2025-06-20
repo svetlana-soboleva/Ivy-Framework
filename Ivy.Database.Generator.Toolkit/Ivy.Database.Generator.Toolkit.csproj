@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="..\..\Ivy\Directory.Build.props" />
+  
+  <Import Project="..\..\Ivy\Directory.Build.props" Condition="Exists('..\..\Ivy\Directory.Build.props')" />
   
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -40,6 +40,10 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.50.0" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Ivy\Ivy.Console\Ivy.Console.csproj" />
   </ItemGroup>
   
 </Project>
