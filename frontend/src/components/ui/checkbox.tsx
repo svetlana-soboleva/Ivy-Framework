@@ -34,6 +34,7 @@ const Checkbox = React.forwardRef<
 
     // Cycle: null -> true -> false -> null (if nullable)
     const handleCheckedChange = (next: boolean) => {
+      console.log("Checkbox clicked, next:", next, "current checked:", checked);
       if (nullable) {
         if (checked === null) onCheckedChange(true);
         else if (checked === true) onCheckedChange(false);
@@ -48,6 +49,10 @@ const Checkbox = React.forwardRef<
     const finalClass = className?.includes("bg-red-50")
       ? baseClass.replace("data-[state=checked]:bg-primary", "")
       : baseClass;
+
+    React.useEffect(() => {
+      console.log("Checkbox initial checked value:", checked);
+    }, [checked]);
 
     return (
       <CheckboxPrimitive.Root
