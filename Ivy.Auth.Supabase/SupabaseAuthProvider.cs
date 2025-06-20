@@ -8,6 +8,14 @@ using Supabase.Gotrue;
 
 namespace Ivy.Auth.Supabase;
 
+public class SupabaseOAuthException(string? error, string? errorCode, string? errorDescription)
+    : Exception($"Supabase error: '{error}', code '{errorCode}' - {errorDescription}")
+{
+    public string? Error { get; } = error;
+    public string? ErrorCode { get; } = errorCode;
+    public string? ErrorDescription { get; } = errorDescription;
+}
+
 public class SupabaseAuthProvider : IAuthProvider
 {
     private readonly global::Supabase.Client _client;
@@ -67,7 +75,10 @@ public class SupabaseAuthProvider : IAuthProvider
         };
 
         // Set scopes. These are necessary for Discord, but some providers return errors if they're provided.
-        if (provider != Constants.Provider.Gitlab && provider != Constants.Provider.Figma && provider != Constants.Provider.Twitch && provider != Constants.Provider.WorkOS)
+        if (provider != Constants.Provider.Gitlab
+            && provider != Constants.Provider.Figma
+            && provider != Constants.Provider.Twitch
+            && provider != Constants.Provider.WorkOS)
         {
             signInOptions.Scopes = "email openid";
         }
@@ -100,7 +111,7 @@ public class SupabaseAuthProvider : IAuthProvider
         var errorDescription = request.Query["error_description"];
         if (error.Count > 0 || errorCode.Count > 0 || errorDescription.Count > 0)
         {
-            throw new Exception($"Supabase error: '{error}', code: '{errorCode}', message: {errorDescription}");
+            throw new SupabaseOAuthException(error, errorCode, errorDescription);
         }
         else if (code.Count == 0)
         {

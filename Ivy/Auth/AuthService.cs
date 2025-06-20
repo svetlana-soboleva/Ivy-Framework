@@ -25,7 +25,7 @@ public class AuthService(IAuthProvider authProvider, AuthToken? token) : IAuthSe
     {
         if (string.IsNullOrWhiteSpace(token?.Jwt))
         {
-            return null!;
+            return Task.CompletedTask;
         }
         
         return authProvider.LogoutAsync(token.Jwt);

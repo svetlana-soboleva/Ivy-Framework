@@ -91,8 +91,9 @@ public class AppHub(
                     ? JsonSerializer.Deserialize<AuthToken>(jwt)
                     : null;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.LogWarning(e, "Failed to deserialize AuthToken from JWT.");
             }
 
             if (string.IsNullOrEmpty(authToken?.Jwt))

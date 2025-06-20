@@ -16,10 +16,11 @@ public class AuthController() : Controller
         }
         else
         {
+            var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
             HttpContext.Response.Cookies.Append("jwt", JsonSerializer.Serialize(token), new CookieOptions
             {
                 HttpOnly = true,
-                //Secure = true, //todo: enable this in production
+                Secure = isProduction, // Enable Secure flag in production
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddYears(1),
             });
