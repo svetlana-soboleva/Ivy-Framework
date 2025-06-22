@@ -85,14 +85,14 @@ public class SupabaseAuthProvider : IAuthProvider
 
         if (provider == Constants.Provider.WorkOS)
         {
-            if (option is not WorkOSAuthOption workOSOption || string.IsNullOrEmpty(workOSOption.ConnectionId))
+            if (option.Tag is not string connectionId || string.IsNullOrEmpty(connectionId))
             {
                 throw new ArgumentException("WorkOS connection ID not provided.");
             }
 
             signInOptions.QueryParams = new()
             {
-                ["connection"] = workOSOption.ConnectionId,
+                ["connection"] = connectionId,
             };
         }
 
@@ -239,7 +239,7 @@ public class SupabaseAuthProvider : IAuthProvider
 
     public SupabaseAuthProvider UseWorkOS(string connectionId)
     {
-        _authOptions.Add(new WorkOSAuthOption(AuthFlow.OAuth, "WorkOS", nameof(Constants.Provider.WorkOS).ToLower(), Icons.None, connectionId));
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "WorkOS", nameof(Constants.Provider.WorkOS).ToLower(), Icons.None, connectionId));
         return this;
     }
 
