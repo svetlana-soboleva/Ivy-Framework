@@ -43,16 +43,16 @@ new TextInput<string>(password, placeholder: "Password")
 ```
 See it in action here. 
 
-```csharp demo-tabs
+```csharp demo-below
 public class PasswordCaptureDemo: ViewBase
 {
     public override object? Build()
     {
         var password = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Enter Pasword"),
-             new TextInput<string>(password, placeholder: "Password")
-                .Variant(TextInputs.Password));         
+        return Layout.Horizontal()
+               | Text.Block("Enter Pasword")
+               | new TextInput<string>(password, placeholder: "Password")
+                .Variant(TextInputs.Password);         
     }
 }
 ```
@@ -68,18 +68,18 @@ that typically spans over multiple lines. The following demo shows how  to use i
 ```
 See it in action here.
 
-```csharp demo-tabs
+```csharp demo-below
 public class CaptureAddressDemo: ViewBase
 {
     public override object? Build()
     {
         var address = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Address"),
-             new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
+        return Layout.Horizontal()
+             | Text.Block("Address")
+             | new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
                 .Variant(TextInputs.Textarea)
                 .Height(30) // Set the height
-                .Width(100));// Set the width          
+                .Width(100);// Set the width          
     }
 }
 ```
@@ -96,16 +96,16 @@ The following demo shows how to add such an text input.
 ```
 see it in action here.
 
-```csharp demo-tabs
+```csharp demo-below
 public class SearchBarDemo: ViewBase
 {
     public override object? Build()
     {
         var searchThis = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Search"),
-             new TextInput<string>(searchThis, placeholder: "search for?")
-                 .Variant(TextInputs.Search));
+        return Layout.Horizontal()
+             | Text.Block("Search")
+             | new TextInput<string>(searchThis, placeholder: "search for?")
+                 .Variant(TextInputs.Search);
     }
 }
 ```
@@ -119,16 +119,16 @@ new TextInput<string>(email, placeholder: "user@domain.com")
 ```
 see it in action here.
 
-```csharp demo-tabs
+```csharp demo-below
 public class EmailEnterDemo: ViewBase
 {
     public override object? Build()
     {
         var email = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Email"),
-             new TextInput<string>(email, placeholder: "user@domain.com")
-                 .Variant(TextInputs.Email));
+        return Layout.Horizontal()
+             | Text.Block("Email")
+             | new TextInput<string>(email, placeholder: "user@domain.com")
+                 .Variant(TextInputs.Email);
     }
 }
 ```
@@ -141,16 +141,16 @@ new TextInput<string>(tel, placeholder: "+1-123-3456")
 ```
 see it in action here.
 
-```csharp demo-tabs
+```csharp demo-below
 public class PhoneEnterDemo: ViewBase
 {
     public override object? Build()
     {
         var tel = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Phone"),
-             new TextInput<string>(tel, placeholder: "+1-123-3456")
-                 .Variant(TextInputs.Tel));
+        return Layout.Horizontal()
+             | Text.Block("Phone")
+             | new TextInput<string>(tel, placeholder: "+1-123-3456")
+                 .Variant(TextInputs.Tel);
     }
 }
 ```
@@ -164,16 +164,16 @@ To capture the URLs/Links  `TextInputs.Url` variant needs to be used.
 ```
 see it in action here.
 
-```csharp demo-tabs
+```csharp demo-below
 public class URLEnterDemo: ViewBase
 {
     public override object? Build()
     {
         var url = UseState("");
-        return Layout.Horizontal(
-             Text.Block("Website"),
-             new TextInput<string>(url, placeholder: "https://ivy.app/")
-                 .Variant(TextInputs.Url));
+        return Layout.Horizontal()
+             | Text.Block("Website")
+             | new TextInput<string>(url, placeholder: "https://ivy.app/")
+                 .Variant(TextInputs.Url);
     }
 }
 ```
@@ -194,17 +194,17 @@ public class EventsDemoApp : ViewBase
      {
         var onChangedState = UseState("");
         var onChangeLabel = UseState("");
-        return Layout.Horizontal(
-                new TextBlock("Name "),
-                new TextInput<string>(onChangedState.Value, e =>
+        return Layout.Horizontal()
+                | Text.Block("Name ")
+                | new TextInput<string>(onChangedState.Value, e =>
                     {
                        onChangedState.Set(e.Value);
                        if(e.Value.Length == 0)
                             onChangeLabel.Set("");   //Clean the text
                        else 
                             onChangeLabel.Set("Hello! " + e.Value); 
-                    }),
-                     onChangeLabel);
+                    })
+                | onChangeLabel;
      }
 }
 ```
@@ -222,7 +222,7 @@ new TextInput<string>(withoutValue, placeholder: "Styled Input")
 ```
 This renders like this, an invalid text input.
 
-```csharp demo-tabs
+```csharp demo-below
 
 public class InvalidInputDemo: ViewBase
 {
@@ -246,7 +246,7 @@ new TextInput<string>(withoutValue, placeholder: "Styled Input")
 ```
 This renders as shown below as a disabled text input.
 
-```csharp demo-tabs
+```csharp demo-below
 public class DisabledInputDemo : ViewBase
 {
     public override object? Build()
@@ -279,10 +279,10 @@ public class EmailValidationDemo : ViewBase
         var onChangedState = UseState("");         
         var invalidState = UseState("");         
         
-        return Layout.Horizontal(       
-            new TextBlock("Email"),
-            new TextInput<string>(onChangedState.Value, e =>                    
-            {                        
+        return Layout.Horizontal()       
+            | Text.Block("Email")
+            | new TextInput<string>(onChangedState.Value, e =>                    
+              {                        
                 onChangedState.Set(e.Value);
                 if (string.IsNullOrWhiteSpace(e.Value))
                 {
@@ -297,9 +297,9 @@ public class EmailValidationDemo : ViewBase
                     // Clear the invalid state
                     invalidState.Set(""); 
                 }                    
-            })
-            .Invalid(invalidState.Value)
-        ); 
+              })
+              .Invalid(invalidState.Value);
+         
     }     
 }
 ```
@@ -349,7 +349,7 @@ We can use associate keyboard shortcuts to text inputs the following way.
 The following demo shows this in action with multiple text inputs each 
 with different shortcut keys.
 
-```csharp demo-tabs
+```csharp demo-below
 public class ShortCutDemo : ViewBase
 {
     public override object? Build()
@@ -372,7 +372,83 @@ public class ShortCutDemo : ViewBase
 }
 ```
 
+## Helper functions
+There are several helper functions to create TextInput variants from state instances. Instead of employing the constructor to create a 
+`TextInput`, these functions should be used. The following is an example of how Ivy can be employed to generate UI idiomatically using 
+these functions.
 
+```csharp demo-below
+public class DataCaptureUsingExtensionDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var userName = UseState("");
+        var password = UseState("");
+        var email = UseState("");
+        var tel = UseState("");
+        var address = UseState("");
+        var website = UseState("");
+        return Layout.Vertical()
+               | Layout.Horizontal()
+                    | Text.Block("Username")
+                    // ToTextInput creates a simple TextInput 
+                    | userName.ToTextInput(placeholder: "User name") 
+               | Layout.Horizontal()
+                    | Text.Block("Password")
+                    // ToPasswordInput creates a TextInput.Password variant 
+                    | password.ToPasswordInput(placeholder: "Password")
+                              .Disabled(userName.Value.Length == 0)
+               | Layout.Horizontal()
+                    | Text.Block("Email")
+                    // ToEmailInput creates a TextInput.Email variant 
+                    | email.ToEmailInput(placeholder: "Email")
+               | Layout.Horizontal() 
+                    | Text.Block("Mobile")
+                    // ToTelInput creates a TextInput.Tel variant 
+                    | tel.ToTelInput(placeholder: "Mobile")
+               | Layout.Horizontal()
+                    | Text.Block("Address")  
+                    // ToTextAreaInput creates a TextInput.TextArea variant 
+                    | address.ToTextAreaInput(placeholder: "Address Line1\nAddress Line2\nAddress Line 3")
+                             .Height(40).Width(100)
+               | Layout.Horizontal()
+                    | Text.Block("Website")
+                    // ToUrlInput creates a TextInput.Url variant 
+                    | website.ToUrlInput(placeholder: "https://ivy.app/");
+                             
+    }
+}
+```
+There is also another extension function to create a `TextInput.Search` variant. 
 
+Here is how it can be used. 
 
+```csharp demo-below
+
+public class BasicFilter : ViewBase 
+{      
+    public override object Build()
+    {         
+        var searchState = UseState("");
+        var result = UseState("");
+        var fruits = new[] { 
+            "Apple", "Banana", "Cherry", "Date", "Elderberry", 
+            "Stawberry", "Blueberry", "Watermelon", "Muskmelon",
+            "Fig", "Grape", "Kiwi", "Lemon", "Mango" 
+        };
+
+        var filtered = fruits
+            .Where(fruit => fruit.ToLower().Contains(searchState.Value.ToLower()))
+            .ToArray();
+            
+        var content = string.Join("\n", filtered);
+        
+        return Layout.Vertical()
+            // ToSearchInput creates a TextInput.Search variant
+            | searchState.ToSearchInput().Placeholder("Which fruit you like?")
+            | result.ToTextAreaInput(content);
+    }     
+
+}
+```
 <WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
