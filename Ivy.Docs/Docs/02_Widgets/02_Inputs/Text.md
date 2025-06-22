@@ -10,324 +10,369 @@ prepare: |
 # TextInput
 
 
-The TextInput widget provides a standard text entry field. It supports various text input types including single-line text, multi-line text, password fields, email, phone number, URL and offers features like placeholder text, validation, and text formatting. The following text describes this widget.
+The`TextInput` widget provides a standard text entry field. It supports various text input types including single-line text, multi-line text, password fields, email, phone number, URL and offers features like placeholder text, validation, shortcut keys and text formatting.
 
 
 ## Basic Usage
 
-
 Here's a simple example of a text input with a placeholder:
 
-
-```csharp
-
-var withoutValue = UseState((string?)null);
-
-new TextInput<string>(withoutValue, placeholder: "Enter text here...", Width = 200, Height = 50);
-
-```
-
-
-
-
-## Variants
-
-
-TextInputs come in several variants to suit different use cases:
-
-
-```csharp demo-tabs 
-public class HorizontalTabs : ViewBase
+```csharp demo-tabs
+public class BasicUsageDemo : ViewBase
 {
-    
     public override object? Build()
-    {
-        var sampleText = UseState("");
-        var password = UseState("");
-        var address = UseState("");
-        var sought = UseState("");
-        var email = UseState("");
-        var phone = UseState("");
-        var urlValue = UseState("");
-        return Layout.Vertical()
-               | new TextInput<string>(sampleText, placeholder: "Text")
-               | new TextInput<string>(password, placeholder: "Password").Variant(TextInputs.Password)
-               | new TextInput<string>(address, placeholder: "Textarea").Variant(TextInputs.Textarea)
-               | new TextInput<string>(sought, placeholder: "Search").Variant(TextInputs.Search)
-               | new TextInput<string>(email, placeholder: "jdoe@somewhere.com").Variant(TextInputs.Email)
-               | new TextInput<string>(phone, placeholder: "+1-234-123345").Variant(TextInputs.Tel)
-               | new TextInput<string>(urlValue, placeholder: "https://ivy.app/").Variant(TextInputs.Url);
+    { 
+        var withoutValue = UseState((string?)null);
+        return Layout.Horizontal()
+            | new TextInput<string>(withoutValue, placeholder: "Enter text here...");
     }
 }
-
-
 ```
 
+## Variants
+TextInputs come in several variants to suit different use cases:
+The following blocks shows how to use these. 
 
-## Event Handling
+### Password
+For capturing passwords, `TextInputs.Password` variant needs to be used. The following code shows how to capture
+a new password.   
 
-
-TextInputs can handle `change` and `blur` events: 
-
-
+```csharp
+new TextInput<string>(password, placeholder: "Password")
+    .Variant(TextInputs.Password)
+```
+See it in action here. 
 
 ```csharp demo-tabs
+public class PasswordCaptureDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var password = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Enter Pasword"),
+             new TextInput<string>(password, placeholder: "Password")
+                .Variant(TextInputs.Password));         
+    }
+}
+```
 
+### TextArea
+When a multiline text is needed, `TextInputs.Textarea` variant should be used. A common use-case is for capturing address
+that typically spans over multiple lines. The following demo shows how  to use it. 
 
+```csharp
+ Text.Block("Address"),
+             new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
+                .Variant(TextInputs.Textarea)
+```
+See it in action here.
+
+```csharp demo-tabs
+public class CaptureAddressDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var address = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Address"),
+             new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
+                .Variant(TextInputs.Textarea)
+                .Height(30) // Set the height
+                .Width(100));// Set the width          
+    }
+}
+```
+Please note that how the newlines (`\n`) are recognized and used to create newlines in the textarea. 
+
+### Search
+When it is needed to find an element from a collection of items, it is better to give users a visual clue.  
+Using the `TextInputs.Search` variant, this visual clue (with a looking glass icon) becomes obvious. 
+The following demo shows how to add such an text input. 
+
+```csharp
+ new TextInput<string>(searchThis, placeholder: "search for?")
+                 .Variant(TextInputs.Search)
+```
+see it in action here.
+
+```csharp demo-tabs
+public class SearchBarDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var searchThis = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Search"),
+             new TextInput<string>(searchThis, placeholder: "search for?")
+                 .Variant(TextInputs.Search));
+    }
+}
+```
+
+### Email 
+To capture the emails `TextInputs.Email` variant should be used.  
+
+```csharp
+new TextInput<string>(email, placeholder: "user@domain.com")
+                 .Variant(TextInputs.Email)
+```
+see it in action here.
+
+```csharp demo-tabs
+public class EmailEnterDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var email = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Email"),
+             new TextInput<string>(email, placeholder: "user@domain.com")
+                 .Variant(TextInputs.Email));
+    }
+}
+```
+### Telephone 
+To capture the phone numbers `TextInputs.Tel` variant needs to be used.  
+
+```csharp
+new TextInput<string>(tel, placeholder: "+1-123-3456")
+                 .Variant(TextInputs.Tel)
+```
+see it in action here.
+
+```csharp demo-tabs
+public class PhoneEnterDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var tel = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Phone"),
+             new TextInput<string>(tel, placeholder: "+1-123-3456")
+                 .Variant(TextInputs.Tel));
+    }
+}
+```
+
+### URL 
+To capture the URLs/Links  `TextInputs.Url` variant needs to be used. 
+
+```csharp
+ new TextInput<string>(url, placeholder: "https://ivy.app/")
+                 .Variant(TextInputs.Url)
+```
+see it in action here.
+
+```csharp demo-tabs
+public class URLEnterDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var url = UseState("");
+        return Layout.Horizontal(
+             Text.Block("Website"),
+             new TextInput<string>(url, placeholder: "https://ivy.app/")
+                 .Variant(TextInputs.Url));
+    }
+}
+```
+
+## Event Handling
+We can get the value of the text entered into any of the `TextInput` variant using the `OnChange` event. 
+
+```csharp
+new TextInput<string>(onChangedState.Value, e => onChangedState.Set(e.Value))
+```
+In this code example shown, the value of the text input will be stored in `onChangedState` variable. 
+The following demo shows how to use it in a small application, where users are greeted as they enter their name.
+
+```csharp demo-tabs
 public class EventsDemoApp : ViewBase
 {
      public override object? Build()
      {
-         var onChangedState = UseState("");
-         var (alertView, showAlert) = this.UseAlert();
-         var client = UseService<IClientProvider>();
-
-         var tb = new TextInput<string>(onChangedState.Value, e => onChangedState.Set(e.Value));
-         
-         return Layout.Vertical(
-             tb , 
-            new Button("Greet", _ => showAlert("Hello! " + onChangedState.Value, result =>
-            {
-                client.Toast(result.ToString());
-            }, "Greetings!", AlertButtonSet.Ok)),
-            
-            alertView
-        );
-
-     }
-}
-
-```
-
-This is another demo
-
-```csharp demo-tabs
-public class EventsDemoApp : ViewBase
-{
-     public override object? Build(){
-       var onChangedState = UseState("");
+        var onChangedState = UseState("");
         var onChangeLabel = UseState("");
-return Layout.Horizontal(
-        
-new TextInput<string>(onChangedState.Value, e =>
-                   {
+        return Layout.Horizontal(
+                new TextBlock("Name "),
+                new TextInput<string>(onChangedState.Value, e =>
+                    {
                        onChangedState.Set(e.Value);
                        if(e.Value.Length == 0)
                             onChangeLabel.Set("");   //Clean the text
                        else 
                             onChangeLabel.Set("Hello! " + e.Value); 
-                   }),
-                   onChangeLabel);
+                    }),
+                     onChangeLabel);
+     }
 }
-    }
-
 ```
 
-The following code demonstrates blurring of the input 
+## Styling
+`TextInput` variants can be customized with various styling options to offer visual clues to the users.   
 
+### Invalid
+When something goes wrong capturing the inputs, `Invalid` style is recommended to be used to signal an error. 
+The following code shows how to make an `TextInput` use the `Invalid` style. 
+
+```csharp
+new TextInput<string>(withoutValue, placeholder: "Styled Input")
+    .Invalid("Invalid input")
+```
+This renders like this, an invalid text input.
 
 ```csharp demo-tabs
 
-public class BlurEventDemoApp : ViewBase
+public class InvalidInputDemo: ViewBase
 {
-     public override object? Build()
-     {
-            var blurCount = UseState(0);
-            var sample = UseState("");
-            var tb = new TextInput<string>(sample, placeholder: "Type and click away");
-            tb.Placeholder = "Blurred";
-            return tb;
+    public override object? Build()
+    {
+        var withoutValue = UseState("");
+        return new TextInput<string>(withoutValue, placeholder: "a@")
+                   .Invalid("Invalid email!");
     }
+}
+```
+Whatever text is provided to the `Invalid` function, shows up when mouse is hovered on the little `i` icon in the box.
+
+### Disabled
+When it is needed to disable a `TextInput` variant, `Disabled` style is needed. 
+The following code shows how to disable a `TextInput`. 
+
+```csharp
+new TextInput<string>(withoutValue, placeholder: "Styled Input")
+    .Disabled()
+```
+This renders as shown below as a disabled text input.
+
+```csharp demo-tabs
+public class DisabledInputDemo : ViewBase
+{
+    public override object? Build()
+    {
+        return Layout.Horizontal()
+            | new TextInput<string>(UseState(""), placeholder: "Disabled Input").Disabled();
+    }
+}
+```
+
+### Real life usages of styles
+The following demo shows how to use style like `Invalid` in form validations. 
+
+#### Validate Email Demo
+In this example, if the email format is wrong, the input is invalidated and a message is shown.
+
+```csharp demo-tabs
+public class EmailValidationDemo : ViewBase 
+{      
+    // Email regex pattern
+    private static readonly System.Text.RegularExpressions.Regex EmailRegex = new 
+        System.Text.RegularExpressions.Regex(
+        @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+        System.Text.RegularExpressions.RegexOptions.Compiled | 
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+    );
+
+    public override object? Build()
+    {         
+        var onChangedState = UseState("");         
+        var invalidState = UseState("");         
+        
+        return Layout.Horizontal(       
+            new TextBlock("Email"),
+            new TextInput<string>(onChangedState.Value, e =>                    
+            {                        
+                onChangedState.Set(e.Value);
+                if (string.IsNullOrWhiteSpace(e.Value))
+                {
+                    invalidState.Set("");
+                }
+                else if (!EmailRegex.IsMatch(e.Value))                        
+                {                             
+                    invalidState.Set("Invalid email address");
+                }                        
+                else                        
+                {                         
+                    // Clear the invalid state
+                    invalidState.Set(""); 
+                }                    
+            })
+            .Invalid(invalidState.Value)
+        ); 
+    }     
+}
+```
+#### Conditional Enabling/Disabling of Text Inputs
+In this demo, password field is enabled only when the username field has a value. 
+
+```csharp demo-tabs
+
+public class LoginForm : ViewBase 
+{      
+    public override object Build()
+    {         
+        var usernameState = UseState("");         
+        var passwordState = UseState("");         
+        
+        return Layout.Vertical()
+            | Text.H2("Login")
+            | Layout.Vertical()
+                | Text.Label("Username")
+                | usernameState.ToTextInput()
+                    .Placeholder("Enter your username")
+                | Text.Label("Password") 
+                | passwordState.ToPasswordInput()
+                    .Placeholder("Enter your password")
+                     // Disabled when username is empty
+                    .Disabled(string.IsNullOrWhiteSpace(usernameState.Value))
+                | Layout.Horizontal()
+                    | new Button("Login")
+                        .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
+                             string.IsNullOrWhiteSpace(passwordState.Value)); 
+                            
+    }     
 }
 
 ```
+Notice, how extension functions `ToTextInput`, and `ToPasswordInput` are used  to generate `TextInput` variants
+needed for the form. 
 
-
-## Styling
-
-
-TextInputs can be customized with various styling options:
-
-
-```csharp
-
-new TextInput<string>(withoutValue, placeholder: "Styled Input")
-
-    .Disabled()
-
-    .Invalid("Invalid input")
-
-```
-
-
-Here are some more examples of how we can use different styling options. 
-
-
-```csharp
-
-Layout.Horizontal()
-
-    | new TextInput<string>(UseState(""), placeholder: "Normal Input")
-
-    | new TextInput<string>(UseState(""), placeholder: "Disabled Input").Disabled()
-
-    | new TextInput<string>(UseState("invalid@"), placeholder: "Email").Invalid("Invalid email address")
-
-```
-
-
-
-# Shortcuts
-
+## Shortcuts
 We can use associate keyboard shortcuts to text inputs the following way. 
 
-
 ```csharp
-
-
-var name = UseState("");
-
-var email = UseState("");
-
-var message = UseState("");
-
-
-Layout.Vertical()
-
-    | new Text("Keyboard Shortcuts Demo")
-
-    | new Text("Ctrl+N - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")
-
-    
-    | new TextInput<string>(name, placeholder: "Name (Ctrl+N)")
-
-        .ShortcutKey("Ctrl+N")
-
-    
-    | new TextInput<string>(email, placeholder: "Email (Ctrl+E)")
-
-        .ShortcutKey("Ctrl+E")
-
-        .Variant(TextInputs.Email)
-
-    
-    | new TextInput<string>(message, placeholder: "Message (Ctrl+M)")
-
-        .ShortcutKey("Ctrl+M")
-
-        .Variant(TextInputs.Textarea)
-
-
+ new TextInput<string>(name, placeholder: "Name (Ctrl+N)")
+                     .ShortcutKey("Ctrl+N")   
 ```
 
+The following demo shows this in action with multiple text inputs each 
+with different shortcut keys.
 
-# Dynamic Form Generation
-
-We can generate forms based on the inputs dynamically coming from another part of the program or elsewhere. 
-
-The following code demonstrates this. 
-
-
-```csharp
-
-var formFields = new[]
-
+```csharp demo-tabs
+public class ShortCutDemo : ViewBase
 {
-
-    new { Name = "email", Type = TextInputs.Email, State = UseState("") },
-
-    new { Name = "phone", Type = TextInputs.Tel, State = UseState("") },
-
-    new { Name = "website", Type = TextInputs.Url, State = UseState("") }
-
-};
-
-
-Layout.Vertical()
-
-    | formFields.Select(field => field.State.ToTextInput(field.Name, variant: field.Type))
-
+    public override object? Build()
+    { 
+        var name = UseState("");
+        var email = UseState("");
+        var message = UseState("");
+        return Layout.Vertical()
+                | new TextBlock("Keyboard Shortcuts Demo")
+                | new TextBlock("Ctrl+N - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")  
+                | new TextInput<string>(name, placeholder: "Name (Ctrl+N)")
+                   .ShortcutKey("Ctrl+N")    
+                | new TextInput<string>(email, placeholder: "Email (Ctrl+E)")
+                   .ShortcutKey("Ctrl+E")
+                    .Variant(TextInputs.Email)    
+                | new TextInput<string>(message, placeholder: "Message (Ctrl+M)")
+                    .ShortcutKey("Ctrl+M")
+                    .Variant(TextInputs.Textarea);
+    }
+}
 ```
 
 
-# TextInput Extension Methods
-
-
-| Method Name | Purpose | Use Case | Example |
-
-|-------------|---------|----------|---------|
-
-| `ToTextAreaInput()` | Creates a multi-line text input | Long text content, comments, descriptions | `bioState.ToTextAreaInput("Tell us about yourself...")` |
-
-| `ToSearchInput()` | Creates a search-optimized input | Search bars, filters, lookup fields | `searchState.ToSearchInput("Search products...")` |
-
-| `ToPasswordInput()` | Creates a password input with hidden text | Login forms, registration, security | `passwordState.ToPasswordInput("Enter password")` |
-
-| `ToEmailInput()` | Creates an email input with validation | Contact forms, user registration | `emailState.ToEmailInput("Enter your email")` |
-
-| `ToUrlInput()` | Creates a URL input with validation | Website links, social profiles | `websiteState.ToUrlInput("Enter website URL")` |
-
-| `ToTelInput()` | Creates a telephone number input | Contact information, phone verification | `phoneState.ToTelInput("Phone number")` |
-
-
-## Parameters
-
-
-All methods accept the same optional parameters:
-
-
-| Parameter | Type | Default | Description |
-
-|-----------|------|---------|-------------|
-
-| `state` | `IAnyState` | Required | The state object to bind the input to |
-
-| `placeholder` | `string?` | `null` | Text shown when input is empty |
-
-| `disabled` | `bool` | `false` | Whether the input is disabled |
-
-
-## Usage Example
-
-
-```csharp
-
-// Dynamic form generation using extension methods
-
-var formData = new Dictionary<string, IAnyState>
-
-{
-
-    ["email"] = UseState(""),
-
-    ["phone"] = UseState(""),
-
-    ["website"] = UseState(""),
-
-    ["password"] = UseState(""),
-
-    ["bio"] = UseState(""),
-
-    ["search"] = UseState("")
-
-};
-
-
-Layout.Vertical()
-
-    | formData["email"].ToEmailInput("Email Address")
-
-    | formData["phone"].ToTelInput("Phone Number") 
-
-    | formData["website"].ToUrlInput("Website")
-
-    | formData["password"].ToPasswordInput("Password")
-
-    | formData["bio"].ToTextAreaInput("Bio")
-
-    | formData["search"].ToSearchInput("Search...")
-
-```
 
 
 <WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
