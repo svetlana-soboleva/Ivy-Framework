@@ -78,8 +78,8 @@ public class CaptureAddressDemo: ViewBase
              | Text.Block("Address")
              | new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
                 .Variant(TextInputs.Textarea)
-                .Height(30) // Set the height
-                .Width(100);// Set the width          
+                .Height(30)
+                .Width(100);         
     }
 }
 ```
@@ -200,7 +200,7 @@ public class EventsDemoApp : ViewBase
                     {
                        onChangedState.Set(e.Value);
                        if(e.Value.Length == 0)
-                            onChangeLabel.Set("");   //Clean the text
+                            onChangeLabel.Set("");
                        else 
                             onChangeLabel.Set("Hello! " + e.Value); 
                     })
@@ -294,7 +294,6 @@ public class EmailValidationDemo : ViewBase
                 }                        
                 else                        
                 {                         
-                    // Clear the invalid state
                     invalidState.Set(""); 
                 }                    
               })
@@ -391,29 +390,23 @@ public class DataCaptureUsingExtensionDemo: ViewBase
         return Layout.Vertical()
                | Layout.Horizontal()
                     | Text.Block("Username")
-                    // ToTextInput creates a simple TextInput 
                     | userName.ToTextInput(placeholder: "User name") 
                | Layout.Horizontal()
                     | Text.Block("Password")
-                    // ToPasswordInput creates a TextInput.Password variant 
                     | password.ToPasswordInput(placeholder: "Password")
                               .Disabled(userName.Value.Length == 0)
                | Layout.Horizontal()
                     | Text.Block("Email")
-                    // ToEmailInput creates a TextInput.Email variant 
                     | email.ToEmailInput(placeholder: "Email")
                | Layout.Horizontal() 
                     | Text.Block("Mobile")
-                    // ToTelInput creates a TextInput.Tel variant 
                     | tel.ToTelInput(placeholder: "Mobile")
                | Layout.Horizontal()
                     | Text.Block("Address")  
-                    // ToTextAreaInput creates a TextInput.TextArea variant 
                     | address.ToTextAreaInput(placeholder: "Address Line1\nAddress Line2\nAddress Line 3")
                              .Height(40).Width(100)
                | Layout.Horizontal()
                     | Text.Block("Website")
-                    // ToUrlInput creates a TextInput.Url variant 
                     | website.ToUrlInput(placeholder: "https://ivy.app/");
                              
     }
@@ -444,11 +437,9 @@ public class BasicFilter : ViewBase
         var content = string.Join("\n", filtered);
         
         return Layout.Vertical()
-            // ToSearchInput creates a TextInput.Search variant
             | searchState.ToSearchInput().Placeholder("Which fruit you like?")
             | result.ToTextAreaInput(content);
     }     
-
 }
 ```
 <WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
