@@ -5,6 +5,8 @@ using Ivy.Widgets.Inputs;
 
 namespace Ivy.Test;
 
+//Todo: I don't really think we need these tests, as if TextInput<string> works, then TextInput should work too.
+
 public class TextInputTests
 {
     [Fact]
