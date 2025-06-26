@@ -103,15 +103,15 @@ public class BoolInputApp : SampleBase
          ("bool", UseState(false), UseState((bool?)false))
       };
 
-      var gridItems = new List<object>();
-
-      // Add header row
-      gridItems.Add(Text.InlineCode("Type"));
-      gridItems.Add(Text.InlineCode("Non-Nullable"));
-      gridItems.Add(Text.InlineCode("State"));
-      gridItems.Add(Text.InlineCode("Type"));
-      gridItems.Add(Text.InlineCode("Nullable"));
-      gridItems.Add(Text.InlineCode("State"));
+      var gridItems = new List<object>
+      {
+         Text.InlineCode("Type"),
+         Text.InlineCode("Non-Nullable"),
+         Text.InlineCode("State"),
+         Text.InlineCode("Type"),
+         Text.InlineCode("Nullable"),
+         Text.InlineCode("State")
+      };
 
       foreach (var (typeName, nonNullableState, nullableState) in numericTypes)
       {
