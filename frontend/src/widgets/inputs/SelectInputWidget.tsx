@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/toggle-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { NullableSelectValue } from '@/types/widgets';
+
+export type NullableSelectValue = string | number | string[] | number[] | null | undefined;
 
 interface Option {
   value: string | number;

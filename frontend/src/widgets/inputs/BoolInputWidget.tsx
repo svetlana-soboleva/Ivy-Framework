@@ -6,8 +6,7 @@ import Icon from '@/components/Icon';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import { inputStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
-import { NullableBoolean } from '@/types/widgets';
+import { Checkbox, NullableBoolean } from '@/components/ui/checkbox';
 
 type VariantType = 'Checkbox' | 'Switch' | 'Toggle';
 

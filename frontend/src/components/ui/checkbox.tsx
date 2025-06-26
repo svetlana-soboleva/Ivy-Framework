@@ -2,7 +2,8 @@ import { cn } from "@/lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check, Minus } from "lucide-react";
 import * as React from "react";
-import { NullableBoolean } from "@/types/widgets";
+
+export type NullableBoolean = boolean | null | undefined;
 
 type AppCheckboxProps = {
   id: string;
