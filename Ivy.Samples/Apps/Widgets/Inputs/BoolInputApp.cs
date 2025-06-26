@@ -104,12 +104,33 @@ public class BoolInputApp : SampleBase
          Text.InlineCode("State")
       };
 
+      var numericTypeNames = new[] { "double", "decimal", "float", "short", "int", "long", "byte" };
+
+      object FormatStateValue(string typeName, object? value, bool isNullable)
+      {
+         return value switch
+         {
+            null => isNullable ? Text.InlineCode("Null") : 0,
+            bool b => b.ToString(),
+            _ when numericTypeNames.Contains(typeName) => value,
+            _ => value
+         };
+      }
+
       foreach (var (typeName, nonNullableState, nullableState) in numericTypes)
       {
          // Non-nullable columns (first 3)
          gridItems.Add(Text.InlineCode(typeName));
          gridItems.Add(CreateBoolInputVariants(nonNullableState));
-         gridItems.Add(nonNullableState);
+
+         var nonNullableAnyState = nonNullableState as Ivy.Core.Hooks.IAnyState;
+         object? nonNullableValue = null;
+         if (nonNullableAnyState != null)
+         {
+            var prop = nonNullableAnyState.GetType().GetProperty("Value");
+            nonNullableValue = prop?.GetValue(nonNullableAnyState);
+         }
+         gridItems.Add(FormatStateValue(typeName, nonNullableValue, false));
 
          // Nullable columns (next 3)
          gridItems.Add(Text.InlineCode($"{typeName}?"));
@@ -122,7 +143,7 @@ public class BoolInputApp : SampleBase
             var prop = anyState.GetType().GetProperty("Value");
             value = prop?.GetValue(anyState);
          }
-         gridItems.Add(value == null ? Text.InlineCode("Null") : value);
+         gridItems.Add(FormatStateValue(typeName, value, true));
       }
 
       return Layout.Grid().Columns(6) | gridItems.ToArray();
