@@ -122,14 +122,147 @@ public static class BoolInputExtensions
 {
     public static BoolInputBase ToBoolInput(this IAnyState state, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
     {
-        var type = state.GetStateType();
-        var isNullable = type.IsNullableType();
+        var stateType = state.GetStateType();
+        var isNullable = stateType.IsNullableType();
         
-        // Always create BoolInput<bool> or BoolInput<bool?> based on nullability
-        var genericType = isNullable ? typeof(BoolInput<bool?>) : typeof(BoolInput<bool>);
-        var input = (BoolInputBase)Activator.CreateInstance(genericType, state, label, disabled, variant)!;
-        input.ScaffoldDefaults(null!, type);
-        return input;
+        // Create the appropriate BoolInput based on the original state type
+        if (isNullable)
+        {
+            var boolValue = ConvertStateToNullableBool(state);
+            var input = new BoolInput<bool?>(boolValue, e => SetStateValue(state, e.Value), label, disabled, variant);
+            input.ScaffoldDefaults(null!, stateType);
+            return input;
+        }
+        else
+        {
+            var boolValue = ConvertStateToBool(state);
+            var input = new BoolInput<bool>(boolValue, e => SetStateValue(state, e.Value), label, disabled, variant);
+            input.ScaffoldDefaults(null!, stateType);
+            return input;
+        }
+    }
+    
+    private static bool ConvertStateToBool(IAnyState state)
+    {
+        var stateType = state.GetStateType();
+        
+        return stateType switch
+        {
+            // Boolean types - direct conversion
+            _ when stateType == typeof(bool) => state.As<bool>().Value,
+            _ when stateType == typeof(bool?) => state.As<bool?>().Value ?? false,
+            
+            // Numeric types - convert to boolean (0 = false, non-zero = true)
+            _ when stateType.IsNumeric() => Convert.ToBoolean(state.As<object>().Value),
+            
+            // Other types - try BestGuessConvert, fallback to false
+            _ => Core.Utils.BestGuessConvert(state.As<object>().Value, typeof(bool)) is bool b && b
+        };
+    }
+    
+    private static bool? ConvertStateToNullableBool(IAnyState state)
+    {
+        var stateType = state.GetStateType();
+        
+        return stateType switch
+        {
+            // Boolean types - direct conversion
+            _ when stateType == typeof(bool) => state.As<bool>().Value,
+            _ when stateType == typeof(bool?) => state.As<bool?>().Value,
+            
+            // Numeric types - convert to boolean (0 = false, non-zero = true)
+            _ when stateType.IsNumeric() => ConvertNullableNumericToBool(state),
+            
+            // Other types - try BestGuessConvert, fallback to false
+            _ => Core.Utils.BestGuessConvert(state.As<object>().Value, typeof(bool)) is bool b ? b : false
+        };
+    }
+    
+    private static bool? ConvertNullableNumericToBool(IAnyState state)
+    {
+        var stateType = state.GetStateType();
+        var underlyingType = Nullable.GetUnderlyingType(stateType);
+        
+        if (underlyingType == null)
+        {
+            // Not nullable, convert directly
+            return Convert.ToBoolean(state.As<object>().Value);
+        }
+        
+        // Handle nullable numeric types
+        var value = state.As<object>().Value;
+        if (value == null)
+        {
+            return null;
+        }
+        
+        return Convert.ToBoolean(value);
+    }
+    
+    private static void SetStateValue(IAnyState state, bool boolValue)
+    {
+        var stateType = state.GetStateType();
+        
+        // Convert boolean back to the original state type
+        var convertedValue = stateType switch
+        {
+            // Boolean types - direct conversion
+            _ when stateType == typeof(bool) => (object)boolValue,
+            _ when stateType == typeof(bool?) => (object)boolValue,
+            
+            // Numeric types - convert boolean to numeric (false = 0, true = 1)
+            _ when stateType.IsNumeric() => Convert.ChangeType(boolValue ? 1 : 0, stateType),
+            
+            // Other types - use BestGuessConvert
+            _ => Core.Utils.BestGuessConvert(boolValue, stateType)
+        };
+        
+        // Set the state value
+        state.As<object>().Set(convertedValue);
+    }
+    
+    private static void SetStateValue(IAnyState state, bool? boolValue)
+    {
+        var stateType = state.GetStateType();
+        
+        // Convert boolean back to the original state type
+        var convertedValue = stateType switch
+        {
+            // Boolean types - direct conversion
+            _ when stateType == typeof(bool) => (object)(boolValue ?? false),
+            _ when stateType == typeof(bool?) => (object)boolValue,
+            
+            // Numeric types - convert boolean to numeric (false = 0, true = 1, null = null)
+            _ when stateType.IsNumeric() => ConvertBoolToNullableNumeric(boolValue, stateType),
+            
+            // Other types - use BestGuessConvert
+            _ => Core.Utils.BestGuessConvert(boolValue ?? false, stateType)
+        };
+        
+        // Set the state value
+        state.As<object>().Set(convertedValue);
+    }
+    
+    private static object ConvertBoolToNullableNumeric(bool? boolValue, Type targetType)
+    {
+        var underlyingType = Nullable.GetUnderlyingType(targetType);
+        
+        if (underlyingType == null)
+        {
+            // Not nullable, convert directly
+            return Convert.ChangeType(boolValue == true ? 1 : 0, targetType);
+        }
+        
+        // Handle nullable numeric types
+        if (boolValue == null)
+        {
+            // Return null for nullable types
+            return null!;
+        }
+        
+        // Convert to the underlying type
+        var numericValue = boolValue == true ? 1 : 0;
+        return Convert.ChangeType(numericValue, underlyingType);
     }
     
     public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false) 
