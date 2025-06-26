@@ -34,3 +34,6 @@ export interface InternalLink {
   title: string;
   appId: string;
 }
+
+export type NullableBoolean = boolean | null | undefined;
+export type NullableSelectValue = string | number | string[] | number[] | null | undefined;

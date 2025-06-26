@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/toggle-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { NullableSelectValue } from '@/types/widgets';
 
 interface Option {
   value: string | number;
@@ -29,7 +30,7 @@ interface Option {
 interface SelectInputWidgetProps {
   id: string;
   placeholder?: string;
-  value?: string | number | string[] | number[];
+  value?: NullableSelectValue;
   variant?: "Select" | "List" | "Toggle";
   nullable?: boolean;
   disabled?: boolean;
@@ -217,13 +218,19 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
 export const SelectInputWidget: React.FC<SelectInputWidgetProps> = (props) => {
   const eventHandler = useEventHandler();
   
-  switch (props.variant) {
+  // Normalize undefined to null when nullable
+  const normalizedProps = {
+    ...props,
+    value: props.nullable && props.value === undefined ? null : props.value
+  };
+  
+  switch (normalizedProps.variant) {
     case "List":
-      return props.selectMany ? <CheckboxVariant {...props} eventHandler={eventHandler} /> : <RadioVariant {...props} eventHandler={eventHandler} />;
+      return normalizedProps.selectMany ? <CheckboxVariant {...normalizedProps} eventHandler={eventHandler} /> : <RadioVariant {...normalizedProps} eventHandler={eventHandler} />;
     case "Toggle":
-      return <ToggleVariant {...props} eventHandler={eventHandler} />;
+      return <ToggleVariant {...normalizedProps} eventHandler={eventHandler} />;
     default:
-      return <SelectVariant {...props} eventHandler={eventHandler} />;
+      return <SelectVariant {...normalizedProps} eventHandler={eventHandler} />;
   }
 };
 

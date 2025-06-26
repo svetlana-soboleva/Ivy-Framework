@@ -7,6 +7,7 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { inputStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { NullableBoolean } from '@/types/widgets';
 
 type VariantType = 'Checkbox' | 'Switch' | 'Toggle';
 
@@ -14,7 +15,7 @@ interface BoolInputWidgetProps {
   id: string;
   label?: string;
   description?: string;
-  value: boolean | null;
+  value: NullableBoolean;
   disabled?: boolean;
   nullable?: boolean;
   invalid?: string;
@@ -28,7 +29,7 @@ interface BaseVariantProps {
   description?: string;
   invalid?: string;
   nullable?: boolean;
-  value: boolean | null;
+  value: NullableBoolean;
   disabled: boolean;
 }
 
@@ -157,6 +158,9 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
 }) => {
   const eventHandler = useEventHandler();
 
+  // Normalize undefined to null when nullable
+  const normalizedValue = nullable && value === undefined ? null : value;
+
   const handleChange = useCallback((newValue: boolean | null) => {
     if (disabled) return;
     eventHandler("OnChange", id, [newValue]);
@@ -169,7 +173,7 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
       id={id}
       label={label}
       description={description}
-      value={value}
+      value={normalizedValue}
       disabled={disabled}
       nullable={nullable}
       icon={icon}

@@ -2,10 +2,11 @@ import { cn } from "@/lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check, Minus } from "lucide-react";
 import * as React from "react";
+import { NullableBoolean } from "@/types/widgets";
 
 type AppCheckboxProps = {
   id: string;
-  checked: boolean | null;
+  checked: NullableBoolean;
   onCheckedChange: (checked: boolean | null) => void;
   disabled?: boolean;
   nullable?: boolean;
@@ -28,16 +29,17 @@ const Checkbox = React.forwardRef<
     },
     ref
   ) => {
-    // Map null to 'indeterminate' for Radix
+    // Map undefined to null when nullable, then null to 'indeterminate' for Radix
+    const normalizedChecked = nullable && checked === undefined ? null : checked;
     const uiChecked =
-      nullable && checked === null ? "indeterminate" : !!checked;
+      nullable && normalizedChecked === null ? "indeterminate" : !!normalizedChecked;
 
     // Cycle: null -> true -> false -> null (if nullable)
     const handleCheckedChange = (next: boolean) => {
-      console.log("Checkbox clicked, next:", next, "current checked:", checked);
+      console.log("Checkbox clicked, next:", next, "current checked:", normalizedChecked);
       if (nullable) {
-        if (checked === null) onCheckedChange(true);
-        else if (checked === true) onCheckedChange(false);
+        if (normalizedChecked === null) onCheckedChange(true);
+        else if (normalizedChecked === true) onCheckedChange(false);
         else onCheckedChange(null);
       } else {
         onCheckedChange(next);
