@@ -86,7 +86,7 @@ public class TextInputApp : SampleBase
                | Text.H2("Events")
                | Text.H3("OnChange")
                | Layout.Horizontal(
-                   new TextInput<string>(onChangedState.Value, e =>
+                   new TextInput(onChangedState.Value, e =>
                    {
                        onChangedState.Set(e.Value);
                        onChangeLabel.Set("Changed"); 
