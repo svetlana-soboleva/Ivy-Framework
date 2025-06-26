@@ -21,6 +21,7 @@ public static class Utils
     public static object? ConvertJsonNode(JsonNode? jsonNode, Type valueType)
     {
         if (jsonNode is null) return null;
+        // Get underlying type to handle nullable types properly with Convert.ChangeType
         var t = Nullable.GetUnderlyingType(valueType) ?? valueType;
 
         if (valueType == typeof(object))
@@ -60,32 +61,36 @@ public static class Utils
         if (t.IsEnum && jsonNode is JsonValue enumVal && enumVal.TryGetValue(out string? enumStr))
             return Enum.Parse(t, enumStr, true);
 
-        if (t == typeof(bool) && jsonNode is JsonValue boolVal0)
+        if (t == typeof(bool) && jsonNode is JsonValue boolVal)
         {
-            if (boolVal0.TryGetValue(out bool b)) return b;
-            if (boolVal0.TryGetValue(out int i)) return i != 0;
-            if (boolVal0.TryGetValue(out long l)) return l != 0;
-            if (boolVal0.TryGetValue(out double d)) return d != 0;
-            if (boolVal0.TryGetValue(out string? s))
+            return boolVal switch
             {
-                if (bool.TryParse(s, out var parsed)) return parsed;
-                if (double.TryParse(s, out var num)) return num != 0;
-            }
+                _ when boolVal.TryGetValue(out bool b) => b,
+                _ when boolVal.TryGetValue(out int i) => i != 0,
+                _ when boolVal.TryGetValue(out long l) => l != 0,
+                _ when boolVal.TryGetValue(out double d) => d != 0,
+                _ when boolVal.TryGetValue(out string? s) => 
+                    bool.TryParse(s, out var parsed) ? parsed : 
+                    double.TryParse(s, out var num) ? num != 0 : false,
+                _ => false
+            };
         }
         
         if (t.IsNumeric() && jsonNode is JsonValue boolVal1 && boolVal1.TryGetValue(out bool _))
         {
-            return Convert.ChangeType(boolVal1.GetValue<bool>() ? 1 : 0, valueType);
+            var convertedValue = Convert.ChangeType(boolVal1.GetValue<bool>() ? 1 : 0, t);
+            return convertedValue;
         }
 
         if (IsNumericType(t) && jsonNode is JsonValue numVal)
         {
-            if (numVal.TryGetValue(out string? str))
-                return Convert.ChangeType(str, t);
-            if (numVal.TryGetValue(out double dbl))
-                return Convert.ChangeType(dbl, t);
-            if (numVal.TryGetValue(out long lng))
-                return Convert.ChangeType(lng, t);
+            return numVal switch
+            {
+                _ when numVal.TryGetValue(out string? str) => Convert.ChangeType(str, t),
+                _ when numVal.TryGetValue(out double dbl) => Convert.ChangeType(dbl, t),
+                _ when numVal.TryGetValue(out long lng) => Convert.ChangeType(lng, t),
+                _ => null
+            };
         }
         
         //todo: maybe make this more generic
