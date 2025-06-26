@@ -37,37 +37,31 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
         // Signed integer types
         typeof(sbyte), typeof(sbyte?), typeof(short), typeof(short?), 
         typeof(int), typeof(int?), typeof(long), typeof(long?),
-        typeof(Int128), typeof(Int128?), typeof(IntPtr), typeof(IntPtr?),
+        typeof(Int128), typeof(Int128?),
         // Unsigned integer types
         typeof(byte), typeof(byte?), typeof(ushort), typeof(ushort?),
         typeof(uint), typeof(uint?), typeof(ulong), typeof(ulong?),
-        typeof(UInt128), typeof(UInt128?), typeof(UIntPtr), typeof(UIntPtr?),
+        typeof(UInt128), typeof(UInt128?),
         // Floating-point types
-        typeof(Half), typeof(Half?), typeof(float), typeof(float?),
+        typeof(float), typeof(float?),
         typeof(double), typeof(double?), typeof(decimal), typeof(decimal?)
     ];
 }
 
 public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
 {
-    private readonly IAnyState _originalState;
-    private readonly IState<bool> _boolState;
-
     public BoolInput(IAnyState state, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) 
         : this(label, disabled, variant)
     {
-        _originalState = state;
-        _boolState = ConvertToBoolState(state);
-        Value = ConvertToTBool(_boolState.Value);
-        OnChange = e => UpdateOriginalState(ConvertToBool(e.Value));
+        var typedState = state.As<TBool>();
+        Value = typedState.Value;
+        OnChange = e => typedState.Set(e.Value);
     }
     
     public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
     {
         OnChange = onChange;
         Value = value;
-        _originalState = null!;
-        _boolState = null!;
     }
 
     public BoolInput(string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
@@ -75,35 +69,12 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
         Label = label;
         Disabled = disabled;
         Variant = variant;
-        _originalState = null!;
-        _boolState = null!;
     }
 
     [Prop] public TBool Value { get; } = default!;
     [Prop] public bool Nullable { get; set; } = typeof(TBool) == typeof(bool?);
     [Event] public Action<Event<IInput<TBool>, TBool>>? OnChange { get; }
 
-    private void UpdateOriginalState(bool boolValue)
-    {
-        var stateType = _originalState.GetStateType();
-        
-        // Convert boolean back to the original type
-        var convertedValue = stateType switch
-        {
-            // Boolean types - direct assignment
-            _ when stateType == typeof(bool) => boolValue,
-            _ when stateType == typeof(bool?) => boolValue,
-            
-            // Numeric types - convert to 1 (true) or 0 (false)
-            _ when stateType.IsNumeric() => Convert.ChangeType(boolValue ? 1 : 0, System.Nullable.GetUnderlyingType(stateType) ?? stateType),
-            
-            // Other types - try BestGuessConvert, fallback to numeric conversion
-            _ => Core.Utils.BestGuessConvert(boolValue, stateType) ?? Convert.ChangeType(boolValue ? 1 : 0, stateType)
-        };
-        
-        // Update the original state
-        _originalState.As<object>().Set(convertedValue);
-    }
 
     private static IState<bool> ConvertToBoolState(IAnyState state)
     {
