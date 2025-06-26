@@ -114,7 +114,15 @@ public class BoolInputApp : SampleBase
          // Nullable columns (next 3)
          gridItems.Add(Text.InlineCode($"{typeName}?"));
          gridItems.Add(CreateBoolInputVariants(nullableState));
-         gridItems.Add(nullableState);
+
+         var anyState = nullableState as Ivy.Core.Hooks.IAnyState;
+         object? value = null;
+         if (anyState != null)
+         {
+            var prop = anyState.GetType().GetProperty("Value");
+            value = prop?.GetValue(anyState);
+         }
+         gridItems.Add(value == null ? Text.InlineCode("Null") : value);
       }
 
       return Layout.Grid().Columns(6) | gridItems.ToArray();
