@@ -91,7 +91,7 @@ public class BoolInputApp : SampleBase
          ("decimal", UseState((decimal)0), UseState((decimal?)null)),
          
          // Boolean types
-         ("bool", UseState(false), UseState((bool?)false))
+         ("bool", UseState(false), UseState((bool?)null))
       };
 
       var gridItems = new List<object>
