@@ -7,6 +7,7 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { inputStyles } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import { Checkbox, NullableBoolean } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type VariantType = 'Checkbox' | 'Switch' | 'Toggle';
 
@@ -51,7 +52,7 @@ const InputLabel: React.FC<{ id: string; label?: string; description?: string }>
     if (!label && !description) return null;
 
     return (
-      <div className="grid gap-1.5 leading-none">
+      <div className="grid gap-1.5 leading-none bg-background">
         {label && <Label htmlFor={id}>{label}</Label>}
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
@@ -60,6 +61,23 @@ const InputLabel: React.FC<{ id: string; label?: string; description?: string }>
     );
   }
 );
+
+const withTooltip = (content: React.ReactNode, invalid?: string) => {
+  if (!invalid) return content;
+  
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {content}
+        </TooltipTrigger>
+        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+          {invalid}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 const VariantComponents = {
   Checkbox: React.memo(({
@@ -71,12 +89,8 @@ const VariantComponents = {
     nullable,
     invalid,
     onCheckedChange
-  }: CheckboxVariantProps) => (
-    <div
-      className="flex items-start space-x-2"
-      onClick={(e) => e.stopPropagation()}
-      title={invalid}
-    >
+  }: CheckboxVariantProps) => {
+    const checkboxElement = (
       <Checkbox
         id={id}
         checked={value}
@@ -85,9 +99,20 @@ const VariantComponents = {
         nullable={nullable}
         className={cn(invalid && inputStyles.invalid)}
       />
-      <InputLabel id={id} label={label} description={description} />
-    </div>
-  )),
+    );
+
+    const content = (
+      <div
+        className="flex items-start space-x-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {withTooltip(checkboxElement, invalid)}
+        <InputLabel id={id} label={label} description={description} />
+      </div>
+    );
+
+    return content;
+  }),
 
   Switch: React.memo(({
     id,
@@ -97,12 +122,8 @@ const VariantComponents = {
     disabled,
     invalid,
     onCheckedChange
-  }: SwitchVariantProps) => (
-    <div
-      className="flex items-start space-x-2"
-      onClick={(e) => e.stopPropagation()}
-      title={invalid}
-    >
+  }: SwitchVariantProps) => {
+    const switchElement = (
       <Switch
         id={id}
         checked={!!value}
@@ -110,9 +131,20 @@ const VariantComponents = {
         disabled={disabled}
         className={cn(invalid && inputStyles.invalid)}
       />
-      <InputLabel id={id} label={label} description={description} />
-    </div>
-  )),
+    );
+
+    const content = (
+      <div
+        className="flex items-start space-x-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {withTooltip(switchElement, invalid)}
+        <InputLabel id={id} label={label} description={description} />
+      </div>
+    );
+
+    return content;
+  }),
 
   Toggle: React.memo(({
     id,
@@ -123,12 +155,8 @@ const VariantComponents = {
     icon,
     invalid,
     onPressedChange
-  }: ToggleVariantProps) => (
-    <div
-      className="flex items-start space-x-2"
-      onClick={(e) => e.stopPropagation()}
-      title={invalid}
-    >
+  }: ToggleVariantProps) => {
+    const toggleElement = (
       <Toggle
         id={id}
         pressed={!!value}
@@ -139,9 +167,20 @@ const VariantComponents = {
       >
         {icon && <Icon className="h-4 w-4" name={icon} />}
       </Toggle>
-      <InputLabel id={id} label={label} description={description} />
-    </div>
-  ))
+    );
+
+    const content = (
+      <div
+        className="flex items-start space-x-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {withTooltip(toggleElement, invalid)}
+        <InputLabel id={id} label={label} description={description} />
+      </div>
+    );
+
+    return content;
+  })
 };
 
 export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
