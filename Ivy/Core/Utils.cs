@@ -37,7 +37,7 @@ public static class Utils
                 if (valueType.IsArray)
                 {
                     var array = Array.CreateInstance(itemType, items.Count);
-                    for (int i = 0; i < items.Count; i++)
+                    for (var i = 0; i < items.Count; i++)
                         array.SetValue(items[i], i);
                     return array;
                 }
@@ -71,7 +71,7 @@ public static class Utils
                 _ when boolVal.TryGetValue(out double d) => d != 0,
                 _ when boolVal.TryGetValue(out string? s) => 
                     bool.TryParse(s, out var parsed) ? parsed : 
-                    double.TryParse(s, out var num) ? num != 0 : false,
+                    double.TryParse(s, out var num) && num != 0,
                 _ => false
             };
         }
