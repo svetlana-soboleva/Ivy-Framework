@@ -105,18 +105,28 @@ public class BoolInputApp : SampleBase
 
       var gridItems = new List<object>();
 
+      // Add header row
+      gridItems.Add(Text.InlineCode("Type"));
+      gridItems.Add(Text.InlineCode("Non-Nullable"));
+      gridItems.Add(Text.InlineCode("State"));
+      gridItems.Add(Text.InlineCode("Type"));
+      gridItems.Add(Text.InlineCode("Nullable"));
+      gridItems.Add(Text.InlineCode("State"));
+
       foreach (var (typeName, nonNullableState, nullableState) in numericTypes)
       {
+         // Non-nullable columns (first 3)
          gridItems.Add(Text.InlineCode(typeName));
          gridItems.Add(CreateBoolInputVariants(nonNullableState));
          gridItems.Add(nonNullableState);
 
+         // Nullable columns (next 3)
          gridItems.Add(Text.InlineCode($"{typeName}?"));
          gridItems.Add(CreateBoolInputVariants(nullableState));
          gridItems.Add(nullableState);
       }
 
-      return Layout.Grid().Columns(3) | gridItems.ToArray();
+      return Layout.Grid().Columns(6) | gridItems.ToArray();
    }
 
    private static object CreateBoolInputVariants(object state)
