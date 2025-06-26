@@ -128,21 +128,21 @@ public static class BoolInputExtensions
         // Create the appropriate BoolInput based on the original state type
         if (isNullable)
         {
-            var boolValue = ConvertToBoolValue(state, true);
+            var boolValue = ConvertToBoolValue<bool?>(state, true);
             var input = new BoolInput<bool?>(boolValue, e => SetStateValue(state, e.Value), label, disabled, variant);
             input.ScaffoldDefaults(null!, stateType);
             return input;
         }
         else
         {
-            var boolValue = ConvertToBoolValue(state, false);
+            var boolValue = ConvertToBoolValue<bool>(state, false);
             var input = new BoolInput<bool>(boolValue, e => SetStateValue(state, e.Value), label, disabled, variant);
             input.ScaffoldDefaults(null!, stateType);
             return input;
         }
     }
     
-    private static T ConvertToBoolValue<T>(IAnyState state, bool isNullable) where T : struct
+    private static T ConvertToBoolValue<T>(IAnyState state, bool isNullable)
     {
         var stateType = state.GetStateType();
         var value = state.As<object>().Value;
@@ -150,7 +150,7 @@ public static class BoolInputExtensions
         // Handle null values for nullable types
         if (isNullable && value == null)
         {
-            return default(T); // null for nullable types
+            return default(T)!; // null for nullable types
         }
         
         // Convert to boolean based on type
@@ -191,7 +191,7 @@ public static class BoolInputExtensions
             _ when stateType.IsNumeric() => ConvertBoolToNumeric(boolValue, stateType, isNullable),
             
             // Other types - use BestGuessConvert
-            _ => Core.Utils.BestGuessConvert(boolValue ?? false, stateType)
+            _ => Core.Utils.BestGuessConvert(boolValue ?? false, stateType) ?? false
         };
         
         // Set the state value

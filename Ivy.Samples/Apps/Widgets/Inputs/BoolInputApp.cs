@@ -126,9 +126,21 @@ public class BoolInputApp : SampleBase
       if (anyState == null)
          return Text.Block("Not an IAnyState");
 
-      return Layout.Vertical()
-             | anyState.ToBoolInput()
-             | anyState.ToBoolInput().Variant(BoolInputs.Switch)
-             | anyState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star);
+      var stateType = anyState.GetStateType();
+      var isNullable = stateType.IsNullableType();
+
+      if (isNullable)
+      {
+         // For nullable states, only show checkbox variant
+         return anyState.ToBoolInput();
+      }
+      else
+      {
+         // For non-nullable states, show all three variants
+         return Layout.Vertical()
+                | anyState.ToBoolInput()
+                | anyState.ToBoolInput().Variant(BoolInputs.Switch)
+                | anyState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star);
+      }
    }
 }
