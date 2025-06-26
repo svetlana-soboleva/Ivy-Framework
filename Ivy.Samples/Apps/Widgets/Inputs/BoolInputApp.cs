@@ -62,50 +62,7 @@ public class BoolInputApp : SampleBase
              | new Box("Not Implemented")
           ;
 
-
-      var intState = this.UseState(0);
-      var nullableIntState = this.UseState<int?>((int?)null);
-      // var floatState = this.UseState(0.0f);
-      // var nullableFloatState = this.UseState<float?>((float?)null);
-      var boolState = this.UseState(false);
-      var nullableBoolState = this.UseState(false);
-
-      var dataBinding = Layout.Grid().Columns(3)
-
-                        | Text.InlineCode("int")
-                        | (Layout.Vertical()
-                              | intState.ToBoolInput()
-                              | intState.ToBoolInput().Variant(BoolInputs.Switch)
-                              | intState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
-                          )
-                        | intState
-
-                        | Text.InlineCode("int? (NOT WORKING)")
-                        | (Layout.Vertical()
-                           | nullableIntState.ToBoolInput()
-                           | nullableIntState.ToBoolInput().Variant(BoolInputs.Switch)
-                           | nullableIntState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
-                        )
-                        | nullableIntState
-
-                        | Text.InlineCode("bool")
-                        | (Layout.Vertical()
-                           | boolState.ToBoolInput()
-                           | boolState.ToBoolInput().Variant(BoolInputs.Switch)
-                           | boolState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
-                        )
-                        | boolState
-
-                        | Text.InlineCode("bool?")
-                        | (Layout.Vertical()
-                           | nullableBoolState.ToBoolInput()
-                           | nullableBoolState.ToBoolInput().Variant(BoolInputs.Switch)
-                           | nullableBoolState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star)
-                        )
-                        | nullableBoolState
-
-                        ;
-
+      var dataBinding = CreateNumericTypeTests();
 
       return Layout.Vertical()
              | Text.H1("BoolInput")
@@ -114,6 +71,63 @@ public class BoolInputApp : SampleBase
              | Text.H2("Data Binding")
              | dataBinding
              ;
+   }
 
+   private object CreateNumericTypeTests()
+   {
+      var numericTypes = new (string TypeName, object NonNullableState, object NullableState)[]
+      {
+         // Signed integer types
+         ("sbyte", UseState((sbyte)0), UseState((sbyte?)null)),
+         ("short", UseState((short)0), UseState((short?)null)),
+         ("int", UseState(0), UseState((int?)null)),
+         ("long", UseState((long)0), UseState((long?)null)),
+         ("Int128", UseState((Int128)0), UseState((Int128?)null)),
+         ("IntPtr", UseState((IntPtr)0), UseState((IntPtr?)null)),
+         
+         // Unsigned integer types
+         ("byte", UseState((byte)0), UseState((byte?)null)),
+         ("ushort", UseState((ushort)0), UseState((ushort?)null)),
+         ("uint", UseState((uint)0), UseState((uint?)null)),
+         ("ulong", UseState((ulong)0), UseState((ulong?)null)),
+         ("UInt128", UseState((UInt128)0), UseState((UInt128?)null)),
+         ("UIntPtr", UseState((UIntPtr)0), UseState((UIntPtr?)null)),
+         
+         // Floating-point types
+         ("Half", UseState((Half)0), UseState((Half?)null)),
+         ("float", UseState(0.0f), UseState((float?)null)),
+         ("double", UseState(0.0), UseState((double?)null)),
+         ("decimal", UseState((decimal)0), UseState((decimal?)null)),
+         
+         // Boolean types
+         ("bool", UseState(false), UseState((bool?)false))
+      };
+
+      var gridItems = new List<object>();
+
+      foreach (var (typeName, nonNullableState, nullableState) in numericTypes)
+      {
+         gridItems.Add(Text.InlineCode(typeName));
+         gridItems.Add(CreateBoolInputVariants(nonNullableState));
+         gridItems.Add(nonNullableState);
+
+         gridItems.Add(Text.InlineCode($"{typeName}?"));
+         gridItems.Add(CreateBoolInputVariants(nullableState));
+         gridItems.Add(nullableState);
+      }
+
+      return Layout.Grid().Columns(3) | gridItems.ToArray();
+   }
+
+   private static object CreateBoolInputVariants(object state)
+   {
+      var anyState = state as IAnyState;
+      if (anyState == null)
+         return Text.Block("Not an IAnyState");
+
+      return Layout.Vertical()
+             | anyState.ToBoolInput()
+             | anyState.ToBoolInput().Variant(BoolInputs.Switch)
+             | anyState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star);
    }
 }
