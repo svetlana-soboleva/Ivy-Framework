@@ -33,7 +33,13 @@ public static class Utils
                 var items = jsonArray.Select(e => ConvertJsonNode(e, itemType)).ToArray();
                 if (valueType.IsArray)
                 {
-                    return items.ToArray();
+                    // Create array of the correct type
+                    var array = Array.CreateInstance(itemType, items.Length);
+                    for (int i = 0; i < items.Length; i++)
+                    {
+                        array.SetValue(items[i], i);
+                    }
+                    return array;
                 }
 
                 if (valueType.GetGenericTypeDefinition() == typeof(List<>))
@@ -83,6 +89,7 @@ public static class Utils
                 _ when numVal.TryGetValue(out string? str) => Convert.ChangeType(str, t),
                 _ when numVal.TryGetValue(out double dbl) => Convert.ChangeType(dbl, t),
                 _ when numVal.TryGetValue(out long lng) => Convert.ChangeType(lng, t),
+                _ when numVal.TryGetValue(out int intVal) => Convert.ChangeType(intVal, t),
                 _ => null
             };
         }
