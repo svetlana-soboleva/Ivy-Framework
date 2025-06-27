@@ -11,10 +11,7 @@ public static class Utils
     {
         unchecked
         {
-            int hash = 23;
-            foreach (char c in text)
-                hash = (hash * 31) + c;
-            return hash;
+            return text.Aggregate(23, (current, c) => (current * 31) + c);
         }
     }
     
@@ -257,26 +254,16 @@ public static class Utils
 
     private static object ConvertElement(JsonElement element)
     {
-        switch (element.ValueKind)
+        return element.ValueKind switch
         {
-            case JsonValueKind.Object:
-                return element.ToDictionary();
-            case JsonValueKind.Array:
-                return element.EnumerateArray()
-                    .Select(ConvertElement)
-                    .ToList();
-            case JsonValueKind.String:
-                return element.GetString()!;
-            case JsonValueKind.Number:
-                return element.TryGetInt64(out long l) ? l : element.GetDouble();
-            case JsonValueKind.True:
-            case JsonValueKind.False:
-                return element.GetBoolean();
-            case JsonValueKind.Null:
-                return null!;
-            default:
-                return element.GetRawText();
-        }
+            JsonValueKind.Object => element.ToDictionary(),
+            JsonValueKind.Array => element.EnumerateArray().Select(ConvertElement).ToList(),
+            JsonValueKind.String => element.GetString()!,
+            JsonValueKind.Number => element.TryGetInt64(out long l) ? l : element.GetDouble(),
+            JsonValueKind.True or JsonValueKind.False => element.GetBoolean(),
+            JsonValueKind.Null => null!,
+            _ => element.GetRawText()
+        };
     }
     
     public static string CleanGenericNotation(string typeName)
