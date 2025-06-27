@@ -110,10 +110,10 @@ public class BoolInputApp : SampleBase
       {
          return value switch
          {
-            null => isNullable ? Text.InlineCode("Null") : 0,
-            bool b => b.ToString(),
-            _ when numericTypeNames.Contains(typeName) => value,
-            _ => value
+            null => isNullable ? Text.InlineCode("Null") : Text.InlineCode("0"),
+            bool b => Text.InlineCode(b.ToString()),
+            _ when numericTypeNames.Contains(typeName) => Text.InlineCode(value.ToString()),
+            _ => Text.InlineCode(value?.ToString() ?? "null")
          };
       }
 
