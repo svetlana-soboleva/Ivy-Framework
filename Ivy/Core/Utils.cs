@@ -11,7 +11,10 @@ public static class Utils
     {
         unchecked
         {
-            return text.Aggregate(23, (current, c) => (current * 31) + c);
+            int hash = 23;
+            foreach (char c in text)
+                hash = (hash * 31) + c;
+            return hash;
         }
     }
     
