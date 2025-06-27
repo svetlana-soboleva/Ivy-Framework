@@ -106,24 +106,13 @@ public class BoolInputApp : SampleBase
 
       var numericTypeNames = new[] { "double", "decimal", "float", "short", "int", "long", "byte" };
 
-      object FormatStateValue(string typeName, object? value, bool isNullable)
-      {
-         return value switch
-         {
-            null => isNullable ? Text.InlineCode("Null") : Text.InlineCode("0"),
-            bool b => Text.InlineCode(b.ToString()),
-            _ when numericTypeNames.Contains(typeName) => Text.InlineCode(value.ToString()),
-            _ => Text.InlineCode(value?.ToString() ?? "null")
-         };
-      }
-
       foreach (var (typeName, nonNullableState, nullableState) in numericTypes)
       {
          // Non-nullable columns (first 3)
          gridItems.Add(Text.InlineCode(typeName));
          gridItems.Add(CreateBoolInputVariants(nonNullableState));
 
-         var nonNullableAnyState = nonNullableState as Ivy.Core.Hooks.IAnyState;
+         var nonNullableAnyState = nonNullableState as IAnyState;
          object? nonNullableValue = null;
          if (nonNullableAnyState != null)
          {
@@ -136,7 +125,7 @@ public class BoolInputApp : SampleBase
          gridItems.Add(Text.InlineCode($"{typeName}?"));
          gridItems.Add(CreateBoolInputVariants(nullableState));
 
-         var anyState = nullableState as Ivy.Core.Hooks.IAnyState;
+         var anyState = nullableState as IAnyState;
          object? value = null;
          if (anyState != null)
          {
@@ -147,12 +136,22 @@ public class BoolInputApp : SampleBase
       }
 
       return Layout.Grid().Columns(6) | gridItems.ToArray();
+
+      object FormatStateValue(string typeName, object? value, bool isNullable)
+      {
+         return value switch
+         {
+            null => isNullable ? Text.InlineCode("Null") : Text.InlineCode("0"),
+            bool b => Text.InlineCode(b.ToString()),
+            _ when numericTypeNames.Contains(typeName) => Text.InlineCode(value.ToString()!),
+            _ => Text.InlineCode(value?.ToString() ?? "null")
+         };
+      }
    }
 
    private static object CreateBoolInputVariants(object state)
    {
-      var anyState = state as IAnyState;
-      if (anyState == null)
+      if (state is not IAnyState anyState)
          return Text.Block("Not an IAnyState");
 
       var stateType = anyState.GetStateType();
@@ -163,13 +162,11 @@ public class BoolInputApp : SampleBase
          // For nullable states, only show checkbox variant
          return anyState.ToBoolInput();
       }
-      else
-      {
-         // For non-nullable states, show all three variants
-         return Layout.Vertical()
-                | anyState.ToBoolInput()
-                | anyState.ToBoolInput().Variant(BoolInputs.Switch)
-                | anyState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star);
-      }
+
+      // For non-nullable states, show all three variants
+      return Layout.Vertical()
+             | anyState.ToBoolInput()
+             | anyState.ToBoolInput().Variant(BoolInputs.Switch)
+             | anyState.ToBoolInput().Variant(BoolInputs.Toggle).Icon(Icons.Star);
    }
 }
