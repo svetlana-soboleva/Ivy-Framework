@@ -33,13 +33,10 @@ public static class Utils
         {
             if (jsonNode is JsonArray jsonArray)
             {
-                var items = jsonArray.Select(e => ConvertJsonNode(e, itemType)).ToList();
+                var items = jsonArray.Select(e => ConvertJsonNode(e, itemType)).ToArray();
                 if (valueType.IsArray)
                 {
-                    var array = Array.CreateInstance(itemType, items.Count);
-                    for (var i = 0; i < items.Count; i++)
-                        array.SetValue(items[i], i);
-                    return array;
+                    return items.ToArray();
                 }
 
                 if (valueType.GetGenericTypeDefinition() == typeof(List<>))
@@ -178,17 +175,16 @@ public static class Utils
         if (IsTupleType(targetType) && input is IDictionary dictionary)
         {
             var tupleTypes = targetType.GetGenericArguments();
-            var values = new object?[tupleTypes.Length];
-            for (int i = 0; i < tupleTypes.Length; i++)
-            {
-                var key = "item" + (i + 1);
-                if (!dictionary.Contains(key))
-                    return null;
-                var converted = BestGuessConvert(dictionary[key], tupleTypes[i]);
-                if (converted == null)
-                    return null;
-                values[i] = converted;
-            }
+            var values = Enumerable.Range(1, tupleTypes.Length)
+                .Select(i => new { Index = i - 1, Key = "item" + i })
+                .Select(x => dictionary.Contains(x.Key) 
+                    ? BestGuessConvert(dictionary[x.Key], tupleTypes[x.Index]) 
+                    : null)
+                .ToArray();
+
+            if (values.Any(v => v == null))
+                return null;
+
             return Activator.CreateInstance(targetType, values);
         }
 
@@ -255,12 +251,8 @@ public static class Utils
     
     public static Dictionary<string, object> ToDictionary(this JsonElement element)
     {
-        var dict = new Dictionary<string, object>();
-        foreach (JsonProperty prop in element.EnumerateObject())
-        {
-            dict[prop.Name] = ConvertElement(prop.Value);
-        }
-        return dict;
+        return element.EnumerateObject()
+            .ToDictionary(prop => prop.Name, prop => ConvertElement(prop.Value));
     }
 
     private static object ConvertElement(JsonElement element)
@@ -270,12 +262,9 @@ public static class Utils
             case JsonValueKind.Object:
                 return element.ToDictionary();
             case JsonValueKind.Array:
-                var list = new List<object>();
-                foreach (JsonElement item in element.EnumerateArray())
-                {
-                    list.Add(ConvertElement(item));
-                }
-                return list;
+                return element.EnumerateArray()
+                    .Select(ConvertElement)
+                    .ToList();
             case JsonValueKind.String:
                 return element.GetString()!;
             case JsonValueKind.Number:
