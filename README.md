@@ -91,7 +91,7 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
 
 5. **Open** [http://localhost:5137](http://localhost:5173) in your browser.
 
-Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy. 
+Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy.
 
 ## Contributing
 
@@ -100,5 +100,3 @@ Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples wi
 3. **Submit** a pull request.
 
 Feel free to file issues and feature requests.
-
-
