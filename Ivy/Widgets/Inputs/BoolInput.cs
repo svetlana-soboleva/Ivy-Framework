@@ -115,27 +115,27 @@ public static class BoolInputExtensions
         {
             // Boolean types - direct conversion
             _ when stateType == typeof(bool) => (bool)value,
-            _ when stateType == typeof(bool?) => value == null ? null : (bool?)value,
+            _ when stateType == typeof(bool?) => (bool?)value,
 
             // Numeric types - convert to boolean (0 = false, non-zero = true)
-            _ when stateType.IsNumeric() && stateType.IsNullableType() => value == null ? null : (bool?)Convert.ToBoolean(value),
+            // Expression value==null should always be null (suggestion by IntelliJ), but in this case it is a valid check.
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            _ when stateType.IsNumeric() && stateType.IsNullableType() => value == null ? null : Convert.ToBoolean(value),
             _ when stateType.IsNumeric() => Convert.ToBoolean(value),
 
             // Other types - try BestGuessConvert, fallback to false
-            _ => Core.Utils.BestGuessConvert(value, typeof(bool)) is bool b && b
+            _ => Core.Utils.BestGuessConvert(value, typeof(bool)) is true
         };
 
         // Handle the return type T appropriately
         if (typeof(T) == typeof(bool?))
         {
-            return (T)(object)boolValue;
+            return (T)(object)boolValue!;
         }
-        else
-        {
-            // For non-nullable bool, convert null to false
-            var nonNullableBool = boolValue as bool? ?? false;
-            return (T)(object)nonNullableBool;
-        }
+
+        // For non-nullable bool, convert null to false
+        var nonNullableBool = boolValue ?? false;
+        return (T)(object)nonNullableBool;
     }
 
     private static void SetStateValue(IAnyState state, bool boolValue)
