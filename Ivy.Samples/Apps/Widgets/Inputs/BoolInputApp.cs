@@ -95,14 +95,14 @@ public class BoolInputApp : SampleBase
         };
 
         var gridItems = new List<object>
-      {
-         Text.InlineCode("Type"),
-         Text.InlineCode("Non-Nullable"),
-         Text.InlineCode("State"),
-         Text.InlineCode("Type"),
-         Text.InlineCode("Nullable"),
-         Text.InlineCode("State")
-      };
+        {
+            Text.InlineCode("Type"),
+            Text.InlineCode("Non-Nullable"),
+            Text.InlineCode("State"),
+            Text.InlineCode("Type"),
+            Text.InlineCode("Nullable"),
+            Text.InlineCode("State")
+        };
 
         var numericTypeNames = new[] { "double", "decimal", "float", "short", "int", "long", "byte" };
 
