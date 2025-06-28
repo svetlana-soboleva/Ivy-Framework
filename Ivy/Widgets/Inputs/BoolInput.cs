@@ -61,8 +61,6 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
         OnChange = e => typedState.Set(e.Value);
     }
 
-    public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
-
     public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null,
         bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
     {
