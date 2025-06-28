@@ -18,7 +18,7 @@ type FormatStyle = keyof typeof formatStyleMap;
 interface NumberInputBaseProps {
   id: string;
   placeholder?: string;
-  value: number;
+  value: number | null;
   formatStyle?: FormatStyle;
   min?: number;
   max?: number;
@@ -26,7 +26,8 @@ interface NumberInputBaseProps {
   precision?: number;
   disabled?: boolean;
   invalid?: string;
-  onValueChange: (value: number) => void;
+  nullable?: boolean;
+  onValueChange: (value: number | null) => void;
   currency?: string | undefined;
 }
 
@@ -44,7 +45,7 @@ const SliderVariant = memo(({
   onValueChange,
 }: NumberInputBaseProps) => {
   // Local state for live feedback (optional, fallback to prop value)
-  const [localValue, setLocalValue] = React.useState<number>(value);
+  const [localValue, setLocalValue] = React.useState<number | null>(value);
 
   React.useEffect(() => {
     setLocalValue(value);
@@ -66,13 +67,16 @@ const SliderVariant = memo(({
     }
   }, [onValueChange]);
 
+  // For slider, we need a numeric value - use 0 as fallback for null
+  const sliderValue = localValue ?? 0;
+
   return (
     <div className="relative w-full mt-8">
       <Slider
         min={min}
         max={max}
         step={step}
-        value={[localValue]}
+        value={[sliderValue]}
         disabled={disabled}
         onValueChange={handleSliderChange}
         onValueCommit={handleSliderCommit}
@@ -106,6 +110,7 @@ const NumberVariant = memo(({
   precision = 2,
   disabled = false,
   invalid,
+  nullable = false,
   onValueChange,
   currency
 }: NumberInputBaseProps) => {
@@ -119,10 +124,13 @@ const NumberVariant = memo(({
   }), [formatStyle, precision]);
 
   const handleNumberChange = useCallback((newValue: number | null) => {
-    if (newValue !== null) {
+    // If not nullable and value is null, convert to 0
+    if (!nullable && newValue === null) {
+      onValueChange(0);
+    } else {
       onValueChange(newValue);
     }
-  }, [onValueChange]);
+  }, [onValueChange, nullable]);
 
   return (
     <div className="relative">
@@ -154,19 +162,29 @@ NumberVariant.displayName = 'NumberVariant';
 export const NumberInputWidget = memo(({ 
   id, 
   variant = "Default",
+  nullable = false,
   ...props
 }: NumberInputWidgetProps) => {
   const eventHandler = useEventHandler() as EventHandler;
    
-  const handleChange = useCallback((newValue: number) => {
-    const boundedValue = Math.min(Math.max(newValue, props.min ?? 0), props.max ?? 100);
-    eventHandler("OnChange", id, [boundedValue]);
+  // Normalize undefined to null when nullable
+  const normalizedValue = nullable && props.value === undefined ? null : props.value;
+   
+  const handleChange = useCallback((newValue: number | null) => {
+    // Apply bounds only if value is not null
+    if (newValue !== null) {
+      const boundedValue = Math.min(Math.max(newValue, props.min ?? 0), props.max ?? 100);
+      eventHandler("OnChange", id, [boundedValue]);
+    } else {
+      // Pass null directly for nullable inputs
+      eventHandler("OnChange", id, [newValue]);
+    }
   }, [eventHandler, id, props.min, props.max]);
 
   return variant === "Slider" ? (
-    <SliderVariant id={id} {...props} onValueChange={handleChange} />
+    <SliderVariant id={id} {...props} value={normalizedValue} onValueChange={handleChange} />
   ) : (
-    <NumberVariant id={id} {...props} onValueChange={handleChange} />
+    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} />
   );
 });
 
