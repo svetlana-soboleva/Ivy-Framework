@@ -5,6 +5,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
+import React from 'react';
 
 const formatStyleMap = {
   Decimal: 'decimal',
@@ -42,7 +43,23 @@ const SliderVariant = memo(({
   invalid,
   onValueChange,
 }: NumberInputBaseProps) => {
+  // Local state for live feedback (optional, fallback to prop value)
+  const [localValue, setLocalValue] = React.useState<number>(value);
+
+  React.useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // Only update local state on drag
   const handleSliderChange = useCallback((values: number[]) => {
+    const newValue = values[0];
+    if (typeof newValue === 'number') {
+      setLocalValue(newValue);
+    }
+  }, []);
+
+  // Only call onValueChange (eventHandler) when drag ends
+  const handleSliderCommit = useCallback((values: number[]) => {
     const newValue = values[0];
     if (typeof newValue === 'number') {
       onValueChange(newValue);
@@ -55,9 +72,10 @@ const SliderVariant = memo(({
         min={min}
         max={max}
         step={step}
-        value={[value]}
+        value={[localValue]}
         disabled={disabled}
         onValueChange={handleSliderChange}
+        onValueCommit={handleSliderCommit}
         className={cn(invalid && inputStyles.invalid)}
       />
       <span
