@@ -25,8 +25,13 @@ jobs:
 
       - name: Ensure Directory.Build.props is available
         run: |
-          New-Item -ItemType Directory -Path "Ivy-Framework/Ivy" -Force
-          Copy-Item -Path "Ivy/Directory.Build.props" -Destination "Ivy-Framework/Ivy/Directory.Build.props" -Force
+          if (Test-Path "Ivy/Directory.Build.props") {
+            New-Item -ItemType Directory -Path "Ivy-Framework/Ivy" -Force
+            Copy-Item -Path "Ivy/Directory.Build.props" -Destination "Ivy-Framework/Ivy/Directory.Build.props" -Force
+            Write-Host "Directory.Build.props copied successfully"
+          } else {
+            Write-Host "Warning: Ivy repository not available. Build may fail if Directory.Build.props is required."
+          }
         shell: pwsh
 
       - name: Set up .NET
@@ -49,3 +54,11 @@ jobs:
       - name: Run Tests
         run: dotnet test --configuration Release --no-build
         working-directory: Ivy-Framework
+
+      - name: Validate Required Secrets
+        run: |
+          if (-not (Test-Path "Ivy/Directory.Build.props")) {
+            Write-Error "Build failed: IVY_FRAMEWORK_TOKEN secret is required but not provided. Please configure the secret in repository settings."
+            exit 1
+          }
+        shell: pwsh
