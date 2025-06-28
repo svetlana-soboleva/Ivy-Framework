@@ -1,5 +1,7 @@
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { inputStyles } from '@/lib/styles';
+import { InvalidIcon } from "@/components/InvalidIcon";
 
 interface ThumbsRatingProps {
   value?: number;
@@ -7,6 +9,7 @@ interface ThumbsRatingProps {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   disabled?: boolean;
+  invalid?: string;
 }
 
 const ThumbsRating = ({
@@ -15,6 +18,7 @@ const ThumbsRating = ({
   size = 'sm',
   className,
   disabled = false,
+  invalid,
 }: ThumbsRatingProps) => {
   const iconSizes = {
     sm: 16,
@@ -28,48 +32,57 @@ const ThumbsRating = ({
   };
 
   return (
-    <div className={cn("flex gap-1 items-center", disabled && "opacity-50", className)}>
-      <button
-        onClick={() => handleClick(1)}
-        disabled={disabled}
-        className={cn(
-          "p-2 rounded-full transition-all",
-          "hover:bg-red-100 dark:hover:bg-red-900/30",
-          "focus-visible:outline-none focus-visible:ring-2",
-          "focus-visible:ring-ring focus-visible:ring-offset-2",
-          value === 1 && "bg-red-100 dark:bg-red-900/30",
-          disabled && "cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent"
-        )}
-      >
-        <ThumbsDown
-          size={iconSizes[size]}
+    <div className="relative">
+      <div className={cn("flex gap-1 items-center", disabled && "opacity-50", className)}>
+        <button
+          onClick={() => handleClick(1)}
+          disabled={disabled}
           className={cn(
-            "transition-colors",
-            value === 1 ? "text-red-600 dark:text-red-400" : "text-muted-foreground"
+            "p-2 rounded-full transition-all",
+            "hover:bg-red-100 dark:hover:bg-red-900/30",
+            "focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-ring focus-visible:ring-offset-2",
+            value === 1 && "bg-red-100 dark:bg-red-900/30",
+            disabled && "cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent",
+            invalid && inputStyles.invalid
           )}
-        />
-      </button>
+        >
+          <ThumbsDown
+            size={iconSizes[size]}
+            className={cn(
+              "transition-colors",
+              value === 1 ? "text-red-600 dark:text-red-400" : "text-muted-foreground"
+            )}
+          />
+        </button>
 
-      <button
-        onClick={() => handleClick(2)}
-        disabled={disabled}
-        className={cn(
-          "p-2 rounded-full transition-all",
-          "hover:bg-green-100 dark:hover:bg-green-900/30",
-          "focus-visible:outline-none focus-visible:ring-2",
-          "focus-visible:ring-ring focus-visible:ring-offset-2",
-          value === 2 && "bg-green-100 dark:bg-green-900/30",
-          disabled && "cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent"
-        )}
-      >
-        <ThumbsUp
-          size={iconSizes[size]}
+        <button
+          onClick={() => handleClick(2)}
+          disabled={disabled}
           className={cn(
-            "transition-colors",
-            value === 2 ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
+            "p-2 rounded-full transition-all",
+            "hover:bg-green-100 dark:hover:bg-green-900/30",
+            "focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-ring focus-visible:ring-offset-2",
+            value === 2 && "bg-green-100 dark:bg-green-900/30",
+            disabled && "cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent",
+            invalid && inputStyles.invalid
           )}
-        />
-      </button>
+        >
+          <ThumbsUp
+            size={iconSizes[size]}
+            className={cn(
+              "transition-colors",
+              value === 2 ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
+            )}
+          />
+        </button>
+      </div>
+      {invalid && (
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4">
+          <InvalidIcon message={invalid} />
+        </div>
+      )}
     </div>
   );
 };

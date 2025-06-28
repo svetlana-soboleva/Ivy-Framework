@@ -9,6 +9,7 @@ interface FeedbackInputWidgetProps {
   value: number;
   variant: 'Thumbs' | 'Emojis' | 'Stars';
   disabled: boolean;
+  invalid?: string;
   events: string[];
 }
 
@@ -17,6 +18,7 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
   value,
   variant,
   disabled,
+  invalid,
   events
 }) => {
   const eventHandler = useEventHandler();
@@ -29,19 +31,19 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
 
   if(variant === 'Thumbs') {
     return (
-      <ThumbsRating disabled={disabled} value={value} onRate={handleChange}/>
+      <ThumbsRating disabled={disabled} value={value} onRate={handleChange} invalid={invalid}/>
     );
   }
 
   if(variant === 'Emojis') {
     return (
-      <EmojiRating disabled={disabled} value={value} onRate={handleChange}/>
+      <EmojiRating disabled={disabled} value={value} onRate={handleChange} invalid={invalid}/>
     );
   }
 
   if(variant === 'Stars') {
     return (
-      <StarRating disabled={disabled} value={value} onRate={handleChange}/>
+      <StarRating disabled={disabled} value={value} onRate={handleChange} invalid={invalid}/>
     );
   }
 
