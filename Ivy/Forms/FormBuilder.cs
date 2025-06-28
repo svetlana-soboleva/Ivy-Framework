@@ -439,7 +439,8 @@ public class FormBuilder<TModel> : ViewBase
             }
             invalidFields.Set(results.Count(e => !e));
             return false;
-        };
+        }
+        ;
 
         var bindings = fields.Select(e => e.Bind(currentModel)).ToArray();
         context.TrackDisposable(bindings.Select(e => e.disposable));
