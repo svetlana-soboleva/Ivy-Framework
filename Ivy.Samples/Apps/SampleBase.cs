@@ -34,7 +34,7 @@ public class CodeView(Type type) : ViewBase
 {
     public override object? Build()
     {
-        var assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
         var resourceName = type.FullName + ".cs";
 
         string code;
