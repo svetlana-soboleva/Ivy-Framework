@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
+import { sidebarMenuRef } from '../layouts/SidebarLayoutWidget';
 
 interface TextInputWidgetProps {
   id: string;
@@ -285,6 +286,13 @@ const SearchVariant: React.FC<{
     onChange(e);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      sidebarMenuRef.current?.focus();
+      e.preventDefault();
+    }
+  };
+
   const styles:React.CSSProperties = {
     ...getWidth(props.width)
   };
@@ -304,6 +312,7 @@ const SearchVariant: React.FC<{
         onChange={handleChange}
         onBlur={onBlur}
         onFocus={onFocus}
+        onKeyDown={handleKeyDown}
         className={cn(
           "pl-8",
           (props.invalid && inputStyles.invalid),   

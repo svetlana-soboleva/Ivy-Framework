@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   Sidebar,
@@ -64,7 +64,22 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
 interface SidebarMenuWidgetProps {
   id: string;
   items: MenuItem[];
+  searchActive?: boolean;
 }
+
+type FlatMenuItem = MenuItem & { isGroup?: boolean };
+const flattenMenuItems = (items: MenuItem[], parentExpanded = true): FlatMenuItem[] => {
+  let flat: FlatMenuItem[] = [];
+  for (const item of items) {
+    if (item.children && item.children.length > 0 && (parentExpanded || item.expanded)) {
+      flat.push({ ...(item as MenuItem), isGroup: true });
+      flat = flat.concat(flattenMenuItems(item.children, true));
+    } else {
+      flat.push(item);
+    }
+  }
+  return flat;
+};
 
 // Separate component for collapsible menu items to properly manage state
 const CollapsibleMenuItem: React.FC<{
@@ -184,10 +199,94 @@ const renderMenuItems = (items: (MenuItem)[], eventHandler:WidgetEventHandlerTyp
   });
 };
 
+export const sidebarMenuRef = React.createRef<HTMLDivElement>();
+
 export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   id,
-  items  
+  items,
+  searchActive = false
 }) => {
   const eventHandler = useEventHandler();
-  return renderMenuItems(items, eventHandler, id, 0)
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const menuRef = sidebarMenuRef;
+
+  // Flatten items for keyboard navigation in search mode
+  const flatItems: FlatMenuItem[] = searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!searchActive || flatItems.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      setSelectedIndex(idx => Math.min(idx + 1, flatItems.length - 1));
+      e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      setSelectedIndex(idx => Math.max(idx - 1, 0));
+      e.preventDefault();
+    } else if (e.key === 'Enter') {
+      const item = flatItems[selectedIndex];
+      if (item && item.tag) {
+        eventHandler('OnSelect', id, [item.tag]);
+      }
+      e.preventDefault();
+    }
+  }, [searchActive, flatItems, selectedIndex, eventHandler, id]);
+
+  // Only reset selectedIndex when searchActive changes
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [searchActive]);
+
+  // Render menu items with highlighting
+  const renderMenuItemsWithHighlight = (items: MenuItem[], level: number, flatIdxRef: { current: number }) => {
+    return items.map((item) => {
+      if (item.children && item.children.length > 0) {
+        return (
+          <SidebarGroup key={item.label}>
+            <SidebarGroupLabel>{item.label}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {renderMenuItemsWithHighlight(item.children, level + 1, flatIdxRef)}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        );
+      } else {
+        const flatIdx = flatIdxRef.current;
+        flatIdxRef.current++;
+        const isActive = searchActive && flatIdx === selectedIndex;
+        return (
+          <SidebarMenuItem key={item.tag}>
+            <SidebarMenuButton
+              isActive={isActive}
+              tabIndex={-1}
+              onClick={() => item.tag && eventHandler('OnSelect', id, [item.tag])}
+              style={isActive ? { background: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' } : {}}
+            >
+              <Icon name={item.icon} size={20} />
+              <span>{item.label}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      }
+    });
+  };
+
+  if (searchActive) {
+    // Only one group: Search Results
+    const flatIdxRef = { current: 0 };
+    return (
+      <div
+        ref={menuRef}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        style={{ outline: 'none' }}
+        data-sidebar-menu-widget
+      >
+        {renderMenuItemsWithHighlight(items, 0, flatIdxRef)}
+      </div>
+    );
+  }
+
+  // Default rendering (no keyboard navigation)
+  return renderMenuItems(items, eventHandler, id, 0);
 }

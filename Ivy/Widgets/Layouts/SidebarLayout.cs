@@ -26,6 +26,7 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     }
 
     [Prop] public MenuItem[] Items { get; set; }
+    [Prop] public bool SearchActive { get; set; } = false;
     [Event] public Action<Event<SidebarMenu,object>> OnSelect { get; set; }
     [Event] public Action<Event<SidebarMenu,object>>? OnCtrlRightClickSelect { get; set; }
     
