@@ -2,6 +2,9 @@ import { memo, useCallback, useMemo } from 'react';
 import { useEventHandler, EventHandler } from "@/components/EventHandlerContext";
 import NumberInput from "@/components/NumberInput";
 import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
+import { inputStyles } from '@/lib/styles';
+import { InvalidIcon } from '@/components/InvalidIcon';
 
 const formatStyleMap = {
   Decimal: 'decimal',
@@ -21,6 +24,7 @@ interface NumberInputBaseProps {
   step?: number;
   precision?: number;
   disabled?: boolean;
+  invalid?: string;
   onValueChange: (value: number) => void;
   currency?: string | undefined;
 }
@@ -35,6 +39,7 @@ const SliderVariant = memo(({
   max = 100,
   step = 1,
   disabled = false,
+  invalid,
   onValueChange,
 }: NumberInputBaseProps) => {
   const handleSliderChange = useCallback((values: number[]) => {
@@ -45,7 +50,7 @@ const SliderVariant = memo(({
   }, [onValueChange]);
 
   return (
-    <div className="w-full mt-8">
+    <div className="relative w-full mt-8">
       <Slider
         min={min}
         max={max}
@@ -53,6 +58,7 @@ const SliderVariant = memo(({
         defaultValue={[value]}
         disabled={disabled}
         onValueChange={handleSliderChange}
+        className={cn(invalid && inputStyles.invalid)}
       />
       <span
           className="mt-4 flex w-full items-center justify-between gap-1 text-xs font-sm text-muted-foreground"
@@ -61,6 +67,11 @@ const SliderVariant = memo(({
           <span>{min}</span>
           <span>{max}</span>
         </span>
+      {invalid && (
+        <div className="absolute right-2.5 top-2.5">
+          <InvalidIcon message={invalid} />
+        </div>
+      )}
     </div>
   );
 });
@@ -76,6 +87,7 @@ const NumberVariant = memo(({
   formatStyle = 'Decimal',
   precision = 2,
   disabled = false,
+  invalid,
   onValueChange,
   currency
 }: NumberInputBaseProps) => {
@@ -95,16 +107,27 @@ const NumberVariant = memo(({
   }, [onValueChange]);
 
   return (
-    <NumberInput 
-      min={min}
-      max={max}
-      step={step}
-      format={formatConfig}
-      placeholder={placeholder}
-      value={value}
-      disabled={disabled}
-      onChange={handleNumberChange}
-    />
+    <div className="relative">
+      <NumberInput 
+        min={min}
+        max={max}
+        step={step}
+        format={formatConfig}
+        placeholder={placeholder}
+        value={value}
+        disabled={disabled}
+        onChange={handleNumberChange}
+        className={cn(
+          invalid && inputStyles.invalid,
+          invalid && "pr-8"
+        )}
+      />
+      {invalid && (
+        <div className="absolute right-8 top-2">
+          <InvalidIcon message={invalid} />
+        </div>
+      )}
+    </div>
   );
 });
 
