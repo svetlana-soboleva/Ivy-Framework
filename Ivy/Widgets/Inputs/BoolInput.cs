@@ -36,14 +36,14 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
 
 public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
 {
-    public BoolInput(IAnyState state, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) 
+    public BoolInput(IAnyState state, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
         : this(label, disabled, variant)
     {
         var typedState = state.As<TBool>();
         Value = typedState.Value;
         OnChange = e => typedState.Set(e.Value);
     }
-    
+
     public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
     {
         OnChange = onChange;
@@ -72,14 +72,14 @@ public static class BoolInputExtensions
         input.ScaffoldDefaults(null!, type);
         return input;
     }
-    
-    public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false) 
+
+    public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false)
         => state.ToBoolInput(label, disabled, BoolInputs.Switch);
 
     public static BoolInputBase ToToggleInput(this IAnyState state, Icons? icon = null, string? label = null, bool disabled = false)
     {
         var input = state.ToBoolInput(label, disabled, BoolInputs.Toggle);
-        if(icon != null)
+        if (icon != null)
         {
             input.Icon = icon.Value;
         }
@@ -88,13 +88,13 @@ public static class BoolInputExtensions
 
     internal static IAnyBoolInput ScaffoldDefaults(this IAnyBoolInput input, string? name, Type type)
     {
-        if(string.IsNullOrEmpty(input.Label))
+        if (string.IsNullOrEmpty(input.Label))
         {
             input.Label = Utils.SplitPascalCase(name) ?? name;
         }
         return input;
     }
-    
+
     public static BoolInputBase Label(this BoolInputBase widget, string label) => widget with { Label = label };
     public static BoolInputBase Disabled(this BoolInputBase widget, bool disabled = true) => widget with { Disabled = disabled };
     public static BoolInputBase Variant(this BoolInputBase widget, BoolInputs variant) => widget with { Variant = variant };
