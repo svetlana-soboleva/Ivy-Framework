@@ -28,7 +28,7 @@ export function EmojiRating({
 
   const handleRating = (rating: number) => {
     if (disabled) return;
-    onRate?.(rating);
+    onRate?.(value === rating ? 0 : rating);
   };
 
   const emojiSizes = {

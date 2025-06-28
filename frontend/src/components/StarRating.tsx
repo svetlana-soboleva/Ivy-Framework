@@ -30,7 +30,7 @@ export function StarRating({
 
   const handleRating = (star: number) => {
     if (disabled) return;
-    onRate?.(star);
+    onRate?.(value === star ? 0 : star);
   };
 
   const starSizes = {

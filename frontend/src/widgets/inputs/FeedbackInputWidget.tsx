@@ -25,17 +25,21 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
 }) => {
   const eventHandler = useEventHandler();
 
+  const isBooleanType = useMemo(() => {
+    return typeof value === 'boolean';
+  }, [value]);
+
   // Convert value to number for rating components
   const numericValue = useMemo(() => {
     if (value === null || value === undefined) return 0;
-    if (typeof value === 'boolean') {
+    if (isBooleanType) {
       if (variant === 'Thumbs') {
         return value ? ThumbsEnum.Up : ThumbsEnum.Down;
       }
       return value ? 1 : 0;
     }
     return value as number;
-  }, [value, variant]);
+  }, [value, variant, isBooleanType]);
 
   const handleChange = useCallback((e: number) => {
     if(!events.includes("OnChange")) return;
@@ -43,7 +47,7 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
     
     // Convert number back to original type
     let convertedValue: number | boolean | null;
-    if (typeof value === 'boolean' || nullable) {
+    if (isBooleanType) {
       if (variant === 'Thumbs') {
         // For boolean types with ThumbsRating
         if (e === ThumbsEnum.None) {
@@ -66,12 +70,16 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
         convertedValue = e === 1;
       }
     } else {
-      // Numeric type handling
-      convertedValue = e === 0 ? null : e;
+      // Numeric type handling (including nullable numeric types)
+      if (e === 0) {
+        convertedValue = nullable ? null : 0;
+      } else {
+        convertedValue = e;
+      }
     }
     
     eventHandler("OnChange", id, [convertedValue]);
-  }, [id, disabled, value, variant, numericValue, events, eventHandler, nullable]);
+  }, [id, disabled, value, variant, numericValue, events, eventHandler, nullable, isBooleanType]);
 
   if(variant === 'Thumbs') {
     return (
