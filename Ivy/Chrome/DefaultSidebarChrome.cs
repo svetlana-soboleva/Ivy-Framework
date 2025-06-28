@@ -1,17 +1,12 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Dynamic;
-using System.Reflection;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Client;
 using Ivy.Core;
-using Ivy.Core.Hooks;
 using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Shared;
 using Ivy.Widgets.Internal;
-using Microsoft.AspNetCore.Authentication;
 
 namespace Ivy.Chrome;
 
@@ -32,7 +27,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         var auth = UseService<IAuthService?>();
         var user = UseState<UserInfo?>();
         var currentPage = UseState<string?>();
-        var search = UseState<string>("");
+        var search = UseState("");
         var menuItems = UseState(() => appRepository.GetMenuItems());
         var args = UseService<AppArgs>();
         var navigate = Context.UseSignal<NavigateSignal, NavigateArgs, Unit>();

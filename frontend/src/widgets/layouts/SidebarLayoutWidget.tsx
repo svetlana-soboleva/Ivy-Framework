@@ -66,6 +66,58 @@ interface SidebarMenuWidgetProps {
   items: MenuItem[];
 }
 
+// Separate component for collapsible menu items to properly manage state
+const CollapsibleMenuItem: React.FC<{
+  item: MenuItem;
+  eventHandler: WidgetEventHandlerType;
+  widgetId: string;
+  level: number;
+}> = ({ item, eventHandler, widgetId, level }) => {
+  const [isOpen, setIsOpen] = useState(item.expanded);
+
+  const onItemClick = (item: MenuItem) => {
+    if(!item.tag) return;
+    eventHandler("OnSelect", widgetId, [item.tag]);
+  }
+
+  const onCtrlRightMouseClick = (e: React.MouseEvent, item: MenuItem) => {
+    if(e.ctrlKey && e.button === 2 && !!item.tag) {
+      e.preventDefault();
+      eventHandler("OnCtrlRightClickSelect", widgetId, [item.tag]);
+    }
+  }
+
+  if(!!item.children && item.children!.length > 0) {
+    return (
+      <Collapsible className="group/collapsible" key={item.label} open={isOpen} onOpenChange={setIsOpen}>
+        <SidebarMenuItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton onClick={() => onItemClick(item)} onMouseDown={(e) => onCtrlRightMouseClick(e, item)}>
+              <Icon name={item.icon} size={20} />
+              <span>{item.label}</span>
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {item.children && renderMenuItems(item.children!, eventHandler, widgetId, level + 1)}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </SidebarMenuItem>
+      </Collapsible>
+    );
+  } else {
+    return (
+      <SidebarMenuItem key={item.label}>
+        <SidebarMenuButton onClick={() => onItemClick(item)} onMouseDown={(e) => onCtrlRightMouseClick(e, item)}>
+          <Icon name={item.icon} size={20} />
+          <span>{item.label}</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+};
+
 const renderMenuItems = (items: (MenuItem)[], eventHandler:WidgetEventHandlerType, widgetId:string,  level:number) => {
 
   const onItemClick = (item:MenuItem) => {
@@ -98,37 +150,13 @@ const renderMenuItems = (items: (MenuItem)[], eventHandler:WidgetEventHandlerTyp
       }
       else
       {
-        if(!!item.children && item.children!.length > 0)
-        {
-          const [isOpen, setIsOpen] = useState(item.expanded);
-          return (
-            <Collapsible className="group/collapsible" key={item.label} open={isOpen} onOpenChange={setIsOpen}>
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton onClick={() => onItemClick(item)} onMouseDown={(e) => onCtrlRightMouseClick(e, item)}>
-                    <Icon name={item.icon} size={20} />
-                    <span>{item.label}</span>
-                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item.children && renderMenuItems(item.children!, eventHandler, widgetId, 1)}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          );
-        }
-        else
-        {
-          return <SidebarMenuItem key={item.label}>
-            <SidebarMenuButton onClick={() => onItemClick(item)} onMouseDown={(e) => onCtrlRightMouseClick(e, item)}>
-              <Icon name={item.icon} size={20} />
-              <span>{item.label}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        }
+        return <CollapsibleMenuItem 
+          key={item.label}
+          item={item}
+          eventHandler={eventHandler}
+          widgetId={widgetId}
+          level={level}
+        />;
       }
 
     } else {
