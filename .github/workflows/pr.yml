@@ -10,6 +10,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout Ivy-Framework
+        uses: actions/checkout@v4
+        with:
+          path: Ivy-Framework
+
+      - name: Check Code Formatting
+        run: dotnet format --verify-no-changes
+        working-directory: Ivy-Framework
+
       - name: Checkout Ivy
         uses: actions/checkout@v4
         with:
@@ -17,11 +26,6 @@ jobs:
           token: ${{ secrets.IVY_FRAMEWORK_TOKEN }}
           path: Ivy
         continue-on-error: true
-
-      - name: Checkout Ivy-Framework
-        uses: actions/checkout@v4
-        with:
-          path: Ivy-Framework
 
       - name: Ensure Directory.Build.props is available
         run: |
@@ -41,10 +45,6 @@ jobs:
 
       - name: Workload update
         run: dotnet workload update
-        working-directory: Ivy-Framework
-
-      - name: Check Code Formatting
-        run: dotnet format --verify-no-changes
         working-directory: Ivy-Framework
 
       - name: Build Solution
