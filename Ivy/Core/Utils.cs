@@ -72,8 +72,8 @@ public static class Utils
                 _ when boolVal.TryGetValue(out int i) => i != 0,
                 _ when boolVal.TryGetValue(out long l) => l != 0,
                 _ when boolVal.TryGetValue(out double d) => d != 0,
-                _ when boolVal.TryGetValue(out string? s) => 
-                    bool.TryParse(s, out var parsed) ? parsed : 
+                _ when boolVal.TryGetValue(out string? s) =>
+                    bool.TryParse(s, out var parsed) ? parsed :
                     double.TryParse(s, out var num) && num != 0,
                 _ => false
             };
@@ -184,8 +184,8 @@ public static class Utils
             var tupleTypes = targetType.GetGenericArguments();
             var values = Enumerable.Range(1, tupleTypes.Length)
                 .Select(i => new { Index = i - 1, Key = "item" + i })
-                .Select(x => dictionary.Contains(x.Key) 
-                    ? BestGuessConvert(dictionary[x.Key], tupleTypes[x.Index]) 
+                .Select(x => dictionary.Contains(x.Key)
+                    ? BestGuessConvert(dictionary[x.Key], tupleTypes[x.Index])
                     : null)
                 .ToArray();
 
