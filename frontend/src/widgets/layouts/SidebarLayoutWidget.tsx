@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 import {
   Sidebar,
@@ -212,8 +212,9 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   // Register only the sidebar menu container with useFocusable
   const { ref: focusRef } = useFocusable('sidebar-navigation', 1);
 
-  // Flatten items for keyboard navigation in search mode
-  const flatItems: FlatMenuItem[] = searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
+  const flatItems: FlatMenuItem[] = useMemo(() => {
+    return searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
+  }, [searchActive, items]);
 
   useEffect(() => {
     setSelectedIndex(0);
