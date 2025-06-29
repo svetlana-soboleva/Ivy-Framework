@@ -291,32 +291,30 @@ export const TabsLayoutWidget = ({
             {badge}
           </Badge>
         )}
-        {activeTabId === tabId && (
-          <div className="ml-2 items-center flex gap-0 relative">
-            {showRefresh && (
-              <a
-                onClick={(e) => {
-                  e.stopPropagation();
-                  eventHandler("OnRefresh", id, [tabOrder.indexOf(tabId)]);
-                }}
-                className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
-              >
-                <RotateCw className="w-3 h-3" />
-              </a>
-            )}
-            {showClose && (
-              <a
-                onClick={(e) => {
-                  e.stopPropagation();
-                  eventHandler("OnClose", id, [tabOrder.indexOf(tabId)]);
-                }}
-                className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
-              >
-                <X className="w-3 h-3" />
-              </a>
-            )}
-          </div>
-        )}
+        <div className="ml-2 items-center flex gap-0 relative">
+          {activeTabId === tabId && showRefresh && (
+            <a
+              onClick={(e) => {
+                e.stopPropagation();
+                eventHandler("OnRefresh", id, [tabOrder.indexOf(tabId)]);
+              }}
+              className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
+            >
+              <RotateCw className="w-3 h-3" />
+            </a>
+          )}
+          {showClose && (
+            <a
+              onClick={(e) => {
+                e.stopPropagation();
+                eventHandler("OnClose", id, [tabOrder.indexOf(tabId)]);
+              }}
+              className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
+            >
+              <X className="w-3 h-3" />
+            </a>
+          )}
+        </div>
       </>
     );
   };
