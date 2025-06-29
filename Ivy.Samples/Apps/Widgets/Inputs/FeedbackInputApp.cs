@@ -16,7 +16,7 @@ public class FeedbackInputApp : SampleBase
                | Text.Block("Zero")
                | Text.Block("Two")
                | Text.Block("Disabled")
-               | Text.Block("Invalid (NOT IMPLEMENTED)")
+               | Text.Block("Invalid")
 
                | Text.InlineCode("FeedbackInputs.Stars")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Stars)
@@ -42,8 +42,8 @@ public class FeedbackInputApp : SampleBase
         var floatState = this.UseState(0.0f);
         var nullableFloatState = this.UseState<float?>((float?)null);
         var boolState = this.UseState(false);
-        var nullableBoolState = this.UseState(false);
 
+        var nullableBoolState = this.UseState<bool?>((bool?)null);
         var dataBinding = Layout.Grid().Columns(3)
                           | Text.InlineCode("int")
                           | intState.ToFeedbackInput()
@@ -60,15 +60,15 @@ public class FeedbackInputApp : SampleBase
                           | Text.InlineCode("float?")
                           | nullableFloatState.ToFeedbackInput()
                           | (nullableFloatState.Value == null ? Text.InlineCode("null") : nullableFloatState.Value.ToString())!
-
-                          | Text.InlineCode("bool (NOT WORKING)")
+                          
+                          | Text.InlineCode("bool")
                           | boolState.ToFeedbackInput()
                           | boolState
+                          
+                          | Text.InlineCode("bool?")
 
-                          | Text.InlineCode("bool? (NOT WORKING)")
                           | nullableBoolState.ToFeedbackInput()
                           | nullableBoolState
-
             ;
 
         return Layout.Vertical()
