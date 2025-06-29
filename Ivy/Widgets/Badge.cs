@@ -30,6 +30,8 @@ public record Badge : WidgetBase<Badge>
 
     [Prop] public bool Disabled { get; set; }
 
+    [Prop] public Sizes Size { get; set; } = Sizes.Default;
+
     [Event] public Action<Event<Button>>? OnClick { get; set; }
 
     public static Badge operator |(Badge badge, object child)
@@ -58,6 +60,23 @@ public static class BadgeExtensions
     public static Badge Variant(this Badge button, BadgeVariant variant)
     {
         return button with { Variant = variant };
+    }
+
+    public static Badge Size(this Badge button, Sizes size)
+    {
+        return button with { Size = size };
+    }
+
+    [RelatedTo(nameof(Badge.Size))]
+    public static Badge Large(this Badge button)
+    {
+        return button.Size(Sizes.Large);
+    }
+
+    [RelatedTo(nameof(Badge.Size))]
+    public static Badge Small(this Badge button)
+    {
+        return button.Size(Sizes.Small);
     }
 
     [RelatedTo(nameof(Badge.Variant))]
