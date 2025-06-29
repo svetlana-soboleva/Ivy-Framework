@@ -10,7 +10,7 @@ interface BadgeWidgetProps {
   title: string;
   icon?: string;
   variant?: string;
-  size?: string;
+  size?: "Default" | "Small" | "Large";
   disabled: boolean;
 }
 
@@ -19,21 +19,21 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   title, 
   icon = undefined,
   variant = "default",
-  size = "default",
+  size = "Default",
   disabled = false
 }) => {
     const eventHandler = useEventHandler();
 
     const sizeClasses = {
-      small: "text-xs px-2 py-0.5",
-      default: "text-sm px-2.5 py-0.5", 
-      large: "text-base px-3 py-1"
+      Small: "text-xs px-2 py-0.5",
+      Default: "text-sm px-2.5 py-0.5", 
+      Large: "text-base px-3 py-1"
     };
 
     const iconSizeClasses = {
-      small: "h-2.5 w-2.5",
-      default: "h-3 w-3",
-      large: "h-4 w-4"
+      Small: "h-2.5 w-2.5",
+      Default: "h-3 w-3",
+      Large: "h-4 w-4"
     };
 
     return (
@@ -42,12 +42,12 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
         variant={camelCase(variant) as "default" | "destructive" | "outline" | "secondary"}
         className={cn(
           "w-min whitespace-nowrap",
-          sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.default
+          sizeClasses[size] || sizeClasses.Default
         )}
       >
         {icon && icon!="None" && (
           <Icon 
-            className={cn("mr-1", iconSizeClasses[size as keyof typeof iconSizeClasses] || iconSizeClasses.default)} 
+            className={cn("mr-1", iconSizeClasses[size] || iconSizeClasses.Default)} 
             name={icon} 
           />
         )}
