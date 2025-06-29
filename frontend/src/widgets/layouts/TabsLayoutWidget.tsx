@@ -253,12 +253,12 @@ export const TabsLayoutWidget = ({
     }
   };
 
-  const handleDragEnd = (event: { active: { id: string | number }; over: { id: string | number } | null }) => {
+  const handleDragEnd = React.useCallback((event: { active: { id: string | number }; over: { id: string | number } | null }) => {
     const { active, over } = event;
     if (active && over && active.id !== over.id) {
       setTabOrder(items => arrayMove(items, items.indexOf(String(active.id)), items.indexOf(String(over.id))));
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     const handleTabEvent = (eventType: string) => (e: Event) => {
