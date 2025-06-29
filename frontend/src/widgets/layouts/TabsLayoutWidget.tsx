@@ -135,7 +135,7 @@ export const TabsLayoutWidget = ({
   variant
 }: TabsLayoutWidgetProps) => {
   const tabWidgets = React.Children.toArray(children).filter((child) =>
-    React.isValidElement(child) && (child.type as any)?.displayName === 'TabWidget'
+    React.isValidElement(child) && (child.type as React.ComponentType<TabWidgetProps>)?.displayName === 'TabWidget'
   );
   
   const eventHandler = useEventHandler();
@@ -146,7 +146,7 @@ export const TabsLayoutWidget = ({
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   // Tab management
-  const tabIds = React.useMemo(() => tabWidgets.map(tab => (tab as any).props.id), [tabWidgets]);
+  const tabIds = React.useMemo(() => tabWidgets.map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id), [tabWidgets]);
   const prevTabIdsRef = React.useRef<string[]>(tabIds);
   const [tabOrder, setTabOrder] = React.useState<string[]>(() => tabIds);
   const [activeTabId, setActiveTabId] = React.useState<string | null>(() => 
@@ -253,17 +253,18 @@ export const TabsLayoutWidget = ({
     }
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: { active: { id: string | number }; over: { id: string | number } | null }) => {
     const { active, over } = event;
     if (active && over && active.id !== over.id) {
-      setTabOrder(items => arrayMove(items, items.indexOf(active.id), items.indexOf(over.id)));
+      setTabOrder(items => arrayMove(items, items.indexOf(String(active.id)), items.indexOf(String(over.id))));
     }
   };
 
   React.useEffect(() => {
-    const handleTabEvent = (eventType: string) => (e: any) => {
-      if (!e.detail?.id) return;
-      const idx = tabOrder.indexOf(e.detail.id);
+    const handleTabEvent = (eventType: string) => (e: Event) => {
+      const customEvent = e as CustomEvent<{ id: string }>;
+      if (!customEvent.detail?.id) return;
+      const idx = tabOrder.indexOf(customEvent.detail.id);
       if (idx !== -1) eventHandler(eventType, id, [idx]);
     };
 
@@ -282,11 +283,11 @@ export const TabsLayoutWidget = ({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
   const showClose = events.includes("OnClose");
   const showRefresh = events.includes("OnRefresh");
-  const orderedTabWidgets = tabOrder.map(id => tabWidgets.find(tab => (tab as any).props.id === id)).filter(Boolean);
+  const orderedTabWidgets = tabOrder.map(id => tabWidgets.find(tab => (tab as React.ReactElement<TabWidgetProps>).props.id === id)).filter(Boolean);
 
   if (tabWidgets.length === 0) return <div className='remove-parent-padding'></div>;
 
-  const renderTabContent = (tabWidget: any) => {
+  const renderTabContent = (tabWidget: React.ReactElement) => {
     if (!React.isValidElement(tabWidget)) return null;
     const { title, id: tabId, icon, badge } = tabWidget.props as TabWidgetProps;
     
@@ -406,7 +407,7 @@ export const TabsLayoutWidget = ({
                   </SortableContext>
                   <DragOverlay>
                     {(() => {
-                      const active = orderedTabWidgets.find(tab => (tab as any)?.props.id === activeTabId);
+                      const active = orderedTabWidgets.find(tab => (tab as React.ReactElement<TabWidgetProps>)?.props.id === activeTabId);
                       if (active && React.isValidElement(active)) {
                         const { title } = active.props as TabWidgetProps;
                         return (
