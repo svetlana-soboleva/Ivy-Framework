@@ -32,6 +32,8 @@ public record Badge : WidgetBase<Badge>
 
     [Prop] public Sizes Size { get; set; } = Sizes.Default;
 
+    [Prop] public Align IconPosition { get; set; } = Align.Left;
+
     [Event] public Action<Event<Button>>? OnClick { get; set; }
 
     public static Badge operator |(Badge badge, object child)
@@ -47,9 +49,9 @@ public static class BadgeExtensions
         return button with { Disabled = disabled };
     }
 
-    public static Badge Icon(this Badge button, Icons icon)
+    public static Badge Icon(this Badge button, Icons? icon, Align position = Align.Left)
     {
-        return button with { Icon = icon };
+        return button with { Icon = icon, IconPosition = position };
     }
 
     public static Badge HandleClick(this Badge button, Action<Event<Button>> onClick)

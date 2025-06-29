@@ -9,6 +9,7 @@ interface BadgeWidgetProps {
   id: string;
   title: string;
   icon?: string;
+  iconPosition?: "Left" | "Right";
   variant?: string;
   size?: "Default" | "Small" | "Large";
   disabled: boolean;
@@ -18,6 +19,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   id, 
   title, 
   icon = undefined,
+  iconPosition = "Left",
   variant = "default",
   size = "Default",
   disabled = false
@@ -46,13 +48,19 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
           disabled && "opacity-50 cursor-not-allowed"
         )}
       >
-        {icon && icon!="None" && (
+        {iconPosition === "Left" && icon && icon !== "None" && (
           <Icon 
             className={cn("mr-1", iconSizeClasses[size] || iconSizeClasses.Default)} 
             name={icon} 
           />
         )}
         {title}
+        {iconPosition === "Right" && icon && icon !== "None" && (
+          <Icon 
+            className={cn("ml-1", iconSizeClasses[size] || iconSizeClasses.Default)} 
+            name={icon} 
+          />
+        )}
       </Badge>
     );
   };

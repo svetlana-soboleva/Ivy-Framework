@@ -82,6 +82,17 @@ public class BadgeApp : SampleBase
                   | Variants.Select(variant => new Badge("With Check", eventHandler, variant: variant, icon: Icons.Check)).ToArray()
                )
 
+               | Text.H2("Icon Positioning")
+               | (Layout.Grid().Columns(Variants.Length)
+                  | VariantNames.Select(name => Text.Block(name)).ToArray()
+
+                  // Icon on left (default)
+                  | Variants.Select(variant => new Badge("Left Icon", eventHandler, variant: variant).Icon(Icons.Bell, Align.Left)).ToArray()
+
+                  // Icon on right
+                  | Variants.Select(variant => new Badge("Right Icon", eventHandler, variant: variant).Icon(Icons.ArrowRight, Align.Right)).ToArray()
+               )
+
                | Text.H2("Icon Only")
                | Layout.Horizontal(
                    new Badge(icon: Icons.Bell, onClick: eventHandler),
