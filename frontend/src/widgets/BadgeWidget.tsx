@@ -42,7 +42,8 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
         variant={camelCase(variant) as "default" | "destructive" | "outline" | "secondary"}
         className={cn(
           "w-min whitespace-nowrap",
-          sizeClasses[size] || sizeClasses.Default
+          sizeClasses[size] || sizeClasses.Default,
+          disabled && "opacity-50 cursor-not-allowed"
         )}
       >
         {icon && icon!="None" && (
