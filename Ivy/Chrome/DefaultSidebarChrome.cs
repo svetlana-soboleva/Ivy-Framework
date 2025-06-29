@@ -15,14 +15,14 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Ivy.Chrome;
 
-[App(isVisible:false, removeIvyBranding:true)]
+[App(isVisible: false, removeIvyBranding: true)]
 public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 {
     private record TabState(string Title, string Url, Icons? Icon, long RefreshToken)
     {
-        public Tab ToTab() => new Tab(Title, new Iframe(Url, refreshToken:RefreshToken)).Icon(Icon);
+        public Tab ToTab() => new Tab(Title, new Iframe(Url, refreshToken: RefreshToken)).Icon(Icon);
     }
-    
+
     public override object? Build()
     {
         var tabs = UseState(ImmutableArray.Create<TabState>);
@@ -36,7 +36,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         var menuItems = UseState(() => appRepository.GetMenuItems());
         var args = UseService<AppArgs>();
         var navigate = Context.UseSignal<NavigateSignal, NavigateArgs, Unit>();
-            
+
         UseEffect(() =>
         {
             return navigate.Receive(navigateArgs =>
@@ -45,7 +45,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 return default!;
             });
         });
-        
+
         UseEffect(() =>
         {
             if (string.IsNullOrWhiteSpace(search.Value))
@@ -56,11 +56,11 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             {
                 var result = appRepository.GetMenuItems().Flatten().Where(e =>
                     (e.Label ?? "").StartsWith(search.Value, StringComparison.OrdinalIgnoreCase)).ToArray();
-                
+
                 menuItems.Set([MenuItem.Default("Search Results").Children(result)]);
             }
-        }, [ search ]);
-            
+        }, [search]);
+
         //////////////////////////////////////////////////////////
         // var isIvyAgentStarting = UseState(false);
         // var isIvyAgentRunning = UseState(false);
@@ -73,11 +73,11 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         //     return cleanup;
         // }, [ isIvyAgentStarting ]);
         //////////////////////////////////////////////////////////
-        
+
         void OpenApp(NavigateArgs navigateArgs)
         {
             var app = appRepository!.GetAppOrDefault(navigateArgs.AppId);
-            if(settings.Navigation == ChromeNavigation.Pages)
+            if (settings.Navigation == ChromeNavigation.Pages)
             {
                 currentPage.Set(navigateArgs.GetUrl(args.ConnectionId));
             }
@@ -87,8 +87,8 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 selectedIndex.Set(tabs.Value.Length - 1);
             }
         }
-        
-        UseEffect(async () => 
+
+        UseEffect(async () =>
         {
             if (auth != null)
             {
@@ -99,7 +99,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 OpenApp(new NavigateArgs(settings.DefaultAppId));
             }
         });
-        
+
         void OnMenuSelect(Event<SidebarMenu, object> @event)
         {
             if (@event.Value is string appId)
@@ -107,7 +107,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 OpenApp(new NavigateArgs(appId));
             }
         }
-        
+
         void OnCtrlRightClickSelect(Event<SidebarMenu, object> @event)
         {
             if (@event.Value is string appId)
@@ -115,12 +115,12 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 client?.OpenUrl(new NavigateArgs(appId).GetUrl());
             }
         }
-        
+
         void OnTabSelect(Event<TabsLayout, int> @event)
         {
             selectedIndex.Set(@event.Value);
         }
-        
+
         void OnTabClose(Event<TabsLayout, int> @event)
         {
             //[0,1,|2|,3] -> 2
@@ -131,17 +131,17 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             selectedIndex.Set(newIndex >= 0 ? newIndex : (int?)null);
             tabs.Set(tabs.Value.RemoveAt(@event.Value));
         }
-        
+
         void OnTabRefresh(Event<TabsLayout, int> @event)
         {
             var tab = tabs.Value[@event.Value];
-            tabs.Set(tabs.Value.RemoveAt(@event.Value).Insert(@event.Value, tab with {RefreshToken = DateTime.UtcNow.Ticks}));
+            tabs.Set(tabs.Value.RemoveAt(@event.Value).Insert(@event.Value, tab with { RefreshToken = DateTime.UtcNow.Ticks }));
             selectedIndex.Set(@event.Value);
         }
 
         object? body = null;
-        
-        if(settings.Navigation == ChromeNavigation.Pages)
+
+        if (settings.Navigation == ChromeNavigation.Pages)
         {
             body = new Iframe(currentPage.Value!, 0);
         }
@@ -173,7 +173,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     MenuItem.Checkbox("System").Icon(Icons.SunMoon).HandleSelect(() => client.SetTheme(Theme.System))
                 )
         };
-        
+
         DropDownMenu? footer;
         if (user.Value != null)
         {
@@ -188,9 +188,9 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                            | Text.Small(user.Value.Email).Overflow(Overflow.Ellipsis))
                         .Grow()
                         .Size(Size.Full().Min(0))
-                        | Icons.ChevronsUpDown  
+                        | Icons.ChevronsUpDown
                 ).Width(Size.Full());
-            
+
             footer = new DropDownMenu(
                     DropDownMenu.DefaultSelectHandler(),
                     trigger)
@@ -223,7 +223,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                         | Text.Muted("Settings")
                     )
                     .Variant(ButtonVariant.Ghost).Width(Size.Full());
-            
+
             footer = new DropDownMenu(
                     DropDownMenu.DefaultSelectHandler(),
                     trigger)
@@ -232,7 +232,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     commonMenuItems
                 );
         }
-        
+
         return new SidebarLayout(
             body,
             sidebarMenu,

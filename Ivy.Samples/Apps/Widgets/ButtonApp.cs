@@ -2,7 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Widgets;
 
-[App(icon:Icons.SquareChevronRight, path: ["Widgets"])]
+[App(icon: Icons.SquareChevronRight, path: ["Widgets"])]
 public class ButtonApp() : SampleBase
 {
     private static readonly ButtonVariant[] Variants = [
@@ -25,8 +25,8 @@ public class ButtonApp() : SampleBase
 
     protected override object? BuildSample()
     {
-        var label = this.UseState("Click a button"); 
-        
+        var label = this.UseState("Click a button");
+
         var eventHandler = (Event<Button> e) =>
         {
             label.Set($"Button {e.Sender.Title} was clicked.");

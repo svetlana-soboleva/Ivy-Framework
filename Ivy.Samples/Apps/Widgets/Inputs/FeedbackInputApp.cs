@@ -3,7 +3,7 @@ using Microsoft.SemanticKernel.Text;
 
 namespace Ivy.Samples.Apps.Widgets.Inputs;
 
-[App(icon:Icons.ThumbsUp, path: [ "Widgets", "Inputs" ])]
+[App(icon: Icons.ThumbsUp, path: ["Widgets", "Inputs"])]
 public class FeedbackInputApp : SampleBase
 {
     protected override object? BuildSample()
@@ -23,13 +23,13 @@ public class FeedbackInputApp : SampleBase
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars).Disabled()
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Stars).Invalid("Invalid feedback")
-               
+
                | Text.InlineCode("FeedbackInputs.Emojis")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Emojis)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis).Disabled()
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Emojis).Invalid("Invalid feedback")
-               
+
                | Text.InlineCode("FeedbackInputs.Thumbs")
                | zeroState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs)
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs)
@@ -43,34 +43,34 @@ public class FeedbackInputApp : SampleBase
         var nullableFloatState = this.UseState<float?>((float?)null);
         var boolState = this.UseState(false);
         var nullableBoolState = this.UseState(false);
-        
+
         var dataBinding = Layout.Grid().Columns(3)
                           | Text.InlineCode("int")
                           | intState.ToFeedbackInput()
                           | intState
-                          
+
                           | Text.InlineCode("int?")
                           | nullableIntState.ToFeedbackInput()
                           | (nullableIntState.Value == null ? Text.InlineCode("null") : nullableIntState.Value.ToString())!
-                          
+
                           | Text.InlineCode("float")
                           | floatState.ToFeedbackInput()
                           | floatState
-                          
+
                           | Text.InlineCode("float?")
                           | nullableFloatState.ToFeedbackInput()
                           | (nullableFloatState.Value == null ? Text.InlineCode("null") : nullableFloatState.Value.ToString())!
-                          
+
                           | Text.InlineCode("bool (NOT WORKING)")
                           | boolState.ToFeedbackInput()
                           | boolState
-                          
+
                           | Text.InlineCode("bool? (NOT WORKING)")
                           | nullableBoolState.ToFeedbackInput()
                           | nullableBoolState
-                          
+
             ;
-        
+
         return Layout.Vertical()
                | Text.H1("Feedback Inputs")
                | Text.H2("Variants")
