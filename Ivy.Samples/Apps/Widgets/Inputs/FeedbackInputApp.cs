@@ -8,8 +8,8 @@ public class FeedbackInputApp : SampleBase
 {
     protected override object? BuildSample()
     {
-        var zeroState = this.UseState(0);
-        var twoState = this.UseState(2);
+        var zeroState = UseState(0);
+        var twoState = UseState(2);
 
         var variants = Layout.Grid().Columns(5)
                | null!
@@ -37,13 +37,13 @@ public class FeedbackInputApp : SampleBase
                | twoState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs).Invalid("Invalid feedback")
             ;
 
-        var intState = this.UseState(0);
-        var nullableIntState = this.UseState<int?>((int?)null);
-        var floatState = this.UseState(0.0f);
-        var nullableFloatState = this.UseState<float?>((float?)null);
-        var boolState = this.UseState(false);
+        var intState = UseState(0);
+        var nullableIntState = UseState((int?)null);
+        var floatState = UseState(0.0f);
+        var nullableFloatState = UseState((float?)null);
+        var boolState = UseState(false);
 
-        var nullableBoolState = this.UseState<bool?>((bool?)null);
+        var nullableBoolState = UseState((bool?)null);
         var dataBinding = Layout.Grid().Columns(3)
                           | Text.InlineCode("int")
                           | intState.ToFeedbackInput()
