@@ -52,7 +52,12 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
         // For boolean types with ThumbsRating
         if (e === ThumbsEnum.None) {
           // Deselection - only allow null for nullable types
-          convertedValue = nullable ? null : false;
+          if (nullable) {
+            convertedValue = null;
+          } else {
+            // For non-nullable types, toggle to the opposite value
+            convertedValue = !value;
+          }
         } else if (e === numericValue) {
           // Clicking the same thumb
           if (nullable) {
@@ -67,12 +72,12 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
           convertedValue = e === ThumbsEnum.Up;
         }
       } else {
-        convertedValue = e === 1;
+        convertedValue = e === ThumbsEnum.Down;
       }
     } else {
       // Numeric type handling (including nullable numeric types)
-      if (e === 0) {
-        convertedValue = nullable ? null : 0;
+      if (e === ThumbsEnum.None) {
+        convertedValue = nullable ? null : ThumbsEnum.None;
       } else {
         convertedValue = e;
       }
