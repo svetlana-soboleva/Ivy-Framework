@@ -138,8 +138,6 @@ export const TabsLayoutWidget = ({
     React.isValidElement(child) && (child.type as any)?.displayName === 'TabWidget'
   );
   
-  if (tabWidgets.length === 0) return <div className='remove-parent-padding'></div>;
-
   const eventHandler = useEventHandler();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
@@ -285,6 +283,8 @@ export const TabsLayoutWidget = ({
   const showClose = events.includes("OnClose");
   const showRefresh = events.includes("OnRefresh");
   const orderedTabWidgets = tabOrder.map(id => tabWidgets.find(tab => (tab as any).props.id === id)).filter(Boolean);
+
+  if (tabWidgets.length === 0) return <div className='remove-parent-padding'></div>;
 
   const renderTabContent = (tabWidget: any) => {
     if (!React.isValidElement(tabWidget)) return null;
