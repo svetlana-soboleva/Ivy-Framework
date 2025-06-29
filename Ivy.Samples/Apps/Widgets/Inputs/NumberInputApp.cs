@@ -40,7 +40,7 @@ public class NumberInputApp : SampleBase
                   | Text.Block("Null")
                   | Text.Block("With Value")
                   | Text.Block("Disabled")
-                  | Text.Block("Invalid (NOT IMPLEMENTED)")
+                  | Text.Block("Invalid")
 
                   | Text.InlineCode("ToNumberInput()")
                   | nullIntValue.ToNumberInput().Placeholder("Placeholder")
