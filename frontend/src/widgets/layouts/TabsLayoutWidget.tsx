@@ -155,6 +155,12 @@ export const TabsLayoutWidget = ({
     tabOrder[selectedIndex] ?? tabOrder[0] ?? null
   );
   const [loadedTabs, setLoadedTabs] = React.useState<Set<string>>(() => new Set());
+  const activeTabIdRef = React.useRef<string | null>(activeTabId);
+
+  // Keep ref in sync with state
+  React.useEffect(() => {
+    activeTabIdRef.current = activeTabId;
+  }, [activeTabId]);
 
   // Sync tab order on add/remove
   React.useEffect(() => {
@@ -215,18 +221,23 @@ export const TabsLayoutWidget = ({
 
   // Sync with selectedIndex prop
   React.useEffect(() => {
-    // Ensure selectedIndex is a valid number, tabOrder is populated,
-    // and selectedIndex is within the bounds of the current tabOrder.
+    // Only update active tab if selectedIndex is explicitly provided and valid
     if (selectedIndex != null && selectedIndex >= 0 && selectedIndex < tabOrder.length) {
       const newTargetTabId = tabOrder[selectedIndex];
       // Only update state if the target tab ID is actually different from the current active one.
-      if (newTargetTabId !== activeTabId) {
+      if (newTargetTabId !== activeTabIdRef.current) {
         setActiveTabId(newTargetTabId);
       }
     }
-    // If selectedIndex becomes out of bounds (e.g., after a tab removal where parent doesn't update selectedIndex,
-    // or if parent sends an invalid index initially), activeTabId will not be changed by this effect.
-    // It will retain its previous value.
+    // If selectedIndex is null or out of bounds, but we have a valid activeTabId that still exists,
+    // keep the current active tab instead of clearing it
+    else if (selectedIndex === null && activeTabIdRef.current && tabOrder.includes(activeTabIdRef.current)) {
+      // Keep current active tab
+    }
+    // If selectedIndex is null and we don't have a valid active tab, let it be null
+    else if (selectedIndex === null && (!activeTabIdRef.current || !tabOrder.includes(activeTabIdRef.current))) {
+      setActiveTabId(null);
+    }
   }, [selectedIndex, tabOrder]);
 
   // Event handlers
