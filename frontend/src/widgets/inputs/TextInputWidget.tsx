@@ -290,7 +290,7 @@ const SearchVariant: React.FC<{
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
       shouldFocusMenuRef.current = true;
       e.currentTarget.blur();
       e.preventDefault();
