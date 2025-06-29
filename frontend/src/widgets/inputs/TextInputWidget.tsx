@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
+import { sidebarMenuRef } from '../layouts/SidebarLayoutWidget';
 
 interface TextInputWidgetProps {
   id: string;
@@ -287,10 +288,7 @@ const SearchVariant: React.FC<{
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      const sidebarMenu = document.querySelector('[data-sidebar-menu-widget]') as HTMLElement;
-      if (sidebarMenu) {
-        sidebarMenu.focus();
-      }
+      sidebarMenuRef.current?.focus();
       e.preventDefault();
     }
   };
