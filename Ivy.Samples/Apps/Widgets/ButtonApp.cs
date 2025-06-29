@@ -5,6 +5,24 @@ namespace Ivy.Samples.Apps.Widgets;
 [App(icon:Icons.SquareChevronRight, path: ["Widgets"])]
 public class ButtonApp() : SampleBase
 {
+    private static readonly ButtonVariant[] Variants = [
+        ButtonVariant.Default,
+        ButtonVariant.Destructive,
+        ButtonVariant.Secondary,
+        ButtonVariant.Outline,
+        ButtonVariant.Ghost,
+        ButtonVariant.Link
+    ];
+
+    private static readonly string[] VariantNames = [
+        "Default",
+        "Destructive", 
+        "Secondary",
+        "Outline",
+        "Ghost",
+        "Link"
+    ];
+
     protected override object? BuildSample()
     {
         var label = this.UseState("Click a button"); 
@@ -13,149 +31,68 @@ public class ButtonApp() : SampleBase
         {
             label.Set($"Button {e.Sender.Title} was clicked.");
         };
-        
+
+        var createButtonRow = (Func<ButtonVariant, Button> buttonFactory) =>
+            Layout.Grid().Columns(Variants.Length)
+            | VariantNames.Select(name => Text.Block(name)).ToArray()
+            | Variants.Select(buttonFactory).ToArray();
+
         return Layout.Vertical()
                | Text.H1("Buttons")
                | Text.H2("Variants")
-               | (Layout.Grid().Columns(6)
-                  | Text.Block("Default")
-                  | Text.Block("Destructive")
-                  | Text.Block("Secondary")
-                  | Text.Block("Outline")
-                  | Text.Block("Ghost")
-                  | Text.Block("Link")
-
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Default)
-                  | new Button("Destructive", eventHandler, variant: ButtonVariant.Destructive)
-                  | new Button("Secondary", eventHandler, variant: ButtonVariant.Secondary)
-                  | new Button("Outline", eventHandler, variant: ButtonVariant.Outline)
-                  | new Button("Ghost", eventHandler, variant: ButtonVariant.Ghost)
-                  | new Button("Link", eventHandler, variant: ButtonVariant.Link)
-               )
+               | createButtonRow(variant => new Button(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant))
                
                | Text.H2("States")
-               | (Layout.Grid().Columns(6)
-                  | Text.Block("Default")
-                  | Text.Block("Destructive")
-                  | Text.Block("Secondary")
-                  | Text.Block("Outline")
-                  | Text.Block("Ghost")
-                  | Text.Block("Link")
-
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Default)
-                  | new Button("Destructive", eventHandler, variant: ButtonVariant.Destructive)
-                  | new Button("Secondary", eventHandler, variant: ButtonVariant.Secondary)
-                  | new Button("Outline", eventHandler, variant: ButtonVariant.Outline)
-                  | new Button("Ghost", eventHandler, variant: ButtonVariant.Ghost)
-                  | new Button("Link", eventHandler, variant: ButtonVariant.Link)
-
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Default).Disabled()
-                  | new Button("Destructive", eventHandler, variant: ButtonVariant.Destructive).Disabled()
-                  | new Button("Secondary", eventHandler, variant: ButtonVariant.Secondary).Disabled()
-                  | new Button("Outline", eventHandler, variant: ButtonVariant.Outline).Disabled()
-                  | new Button("Ghost", eventHandler, variant: ButtonVariant.Ghost).Disabled()
-                  | new Button("Link", eventHandler, variant: ButtonVariant.Link).Disabled()
-
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Default).Loading()
-                  | new Button("Destructive", eventHandler, variant: ButtonVariant.Destructive).Loading()
-                  | new Button("Secondary", eventHandler, variant: ButtonVariant.Secondary).Loading()
-                  | new Button("Outline", eventHandler, variant: ButtonVariant.Outline).Loading()
-                  | new Button("Ghost", eventHandler, variant: ButtonVariant.Ghost).Loading()
-                  | new Button("Link", eventHandler, variant: ButtonVariant.Link).Loading()
+               | (Layout.Grid().Columns(Variants.Length)
+                  | VariantNames.Select(name => Text.Block(name)).ToArray()
+                  
+                  // Normal state
+                  | Variants.Select(variant => new Button(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant)).ToArray()
+                  
+                  // Disabled state
+                  | Variants.Select(variant => new Button(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant).Disabled()).ToArray()
+                  
+                  // Loading state
+                  | Variants.Select(variant => new Button(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant).Loading()).ToArray()
                )
                
                | Text.H2("Sizes")
-               | (Layout.Grid().Columns(6)
-                  | Text.Block("Default")
-                  | Text.Block("Destructive")
-                  | Text.Block("Secondary")
-                  | Text.Block("Outline")
-                  | Text.Block("Ghost")
-                  | Text.Block("Link")
+               | (Layout.Grid().Columns(Variants.Length)
+                  | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Small
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Default).Small()
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Destructive).Small()
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Secondary).Small()
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Outline).Small()
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Ghost).Small()
-                  | new Button("Small", eventHandler, variant: ButtonVariant.Link).Small()
+                  | Variants.Select(variant => new Button("Small", eventHandler, variant: variant).Small()).ToArray()
 
                   // Default
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Default)
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Destructive)
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Secondary)
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Outline)
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Ghost)
-                  | new Button("Default", eventHandler, variant: ButtonVariant.Link)
+                  | Variants.Select(variant => new Button("Default", eventHandler, variant: variant)).ToArray()
 
                   // Large
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Default).Large()
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Destructive).Large()
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Secondary).Large()
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Outline).Large()
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Ghost).Large()
-                  | new Button("Large", eventHandler, variant: ButtonVariant.Link).Large()
+                  | Variants.Select(variant => new Button("Large", eventHandler, variant: variant).Large()).ToArray()
                )
                
                | Text.H2("With Icons")
-               | (Layout.Grid().Columns(6)
-                  | Text.Block("Default")
-                  | Text.Block("Destructive")
-                  | Text.Block("Secondary")
-                  | Text.Block("Outline")
-                  | Text.Block("Ghost")
-                  | Text.Block("Link")
+               | (Layout.Grid().Columns(Variants.Length)
+                  | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Icon Left
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Default, icon: Icons.MessageSquareX)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Destructive, icon: Icons.MessageSquareX)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Secondary, icon: Icons.MessageSquareX)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Outline, icon: Icons.MessageSquareX)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Ghost, icon: Icons.MessageSquareX)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Link, icon: Icons.MessageSquareX)
+                  | Variants.Select(variant => new Button("Button With Icon", eventHandler, variant: variant, icon: Icons.MessageSquareX)).ToArray()
 
                   // Icon Right
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Default, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Destructive, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Secondary, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Outline, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Ghost, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
-                  | new Button("Button With Icon", eventHandler, variant: ButtonVariant.Link, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)
+                  | Variants.Select(variant => new Button("Button With Icon", eventHandler, variant: variant, icon: Icons.MessageSquareX).Icon(Icons.MessageSquareX, Align.Right)).ToArray()
                )
                
                | Text.H2("Styling")
-               | (Layout.Grid().Columns(6)
-                  | Text.Block("Default")
-                  | Text.Block("Destructive")
-                  | Text.Block("Secondary")
-                  | Text.Block("Outline")
-                  | Text.Block("Ghost")
-                  | Text.Block("Link")
+               | (Layout.Grid().Columns(Variants.Length)
+                  | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Rounded
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Default).BorderRadius(BorderRadius.Rounded)
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Destructive).BorderRadius(BorderRadius.Rounded)
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Secondary).BorderRadius(BorderRadius.Rounded)
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Outline).BorderRadius(BorderRadius.Rounded)
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Ghost).BorderRadius(BorderRadius.Rounded)
-                  | new Button("Rounded", eventHandler, variant: ButtonVariant.Link).BorderRadius(BorderRadius.Rounded)
+                  | Variants.Select(variant => new Button("Rounded", eventHandler, variant: variant).BorderRadius(BorderRadius.Rounded)).ToArray()
 
                   // Full
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Default).BorderRadius(BorderRadius.Full)
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Destructive).BorderRadius(BorderRadius.Full)
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Secondary).BorderRadius(BorderRadius.Full)
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Outline).BorderRadius(BorderRadius.Full)
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Ghost).BorderRadius(BorderRadius.Full)
-                  | new Button("Full", eventHandler, variant: ButtonVariant.Link).BorderRadius(BorderRadius.Full)
+                  | Variants.Select(variant => new Button("Full", eventHandler, variant: variant).BorderRadius(BorderRadius.Full)).ToArray()
 
                   // With Tooltip
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Default).Tooltip("This is a tooltip!")
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Destructive).Tooltip("This is a tooltip!")
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Secondary).Tooltip("This is a tooltip!")
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Outline).Tooltip("This is a tooltip!")
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Ghost).Tooltip("This is a tooltip!")
-                  | new Button("With Tooltip", eventHandler, variant: ButtonVariant.Link).Tooltip("This is a tooltip!")
+                  | Variants.Select(variant => new Button("With Tooltip", eventHandler, variant: variant).Tooltip("This is a tooltip!")).ToArray()
                )
                
                | Text.H2("Icon Only")
