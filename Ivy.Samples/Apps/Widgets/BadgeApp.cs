@@ -21,15 +21,6 @@ public class BadgeApp : SampleBase
 
     protected override object? BuildSample()
     {
-        var clickCount = this.UseState(0);
-        var lastClicked = this.UseState("None");
-
-        var eventHandler = (Event<Button> e) =>
-        {
-            clickCount.Set(clickCount.Value + 1);
-            lastClicked.Set(e.Sender.Title ?? "Unknown");
-        };
-
         var createBadgeRow = (Func<BadgeVariant, Badge> badgeFactory) =>
             Layout.Grid().Columns(Variants.Length)
             | VariantNames.Select(name => Text.Block(name)).ToArray()
@@ -38,17 +29,17 @@ public class BadgeApp : SampleBase
         return Layout.Vertical()
                | Text.H1("Badges")
                | Text.H2("Variants")
-               | createBadgeRow(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant))
+               | createBadgeRow(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant))
 
                | Text.H2("States")
                | (Layout.Grid().Columns(Variants.Length)
                   | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Normal state
-                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant)).ToArray()
+                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant)).ToArray()
 
                   // Disabled state
-                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], eventHandler, variant: variant).Disabled()).ToArray()
+                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant).Disabled()).ToArray()
                )
 
                | Text.H2("Sizes")
@@ -56,13 +47,13 @@ public class BadgeApp : SampleBase
                   | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Small
-                  | Variants.Select(variant => new Badge("Small", eventHandler, variant: variant).Small()).ToArray()
+                  | Variants.Select(variant => new Badge("Small", variant: variant).Small()).ToArray()
 
                   // Default
-                  | Variants.Select(variant => new Badge("Default", eventHandler, variant: variant)).ToArray()
+                  | Variants.Select(variant => new Badge("Default", variant: variant)).ToArray()
 
                   // Large
-                  | Variants.Select(variant => new Badge("Large", eventHandler, variant: variant).Large()).ToArray()
+                  | Variants.Select(variant => new Badge("Large", variant: variant).Large()).ToArray()
                )
 
                | Text.H2("With Icons")
@@ -70,16 +61,16 @@ public class BadgeApp : SampleBase
                   | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Bell icon
-                  | Variants.Select(variant => new Badge("With Bell", eventHandler, variant: variant, icon: Icons.Bell)).ToArray()
+                  | Variants.Select(variant => new Badge("With Bell", variant: variant, icon: Icons.Bell)).ToArray()
 
                   // Heart icon
-                  | Variants.Select(variant => new Badge("With Heart", eventHandler, variant: variant, icon: Icons.Heart)).ToArray()
+                  | Variants.Select(variant => new Badge("With Heart", variant: variant, icon: Icons.Heart)).ToArray()
 
                   // Star icon
-                  | Variants.Select(variant => new Badge("With Star", eventHandler, variant: variant, icon: Icons.Star)).ToArray()
+                  | Variants.Select(variant => new Badge("With Star", variant: variant, icon: Icons.Star)).ToArray()
 
                   // Check icon
-                  | Variants.Select(variant => new Badge("With Check", eventHandler, variant: variant, icon: Icons.Check)).ToArray()
+                  | Variants.Select(variant => new Badge("With Check", variant: variant, icon: Icons.Check)).ToArray()
                )
 
                | Text.H2("Icon Positioning")
@@ -87,41 +78,37 @@ public class BadgeApp : SampleBase
                   | VariantNames.Select(name => Text.Block(name)).ToArray()
 
                   // Icon on left (default)
-                  | Variants.Select(variant => new Badge("Left Icon", eventHandler, variant: variant).Icon(Icons.Bell, Align.Left)).ToArray()
+                  | Variants.Select(variant => new Badge("Left Icon", variant: variant).Icon(Icons.Bell, Align.Left)).ToArray()
 
                   // Icon on right
-                  | Variants.Select(variant => new Badge("Right Icon", eventHandler, variant: variant).Icon(Icons.ArrowRight, Align.Right)).ToArray()
+                  | Variants.Select(variant => new Badge("Right Icon", variant: variant).Icon(Icons.ArrowRight, Align.Right)).ToArray()
                )
 
                | Text.H2("Icon Only")
                | Layout.Horizontal(
-                   new Badge(icon: Icons.Bell, onClick: eventHandler),
-                   new Badge(icon: Icons.Heart, onClick: eventHandler, variant: BadgeVariant.Destructive),
-                   new Badge(icon: Icons.Star, onClick: eventHandler, variant: BadgeVariant.Outline),
-                   new Badge(icon: Icons.Check, onClick: eventHandler, variant: BadgeVariant.Secondary)
+                   new Badge(icon: Icons.Bell),
+                   new Badge(icon: Icons.Heart, variant: BadgeVariant.Destructive),
+                   new Badge(icon: Icons.Star, variant: BadgeVariant.Outline),
+                   new Badge(icon: Icons.Check, variant: BadgeVariant.Secondary)
                )
 
                | Text.H2("Disabled vs Enabled (Clear Comparison)")
                | Layout.Horizontal(
                    Layout.Vertical(
                        Text.Block("Enabled:"),
-                       new Badge("Clickable", eventHandler, variant: BadgeVariant.Default),
-                       new Badge("Clickable", eventHandler, variant: BadgeVariant.Destructive),
-                       new Badge("Clickable", eventHandler, variant: BadgeVariant.Secondary),
-                       new Badge("Clickable", eventHandler, variant: BadgeVariant.Outline)
+                       new Badge("Enabled", variant: BadgeVariant.Default),
+                       new Badge("Enabled", variant: BadgeVariant.Destructive),
+                       new Badge("Enabled", variant: BadgeVariant.Secondary),
+                       new Badge("Enabled", variant: BadgeVariant.Outline)
                    ),
                    Layout.Vertical(
                        Text.Block("Disabled:"),
-                       new Badge("Not Clickable", eventHandler, variant: BadgeVariant.Default).Disabled(),
-                       new Badge("Not Clickable", eventHandler, variant: BadgeVariant.Destructive).Disabled(),
-                       new Badge("Not Clickable", eventHandler, variant: BadgeVariant.Secondary).Disabled(),
-                       new Badge("Not Clickable", eventHandler, variant: BadgeVariant.Outline).Disabled()
+                       new Badge("Disabled", variant: BadgeVariant.Default).Disabled(),
+                       new Badge("Disabled", variant: BadgeVariant.Destructive).Disabled(),
+                       new Badge("Disabled", variant: BadgeVariant.Secondary).Disabled(),
+                       new Badge("Disabled", variant: BadgeVariant.Outline).Disabled()
                    )
                )
-
-               | Text.H2("Interactive Demo")
-               | Text.Literal($"Clicks: {clickCount.Value}")
-               | Text.Literal($"Last clicked: {lastClicked.Value}")
             ;
     }
 }
