@@ -169,7 +169,7 @@ export const TabsLayoutWidget = ({
     const removed = prev.filter(id => !tabIds.includes(id));
     
     if (added.length || removed.length) {
-      setTabOrder(current => [...current.filter(id => !removed.includes(id)), ...added]);
+      setTabOrder(tabIds);
       prevTabIdsRef.current = tabIds;
     }
   }, [tabIds]);
