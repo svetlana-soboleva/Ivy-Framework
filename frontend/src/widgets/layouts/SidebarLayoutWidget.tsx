@@ -200,8 +200,6 @@ const renderMenuItems = (items: (MenuItem)[], eventHandler:WidgetEventHandlerTyp
   });
 };
 
-export const sidebarMenuRef = React.createRef<HTMLDivElement>();
-
 export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   id,
   items,
