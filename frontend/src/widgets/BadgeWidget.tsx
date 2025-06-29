@@ -1,12 +1,10 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Icon from '@/components/Icon';
 import { camelCase } from '@/lib/utils';
-import { useEventHandler } from '@/components/EventHandlerContext';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface BadgeWidgetProps {
-  id: string;
   title: string;
   icon?: string;
   iconPosition?: "Left" | "Right";
@@ -16,7 +14,6 @@ interface BadgeWidgetProps {
 }
 
 export const BadgeWidget: React.FC<BadgeWidgetProps> = ({ 
-  id, 
   title, 
   icon = undefined,
   iconPosition = "Left",
@@ -24,8 +21,6 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   size = "Default",
   disabled = false
 }) => {
-    const eventHandler = useEventHandler();
-
     let badgeClasses = "text-sm px-2.5 py-0.5";
     let iconClasses = "h-3 w-3";
 
@@ -42,20 +37,13 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
         break;
     }
 
-    const handleClick = useCallback(() => {
-      if (!disabled) {
-        eventHandler("OnClick", id, []);
-      }
-    }, [disabled, eventHandler, id]);
-
     return (
       <Badge
-        onClick={handleClick}
         variant={camelCase(variant) as "default" | "destructive" | "outline" | "secondary"}
         className={cn(
           "w-min whitespace-nowrap",
           badgeClasses,
-          disabled && "opacity-50 cursor-not-allowed"
+          disabled && "opacity-50"
         )}
       >
         {iconPosition === "Left" && icon && icon !== "None" && (
