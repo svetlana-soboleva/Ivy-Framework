@@ -209,16 +209,17 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
 }) => {
   const eventHandler = useEventHandler();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const menuRef = sidebarMenuRef;
-  
-  // Register with focus management system
+  // Register only the sidebar menu container with useFocusable
   const { ref: focusRef } = useFocusable('sidebar-navigation', 1);
 
   // Flatten items for keyboard navigation in search mode
   const flatItems: FlatMenuItem[] = searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
 
-  // Keyboard navigation handler
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [searchActive]);
+
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (!searchActive || flatItems.length === 0) return;
     if (e.key === 'ArrowDown') {
       setSelectedIndex(idx => Math.min(idx + 1, flatItems.length - 1));
@@ -235,12 +236,6 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     }
   }, [searchActive, flatItems, selectedIndex, eventHandler, id]);
 
-  // Only reset selectedIndex when searchActive changes
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [searchActive]);
-
-  // Render menu items with highlighting
   const renderMenuItemsWithHighlight = (items: MenuItem[], level: number, flatIdxRef: { current: number }) => {
     return items.map((item) => {
       if (item.children && item.children.length > 0) {
@@ -262,8 +257,13 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
           <SidebarMenuItem key={item.tag}>
             <SidebarMenuButton
               isActive={isActive}
-              tabIndex={-1}
+              tabIndex={-1} // Not focusable
               onClick={() => item.tag && eventHandler('OnSelect', id, [item.tag])}
+              onMouseEnter={() => {
+                if (searchActive) {
+                  setSelectedIndex(flatIdx);
+                }
+              }}
               style={isActive ? { background: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' } : {}}
             >
               <Icon name={item.icon} size={20} />
@@ -275,45 +275,24 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     });
   };
 
-  if (searchActive) {
-    // Only one group: Search Results
-    const flatIdxRef = { current: 0 };
-    return (
-      <div
-        ref={(el) => {
-          // Handle both refs
-          if (el) {
-            if (menuRef) {
-              (menuRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-            }
-            focusRef(el);
-          }
-        }}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-        style={{ outline: 'none' }}
-        data-sidebar-menu-widget
-      >
-        {renderMenuItemsWithHighlight(items, 0, flatIdxRef)}
-      </div>
-    );
-  }
-
-  // Default rendering (no keyboard navigation)
+  const flatIdxRef = { current: 0 };
   return (
     <div
-      ref={(el) => {
-        // Handle both refs
-        if (el) {
-          if (menuRef) {
-            (menuRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-          }
-          focusRef(el);
-        }
+      ref={el => {
+        focusRef(el);
+        (sidebarMenuRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
       }}
+      tabIndex={0}
+      onFocus={() => {
+        if (searchActive && flatItems.length > 0) setSelectedIndex(0);
+      }}
+      onKeyDown={handleMenuKeyDown}
+      style={{ outline: 'none' }}
       data-sidebar-menu-widget
     >
-      {renderMenuItems(items, eventHandler, id, 0)}
+      {searchActive
+        ? renderMenuItemsWithHighlight(items, 0, flatIdxRef)
+        : renderMenuItems(items, eventHandler, id, 0)}
     </div>
   );
 }

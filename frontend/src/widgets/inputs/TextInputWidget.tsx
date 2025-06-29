@@ -6,8 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
-import { useFocusManagement } from '@/hooks/use-focus-management';
+import { useFocusable } from '@/hooks/use-focus-management';
 import { useEventHandler } from '@/components/EventHandlerContext';
+import { sidebarMenuRef } from '../layouts/SidebarLayoutWidget';
 
 interface TextInputWidgetProps {
   id: string;
@@ -280,9 +281,8 @@ const SearchVariant: React.FC<{
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef) as { elementRef: React.RefObject<HTMLInputElement>, savePosition: () => void };
-  
-  // Use focus management for generic keyboard navigation
-  const focusManager = useFocusManagement('sidebar-navigation');
+  const { ref: focusRef } = useFocusable('sidebar-navigation', 0);
+  const shouldFocusMenuRef = useRef(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     savePosition();
@@ -291,14 +291,18 @@ const SearchVariant: React.FC<{
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      // Use the focus management system for generic navigation
-      if (e.key === 'ArrowDown') {
-        focusManager.focusNext();
-      } else {
-        focusManager.focusPrevious();
-      }
+      shouldFocusMenuRef.current = true;
+      e.currentTarget.blur();
       e.preventDefault();
     }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (shouldFocusMenuRef.current) {
+      shouldFocusMenuRef.current = false;
+      sidebarMenuRef.current?.focus();
+    }
+    onBlur(e);
   };
 
   const styles: React.CSSProperties = {
@@ -314,14 +318,20 @@ const SearchVariant: React.FC<{
 
       {/* Search Input */}
       <Input
-        ref={elementRef}
+        ref={(el) => {
+          // Handle both refs
+          if (el) {
+            (elementRef as React.MutableRefObject<HTMLInputElement | null>).current = el;
+            focusRef(el);
+          }
+        }}
         id={props.id}
         type="search"
         placeholder={props.placeholder}
         value={props.value}
         disabled={props.disabled}
         onChange={handleChange}
-        onBlur={onBlur}
+        onBlur={handleBlur}
         onFocus={onFocus}
         onKeyDown={handleKeyDown}
         className={cn(
