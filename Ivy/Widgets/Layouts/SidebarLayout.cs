@@ -30,7 +30,7 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     [Event] public Action<Event<SidebarMenu, object>> OnSelect { get; set; }
     [Event] public Action<Event<SidebarMenu, object>>? OnCtrlRightClickSelect { get; set; }
 
-    
+
     public static SidebarMenu operator |(SidebarMenu widget, object child)
     {
         throw new NotSupportedException("SidebarMenu does not support children.");

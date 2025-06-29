@@ -60,11 +60,11 @@ public class FeedbackInputApp : SampleBase
                           | Text.InlineCode("float?")
                           | nullableFloatState.ToFeedbackInput()
                           | (nullableFloatState.Value == null ? Text.InlineCode("null") : nullableFloatState.Value.ToString())!
-                          
+
                           | Text.InlineCode("bool")
                           | boolState.ToFeedbackInput()
                           | boolState
-                          
+
                           | Text.InlineCode("bool?")
 
                           | nullableBoolState.ToFeedbackInput()
