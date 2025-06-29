@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Icon from '@/components/Icon';
 import { camelCase } from '@/lib/utils';
 import { useEventHandler } from '@/components/EventHandlerContext';
@@ -26,38 +26,48 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
 }) => {
     const eventHandler = useEventHandler();
 
-    const sizeClasses = {
-      Small: "text-xs px-2 py-0.5",
-      Default: "text-sm px-2.5 py-0.5", 
-      Large: "text-base px-3 py-1"
-    };
+    let badgeClasses = "text-sm px-2.5 py-0.5";
+    let iconClasses = "h-3 w-3";
 
-    const iconSizeClasses = {
-      Small: "h-2.5 w-2.5",
-      Default: "h-3 w-3",
-      Large: "h-4 w-4"
-    };
+    switch (size) {
+      case "Small":
+        badgeClasses = "text-xs px-2 py-0.5";
+        iconClasses = "h-2.5 w-2.5";
+        break;
+      case "Large":
+        badgeClasses = "text-base px-3 py-1";
+        iconClasses = "h-4 w-4";
+        break;
+      default:
+        break;
+    }
+
+    const handleClick = useCallback(() => {
+      if (!disabled) {
+        eventHandler("OnClick", id, []);
+      }
+    }, [disabled, eventHandler, id]);
 
     return (
       <Badge
-        onClick={() => !disabled && eventHandler("OnClick", id, [])}
+        onClick={handleClick}
         variant={camelCase(variant) as "default" | "destructive" | "outline" | "secondary"}
         className={cn(
           "w-min whitespace-nowrap",
-          sizeClasses[size] || sizeClasses.Default,
+          badgeClasses,
           disabled && "opacity-50 cursor-not-allowed"
         )}
       >
         {iconPosition === "Left" && icon && icon !== "None" && (
           <Icon 
-            className={cn("mr-1", iconSizeClasses[size] || iconSizeClasses.Default)} 
+            className={cn("mr-1", iconClasses)} 
             name={icon} 
           />
         )}
         {title}
         {iconPosition === "Right" && icon && icon !== "None" && (
           <Icon 
-            className={cn("ml-1", iconSizeClasses[size] || iconSizeClasses.Default)} 
+            className={cn("ml-1", iconClasses)} 
             name={icon} 
           />
         )}
