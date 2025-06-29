@@ -146,7 +146,7 @@ export const TabsLayoutWidget = ({
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   // Tab management
-  const tabIds = React.useMemo(() => tabWidgets.map(tab => (tab as any).props.id), [tabWidgets.length]);
+  const tabIds = React.useMemo(() => tabWidgets.map(tab => (tab as any).props.id), [tabWidgets]);
   const prevTabIdsRef = React.useRef<string[]>(tabIds);
   const [tabOrder, setTabOrder] = React.useState<string[]>(() => tabIds);
   const [activeTabId, setActiveTabId] = React.useState<string | null>(() => 
