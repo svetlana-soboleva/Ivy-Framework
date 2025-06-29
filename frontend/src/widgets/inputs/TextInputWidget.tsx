@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
-import { useEventHandler } from '@/components/EventHandlerContext';
 import { EyeIcon, EyeOffIcon, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
-import { sidebarMenuRef } from '../layouts/SidebarLayoutWidget';
+import { useFocusManagement } from '@/hooks/use-focus-management';
+import { useEventHandler } from '@/components/EventHandlerContext';
 
 interface TextInputWidgetProps {
   id: string;
@@ -280,6 +280,9 @@ const SearchVariant: React.FC<{
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef) as { elementRef: React.RefObject<HTMLInputElement>, savePosition: () => void };
+  
+  // Use focus management for generic keyboard navigation
+  const focusManager = useFocusManagement('sidebar-navigation');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     savePosition();
@@ -288,7 +291,12 @@ const SearchVariant: React.FC<{
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      sidebarMenuRef.current?.focus();
+      // Use the focus management system for generic navigation
+      if (e.key === 'ArrowDown') {
+        focusManager.focusNext();
+      } else {
+        focusManager.focusPrevious();
+      }
       e.preventDefault();
     }
   };

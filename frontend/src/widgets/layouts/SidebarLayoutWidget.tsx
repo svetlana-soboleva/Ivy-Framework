@@ -23,6 +23,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ChevronRight } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useFocusable } from '@/hooks/use-focus-management';
 
 interface SidebarLayoutWidgetProps {
   slots?: {
@@ -209,6 +210,9 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   const eventHandler = useEventHandler();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const menuRef = sidebarMenuRef;
+  
+  // Register with focus management system
+  const { ref: focusRef } = useFocusable('sidebar-navigation', 1);
 
   // Flatten items for keyboard navigation in search mode
   const flatItems: FlatMenuItem[] = searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
@@ -276,7 +280,15 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     const flatIdxRef = { current: 0 };
     return (
       <div
-        ref={menuRef}
+        ref={(el) => {
+          // Handle both refs
+          if (el) {
+            if (menuRef) {
+              (menuRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+            }
+            focusRef(el);
+          }
+        }}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         style={{ outline: 'none' }}
@@ -288,5 +300,20 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   }
 
   // Default rendering (no keyboard navigation)
-  return renderMenuItems(items, eventHandler, id, 0);
+  return (
+    <div
+      ref={(el) => {
+        // Handle both refs
+        if (el) {
+          if (menuRef) {
+            (menuRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+          }
+          focusRef(el);
+        }
+      }}
+      data-sidebar-menu-widget
+    >
+      {renderMenuItems(items, eventHandler, id, 0)}
+    </div>
+  );
 }
