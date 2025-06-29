@@ -94,9 +94,7 @@ export const FeedbackInputWidget: React.FC<FeedbackInputWidgetProps> = ({
         convertedValue = e;
       }
     }
-    
-    console.log('FeedbackInputWidget convertedValue:', convertedValue);
-    eventHandler("OnChange", id, [convertedValue]);
+        eventHandler("OnChange", id, [convertedValue]);
   }, [id, disabled, value, variant, numericValue, events, eventHandler, nullable, isBooleanType]);
 
   if(variant === 'Thumbs') {
