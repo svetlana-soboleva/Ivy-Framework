@@ -31,17 +31,6 @@ public class BadgeApp : SampleBase
                | Text.H2("Variants")
                | createBadgeRow(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant))
 
-               | Text.H2("States")
-               | (Layout.Grid().Columns(Variants.Length)
-                  | VariantNames.Select(name => Text.Block(name)).ToArray()
-
-                  // Normal state
-                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant)).ToArray()
-
-                  // Disabled state
-                  | Variants.Select(variant => new Badge(VariantNames[Array.IndexOf(Variants, variant)], variant: variant).Disabled()).ToArray()
-               )
-
                | Text.H2("Sizes")
                | (Layout.Grid().Columns(Variants.Length)
                   | VariantNames.Select(name => Text.Block(name)).ToArray()
@@ -90,24 +79,6 @@ public class BadgeApp : SampleBase
                    new Badge(icon: Icons.Heart, variant: BadgeVariant.Destructive),
                    new Badge(icon: Icons.Star, variant: BadgeVariant.Outline),
                    new Badge(icon: Icons.Check, variant: BadgeVariant.Secondary)
-               )
-
-               | Text.H2("Disabled vs Enabled (Clear Comparison)")
-               | Layout.Horizontal(
-                   Layout.Vertical(
-                       Text.Block("Enabled:"),
-                       new Badge("Enabled", variant: BadgeVariant.Default),
-                       new Badge("Enabled", variant: BadgeVariant.Destructive),
-                       new Badge("Enabled", variant: BadgeVariant.Secondary),
-                       new Badge("Enabled", variant: BadgeVariant.Outline)
-                   ),
-                   Layout.Vertical(
-                       Text.Block("Disabled:"),
-                       new Badge("Disabled", variant: BadgeVariant.Default).Disabled(),
-                       new Badge("Disabled", variant: BadgeVariant.Destructive).Disabled(),
-                       new Badge("Disabled", variant: BadgeVariant.Secondary).Disabled(),
-                       new Badge("Disabled", variant: BadgeVariant.Outline).Disabled()
-                   )
                )
             ;
     }

@@ -14,12 +14,11 @@ public enum BadgeVariant
 
 public record Badge : WidgetBase<Badge>
 {
-    public Badge(string? title = null, Action<Event<Button>>? onClick = null, BadgeVariant variant = BadgeVariant.Default, Icons icon = Icons.None)
+    public Badge(string? title = null, BadgeVariant variant = BadgeVariant.Default, Icons icon = Icons.None)
     {
         Title = title;
         Variant = variant;
         Icon = icon;
-        OnClick = onClick;
     }
 
     [Prop] public string? Title { get; set; }
@@ -28,13 +27,9 @@ public record Badge : WidgetBase<Badge>
 
     [Prop] public Icons? Icon { get; set; }
 
-    [Prop] public bool Disabled { get; set; }
-
     [Prop] public Sizes Size { get; set; } = Sizes.Default;
 
     [Prop] public Align IconPosition { get; set; } = Align.Left;
-
-    [Event] public Action<Event<Button>>? OnClick { get; set; }
 
     public static Badge operator |(Badge badge, object child)
     {
@@ -44,64 +39,54 @@ public record Badge : WidgetBase<Badge>
 
 public static class BadgeExtensions
 {
-    public static Badge Disabled(this Badge button, bool disabled = true)
+    public static Badge Icon(this Badge badge, Icons? icon, Align position = Align.Left)
     {
-        return button with { Disabled = disabled };
+        return badge with { Icon = icon, IconPosition = position };
     }
 
-    public static Badge Icon(this Badge button, Icons? icon, Align position = Align.Left)
+    public static Badge Variant(this Badge badge, BadgeVariant variant)
     {
-        return button with { Icon = icon, IconPosition = position };
+        return badge with { Variant = variant };
     }
 
-    public static Badge HandleClick(this Badge button, Action<Event<Button>> onClick)
+    public static Badge Size(this Badge badge, Sizes size)
     {
-        return button with { OnClick = onClick };
-    }
-
-    public static Badge Variant(this Badge button, BadgeVariant variant)
-    {
-        return button with { Variant = variant };
-    }
-
-    public static Badge Size(this Badge button, Sizes size)
-    {
-        return button with { Size = size };
+        return badge with { Size = size };
     }
 
     [RelatedTo(nameof(Badge.Size))]
-    public static Badge Large(this Badge button)
+    public static Badge Large(this Badge badge)
     {
-        return button.Size(Sizes.Large);
+        return badge.Size(Sizes.Large);
     }
 
     [RelatedTo(nameof(Badge.Size))]
-    public static Badge Small(this Badge button)
+    public static Badge Small(this Badge badge)
     {
-        return button.Size(Sizes.Small);
+        return badge.Size(Sizes.Small);
     }
 
     [RelatedTo(nameof(Badge.Variant))]
-    public static Badge Secondary(this Badge button)
+    public static Badge Secondary(this Badge badge)
     {
-        return button with { Variant = BadgeVariant.Secondary };
+        return badge with { Variant = BadgeVariant.Secondary };
     }
 
     [RelatedTo(nameof(Badge.Variant))]
-    public static Badge Destructive(this Badge button)
+    public static Badge Destructive(this Badge badge)
     {
-        return button with { Variant = BadgeVariant.Destructive };
+        return badge with { Variant = BadgeVariant.Destructive };
     }
 
     [RelatedTo(nameof(Badge.Variant))]
-    public static Badge Outline(this Badge button)
+    public static Badge Outline(this Badge badge)
     {
-        return button with { Variant = BadgeVariant.Outline };
+        return badge with { Variant = BadgeVariant.Outline };
     }
 
     [RelatedTo(nameof(Badge.Variant))]
-    public static Badge Default(this Badge button)
+    public static Badge Default(this Badge badge)
     {
-        return button with { Variant = BadgeVariant.Default };
+        return badge with { Variant = BadgeVariant.Default };
     }
 }

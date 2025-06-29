@@ -10,7 +10,6 @@ interface BadgeWidgetProps {
   iconPosition?: "Left" | "Right";
   variant?: string;
   size?: "Default" | "Small" | "Large";
-  disabled: boolean;
 }
 
 export const BadgeWidget: React.FC<BadgeWidgetProps> = ({ 
@@ -18,8 +17,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   icon = undefined,
   iconPosition = "Left",
   variant = "default",
-  size = "Default",
-  disabled = false
+  size = "Default"
 }) => {
     let badgeClasses = "text-sm px-2.5 py-0.5";
     let iconClasses = "h-3 w-3";
@@ -42,8 +40,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
         variant={camelCase(variant) as "default" | "destructive" | "outline" | "secondary"}
         className={cn(
           "w-min whitespace-nowrap",
-          badgeClasses,
-          disabled && "opacity-50"
+          badgeClasses
         )}
       >
         {iconPosition === "Left" && icon && icon !== "None" && (
