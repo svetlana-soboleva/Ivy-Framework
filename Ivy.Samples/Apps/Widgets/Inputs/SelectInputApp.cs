@@ -29,12 +29,6 @@ public class SelectInputApp : SampleBase
         new Option<string>("Olivia")
     ];
 
-    private enum Features
-    {
-        AllowOverage,
-        RemoveBranding
-    }
-
     private enum Colors
     {
         Red,
