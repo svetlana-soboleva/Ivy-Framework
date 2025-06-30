@@ -50,7 +50,7 @@ public class PasswordCaptureDemo: ViewBase
     {
         var password = UseState("");
         return Layout.Horizontal()
-               | Text.Block("Enter Pasword")
+               | Text.Block("Enter Password")
                | new TextInput<string>(password, placeholder: "Password")
                 .Variant(TextInputs.Password);         
     }
