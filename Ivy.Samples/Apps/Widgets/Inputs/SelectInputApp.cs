@@ -117,14 +117,14 @@ public class SelectInputApp : SampleBase
                | Text.Block("With Placeholder")
                | Text.Block("State")
 
-               | Text.InlineCode("List")
+               | Text.InlineCode("SelectInputs.List")
                | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany()
                | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Disabled()
                | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Invalid("Invalid")
                | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Placeholder("Select colors")
                | Text.InlineCode($"[{string.Join(", ", colorStateList.Value)}]")
 
-               | Text.InlineCode("Toggle")
+               | Text.InlineCode("SelectInputs.Toggle")
                | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany()
                | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Disabled()
                | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Invalid("Invalid")
