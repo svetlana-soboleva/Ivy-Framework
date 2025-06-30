@@ -19,6 +19,9 @@ import {
 } from "@/components/ui/toggle-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { InvalidIcon } from '@/components/InvalidIcon';
+import { cn } from '@/lib/utils';
+import { inputStyles } from '@/lib/styles';
 
 export type NullableSelectValue = string | number | string[] | number[] | null | undefined;
 
@@ -35,6 +38,7 @@ interface SelectInputWidgetProps {
   variant?: "Select" | "List" | "Toggle";
   nullable?: boolean;
   disabled?: boolean;
+  invalid?: string;
   options: Option[];
   eventHandler: EventHandler;
   selectMany: boolean;
@@ -45,6 +49,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   id,
   value,
   disabled = false,
+  invalid,
   options = [],
   eventHandler
 }) => {
@@ -59,24 +64,34 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
     : undefined;
 
   return (
-    <ToggleGroup
-      type="single"
-      value={stringValue}
-      onValueChange={(newValue: string) => eventHandler("OnChange", id, [newValue])}
-      disabled={disabled}
-      className="flex flex-wrap gap-2"
-    >
-      {validOptions.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value.toString()}
-          aria-label={option.label}
-          className="px-3 py-2"
-        >
-          {option.label}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+    <div className="relative">
+      <ToggleGroup
+        type="single"
+        value={stringValue}
+        onValueChange={(newValue: string) => eventHandler("OnChange", id, [newValue])}
+        disabled={disabled}
+        className="flex flex-wrap gap-2"
+      >
+        {validOptions.map((option) => (
+          <ToggleGroupItem
+            key={option.value}
+            value={option.value.toString()}
+            aria-label={option.label}
+            className={cn(
+              "px-3 py-2",
+              invalid && stringValue === option.value.toString() && inputStyles.invalid
+            )}
+          >
+            {option.label}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      {invalid && (
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+          <InvalidIcon message={invalid} />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -84,6 +99,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   id,
   value,
   disabled = false,
+  invalid,
   options = [],
   eventHandler
 }) => {
@@ -96,19 +112,39 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
     : undefined;
 
   return (
-    <RadioGroup
-      value={stringValue}
-      onValueChange={(newValue) => eventHandler("OnChange", id, [newValue])}
-      disabled={disabled}
-      className="flex flex-col space-y-2"
-    >
-      {validOptions.map((option) => (
-        <div key={option.value} className="flex items-center space-x-2">
-          <RadioGroupItem value={option.value.toString()} id={`${id}-${option.value}`} />
-          <Label htmlFor={`${id}-${option.value}`}>{option.label}</Label>
+    <div className="relative">
+      <RadioGroup
+        value={stringValue}
+        onValueChange={(newValue) => eventHandler("OnChange", id, [newValue])}
+        disabled={disabled}
+        className="flex flex-col space-y-2"
+      >
+        {validOptions.map((option) => (
+          <div key={option.value} className="flex items-center space-x-2">
+            <RadioGroupItem 
+              value={option.value.toString()} 
+              id={`${id}-${option.value}`}
+              className={cn(
+                invalid && stringValue === option.value.toString() && inputStyles.invalid
+              )}
+            />
+            <Label 
+              htmlFor={`${id}-${option.value}`}
+              className={cn(
+                invalid && stringValue === option.value.toString() && "text-red-900 dark:text-red-500"
+              )}
+            >
+              {option.label}
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+      {invalid && (
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+          <InvalidIcon message={invalid} />
         </div>
-      ))}
-    </RadioGroup>
+      )}
+    </div>
   );
 };
 
@@ -116,6 +152,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   id,
   value,
   disabled = false,
+  invalid,
   options = [],
   eventHandler,
   separator = ","
@@ -145,18 +182,35 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-2 gap-2">
-      {validOptions.map((option) => (
-        <div key={option.value} className="flex items-center space-x-2">
-          <Checkbox 
-            id={`${id}-${option.value}`}
-            checked={selectedValues.includes(option.value)}
-            onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
-            disabled={disabled}
-          />
-          <Label htmlFor={`${id}-${option.value}`}>{option.label}</Label>
+    <div className="relative">
+      <div className="flex flex-col space-y-2 gap-2">
+        {validOptions.map((option) => (
+          <div key={option.value} className="flex items-center space-x-2">
+            <Checkbox 
+              id={`${id}-${option.value}`}
+              checked={selectedValues.includes(option.value)}
+              onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
+              disabled={disabled}
+              className={cn(
+                invalid && selectedValues.includes(option.value) && inputStyles.invalid
+              )}
+            />
+            <Label 
+              htmlFor={`${id}-${option.value}`}
+              className={cn(
+                invalid && selectedValues.includes(option.value) && "text-red-900 dark:text-red-500"
+              )}
+            >
+              {option.label}
+            </Label>
+          </div>
+        ))}
+      </div>
+      {invalid && (
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+          <InvalidIcon message={invalid} />
         </div>
-      ))}
+      )}
     </div>
   );
 };
@@ -166,6 +220,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   placeholder = "",
   value,
   disabled = false,
+  invalid,
   options = [],
   eventHandler
 }) => {
@@ -188,31 +243,40 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     : undefined;
 
   return (
-    <Select 
-      key={id} 
-      disabled={disabled}
-      value={stringValue}
-      onValueChange={(newValue) => eventHandler("OnChange", id, [newValue])}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
-        {Object.entries(groupedOptions).map(([group, options]) => (
-          <SelectGroup key={group}>
-            {group !== "default" && <SelectLabel>{group}</SelectLabel>}
-            {options.map((option) => (
-              <SelectItem 
-                key={option.value} 
-                value={option.value.toString()}
-              >
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative">
+      <Select 
+        key={id} 
+        disabled={disabled}
+        value={stringValue}
+        onValueChange={(newValue) => eventHandler("OnChange", id, [newValue])}
+      >
+        <SelectTrigger className={cn(
+          invalid && inputStyles.invalid
+        )}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {Object.entries(groupedOptions).map(([group, options]) => (
+            <SelectGroup key={group}>
+              {group !== "default" && <SelectLabel>{group}</SelectLabel>}
+              {options.map((option) => (
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value.toString()}
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          ))}
+        </SelectContent>
+      </Select>
+      {invalid && (
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
+          <InvalidIcon message={invalid} />
+        </div>
+      )}
+    </div>
   );
 };
 
