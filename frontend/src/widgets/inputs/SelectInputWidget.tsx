@@ -64,7 +64,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
     : undefined;
 
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-center gap-2">
       <div className="flex-1">
         <ToggleGroup
           type="single"
@@ -89,9 +89,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
         </ToggleGroup>
       </div>
       {invalid && (
-        <div className="flex-shrink-0 mt-2">
-          <InvalidIcon message={invalid} />
-        </div>
+        <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
     </div>
   );
@@ -114,7 +112,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
     : undefined;
 
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-center gap-2">
       <div className="flex-1">
         <RadioGroup
           value={stringValue}
@@ -144,9 +142,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
         </RadioGroup>
       </div>
       {invalid && (
-        <div className="flex-shrink-0 mt-2">
-          <InvalidIcon message={invalid} />
-        </div>
+        <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
     </div>
   );
@@ -186,7 +182,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   };
 
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-center gap-2">
       <div className="flex-1">
         <div className="flex flex-col space-y-2 gap-2">
           {validOptions.map((option) => (
@@ -213,9 +209,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
         </div>
       </div>
       {invalid && (
-        <div className="flex-shrink-0 mt-2">
-          <InvalidIcon message={invalid} />
-        </div>
+        <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
     </div>
   );
@@ -280,9 +274,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
         </Select>
       </div>
       {invalid && (
-        <div className="flex-shrink-0">
-          <InvalidIcon message={invalid} />
-        </div>
+        <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
     </div>
   );
