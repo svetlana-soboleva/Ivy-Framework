@@ -49,7 +49,7 @@ public class SelectInputApp : SampleBase
         var dataBinding = CreateDataBindingTests();
 
         return Layout.Vertical()
-               | Text.H1("SelectInput")
+               | Text.H1("Select Inputs")
                | Text.H2("Variants")
                | variants
                | Text.H2("Data Binding")
