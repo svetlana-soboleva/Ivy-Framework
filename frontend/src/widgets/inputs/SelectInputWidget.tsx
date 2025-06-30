@@ -75,7 +75,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           {validOptions.map((option) => {
             const isSelected = stringValue === option.value.toString();
             const isInvalid = !!invalid && isSelected;
-            return (
+            const toggleItem = (
               <ToggleGroupItem
                 key={option.value}
                 value={option.value.toString()}
@@ -92,24 +92,26 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                 {option.label}
               </ToggleGroupItem>
             );
+            if (isInvalid) {
+              return (
+                <TooltipProvider key={option.value}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+                    <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                      <div className="max-w-60">{invalid}</div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            }
+            return toggleItem;
           })}
         </ToggleGroup>
       </div>
     </div>
   );
 
-  return invalid ? (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{container}</TooltipTrigger>
-        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-          <div className="max-w-60">{invalid}</div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    container
-  );
+  return container;
 };
 
 const RadioVariant: React.FC<SelectInputWidgetProps> = ({
@@ -210,19 +212,38 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
             const isInvalid = !!invalid && isSelected;
             return (
               <div key={option.value} className="flex items-center space-x-2">
-                <Checkbox 
-                  id={`${id}-${option.value}`}
-                  checked={isSelected}
-                  onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
-                  disabled={disabled}
-                  className={cn(
-                    isInvalid
-                      ? inputStyles.invalid
-                      : isSelected
+                {isInvalid ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Checkbox 
+                          id={`${id}-${option.value}`}
+                          checked={isSelected}
+                          onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
+                          disabled={disabled}
+                          className={cn(
+                            inputStyles.invalid + ' !bg-red-50 !border-red-500 !text-red-900'
+                          )}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                        <div className="max-w-60">{invalid}</div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <Checkbox 
+                    id={`${id}-${option.value}`}
+                    checked={isSelected}
+                    onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
+                    disabled={disabled}
+                    className={cn(
+                      isSelected
                         ? "data-[state=checked]:bg-emerald-100 data-[state=checked]:border-emerald-500 data-[state=checked]:text-emerald-900"
                         : undefined
-                  )}
-                />
+                    )}
+                  />
+                )}
                 <Label 
                   htmlFor={`${id}-${option.value}`}
                   className={cn(
@@ -240,18 +261,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
       </div>
     </div>
   );
-  return invalid ? (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{container}</TooltipTrigger>
-        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-          <div className="max-w-60">{invalid}</div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    container
-  );
+  return container;
 };
 
 const SelectVariant: React.FC<SelectInputWidgetProps> = ({ 
