@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { cn } from '@/lib/utils';
 import { inputStyles } from '@/lib/styles';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export type NullableSelectValue = string | number | string[] | number[] | null | undefined;
 
@@ -53,17 +54,15 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   options = [],
   eventHandler
 }) => {
-  // Filter out any options with null/undefined/empty values
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
   );
-
-  // Only convert value to string if it exists and isn't empty
   const stringValue = value != null && value.toString().trim() !== '' 
     ? value.toString() 
     : undefined;
 
-  return (
+  // Outer container
+  const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <ToggleGroup
@@ -73,25 +72,43 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           disabled={disabled}
           className="flex flex-wrap gap-2"
         >
-          {validOptions.map((option) => (
-            <ToggleGroupItem
-              key={option.value}
-              value={option.value.toString()}
-              aria-label={option.label}
-              className={cn(
-                "px-3 py-2",
-                invalid && stringValue === option.value.toString() && inputStyles.invalid
-              )}
-            >
-              {option.label}
-            </ToggleGroupItem>
-          ))}
+          {validOptions.map((option) => {
+            const isSelected = stringValue === option.value.toString();
+            const isInvalid = !!invalid && isSelected;
+            return (
+              <ToggleGroupItem
+                key={option.value}
+                value={option.value.toString()}
+                aria-label={option.label}
+                className={cn(
+                  "px-3 py-2",
+                  isInvalid
+                    ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                    : isSelected
+                      ? "data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900"
+                      : undefined
+                )}
+              >
+                {option.label}
+              </ToggleGroupItem>
+            );
+          })}
         </ToggleGroup>
       </div>
-      {invalid && (
-        <InvalidIcon message={invalid} className="flex-shrink-0" />
-      )}
     </div>
+  );
+
+  return invalid ? (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{container}</TooltipTrigger>
+        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+          <div className="max-w-60">{invalid}</div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    container
   );
 };
 
@@ -106,12 +123,11 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
   );
-
   const stringValue = value != null && value.toString().trim() !== '' 
     ? value.toString() 
     : undefined;
 
-  return (
+  const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <RadioGroup
@@ -126,13 +142,13 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 value={option.value.toString()} 
                 id={`${id}-${option.value}`}
                 className={cn(
-                  invalid && stringValue === option.value.toString() && inputStyles.invalid
+                  stringValue === option.value.toString() && invalid ? inputStyles.invalid : undefined
                 )}
               />
               <Label 
                 htmlFor={`${id}-${option.value}`}
                 className={cn(
-                  invalid && stringValue === option.value.toString() && inputStyles.invalid
+                  stringValue === option.value.toString() && invalid ? inputStyles.invalid : undefined
                 )}
               >
                 {option.label}
@@ -141,10 +157,20 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
           ))}
         </RadioGroup>
       </div>
-      {invalid && (
-        <InvalidIcon message={invalid} className="flex-shrink-0" />
-      )}
     </div>
+  );
+
+  return invalid ? (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{container}</TooltipTrigger>
+        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+          <div className="max-w-60">{invalid}</div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    container
   );
 };
 
@@ -160,58 +186,71 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
   );
-
-  // Handle array or string values
   let selectedValues: (string | number)[] = [];
   if (Array.isArray(value)) {
     selectedValues = value;
   } else if (value != null && value.toString().trim() !== '') {
     selectedValues = value.toString().split(separator).map(v => v.trim());
   }
-
   const handleCheckboxChange = (optionValue: string | number, checked: boolean) => {
     let newValues: (string | number)[];
-    
     if (checked) {
       newValues = [...selectedValues, optionValue];
     } else {
       newValues = selectedValues.filter(v => v !== optionValue);
     }
-    
     eventHandler("OnChange", id, [newValues]);
   };
-
-  return (
+  const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <div className="flex flex-col space-y-2 gap-2">
-          {validOptions.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`${id}-${option.value}`}
-                checked={selectedValues.includes(option.value)}
-                onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
-                disabled={disabled}
-                className={cn(
-                  invalid && selectedValues.includes(option.value) && inputStyles.invalid
-                )}
-              />
-              <Label 
-                htmlFor={`${id}-${option.value}`}
-                className={cn(
-                  invalid && selectedValues.includes(option.value) && inputStyles.invalid
-                )}
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
+          {validOptions.map((option) => {
+            const isSelected = selectedValues.includes(option.value);
+            const isInvalid = !!invalid && isSelected;
+            return (
+              <div key={option.value} className="flex items-center space-x-2">
+                <Checkbox 
+                  id={`${id}-${option.value}`}
+                  checked={isSelected}
+                  onCheckedChange={(checked) => handleCheckboxChange(option.value, checked === true)}
+                  disabled={disabled}
+                  className={cn(
+                    isInvalid
+                      ? inputStyles.invalid
+                      : isSelected
+                        ? "data-[state=checked]:bg-emerald-100 data-[state=checked]:border-emerald-500 data-[state=checked]:text-emerald-900"
+                        : undefined
+                  )}
+                />
+                <Label 
+                  htmlFor={`${id}-${option.value}`}
+                  className={cn(
+                    isInvalid
+                      ? inputStyles.invalid
+                      : undefined
+                  )}
+                >
+                  {option.label}
+                </Label>
+              </div>
+            );
+          })}
         </div>
       </div>
-      {invalid && (
-        <InvalidIcon message={invalid} className="flex-shrink-0" />
-      )}
     </div>
+  );
+  return invalid ? (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{container}</TooltipTrigger>
+        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+          <div className="max-w-60">{invalid}</div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    container
   );
 };
 
