@@ -2,14 +2,7 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Widgets.Inputs;
 
-public enum Color
-{
-    Red,
-    Green,
-    Blue
-}
-
-[App(icon: Icons.LassoSelect)]
+[App(icon: Icons.LassoSelect, path: ["Widgets", "Inputs"])]
 public class SelectInputApp : SampleBase
 {
     private static readonly Option<Guid>[] GuidOptions =
@@ -42,51 +35,194 @@ public class SelectInputApp : SampleBase
         RemoveBranding
     }
 
+    private enum Colors
+    {
+        Red,
+        Green,
+        Blue,
+        Yellow
+    }
+
     protected override object? BuildSample()
     {
-        var enumArrayState = this.UseState<List<Features>>();
+        var variants = CreateVariantsSection();
+        var dataBinding = CreateDataBindingTests();
 
         return Layout.Vertical()
-               | enumArrayState.ToSelectInput().List()
-               | enumArrayState;
+               | Text.H1("SelectInput")
+               | Text.H2("Variants")
+               | variants
+               | Text.H2("Data Binding")
+               | dataBinding
+               ;
+    }
 
+    private object CreateVariantsSection()
+    {
+        var colorState = UseState(Colors.Red);
+        var colorOptions = typeof(Colors).ToOptions();
 
-        // var intArrayState = this.UseState<int[]>();
-        // var intArrayInput = intArrayState.ToSelectInput(IntOptions).List();
-        //
-        // var intState = this.UseState(1);
-        // var intInput = intState.ToSelectInput(IntOptions);
-        //
-        // var stringArrayState = this.UseState<string[]>();
-        // var stringArrayInput = stringArrayState.ToSelectInput(StringOptions).List();
-        //
-        // var stringState = this.UseState("Niels");
-        // var stringInput = stringState.ToSelectInput(StringOptions);
-        //
-        // var guidArrayState = this.UseState<Guid[]>();
-        // var guidArrayInput = guidArrayState.ToSelectInput(GuidOptions).List();
-        //
-        // var guidState = this.UseState<Guid>(GuidOptions[0].TypedValue);
-        // var guidInput = guidState.ToSelectInput(GuidOptions);
-        //
-        // var colorState = this.UseState(Color.Red);
-        //
-        // var options = typeof(Color).ToOptions();
-        //
-        // return Layout.Vertical(
-        //     intArrayInput,
-        //     intInput,
-        //     stringArrayInput,
-        //     stringInput,
-        //     guidArrayInput,
-        //     guidInput,
-        //
-        //     colorState.ToSelectInput(options),
-        //     colorState.ToSelectInput(options).Disabled(),
-        //     colorState.ToSelectInput(options).Variant(SelectInputs.List),
-        //     colorState.ToSelectInput(options).Variant(SelectInputs.List).Disabled(),
-        //     colorState.ToSelectInput(options).Variant(SelectInputs.Toggle),
-        //     colorState.ToSelectInput(options).Variant(SelectInputs.Toggle).Disabled()
-        // );
+        return Layout.Grid().Columns(6)
+               | null!
+               | Text.Block("Default")
+               | Text.Block("Disabled")
+               | Text.Block("Invalid")
+               | Text.Block("With Placeholder")
+               | Text.Block("Multiple")
+
+               | Text.InlineCode("SelectInputs.Select")
+               | colorState.ToSelectInput(colorOptions)
+               | colorState.ToSelectInput(colorOptions).Disabled()
+               | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
+               | new Box("Not Applicable")
+
+               | null!
+               | colorState.ToSelectInput(colorOptions)
+               | colorState.ToSelectInput(colorOptions).Disabled()
+               | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
+               | new Box("Not Applicable")
+
+               | Text.InlineCode("SelectInputs.List")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
+               | new Box("Not Applicable")
+
+               | null!
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
+               | new Box("Not Applicable")
+
+               | Text.InlineCode("SelectInputs.Toggle")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
+               | new Box("Not Applicable")
+
+               | null!
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
+               | new Box("Not Applicable")
+            ;
+    }
+
+    private object CreateDataBindingTests()
+    {
+        var dataTypes = new (string TypeName, object NonNullableState, object NullableState, IAnyOption[] Options)[]
+        {
+            // Enum types
+            ("Colors", UseState(Colors.Red), UseState((Colors?)null), typeof(Colors).ToOptions()),
+            
+            // String types
+            ("string", UseState("Niels"), UseState((string?)null), StringOptions),
+            
+            // Integer types
+            ("int", UseState(1), UseState((int?)null), IntOptions),
+            
+            // Guid types
+            ("Guid", UseState(GuidOptions[0].TypedValue), UseState((Guid?)null), GuidOptions),
+            
+            // Array types
+            ("Colors[]", UseState<Colors[]>(new Colors[0]), UseState((Colors[]?)null), typeof(Colors).ToOptions()),
+            ("string[]", UseState<string[]>(new string[0]), UseState((string[]?)null), StringOptions),
+            ("int[]", UseState<int[]>(new int[0]), UseState((int[]?)null), IntOptions),
+            ("Guid[]", UseState<Guid[]>(new Guid[0]), UseState((Guid[]?)null), GuidOptions),
+            
+            // List types
+            ("List<Colors>", UseState<List<Colors>>(new List<Colors>()), UseState((List<Colors>?)null), typeof(Colors).ToOptions()),
+            ("List<string>", UseState<List<string>>(new List<string>()), UseState((List<string>?)null), StringOptions),
+            ("List<int>", UseState<List<int>>(new List<int>()), UseState((List<int>?)null), IntOptions),
+            ("List<Guid>", UseState<List<Guid>>(new List<Guid>()), UseState((List<Guid>?)null), GuidOptions)
+        };
+
+        var gridItems = new List<object>
+        {
+            Text.InlineCode("Type"),
+            Text.InlineCode("Non-Nullable"),
+            Text.InlineCode("State"),
+            Text.InlineCode("Type"),
+            Text.InlineCode("Nullable"),
+            Text.InlineCode("State")
+        };
+
+        foreach (var (typeName, nonNullableState, nullableState, options) in dataTypes)
+        {
+            // Non-nullable columns (first 3)
+            gridItems.Add(Text.InlineCode(typeName));
+            gridItems.Add(CreateSelectInputVariants(nonNullableState, options));
+
+            var nonNullableAnyState = nonNullableState as IAnyState;
+            object? nonNullableValue = null;
+            if (nonNullableAnyState != null)
+            {
+                var prop = nonNullableAnyState.GetType().GetProperty("Value");
+                nonNullableValue = prop?.GetValue(nonNullableAnyState);
+            }
+            gridItems.Add(FormatStateValue(typeName, nonNullableValue, false));
+
+            // Nullable columns (next 3)
+            gridItems.Add(Text.InlineCode($"{typeName}?"));
+            gridItems.Add(CreateSelectInputVariants(nullableState, options));
+
+            object? value = null;
+            if (nullableState is IAnyState anyState)
+            {
+                var prop = anyState.GetType().GetProperty("Value");
+                value = prop?.GetValue(anyState);
+            }
+            gridItems.Add(FormatStateValue(typeName, value, true));
+        }
+
+        return Layout.Grid().Columns(6) | gridItems.ToArray();
+    }
+
+    private static object CreateSelectInputVariants(object state, IAnyOption[] options)
+    {
+        if (state is not IAnyState anyState)
+            return Text.Block("Not an IAnyState");
+
+        var stateType = anyState.GetStateType();
+        var isCollection = stateType.IsCollectionType();
+
+        if (isCollection)
+        {
+            // For collection states, show all three variants with SelectMany
+            return Layout.Vertical()
+                   | anyState.ToSelectInput(options).SelectMany()
+                   | anyState.ToSelectInput(options).Variant(SelectInputs.List).SelectMany()
+                   | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle).SelectMany();
+        }
+
+        // For non-collection states, show all three variants
+        return Layout.Vertical()
+               | anyState.ToSelectInput(options)
+               | anyState.ToSelectInput(options).Variant(SelectInputs.List)
+               | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle);
+    }
+
+    private static object FormatStateValue(string typeName, object? value, bool isNullable)
+    {
+        if (value == null)
+            return isNullable ? Text.InlineCode("Null") : Text.InlineCode("Default");
+
+        if (value is Array array)
+        {
+            return array.Length == 0 ? Text.InlineCode("[]") : Text.InlineCode($"[{array.Length} items]");
+        }
+
+        if (value is System.Collections.IList list)
+        {
+            return list.Count == 0 ? Text.InlineCode("[]") : Text.InlineCode($"[{list.Count} items]");
+        }
+
+        return Text.InlineCode(value.ToString()!);
     }
 }
