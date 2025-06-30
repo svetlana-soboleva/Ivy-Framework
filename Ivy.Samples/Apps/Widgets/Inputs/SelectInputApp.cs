@@ -40,12 +40,15 @@ public class SelectInputApp : SampleBase
     protected override object? BuildSample()
     {
         var variants = CreateVariantsSection();
+        var multiSelectVariants = CreateMultiSelectVariantsSection();
         var dataBinding = CreateDataBindingTests();
 
         return Layout.Vertical()
                | Text.H1("Select Inputs")
                | Text.H2("Variants")
                | variants
+               | Text.H2("Multi-Select Variants")
+               | multiSelectVariants
                | Text.H2("Data Binding")
                | dataBinding
                ;
@@ -62,7 +65,6 @@ public class SelectInputApp : SampleBase
                | Text.Block("Disabled")
                | Text.Block("Invalid")
                | Text.Block("With Placeholder")
-               | Text.Block("Multiple")
 
                | Text.InlineCode("SelectInputs.Select")
                | colorState.ToSelectInput(colorOptions)
@@ -106,6 +108,22 @@ public class SelectInputApp : SampleBase
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
                | new Box("Not Applicable")
             ;
+    }
+
+    private object CreateMultiSelectVariantsSection()
+    {
+        var colorState = UseState(new List<Colors>());
+        var colorOptions = typeof(Colors).ToOptions();
+
+        return Layout.Grid().Columns(4)
+               | null!
+               | Text.Block("List")
+               | Text.Block("Toggle")
+               | Text.Block("State")
+               | Text.InlineCode("Multi-Select")
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany()
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany()
+               | Text.InlineCode($"[{string.Join(", ", colorState.Value)}]");
     }
 
     private object CreateDataBindingTests()
