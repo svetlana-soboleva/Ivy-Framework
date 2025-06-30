@@ -87,7 +87,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
         ))}
       </ToggleGroup>
       {invalid && (
-        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+        <div className="absolute -right-6 top-2.5">
           <InvalidIcon message={invalid} />
         </div>
       )}
@@ -140,7 +140,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
         ))}
       </RadioGroup>
       {invalid && (
-        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+        <div className="absolute -right-6 top-2.5">
           <InvalidIcon message={invalid} />
         </div>
       )}
@@ -207,7 +207,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
         ))}
       </div>
       {invalid && (
-        <div className="absolute -right-6 top-1/2 -translate-y-1/2">
+        <div className="absolute -right-6 top-2.5">
           <InvalidIcon message={invalid} />
         </div>
       )}
@@ -272,7 +272,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
         </SelectContent>
       </Select>
       {invalid && (
-        <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
+        <div className="absolute right-8 top-2">
           <InvalidIcon message={invalid} />
         </div>
       )}
