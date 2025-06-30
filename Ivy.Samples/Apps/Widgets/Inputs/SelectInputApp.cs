@@ -131,16 +131,16 @@ public class SelectInputApp : SampleBase
             ("Guid", UseState(GuidOptions[0].TypedValue), UseState((Guid?)null), GuidOptions),
             
             // Array types
-            ("Colors[]", UseState<Colors[]>(new Colors[0]), UseState((Colors[]?)null), typeof(Colors).ToOptions()),
-            ("string[]", UseState<string[]>(new string[0]), UseState((string[]?)null), StringOptions),
-            ("int[]", UseState<int[]>(new int[0]), UseState((int[]?)null), IntOptions),
-            ("Guid[]", UseState<Guid[]>(new Guid[0]), UseState((Guid[]?)null), GuidOptions),
+            ("Colors[]", UseState<Colors[]>([]), UseState((Colors[]?)null), typeof(Colors).ToOptions()),
+            ("string[]", UseState<string[]>([]), UseState((string[]?)null), StringOptions),
+            ("int[]", UseState<int[]>([]), UseState((int[]?)null), IntOptions),
+            ("Guid[]", UseState<Guid[]>([]), UseState((Guid[]?)null), GuidOptions),
             
             // List types
-            ("List<Colors>", UseState<List<Colors>>(new List<Colors>()), UseState((List<Colors>?)null), typeof(Colors).ToOptions()),
-            ("List<string>", UseState<List<string>>(new List<string>()), UseState((List<string>?)null), StringOptions),
-            ("List<int>", UseState<List<int>>(new List<int>()), UseState((List<int>?)null), IntOptions),
-            ("List<Guid>", UseState<List<Guid>>(new List<Guid>()), UseState((List<Guid>?)null), GuidOptions)
+            ("List<Colors>", UseState<List<Colors>>([]), UseState((List<Colors>?)null), typeof(Colors).ToOptions()),
+            ("List<string>", UseState<List<string>>([]), UseState((List<string>?)null), StringOptions),
+            ("List<int>", UseState<List<int>>([]), UseState((List<int>?)null), IntOptions),
+            ("List<Guid>", UseState<List<Guid>>([]), UseState((List<Guid>?)null), GuidOptions)
         };
 
         var gridItems = new List<object>
