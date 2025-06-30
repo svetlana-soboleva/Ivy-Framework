@@ -59,7 +59,7 @@ public class SelectInputApp : SampleBase
         var colorState = UseState(Colors.Red);
         var colorOptions = typeof(Colors).ToOptions();
 
-        return Layout.Grid().Columns(6)
+        return Layout.Grid().Columns(5)
                | null!
                | Text.Block("Default")
                | Text.Block("Disabled")
@@ -71,43 +71,36 @@ public class SelectInputApp : SampleBase
                | colorState.ToSelectInput(colorOptions).Disabled()
                | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
-               | new Box("Not Applicable")
 
                | null!
                | colorState.ToSelectInput(colorOptions)
                | colorState.ToSelectInput(colorOptions).Disabled()
                | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
-               | new Box("Not Applicable")
 
                | Text.InlineCode("SelectInputs.List")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
-               | new Box("Not Applicable")
 
                | null!
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
-               | new Box("Not Applicable")
 
                | Text.InlineCode("SelectInputs.Toggle")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
-               | new Box("Not Applicable")
 
                | null!
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
-               | new Box("Not Applicable")
-            ;
+               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color");
     }
 
     private object CreateMultiSelectVariantsSection()
