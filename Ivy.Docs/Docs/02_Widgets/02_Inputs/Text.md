@@ -37,10 +37,7 @@ The following blocks shows how to use these.
 For capturing passwords, `TextInputs.Password` variant needs to be used. The following code shows how to capture
 a new password.   
 
-```csharp
-new TextInput<string>(password, placeholder: "Password")
-    .Variant(TextInputs.Password)
-```
+
 See it in action here. 
 
 ```csharp demo-below
@@ -61,11 +58,6 @@ public class PasswordCaptureDemo: ViewBase
 When a multiline text is needed, `TextInputs.Textarea` variant should be used. A common use-case is for capturing address
 that typically spans over multiple lines. The following demo shows how  to use it. 
 
-```csharp
- Text.Block("Address"),
-             new TextInput<string>(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
-                .Variant(TextInputs.Textarea)
-```
 See it in action here.
 
 ```csharp demo-below
@@ -90,11 +82,7 @@ When it is needed to find an element from a collection of items, it is better to
 Using the `TextInputs.Search` variant, this visual clue (with a looking glass icon) becomes obvious. 
 The following demo shows how to add such an text input. 
 
-```csharp
- new TextInput<string>(searchThis, placeholder: "search for?")
-                 .Variant(TextInputs.Search)
-```
-see it in action here.
+See it in action here.
 
 ```csharp demo-below
 public class SearchBarDemo: ViewBase
@@ -113,11 +101,7 @@ public class SearchBarDemo: ViewBase
 ### Email 
 To capture the emails `TextInputs.Email` variant should be used.  
 
-```csharp
-new TextInput<string>(email, placeholder: "user@domain.com")
-                 .Variant(TextInputs.Email)
-```
-see it in action here.
+See it in action here.
 
 ```csharp demo-below
 public class EmailEnterDemo: ViewBase
@@ -135,11 +119,7 @@ public class EmailEnterDemo: ViewBase
 ### Telephone 
 To capture the phone numbers `TextInputs.Tel` variant needs to be used.  
 
-```csharp
-new TextInput<string>(tel, placeholder: "+1-123-3456")
-                 .Variant(TextInputs.Tel)
-```
-see it in action here.
+See it in action here.
 
 ```csharp demo-below
 public class PhoneEnterDemo: ViewBase
@@ -158,10 +138,6 @@ public class PhoneEnterDemo: ViewBase
 ### URL 
 To capture the URLs/Links  `TextInputs.Url` variant needs to be used. 
 
-```csharp
- new TextInput<string>(url, placeholder: "https://ivy.app/")
-                 .Variant(TextInputs.Url)
-```
 see it in action here.
 
 ```csharp demo-below
