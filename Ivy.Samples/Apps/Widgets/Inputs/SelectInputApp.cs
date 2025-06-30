@@ -112,18 +112,31 @@ public class SelectInputApp : SampleBase
 
     private object CreateMultiSelectVariantsSection()
     {
-        var colorState = UseState(new List<Colors>());
+        var colorStateList = UseState(new List<Colors>());
+        var colorStateToggle = UseState(new List<Colors>());
         var colorOptions = typeof(Colors).ToOptions();
 
-        return Layout.Grid().Columns(4)
+        return Layout.Grid().Columns(6)
                | null!
-               | Text.Block("List")
-               | Text.Block("Toggle")
+               | Text.Block("Default")
+               | Text.Block("Disabled")
+               | Text.Block("Invalid")
+               | Text.Block("With Placeholder")
                | Text.Block("State")
-               | Text.InlineCode("Multi-Select")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany()
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany()
-               | Text.InlineCode($"[{string.Join(", ", colorState.Value)}]");
+
+               | Text.InlineCode("List")
+               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany()
+               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Disabled()
+               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Invalid("Invalid")
+               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Placeholder("Select colors")
+               | Text.InlineCode($"[{string.Join(", ", colorStateList.Value)}]")
+
+               | Text.InlineCode("Toggle")
+               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany()
+               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Disabled()
+               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Invalid("Invalid")
+               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Placeholder("Select colors")
+               | Text.InlineCode($"[{string.Join(", ", colorStateToggle.Value)}]");
     }
 
     private object CreateDataBindingTests()
