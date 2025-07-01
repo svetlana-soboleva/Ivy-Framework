@@ -37,7 +37,7 @@ public class CodeApp : SampleBase
                     }
                 }
                 """,
-            
+
             [Languages.Javascript] = """
                 function* fibonacci() {
                     let a = 0, b = 1;
@@ -51,7 +51,7 @@ public class CodeApp : SampleBase
                 const fibGen = fibonacci();
                 console.log(fibGen.next().value); // 0
                 """,
-            
+
             [Languages.Typescript] = """
                 function* fibonacci(): Generator<number, void, unknown> {
                     let a = 0, b = 1;
@@ -65,7 +65,7 @@ public class CodeApp : SampleBase
                 const fibGen = fibonacci();
                 console.log(fibGen.next().value); // 0
                 """,
-            
+
             [Languages.Python] = """
                 def fibonacci():
                     a, b = 0, 1
@@ -78,7 +78,7 @@ public class CodeApp : SampleBase
                 print(next(fib_gen))  # 0
                 print(next(fib_gen))  # 1
                 """,
-            
+
             [Languages.Sql] = """
                 WITH RECURSIVE fibonacci AS (
                     SELECT 0 as n, 0 as fib, 1 as next_fib
@@ -89,7 +89,7 @@ public class CodeApp : SampleBase
                 )
                 SELECT n, fib FROM fibonacci;
                 """,
-            
+
             [Languages.Html] = """
                 <!DOCTYPE html>
                 <html lang="en">
@@ -104,7 +104,7 @@ public class CodeApp : SampleBase
                 </body>
                 </html>
                 """,
-            
+
             [Languages.Css] = """
                 .fibonacci-container {
                     display: flex;
@@ -122,7 +122,7 @@ public class CodeApp : SampleBase
                     font-family: 'Courier New', monospace;
                 }
                 """,
-            
+
             [Languages.Json] = """
                 {
                   "fibonacci": {
@@ -135,7 +135,7 @@ public class CodeApp : SampleBase
                   }
                 }
                 """,
-            
+
             [Languages.Dbml] = """
                 // Database schema for Fibonacci application
                 Project fibonacci_app {
