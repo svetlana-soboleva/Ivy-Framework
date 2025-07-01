@@ -412,7 +412,7 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     if (!shortcutObj) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check if the required modifier keys match what was defined in the shortcut
+      // Check if the required modifier keys match exactly what was defined in the shortcut
       const modifierMatch = 
         (shortcutObj.meta && event.metaKey) ||
         (shortcutObj.ctrl && event.ctrlKey) ||
@@ -420,8 +420,8 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
       
       const isShortcutPressed =
         modifierMatch &&
-        (!shortcutObj.shift || event.shiftKey) &&
-        (!shortcutObj.alt || event.altKey) &&
+        (event.shiftKey === shortcutObj.shift) &&
+        (event.altKey === shortcutObj.alt) &&
         (event.key.toLowerCase() === shortcutObj.key.toLowerCase());
       if (isShortcutPressed) {
         event.preventDefault();
