@@ -78,8 +78,19 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             }
             else
             {
-                tabs.Set(tabs.Value.Add(new TabState(app.Title, navigateArgs.GetUrl(args.ConnectionId), app.Icon, DateTime.UtcNow.Ticks)));
-                selectedIndex.Set(tabs.Value.Length - 1);
+                var url = navigateArgs.GetUrl(args.ConnectionId);
+                var existingTab = tabs.Value.FirstOrDefault(tab => tab.Url == url);
+                var existingTabIndex = existingTab != null ? tabs.Value.IndexOf(existingTab) : -1;
+
+                if (existingTabIndex >= 0)
+                {
+                    selectedIndex.Set(existingTabIndex);
+                }
+                else
+                {
+                    tabs.Set(tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks)));
+                    selectedIndex.Set(tabs.Value.Length - 1);
+                }
             }
         }
 
