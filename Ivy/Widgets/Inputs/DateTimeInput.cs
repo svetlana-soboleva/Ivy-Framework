@@ -63,7 +63,7 @@ public static class DateTimeInputExtensions
     public static DateTimeInputBase ToDateInput(this IAnyState state, string? placeholder = null, bool disabled = false,
         DateTimeInputs variant = DateTimeInputs.Date)
         => ToDateTimeInput(state, placeholder, disabled, variant);
-    
+
     public static DateTimeInputBase ToDateTimeInput(this IAnyState state, string? placeholder = null, bool disabled = false, DateTimeInputs variant = DateTimeInputs.DateTime)
     {
         var type = state.GetStateType();
