@@ -1,3 +1,4 @@
+using Ivy.Auth;
 using Ivy.Core;
 using Ivy.Shared;
 
@@ -18,22 +19,22 @@ public static class ClientExtensions
     {
         client.Sender.Send("OpenUrl", uri.ToString());
     }
-    
+
     public static void Redirect(this IClientProvider client, string url)
     {
         client.Sender.Send("Redirect", url);
     }
-    
-    public static void SetJwt(this IClientProvider client, string? jwt)
+
+    public static void SetJwt(this IClientProvider client, AuthToken? authToken)
     {
-        client.Sender.Send("SetJwt", jwt);
+        client.Sender.Send("SetJwt", authToken);
     }
-    
+
     public static void SetTheme(this IClientProvider client, Theme theme)
     {
         client.Sender.Send("SetTheme", theme.ToString());
     }
-    
+
     internal static void SetChatPanelUrl(this IClientProvider client, string url)
     {
         client.Sender.Send("$SetChatPanelUrl", url);

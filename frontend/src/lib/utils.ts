@@ -20,13 +20,22 @@ export function getParentId():string|null {
   return urlParams.get('parentId');
 }
 
-export function getMachineId() {
-  let machineId = localStorage.getItem('machineId');
-  if (!machineId) {
-      machineId = crypto.randomUUID();
-      localStorage.setItem('machineId', machineId);
+function generateUUID(): string {
+  if (typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
   }
-  return machineId;
+  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c: string) =>
+    (Number(c) ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> Number(c) / 4).toString(16)
+  );
+}
+
+export function getMachineId(): string {
+  let id = localStorage.getItem("machineId");
+  if (!id) {
+    id = generateUUID();
+    localStorage.setItem("machineId", id);
+  }
+  return id;
 }
 
 export function getIvyHost():string {

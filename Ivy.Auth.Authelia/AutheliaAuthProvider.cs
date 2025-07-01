@@ -13,21 +13,21 @@ public class AutheliaAuthProvider : IAuthProvider
     private readonly HttpClient _httpClient;
     private readonly CookieContainer _cookieContainer;
     private readonly string _baseUrl;
-    
+
     public AutheliaAuthProvider()
     {
         var configuration = new ConfigurationBuilder()
             .AddEnvironmentVariables()
             .AddUserSecrets(Assembly.GetEntryAssembly()!)
             .Build();
-        _baseUrl = configuration.GetValue<string>("AUTHELIA_URL") 
+        _baseUrl = configuration.GetValue<string>("AUTHELIA_URL")
             ?? throw new Exception("AUTHELIA_URL is required");
         _cookieContainer = new CookieContainer();
         var handler = new HttpClientHandler { CookieContainer = _cookieContainer };
         _httpClient = new HttpClient(handler) { BaseAddress = new Uri(_baseUrl) };
     }
 
-    public async Task<string?> LoginAsync(string username, string password)
+    public async Task<AuthToken?> LoginAsync(string username, string password)
     {
         var payload = new { username, password };
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
@@ -36,11 +36,14 @@ public class AutheliaAuthProvider : IAuthProvider
         {
             // Return the "authelia_session" cookie value as our token.
             var cookies = _cookieContainer.GetCookies(new Uri(_baseUrl));
-            return cookies["authelia_session"]?.Value;
+            var session = cookies["authelia_session"]?.Value;
+            return session != null
+                ? new AuthToken(session)
+                : null;
         }
         return null;
     }
-    
+
     public async Task LogoutAsync(string _)
     {
         // Instruct Authelia to log out. Then expire the session cookie.
@@ -52,12 +55,14 @@ public class AutheliaAuthProvider : IAuthProvider
         _cookieContainer.Add(new Uri(_baseUrl), expired);
     }
 
-    public Task<Uri> GetOAuthUriAsync(string optionId, Uri callbackUri)
+    public Task<AuthToken?> RefreshJwtAsync(AuthToken jwt) => Task.FromResult<AuthToken?>(jwt);
+
+    public Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
     {
         throw new NotImplementedException();
     }
 
-    public string HandleOAuthCallback(HttpRequest request)
+    public Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
     {
         throw new NotImplementedException();
     }
@@ -70,7 +75,7 @@ public class AutheliaAuthProvider : IAuthProvider
         var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
     }
-    
+
     public async Task<UserInfo?> GetUserInfoAsync(string jwt)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/user/info");
@@ -84,7 +89,7 @@ public class AutheliaAuthProvider : IAuthProvider
             return null;
         return new UserInfo(user.Id, user.Email, user.DisplayName, null);
     }
-    
+
     public AuthOption[] GetAuthOptions()
     {
         return [new AuthOption(AuthFlow.EmailPassword)];
