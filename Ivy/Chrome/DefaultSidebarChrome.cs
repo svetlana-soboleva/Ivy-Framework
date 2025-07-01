@@ -82,8 +82,15 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 
                 if (settings.PreventTabDuplicates)
                 {
-                    var existingTab = tabs.Value.FirstOrDefault(tab => tab.Url == url);
-                    var existingTabIndex = existingTab != null ? tabs.Value.IndexOf(existingTab) : -1;
+                    int existingTabIndex = -1;
+                    for (int i = 0; i < tabs.Value.Length; i++)
+                    {
+                        if (tabs.Value[i].Url == url)
+                        {
+                            existingTabIndex = i;
+                            break;
+                        }
+                    }
 
                     if (existingTabIndex >= 0)
                     {
