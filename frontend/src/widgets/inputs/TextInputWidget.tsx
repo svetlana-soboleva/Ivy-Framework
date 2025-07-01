@@ -23,27 +23,34 @@ interface TextInputWidgetProps {
   shortcutKey?: string;
 }
 
+// Utility to detect Mac platform
+const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
+
 // Parse the shortcut string into components
 const parseShortcut = (shortcutStr?: string) => {
   if (!shortcutStr) return null;
-  
   const parts = shortcutStr.toLowerCase().split('+');
   return {
-    ctrl: parts.includes('ctrl'),
+    ctrl: !isMac && parts.includes('ctrl'),
     shift: parts.includes('shift'),
     alt: parts.includes('alt'),
-    meta: parts.includes('meta') || parts.includes('cmd') || parts.includes('command'),
-    key: parts[parts.length - 1] // The last part is assumed to be the key
+    meta: isMac ? (parts.includes('ctrl') || parts.includes('meta') || parts.includes('cmd') || parts.includes('command')) : false,
+    key: parts[parts.length - 1]
   };
 };
 
 // Format the shortcut for display
 const formatShortcutForDisplay = (shortcutStr?: string) => {
   if (!shortcutStr) return '';
-  
-  return shortcutStr
-    .split('+')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+  const parts = shortcutStr.split('+');
+  return parts
+    .map(part => {
+      if (isMac && (part.toLowerCase() === 'ctrl' || part.toLowerCase() === 'cmd' || part.toLowerCase() === 'command' || part.toLowerCase() === 'meta')) {
+        return '<span style="font-size:1.5em;line-height:1;vertical-align:middle;">⌘</span>';
+      }
+      if (!isMac && part.toLowerCase() === 'ctrl') return 'Ctrl';
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    })
     .join('+');
 };
 
@@ -117,9 +124,7 @@ const DefaultVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
-            {shortcutDisplay}
-          </kbd>
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
         </div>
       )}
     </div>
@@ -174,9 +179,7 @@ const TextareaVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-2.5 flex items-center">
-          <kbd className="px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
-            {shortcutDisplay}
-          </kbd>
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
         </div>
       )}
     </div>
@@ -261,9 +264,7 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2"/>
         )}
         {props.shortcutKey && (
-          <kbd className="ml-2 px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
-            {shortcutDisplay}
-          </kbd>
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
         )}
       </div>}
           
@@ -352,9 +353,7 @@ const SearchVariant: React.FC<{
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
-            {shortcutDisplay}
-          </kbd>
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
         </div>
       )}
     </div>
@@ -393,18 +392,14 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     if (!shortcutObj) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check if the pressed keys match our shortcut
-      const isShortcutPressed = 
-        (shortcutObj.ctrl === event.ctrlKey) &&
-        (shortcutObj.shift === event.shiftKey) &&
-        (shortcutObj.alt === event.altKey) &&
-        (shortcutObj.meta === event.metaKey) &&
+      // On Mac, use metaKey (Command), on others use ctrlKey
+      const isShortcutPressed =
+        (isMac ? event.metaKey : event.ctrlKey) &&
+        (!shortcutObj.shift || event.shiftKey) &&
+        (!shortcutObj.alt || event.altKey) &&
         (event.key.toLowerCase() === shortcutObj.key.toLowerCase());
-
       if (isShortcutPressed) {
         event.preventDefault();
-        
-        // Focus the input field
         if (inputRef.current) {
           inputRef.current.focus();
           setIsFocused(true);
