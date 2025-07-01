@@ -86,28 +86,12 @@ public class CodeInputApp : SampleBase
                | UseState("").ToCodeInput().Language(Languages.Html).Placeholder("Enter HTML here...")
             ;
 
-        var codeBlockExamples = Layout.Vertical()
-               | Text.H2("Code Block Examples")
-               | Layout.Grid().Columns(2)
-                   | Layout.Vertical()
-                       | Text.H3("With Copy Button")
-                       | new Code(csharpCode.Value, Languages.Csharp).ShowCopyButton()
-                       | Text.H3("Without Copy Button")
-                       | new Code(jsonCode.Value, Languages.Json).ShowCopyButton(false)
-                   | Layout.Vertical()
-                       | Text.H3("With Line Numbers")
-                       | new Code(sqlCode.Value, Languages.Sql).ShowLineNumbers()
-                       | Text.H3("Without Border")
-                       | new Code(htmlCode.Value, Languages.Html).ShowBorder(false)
-            ;
-
         var dataBinding = CreateStringTypeTests();
 
         return Layout.Vertical()
                | Text.H1("CodeInput")
                | Text.H2("Variants")
                | variants
-               | codeBlockExamples
                | Text.H2("Data Binding")
                | dataBinding
                ;
