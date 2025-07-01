@@ -22,7 +22,7 @@ namespace Ivy;
 public class ServerArgs
 {
     public const int DefaultPort = 5010;
-    
+
     public int Port { get; set; } = DefaultPort;
     public bool Verbose { get; set; } = false;
     public bool IKillForThisPort { get; set; } = false;
