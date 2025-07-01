@@ -42,7 +42,7 @@ const parseShortcut = (shortcutStr?: string) => {
 // Format the shortcut for display as React nodes
 const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
   if (!shortcutStr) return [];
-  const parts = shortcutStr.split('+');
+  const parts = shortcutStr.split('+').map(p => p.trim());
   const result: React.ReactNode[] = [];
   
   parts.forEach((part, index) => {
