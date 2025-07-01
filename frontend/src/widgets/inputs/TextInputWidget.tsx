@@ -280,7 +280,7 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2"/>
         )}
         {props.shortcutKey && (
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="ml-2 px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
         )}
