@@ -398,7 +398,7 @@ public static class IvyServerUtils
 {
     public static ServerArgs GetArgs()
     {
-        var portOption = new Option<int>("--port", () => 5010);
+        var portOption = new Option<int>("--port", () => new ServerArgs().Port);
         var verboseOption = new Option<bool>("--verbose", () => false);
         var silentOption = new Option<bool>("--silent", () => false);
         var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
