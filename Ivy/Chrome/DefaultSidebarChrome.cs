@@ -79,19 +79,22 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             else
             {
                 var url = navigateArgs.GetUrl(args.ConnectionId);
-                var existingTab = tabs.Value.FirstOrDefault(tab => tab.Url == url);
-                var existingTabIndex = existingTab != null ? tabs.Value.IndexOf(existingTab) : -1;
+                
+                if (settings.PreventTabDuplicates)
+                {
+                    var existingTab = tabs.Value.FirstOrDefault(tab => tab.Url == url);
+                    var existingTabIndex = existingTab != null ? tabs.Value.IndexOf(existingTab) : -1;
 
-                if (existingTabIndex >= 0)
-                {
-                    selectedIndex.Set(existingTabIndex);
+                    if (existingTabIndex >= 0)
+                    {
+                        selectedIndex.Set(existingTabIndex);
+                        return;
+                    }
                 }
-                else
-                {
-                    var newTabs = tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
-                    tabs.Set(newTabs);
-                    selectedIndex.Set(newTabs.Length - 1);
-                }
+                
+                var newTabs = tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
+                tabs.Set(newTabs);
+                selectedIndex.Set(newTabs.Length - 1);
             }
         }
 

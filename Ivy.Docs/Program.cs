@@ -14,7 +14,8 @@ var chromeSettings = new ChromeSettings()
             | Text.Muted($"Version {version}")
     )
     .DefaultApp<Ivy.Docs.Apps.Onboarding.GettingStarted.IntroductionApp>()
-    .UsePages();
+    .UsePages()
+    .PreventTabDuplicates(true);
 server.UseChrome(() => new DefaultSidebarChrome(chromeSettings));
 
 await server.RunAsync();
