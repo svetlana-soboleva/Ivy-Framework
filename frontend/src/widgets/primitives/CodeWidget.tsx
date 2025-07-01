@@ -15,19 +15,19 @@ interface CodeWidgetProps {
   height?: string;
 }
 
-const mapLanguageToPrism = (language: string): string => {
-  const languageMap: Record<string, string> = {
-    'Csharp': 'csharp',
-    'Javascript': 'javascript',
-    'Typescript': 'typescript',
-    'Python': 'python',
-    'Sql': 'sql',
-    'Html': 'html',
-    'Css': 'css',
-    'Json': 'json',
-    'Dbml': 'dbml'
-  };
+const languageMap: Record<string, string> = {
+  'Csharp': 'csharp',
+  'Javascript': 'javascript',
+  'Typescript': 'typescript',
+  'Python': 'python',
+  'Sql': 'sql',
+  'Html': 'html',
+  'Css': 'css',
+  'Json': 'json',
+  'Dbml': 'dbml'
+};
 
+const mapLanguageToPrism = (language: string): string => {
   if(!languageMap[language]) console.warn(`Language ${language} is not specified in the code widget, attempting to use the language name as a fallback.`)
   
   return languageMap[language] || language.toLowerCase();
