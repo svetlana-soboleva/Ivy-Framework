@@ -21,7 +21,7 @@ namespace Ivy;
 
 public class ServerArgs
 {
-    public int Port { get; set; } = 5000;
+    public int Port { get; set; } = 5010;
     public bool Verbose { get; set; } = false;
     public bool IKillForThisPort { get; set; } = false;
     public bool Browse { get; set; } = false;
@@ -398,7 +398,7 @@ public static class IvyServerUtils
 {
     public static ServerArgs GetArgs()
     {
-        var portOption = new Option<int>("--port", () => 5000);
+        var portOption = new Option<int>("--port", () => 5010);
         var verboseOption = new Option<bool>("--verbose", () => false);
         var silentOption = new Option<bool>("--silent", () => false);
         var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
