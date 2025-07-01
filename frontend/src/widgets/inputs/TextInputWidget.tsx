@@ -392,9 +392,14 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     if (!shortcutObj) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // On Mac, use metaKey (Command), on others use ctrlKey
+      // Check if the required modifier keys match what was defined in the shortcut
+      const modifierMatch = 
+        (shortcutObj.meta && event.metaKey) ||
+        (shortcutObj.ctrl && event.ctrlKey) ||
+        (!shortcutObj.meta && !shortcutObj.ctrl && !event.metaKey && !event.ctrlKey);
+      
       const isShortcutPressed =
-        (isMac ? event.metaKey : event.ctrlKey) &&
+        modifierMatch &&
         (!shortcutObj.shift || event.shiftKey) &&
         (!shortcutObj.alt || event.altKey) &&
         (event.key.toLowerCase() === shortcutObj.key.toLowerCase());
