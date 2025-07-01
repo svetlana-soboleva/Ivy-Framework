@@ -250,87 +250,6 @@ public class DisabledInputDemo : ViewBase
 }
 ```
 
-### Real life usages of styles
-
-The following demo shows how to use style like `Invalid` in form validations.
-
-#### Validate Email Demo
-
-In this example, if the email format is wrong, the input is invalidated and a message is shown.
-
-```csharp demo-tabs
-public class EmailValidationDemo : ViewBase 
-{      
-    // Email regex pattern
-    private static readonly System.Text.RegularExpressions.Regex EmailRegex = new 
-        System.Text.RegularExpressions.Regex(
-        @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-        System.Text.RegularExpressions.RegexOptions.Compiled | 
-        System.Text.RegularExpressions.RegexOptions.IgnoreCase
-    );
-
-    public override object? Build()
-    {         
-        var onChangedState = UseState("");         
-        var invalidState = UseState("");         
-        
-        return Layout.Horizontal()       
-            | Text.Block("Email")
-            | new TextInput(onChangedState.Value, e =>                    
-              {                        
-                onChangedState.Set(e.Value);
-                if (string.IsNullOrWhiteSpace(e.Value))
-                {
-                    invalidState.Set("");
-                }
-                else if (!EmailRegex.IsMatch(e.Value))                        
-                {                             
-                    invalidState.Set("Invalid email address");
-                }                        
-                else                        
-                {                         
-                    invalidState.Set(""); 
-                }                    
-              })
-              .Invalid(invalidState.Value);
-         
-    }     
-}
-```
-
-#### Conditional Enabling/Disabling of Text Inputs
-
-In this demo, password field is enabled only when the username field has a value.
-
-```csharp demo-tabs
-
-public class LoginForm : ViewBase 
-{      
-    public override object Build()
-    {         
-        var usernameState = UseState("");         
-        var passwordState = UseState("");         
-        
-        return Layout.Vertical()
-            | Text.H2("Login")
-            | Layout.Vertical()
-                | Text.Label("Username")
-                | usernameState.ToTextInput()
-                    .Placeholder("Enter your username")
-                | Text.Label("Password") 
-                | passwordState.ToPasswordInput()
-                    .Placeholder("Enter your password")
-                     // Disabled when username is empty
-                    .Disabled(string.IsNullOrWhiteSpace(usernameState.Value))
-                | Layout.Horizontal()
-                    | new Button("Login")
-                        .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
-                             string.IsNullOrWhiteSpace(passwordState.Value)); 
-                            
-    }     
-}
-
-```
 
 Notice, how extension functions `ToTextInput`, and `ToPasswordInput` are used  to generate `TextInput` variants
 needed for the form.
@@ -445,3 +364,86 @@ public class BasicFilter : ViewBase
 ```
 
 <WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
+
+
+### Examples
+
+The following demo shows how to use style like `Invalid` in form validations.
+
+#### Validate Email Demo
+
+In this example, if the email format is wrong, the input is invalidated and a message is shown.
+
+```csharp demo-tabs
+public class EmailValidationDemo : ViewBase 
+{      
+    // Email regex pattern
+    private static readonly System.Text.RegularExpressions.Regex EmailRegex = new 
+        System.Text.RegularExpressions.Regex(
+        @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+        System.Text.RegularExpressions.RegexOptions.Compiled | 
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+    );
+
+    public override object? Build()
+    {         
+        var onChangedState = UseState("");         
+        var invalidState = UseState("");         
+        
+        return Layout.Horizontal()       
+            | Text.Block("Email")
+            | new TextInput(onChangedState.Value, e =>                    
+              {                        
+                onChangedState.Set(e.Value);
+                if (string.IsNullOrWhiteSpace(e.Value))
+                {
+                    invalidState.Set("");
+                }
+                else if (!EmailRegex.IsMatch(e.Value))                        
+                {                             
+                    invalidState.Set("Invalid email address");
+                }                        
+                else                        
+                {                         
+                    invalidState.Set(""); 
+                }                    
+              })
+              .Invalid(invalidState.Value);
+         
+    }     
+}
+```
+
+#### Conditional Enabling/Disabling of Text Inputs
+
+In this demo, password field is enabled only when the username field has a value.
+
+```csharp demo-tabs
+
+public class LoginForm : ViewBase 
+{      
+    public override object Build()
+    {         
+        var usernameState = UseState("");         
+        var passwordState = UseState("");         
+        
+        return Layout.Vertical()
+            | Text.H2("Login")
+            | Layout.Vertical()
+                | Text.Label("Username")
+                | usernameState.ToTextInput()
+                    .Placeholder("Enter your username")
+                | Text.Label("Password") 
+                | passwordState.ToPasswordInput()
+                    .Placeholder("Enter your password")
+                     // Disabled when username is empty
+                    .Disabled(string.IsNullOrWhiteSpace(usernameState.Value))
+                | Layout.Horizontal()
+                    | new Button("Login")
+                        .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
+                             string.IsNullOrWhiteSpace(passwordState.Value)); 
+                            
+    }     
+}
+
+```
