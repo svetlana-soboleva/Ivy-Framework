@@ -88,8 +88,9 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 }
                 else
                 {
-                    tabs.Set(tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks)));
-                    selectedIndex.Set(tabs.Value.Length - 1);
+                    var newTabs = tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
+                    tabs.Set(newTabs);
+                    selectedIndex.Set(newTabs.Length - 1);
                 }
             }
         }
