@@ -79,7 +79,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             else
             {
                 var url = navigateArgs.GetUrl(args.ConnectionId);
-                
+
                 if (settings.PreventTabDuplicates)
                 {
                     var existingTab = tabs.Value.FirstOrDefault(tab => tab.Url == url);
@@ -91,7 +91,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                         return;
                     }
                 }
-                
+
                 var newTabs = tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
                 tabs.Set(newTabs);
                 selectedIndex.Set(newTabs.Length - 1);
