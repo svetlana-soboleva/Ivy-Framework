@@ -39,19 +39,31 @@ const parseShortcut = (shortcutStr?: string) => {
   };
 };
 
-// Format the shortcut for display
-const formatShortcutForDisplay = (shortcutStr?: string) => {
-  if (!shortcutStr) return '';
+// Format the shortcut for display as React nodes
+const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
+  if (!shortcutStr) return [];
   const parts = shortcutStr.split('+');
-  return parts
-    .map(part => {
-      if (isMac && (part.toLowerCase() === 'ctrl' || part.toLowerCase() === 'cmd' || part.toLowerCase() === 'command' || part.toLowerCase() === 'meta')) {
-        return '<span style="font-size:1.5em;line-height:1;vertical-align:middle;">⌘</span>';
-      }
-      if (!isMac && part.toLowerCase() === 'ctrl') return 'Ctrl';
-      return part.charAt(0).toUpperCase() + part.slice(1);
-    })
-    .join('+');
+  const result: React.ReactNode[] = [];
+  
+  parts.forEach((part, index) => {
+    if (index > 0) {
+      result.push('+');
+    }
+    
+    if (isMac && (part.toLowerCase() === 'ctrl' || part.toLowerCase() === 'cmd' || part.toLowerCase() === 'command' || part.toLowerCase() === 'meta')) {
+      result.push(
+        <span key={`meta-${index}`} style={{ fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }}>
+          ⌘
+        </span>
+      );
+    } else if (!isMac && part.toLowerCase() === 'ctrl') {
+      result.push('Ctrl');
+    } else {
+      result.push(part.charAt(0).toUpperCase() + part.slice(1));
+    }
+  });
+  
+  return result;
 };
 
 const useCursorPosition = (value?: string, externalRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -124,7 +136,9 @@ const DefaultVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            {shortcutDisplay}
+          </kbd>
         </div>
       )}
     </div>
@@ -179,7 +193,9 @@ const TextareaVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-2.5 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            {shortcutDisplay}
+          </kbd>
         </div>
       )}
     </div>
@@ -264,7 +280,9 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2"/>
         )}
         {props.shortcutKey && (
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            {shortcutDisplay}
+          </kbd>
         )}
       </div>}
           
@@ -353,7 +371,9 @@ const SearchVariant: React.FC<{
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md" dangerouslySetInnerHTML={{ __html: shortcutDisplay }} />
+          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            {shortcutDisplay}
+          </kbd>
         </div>
       )}
     </div>
