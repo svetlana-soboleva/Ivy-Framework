@@ -136,7 +136,7 @@ const DefaultVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>
@@ -193,7 +193,7 @@ const TextareaVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-2.5 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>
@@ -280,7 +280,7 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2"/>
         )}
         {props.shortcutKey && (
-          <kbd className="ml-2 px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
         )}
@@ -371,7 +371,7 @@ const SearchVariant: React.FC<{
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-2 py-1 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>
