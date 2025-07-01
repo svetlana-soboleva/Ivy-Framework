@@ -189,9 +189,6 @@ public class CodeInputApp : SampleBase
         // For non-nullable states, show all variants
         return Layout.Vertical()
                | anyState.ToCodeInput()
-               | anyState.ToCodeInput().Language(Languages.Csharp)
-               | anyState.ToCodeInput().Language(Languages.Json)
-               | anyState.ToCodeInput().Language(Languages.Sql)
-               | anyState.ToCodeInput().Language(Languages.Html);
+               | anyState.ToCodeInput().Language(Languages.Csharp);
     }
 }
