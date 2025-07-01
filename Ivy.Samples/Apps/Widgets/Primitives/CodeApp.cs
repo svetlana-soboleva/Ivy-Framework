@@ -27,7 +27,7 @@ public class CodeApp : SampleBase
             console.log(fibGen.next().value); // 5
             """;
 
-        return new Code(content, "ts")
+        return new Code(content, Languages.Typescript)
             .ShowCopyButton(true)
             .ShowLineNumbers()
             ;
