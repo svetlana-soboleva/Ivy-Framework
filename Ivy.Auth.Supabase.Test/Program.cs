@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Ivy;
 using Ivy.Auth.Supabase;
-using Ivy.Chrome;
 
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 var server = new Server();
