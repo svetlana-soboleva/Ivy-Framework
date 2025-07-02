@@ -57,6 +57,7 @@ public class PasswordCaptureDemo: ViewBase
 ```
 
 ### TextArea
+
 When a multiline text is needed, `TextInputs.Textarea` variant should be used. A common use-case is for capturing address
 that typically spans over multiple lines. The following demo shows how  to use it.
 
@@ -69,11 +70,11 @@ public class CaptureAddressDemo: ViewBase
     {
         var address = UseState("");
         return Layout.Horizontal()
-             | Text.Block("Address")
-             | new TextInput(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
-                .Variant(TextInputs.Textarea)
-                .Height(30)
-                .Width(100);         
+                | Text.Block("Address")
+                | new TextInput(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
+                               .Variant(TextInputs.Textarea)
+                               .Height(30)
+                               .Width(100);         
     }
 }
 ```
@@ -95,9 +96,9 @@ public class SearchBarDemo: ViewBase
     {
         var searchThis = UseState("");
         return Layout.Horizontal()
-             | Text.Block("Search")
-             | new TextInput(searchThis, placeholder: "search for?")
-                   .Variant(TextInputs.Search);
+                | Text.Block("Search")
+                | new TextInput(searchThis, placeholder: "search for?")
+                               .Variant(TextInputs.Search);
     }
 }
 ```
@@ -115,9 +116,9 @@ public class EmailEnterDemo: ViewBase
     {
         var email = UseState("");
         return Layout.Horizontal()
-             | Text.Block("Email")
-             | new TextInput(email, placeholder: "user@domain.com")
-                   .Variant(TextInputs.Email);
+                | Text.Block("Email")
+                | new TextInput(email, placeholder: "user@domain.com")
+                      .Variant(TextInputs.Email);
     }
 }
 ```
@@ -135,9 +136,9 @@ public class PhoneEnterDemo: ViewBase
     {
         var tel = UseState("");
         return Layout.Horizontal()
-             | Text.Block("Phone")
-             | new TextInput(tel, placeholder: "+1-123-3456")
-                 .Variant(TextInputs.Tel);
+                | Text.Block("Phone")
+                | new TextInput(tel, placeholder: "+1-123-3456")
+                                .Variant(TextInputs.Tel);
     }
 }
 ```
@@ -155,9 +156,9 @@ public class URLEnterDemo: ViewBase
     {
         var url = UseState("");
         return Layout.Horizontal()
-             | Text.Block("Website")
-             | new TextInput(url, placeholder: "https://ivy.app/")
-                 .Variant(TextInputs.Url);
+                | Text.Block("Website")
+                | new TextInput(url, placeholder: "https://ivy.app/")
+                               .Variant(TextInputs.Url);
     }
 }
 ```
@@ -186,9 +187,13 @@ public class EventsDemoApp : ViewBase
                     {
                        onChangedState.Set(e.Value);
                        if(e.Value.Length == 0)
+                       {
                             onChangeLabel.Set("");
-                       else 
-                            onChangeLabel.Set("Hello! " + e.Value); 
+                       }
+                       else
+                       { 
+                            onChangeLabel.Set("Hello! " + e.Value);
+                       }
                     })
                 | onChangeLabel;
      }
@@ -244,7 +249,7 @@ public class DisabledInputDemo : ViewBase
     public override object? Build()
     {
         return Layout.Horizontal()
-            | new TextInput(UseState(""), placeholder: "Disabled Input").Disabled();
+                | new TextInput(UseState(""), placeholder: "Disabled Input").Disabled();
     }
 }
 ```
@@ -277,13 +282,13 @@ public class ShortCutDemo : ViewBase
                 | new TextBlock("Keyboard Shortcuts Demo")
                 | new TextBlock("Ctrl+N - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")  
                 | new TextInput(name, placeholder: "Name (Ctrl+N)")
-                   .ShortcutKey("Ctrl+N")    
+                               .ShortcutKey("Ctrl+N")    
                 | new TextInput(email, placeholder: "Email (Ctrl+E)")
-                   .ShortcutKey("Ctrl+E")
-                    .Variant(TextInputs.Email)    
+                               .ShortcutKey("Ctrl+E")
+                               .Variant(TextInputs.Email)    
                 | new TextInput(message, placeholder: "Message (Ctrl+M)")
-                    .ShortcutKey("Ctrl+M")
-                    .Variant(TextInputs.Textarea);
+                               .ShortcutKey("Ctrl+M")
+                               .Variant(TextInputs.Textarea);
     }
 }
 ```
@@ -306,27 +311,26 @@ public class DataCaptureUsingExtensionDemo: ViewBase
         var address = UseState("");
         var website = UseState("");
         return Layout.Vertical()
-               | Layout.Horizontal()
-                    | Text.Block("Username")
-                    | userName.ToTextInput(placeholder: "User name") 
-               | Layout.Horizontal()
-                    | Text.Block("Password")
-                    | password.ToPasswordInput(placeholder: "Password")
-                              .Disabled(userName.Value.Length == 0)
-               | Layout.Horizontal()
-                    | Text.Block("Email")
-                    | email.ToEmailInput(placeholder: "Email")
-               | Layout.Horizontal() 
-                    | Text.Block("Mobile")
-                    | tel.ToTelInput(placeholder: "Mobile")
-               | Layout.Horizontal()
-                    | Text.Block("Address")  
-                    | address.ToTextAreaInput(placeholder: "Address Line1\nAddress Line2\nAddress Line 3")
-                             .Height(40).Width(100)
-               | Layout.Horizontal()
-                    | Text.Block("Website")
-                    | website.ToUrlInput(placeholder: "https://ivy.app/");
-                             
+                | Layout.Horizontal()
+                   | Text.Block("Username")
+                   | userName.ToTextInput(placeholder: "User name") 
+                | Layout.Horizontal()
+                   | Text.Block("Password")
+                   | password.ToPasswordInput(placeholder: "Password")
+                             .Disabled(userName.Value.Length == 0)
+                | Layout.Horizontal()
+                   | Text.Block("Email")
+                   | email.ToEmailInput(placeholder: "Email")
+                | Layout.Horizontal() 
+                   | Text.Block("Mobile")
+                   | tel.ToTelInput(placeholder: "Mobile")
+                | Layout.Horizontal()
+                   | Text.Block("Address")  
+                   | address.ToTextAreaInput(placeholder: "Address Line1\nAddress Line2\nAddress Line 3")
+                            .Height(40).Width(100)
+                | Layout.Horizontal()
+                   | Text.Block("Website")
+                   | website.ToUrlInput(placeholder: "https://ivy.app/");                             
     }
 }
 ```
