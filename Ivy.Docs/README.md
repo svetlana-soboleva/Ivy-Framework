@@ -21,13 +21,19 @@ You are free to work on anything with status `Todo`. Submit a PR for each Markdo
 
 The Markdown files are compiled to C#/Ivy during the build of the `Ivy.Docs` project. The generated C# files are created in the `Generated/` directory and are automatically regenerated when you run `dotnet build` on the `Ivy.Docs` project. The build process uses file hashing to skip regeneration if the markdown files haven't changed.
 
-To force regenerate all the C# files (for example, if you want to ensure they're up to date), you can use this command:
+To force regenerate all the C# files (for example, if you want to ensure they're up to date), you can use the following scripts:
 
-```bash
-dotnet run --project Ivy.Docs.Tools/Ivy.Docs.Tools.csproj -- convert "Ivy.Docs/Docs/*.md" Ivy.Docs/Generated
+**Windows (PowerShell):**
+
+```powershell
+.\Regenerate.ps1
 ```
 
-**Note**: The quotes around the pattern are important to prevent shell expansion issues.
+**Mac/Linux (Bash):**
+
+```bash
+sh ./Regenerate.sh
+```
 
 Clone <https://github.com/Ivy-Interactive/Ivy-Framework>, then go to the `Ivy.Samples` folder and run `dotnet watch`. Navigate to the URL that is printed.
 
