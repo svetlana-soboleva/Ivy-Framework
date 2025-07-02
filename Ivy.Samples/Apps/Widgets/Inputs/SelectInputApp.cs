@@ -252,19 +252,14 @@ public class SelectInputApp : SampleBase
 
     private static object FormatStateValue(string typeName, object? value, bool isNullable)
     {
-        if (value == null)
-            return isNullable ? Text.InlineCode("Null") : Text.InlineCode("Default");
-
-        if (value is Array array)
+        return value switch
         {
-            return array.Length == 0 ? Text.InlineCode("[]") : Text.InlineCode($"[{array.Length} items]");
-        }
-
-        if (value is System.Collections.IList list)
-        {
-            return list.Count == 0 ? Text.InlineCode("[]") : Text.InlineCode($"[{list.Count} items]");
-        }
-
-        return Text.InlineCode(value.ToString()!);
+            null => isNullable ? Text.InlineCode("Null") : Text.InlineCode("Default"),
+            Array array => array.Length == 0 ? Text.InlineCode("[]") : Text.InlineCode($"[{array.Length} items]"),
+            System.Collections.IList list => list.Count == 0
+                ? Text.InlineCode("[]")
+                : Text.InlineCode($"[{list.Count} items]"),
+            _ => Text.InlineCode(value.ToString()!)
+        };
     }
 }
