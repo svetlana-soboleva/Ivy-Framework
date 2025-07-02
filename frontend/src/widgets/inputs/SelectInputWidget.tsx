@@ -23,6 +23,7 @@ import { InvalidIcon } from '@/components/InvalidIcon';
 import { cn } from '@/lib/utils';
 import { inputStyles } from '@/lib/styles';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { X } from 'lucide-react';
 
 export type NullableSelectValue = string | number | string[] | number[] | null | undefined;
 
@@ -52,7 +53,8 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   disabled = false,
   invalid,
   options = [],
-  eventHandler
+  eventHandler,
+  nullable = false
 }) => {
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
@@ -60,6 +62,8 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   const stringValue = value != null && value.toString().trim() !== '' 
     ? value.toString() 
     : undefined;
+
+  const hasValue = stringValue !== undefined;
 
   // Outer container
   const container = (
@@ -108,6 +112,17 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           })}
         </ToggleGroup>
       </div>
+      {nullable && hasValue && !disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear"
+          onClick={() => eventHandler("OnChange", id, [null])}
+          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
     </div>
   );
 
@@ -120,7 +135,8 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   disabled = false,
   invalid,
   options = [],
-  eventHandler
+  eventHandler,
+  nullable = false
 }) => {
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
@@ -128,6 +144,8 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   const stringValue = value != null && value.toString().trim() !== '' 
     ? value.toString() 
     : undefined;
+
+  const hasValue = stringValue !== undefined;
 
   const container = (
     <div className="flex items-center gap-2">
@@ -159,6 +177,17 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
           ))}
         </RadioGroup>
       </div>
+      {nullable && hasValue && !disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear"
+          onClick={() => eventHandler("OnChange", id, [null])}
+          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
     </div>
   );
 
@@ -183,7 +212,8 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   invalid,
   options = [],
   eventHandler,
-  separator = ","
+  separator = ",",
+  nullable = false
 }) => {
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
@@ -203,6 +233,9 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
     }
     eventHandler("OnChange", id, [newValues]);
   };
+  
+  const hasValues = selectedValues.length > 0;
+  
   const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
@@ -259,6 +292,17 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
           })}
         </div>
       </div>
+      {nullable && hasValues && !disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear All"
+          onClick={() => eventHandler("OnChange", id, [[]])}
+          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
     </div>
   );
   return container;
@@ -271,7 +315,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   disabled = false,
   invalid,
   options = [],
-  eventHandler
+  eventHandler,
+  nullable = false
 }) => {
 
   const validOptions = options.filter(option => 
@@ -290,6 +335,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   const stringValue = value != null && value.toString().trim() !== '' 
     ? value.toString() 
     : undefined;
+
+  const hasValue = stringValue !== undefined;
 
   return (
     <div className="flex items-center gap-2">
@@ -322,6 +369,17 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
           </SelectContent>
         </Select>
       </div>
+      {nullable && hasValue && !disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear"
+          onClick={() => eventHandler("OnChange", id, [null])}
+          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
       {invalid && (
         <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
