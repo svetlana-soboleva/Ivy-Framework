@@ -342,7 +342,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <Select 
-          key={id} 
+          key={`${id}-${stringValue ?? 'null'}`} 
           disabled={disabled}
           value={stringValue}
           onValueChange={(newValue) => eventHandler("OnChange", id, [newValue])}
