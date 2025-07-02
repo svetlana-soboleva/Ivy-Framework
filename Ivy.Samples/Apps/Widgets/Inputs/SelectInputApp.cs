@@ -42,9 +42,12 @@ public class SelectInputApp : SampleBase
         var variants = CreateVariantsSection();
         var multiSelectVariants = CreateMultiSelectVariantsSection();
         var dataBinding = CreateDataBindingTests();
+        var nullableTest = CreateNullableTestSection();
 
         return Layout.Vertical()
                | Text.H1("Select Inputs")
+               | Text.H2("Nullable Test")
+               | nullableTest
                | Text.H2("Variants")
                | variants
                | Text.H2("Multi-Select Variants")
@@ -138,22 +141,17 @@ public class SelectInputApp : SampleBase
         {
             // Enum types
             ("Colors", UseState(Colors.Red), UseState((Colors?)null), typeof(Colors).ToOptions()),
-            
             // String types
             ("string", UseState("Niels"), UseState((string?)null), StringOptions),
-            
             // Integer types
             ("int", UseState(1), UseState((int?)null), IntOptions),
-            
             // Guid types
             ("Guid", UseState(GuidOptions[0].TypedValue), UseState((Guid?)null), GuidOptions),
-            
             // Array types
             ("Colors[]", UseState<Colors[]>([]), UseState((Colors[]?)null), typeof(Colors).ToOptions()),
             ("string[]", UseState<string[]>([]), UseState((string[]?)null), StringOptions),
             ("int[]", UseState<int[]>([]), UseState((int[]?)null), IntOptions),
             ("Guid[]", UseState<Guid[]>([]), UseState((Guid[]?)null), GuidOptions),
-            
             // List types
             ("List<Colors>", UseState<List<Colors>>([]), UseState((List<Colors>?)null), typeof(Colors).ToOptions()),
             ("List<string>", UseState<List<string>>([]), UseState((List<string>?)null), StringOptions),
@@ -161,7 +159,7 @@ public class SelectInputApp : SampleBase
             ("List<Guid>", UseState<List<Guid>>([]), UseState((List<Guid>?)null), GuidOptions)
         };
 
-        var gridItems = new List<object>
+        var gridRows = new List<object>
         {
             Text.InlineCode("Type"),
             Text.InlineCode("Non-Nullable"),
@@ -173,10 +171,7 @@ public class SelectInputApp : SampleBase
 
         foreach (var (typeName, nonNullableState, nullableState, options) in dataTypes)
         {
-            // Non-nullable columns (first 3)
-            gridItems.Add(Text.InlineCode(typeName));
-            gridItems.Add(CreateSelectInputVariants(nonNullableState, options));
-
+            // Non-nullable
             var nonNullableAnyState = nonNullableState as IAnyState;
             object? nonNullableValue = null;
             if (nonNullableAnyState != null)
@@ -184,22 +179,28 @@ public class SelectInputApp : SampleBase
                 var prop = nonNullableAnyState.GetType().GetProperty("Value");
                 nonNullableValue = prop?.GetValue(nonNullableAnyState);
             }
-            gridItems.Add(FormatStateValue(typeName, nonNullableValue, false));
+            var nonNullableCell = Layout.Vertical()
+                | CreateSelectInputVariants(nonNullableState, options);
 
-            // Nullable columns (next 3)
-            gridItems.Add(Text.InlineCode($"{typeName}?"));
-            gridItems.Add(CreateSelectInputVariants(nullableState, options));
-
-            object? value = null;
+            // Nullable
+            object? nullableValue = null;
             if (nullableState is IAnyState anyState)
             {
                 var prop = anyState.GetType().GetProperty("Value");
-                value = prop?.GetValue(anyState);
+                nullableValue = prop?.GetValue(anyState);
             }
-            gridItems.Add(FormatStateValue(typeName, value, true));
+            var nullableCell = Layout.Vertical()
+                | CreateSelectInputVariants(nullableState, options);
+
+            gridRows.Add(Text.InlineCode(typeName));
+            gridRows.Add(nonNullableCell);
+            gridRows.Add(FormatStateValue(typeName, nonNullableValue, false));
+            gridRows.Add(Text.InlineCode($"{typeName}?"));
+            gridRows.Add(nullableCell);
+            gridRows.Add(FormatStateValue(typeName, nullableValue, true));
         }
 
-        return Layout.Grid().Columns(6) | gridItems.ToArray();
+        return Layout.Grid().Columns(6) | gridRows.ToArray();
     }
 
     private static object CreateSelectInputVariants(object state, IAnyOption[] options)
@@ -224,6 +225,29 @@ public class SelectInputApp : SampleBase
                | anyState.ToSelectInput(options)
                | anyState.ToSelectInput(options).Variant(SelectInputs.List)
                | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle);
+    }
+
+    private object CreateNullableTestSection()
+    {
+        var nullableColorState = UseState((Colors?)null);
+        var nonNullableColorState = UseState(Colors.Red);
+        var colorOptions = typeof(Colors).ToOptions();
+
+        return Layout.Grid().Columns(4)
+               | Text.Block("Type")
+               | Text.Block("Select")
+               | Text.Block("List")
+               | Text.Block("Toggle")
+
+               | Text.InlineCode("Nullable")
+               | nullableColorState.ToSelectInput(colorOptions)
+               | nullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
+               | nullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
+
+               | Text.InlineCode("Non-Nullable")
+               | nonNullableColorState.ToSelectInput(colorOptions)
+               | nonNullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
+               | nonNullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle);
     }
 
     private static object FormatStateValue(string typeName, object? value, bool isNullable)
