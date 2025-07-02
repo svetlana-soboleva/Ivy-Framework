@@ -17,6 +17,7 @@ public class BoolInputDemo : ViewBase
     }
 }
 ```
+
 ## Variants
 There are three variants of bool inputs. The following blocks show how to create and use them.
 
@@ -46,11 +47,11 @@ public class BoolInputDemo : ViewBase
         | Text.InlineCode(agreed);
     }
 }
+
 ```
 ### Switch 
 To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling 
 some settings values on and off.  
-
 
 ```csharp demo-below
 public class BoolInputDemo : ViewBase
@@ -99,14 +100,12 @@ public class SingleToggleDemo : ViewBase
 {
     public override object? Build()
     {        
-        var isFavorite = UseState(false);
-        
+        var isFavorite = UseState(false);        
         return Layout.Vertical()            
             | Layout.Horizontal()
                 |  isFavorite.ToToggleInput(isFavorite.Value ? Icons.Heart : Icons.HeartOff)
                     .Label(isFavorite.Value ? "Remove from Favorites" : "Add to Favorites")
-                | Text.Block(isFavorite.Value ? "❤️ Favorited!" : "🤍 Not favourite!")
-            
+                | Text.Block(isFavorite.Value ? "❤️ Favorited!" : "🤍 Not favourite!")            
             | Text.Small(isFavorite.Value 
                 ? "This article has been added to your favorites." 
                 : "Click the heart to save this article.");
@@ -167,7 +166,6 @@ All values captured are integers; either 1 or 0.
 
 
 ## Examples
-
 This is a set of few examples showing how to use `BoolInput`s in several situations.
 
 ### Toggling Dashboard Controls
@@ -194,7 +192,6 @@ public class DashboardToggle : ViewBase
                     .Label("Show Sidebar")
                 | compactView.ToToggleInput(Icons.Minimize)
                     .Label("Compact View")
-            
             | Text.Block("Dashboard Preview:")
             | Layout.Horizontal()
                 | (showSidebar.Value ? Text.Block("📋 Sidebar") : null!)
@@ -221,7 +218,6 @@ public class SimpleFlightBooking : ViewBase
 
         return Layout.Vertical()
             | Text.H3("Book Flight")
-            
             // Round Trip Switch
             | isRoundTrip.ToSwitchInput().Label("Round Trip")
             // Departure Date (always visible)
@@ -230,7 +226,6 @@ public class SimpleFlightBooking : ViewBase
                 | departureDate.ToDateTimeInput()
                     .Variant(DateTimeInputs.Date)
                     .Placeholder("Select departure date")
-            
             // Return Date (only visible when round trip is on)
             | (isRoundTrip.Value 
                 ? Layout.Vertical()
@@ -239,7 +234,6 @@ public class SimpleFlightBooking : ViewBase
                         .Variant(DateTimeInputs.Date)
                         .Placeholder("Select return date")
                 : null!)
-            
             // Summary
             | Text.Block(isRoundTrip.Value 
                 ? $"Round trip: {departureDate.Value:MMM dd} → {returnDate.Value:MMM dd}"

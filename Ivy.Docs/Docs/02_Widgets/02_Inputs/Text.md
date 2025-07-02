@@ -50,14 +50,13 @@ public class PasswordCaptureDemo: ViewBase
         var password = UseState("");
         return Layout.Horizontal()
                | Text.Block("Enter Password")
-               | new TextInput<string>(password, placeholder: "Password")
+               | new TextInput(password, placeholder: "Password")
                 .Variant(TextInputs.Password);         
     }
 }
 ```
 
 ### TextArea
-
 When a multiline text is needed, `TextInputs.Textarea` variant should be used. A common use-case is for capturing address
 that typically spans over multiple lines. The following demo shows how  to use it.
 
@@ -98,7 +97,7 @@ public class SearchBarDemo: ViewBase
         return Layout.Horizontal()
              | Text.Block("Search")
              | new TextInput(searchThis, placeholder: "search for?")
-                 .Variant(TextInputs.Search);
+                   .Variant(TextInputs.Search);
     }
 }
 ```
@@ -118,7 +117,7 @@ public class EmailEnterDemo: ViewBase
         return Layout.Horizontal()
              | Text.Block("Email")
              | new TextInput(email, placeholder: "user@domain.com")
-                 .Variant(TextInputs.Email);
+                   .Variant(TextInputs.Email);
     }
 }
 ```
