@@ -13,15 +13,17 @@ public class BoolInputDemo : ViewBase
     {
         var state = this.UseState(false);
         return Layout.Horizontal()
-        | new BoolInput<bool>(state).Label("Accept Terms");
+               | new BoolInput<bool>(state).Label("Accept Terms");
     }
 }
 ```
 
 ## Variants
+
 There are three variants of bool inputs. The following blocks show how to create and use them.
 
 ### CheckBox
+
 To make the bool input appear like a checkbox, this variant should be used. 
 
 ```csharp demo-below
@@ -32,24 +34,25 @@ public class BoolInputDemo : ViewBase
         var state = UseState(false);
         var agreed = UseState(""); 
         return Layout.Horizontal()
-        | new BoolInput<bool>(state.Value, e => 
-        {
-            if(e.Value)
-            {
-                agreed.Set("You are all set!");                
-            }
-            else
-            {
-                agreed.Set("");
-            }
-            state.Set(e.Value);
-        },variant: BoolInputs.Checkbox).Label("Agree to terms and conditions")
-        | Text.InlineCode(agreed);
+               | new BoolInput<bool>(state.Value, e => 
+                     {
+                          if(e.Value)
+                          {
+                              agreed.Set("You are all set!");                
+                          }
+                          else
+                          {
+                              agreed.Set("");
+                          }
+                          state.Set(e.Value);
+                     },variant: BoolInputs.Checkbox).Label("Agree to terms and conditions")
+               | Text.InlineCode(agreed);
     }
 }
 
 ```
 ### Switch 
+
 To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling 
 some settings values on and off.  
 
@@ -66,28 +69,29 @@ public class BoolInputDemo : ViewBase
         var roundTrip = UseState(false);
         
         return Layout.Vertical()
-            | Layout.Horizontal()
-                | new BoolInput<bool>(read.Value, e => 
-                {
+               | Layout.Horizontal()
+                 | new BoolInput<bool>(read.Value, e => 
+                 {
                     if(e.Value)
                        readMessage.Set("User has readonly access!");
                     else
                        readMessage.Set("");
                     read.Set(e.Value);
-                }, variant: BoolInputs.Switch).Label("Readonly")
-                | Text.Block(readMessage)
-            | new BoolInput<bool>(write, variant: BoolInputs.Switch)
-                .Label("Can write")
-                .Disabled(read.Value)
-            | new BoolInput<bool>(delete, variant: BoolInputs.Switch).Label("Can delete")
-                .Disabled(read.Value)
-            | new BoolInput<bool>(dark, variant: BoolInputs.Switch)
-                 .Label("Round trip");
+                 }, variant: BoolInputs.Switch).Label("Readonly")
+                 | Text.Block(readMessage)
+              | new BoolInput<bool>(write, variant: BoolInputs.Switch)
+                   .Label("Can write")
+                   .Disabled(read.Value)
+              | new BoolInput<bool>(delete, variant: BoolInputs.Switch).Label("Can delete")
+                   .Disabled(read.Value)
+              | new BoolInput<bool>(dark, variant: BoolInputs.Switch)
+                   .Label("Round trip");
     }
 }
 ```
 
 ### Toggle 
+
 `Toggle` is a button-style boolean input that switches between two states (on/off, enabled/disabled) with a single click. 
 It appears as a pressable button that visually indicates its current state through styling and optional icons.
 This is represented by `BoolInputs.Toggle` 
@@ -102,18 +106,19 @@ public class SingleToggleDemo : ViewBase
     {        
         var isFavorite = UseState(false);        
         return Layout.Vertical()            
-            | Layout.Horizontal()
-                |  isFavorite.ToToggleInput(isFavorite.Value ? Icons.Heart : Icons.HeartOff)
-                    .Label(isFavorite.Value ? "Remove from Favorites" : "Add to Favorites")
-                | Text.Block(isFavorite.Value ? "❤️ Favorited!" : "🤍 Not favourite!")            
-            | Text.Small(isFavorite.Value 
-                ? "This article has been added to your favorites." 
-                : "Click the heart to save this article.");
+                | Layout.Horizontal()
+                    |  isFavorite.ToToggleInput(isFavorite.Value ? Icons.Heart : Icons.HeartOff)
+                                 .Label(isFavorite.Value ? "Remove from Favorites" : "Add to Favorites")
+                    | Text.Block(isFavorite.Value ? "❤️ Favorited!" : "🤍 Not favourite!")            
+                | Text.Small(isFavorite.Value 
+                    ? "This article has been added to your favorites." 
+                    : "Click the heart to save this article.");
     }
 }
 ```
 
 ## Extension Functions
+
 There are several extension functions that can be used to generate these boolean inputs. `ToBoolInput` creates a 
 `BoolInputs.CheckBox` variant. `ToSwitchInput` creates a `BoolInputs.Switch` variant, and `ToToggleInput` creates 
 a `BoolInputs.Toggle` variant. 
@@ -134,6 +139,7 @@ public class BoolInputVariants : ViewBase
 ```
 
 ## Bool represented by integers 
+
 Bool inputs have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`. 
 The following example shows how integers can be used to represent bool inputs. 
 
@@ -149,14 +155,14 @@ public class BoolInputVariants2 : ViewBase
         var boolVal3 = UseState(0);
         return Layout.Vertical()
                 | Layout.Horizontal()
-                    | boolVal1.ToBoolInput().Label("Legacy")
-                    | Text.Block($"value of Legacy is set to {boolVal1.Value.ToString()}")
+                   | boolVal1.ToBoolInput().Label("Legacy")
+                   | Text.Block($"value of Legacy is set to {boolVal1.Value.ToString()}")
                 | Layout.Horizontal()
-                    | boolVal2.ToSwitchInput().Label("Legacy2")
-                    | Text.Block($"value of Legacy2 is set to {boolVal2.Value.ToString()}") 
+                   | boolVal2.ToSwitchInput().Label("Legacy2")
+                   | Text.Block($"value of Legacy2 is set to {boolVal2.Value.ToString()}") 
                 | Layout.Horizontal()
-                    | boolVal3.ToToggleInput(Icons.MoonStar).Label("Dark")
-                    | Text.Block($"value of Dark is set to {boolVal3.Value.ToString()}");
+                   | boolVal3.ToToggleInput(Icons.MoonStar).Label("Dark")
+                   | Text.Block($"value of Dark is set to {boolVal3.Value.ToString()}");
     }
 }
 ```
@@ -166,9 +172,11 @@ All values captured are integers; either 1 or 0.
 
 
 ## Examples
+
 This is a set of few examples showing how to use `BoolInput`s in several situations.
 
 ### Toggling Dashboard Controls
+
 The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface. 
 
 ```csharp demo-below
@@ -184,18 +192,18 @@ public class DashboardToggle : ViewBase
         return Layout.Vertical()
             | Text.H3("Dashboard Customization")            
             | Layout.Grid().Columns(2)
-                | showCharts.ToToggleInput(Icons.ChartBar)
-                    .Label("Show Charts")
-                | showNotifications.ToToggleInput(Icons.Bell)
-                    .Label("Show Notifications")
-                | showSidebar.ToToggleInput(Icons.Menu)
-                    .Label("Show Sidebar")
-                | compactView.ToToggleInput(Icons.Minimize)
-                    .Label("Compact View")
+               | showCharts.ToToggleInput(Icons.ChartBar)
+                           .Label("Show Charts")
+               | showNotifications.ToToggleInput(Icons.Bell)
+                           .Label("Show Notifications")
+               | showSidebar.ToToggleInput(Icons.Menu)
+                            .Label("Show Sidebar")
+               | compactView.ToToggleInput(Icons.Minimize)
+                            .Label("Compact View")
             | Text.Block("Dashboard Preview:")
             | Layout.Horizontal()
-                | (showSidebar.Value ? Text.Block("📋 Sidebar") : null!)
-                | Layout.Vertical()
+               | (showSidebar.Value ? Text.Block("📋 Sidebar") : null!)
+               | Layout.Vertical()
                     | (showNotifications.Value ? Text.Block("🔔 Notifications Panel") : null!)
                     | (showCharts.Value ? Text.Block("📊 Charts & Analytics") : null!)
                     | Text.Block(compactView.Value ? "Compact Layout Active" : "Full Layout Active");
@@ -204,6 +212,7 @@ public class DashboardToggle : ViewBase
 ```
 
 ### Round trip example
+
 The following example shows a demo of how `Switch` variant can be used in a possible situation where it makes sense
 to do so. 
 
@@ -217,27 +226,27 @@ public class SimpleFlightBooking : ViewBase
         var returnDate = UseState(DateTime.Today.AddDays(7));
 
         return Layout.Vertical()
-            | Text.H3("Book Flight")
-            // Round Trip Switch
-            | isRoundTrip.ToSwitchInput().Label("Round Trip")
-            // Departure Date (always visible)
-            | Layout.Vertical()
-                | Text.Label("Departure Date:")
-                | departureDate.ToDateTimeInput()
-                    .Variant(DateTimeInputs.Date)
-                    .Placeholder("Select departure date")
-            // Return Date (only visible when round trip is on)
-            | (isRoundTrip.Value 
-                ? Layout.Vertical()
-                    | Text.Label("Return Date:")
-                    | returnDate.ToDateTimeInput()
-                        .Variant(DateTimeInputs.Date)
-                        .Placeholder("Select return date")
-                : null!)
-            // Summary
-            | Text.Block(isRoundTrip.Value 
-                ? $"Round trip: {departureDate.Value:MMM dd} → {returnDate.Value:MMM dd}"
-                : $"One way: {departureDate.Value:MMM dd}");
+                | Text.H3("Book Flight")
+                // Round Trip Switch
+                | isRoundTrip.ToSwitchInput().Label("Round Trip")
+                // Departure Date (always visible)
+                | Layout.Vertical()
+                   | Text.Label("Departure Date:")
+                   | departureDate.ToDateTimeInput()
+                                  .Variant(DateTimeInputs.Date)
+                                  .Placeholder("Select departure date")
+                // Return Date (only visible when round trip is on)
+                | (isRoundTrip.Value 
+                    ? Layout.Vertical()
+                       | Text.Label("Return Date:")
+                       | returnDate.ToDateTimeInput()
+                                   .Variant(DateTimeInputs.Date)
+                                   .Placeholder("Select return date")
+                    : null!)
+                // Summary
+                | Text.Block(isRoundTrip.Value 
+                   ? $"Round trip: {departureDate.Value:MMM dd} → {returnDate.Value:MMM dd}"
+                   : $"One way: {departureDate.Value:MMM dd}");
     }
 }
 ```
