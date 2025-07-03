@@ -76,7 +76,6 @@ npx playwright show-report
 ### Test Files
 
 - `e2e/` - End-to-end test files
-- `tests-examples/` - Example test implementations
 
 ### CI/CD
 
