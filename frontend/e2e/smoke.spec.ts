@@ -16,13 +16,3 @@ test('loads the main page', async ({ page }) => {
   // Check that the page loaded successfully
   await expect(page.locator('body')).toBeVisible();
 });
-
-test('can navigate to different apps', async ({ page }) => {
-  await page.goto('/');
-
-  // Wait for the page to load
-  await page.waitForLoadState('networkidle');
-
-  // Check that we can see the main content
-  await expect(page.locator('body')).toBeVisible();
-});
