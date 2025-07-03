@@ -340,7 +340,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1">
+      <div className="flex-1 relative">
         <Select 
           key={`${id}-${stringValue ?? 'null'}`} 
           disabled={disabled}
@@ -368,18 +368,23 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
             ))}
           </SelectContent>
         </Select>
+        {nullable && hasValue && !disabled && (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Clear"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              eventHandler("OnChange", id, [null]);
+            }}
+            className="absolute top-1/2 -translate-y-1/2 right-8 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+            style={{ pointerEvents: "auto" }}
+          >
+            <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          </button>
+        )}
       </div>
-      {nullable && hasValue && !disabled && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label="Clear"
-          onClick={() => eventHandler("OnChange", id, [null])}
-          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
-        >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-        </button>
-      )}
       {invalid && (
         <InvalidIcon message={invalid} className="flex-shrink-0" />
       )}
