@@ -63,7 +63,7 @@ public class SelectInputApp : SampleBase
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(5)
-               | Text.InlineCode("")
+               | Text.InlineCode("Variant")
                | Text.InlineCode("Default")
                | Text.InlineCode("Disabled")
                | Text.InlineCode("Invalid")
@@ -75,31 +75,13 @@ public class SelectInputApp : SampleBase
                | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
 
-               | Text.InlineCode("")
-               | colorState.ToSelectInput(colorOptions)
-               | colorState.ToSelectInput(colorOptions).Disabled()
-               | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
-
                | Text.InlineCode("SelectInputs.List")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
 
-               | Text.InlineCode("")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
-
                | Text.InlineCode("SelectInputs.Toggle")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color")
-
-               | Text.InlineCode("")
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
                | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
@@ -113,7 +95,7 @@ public class SelectInputApp : SampleBase
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(6)
-               | Text.InlineCode("")
+               | Text.InlineCode("Variant")
                | Text.InlineCode("Default")
                | Text.InlineCode("Disabled")
                | Text.InlineCode("Invalid")
