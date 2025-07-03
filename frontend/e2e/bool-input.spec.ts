@@ -15,12 +15,8 @@ test("debug sidebar search", async ({ page }) => {
   // Press Enter
   await searchInput.press("Enter");
 
-  // Wait for search results to appear
-  await page.waitForTimeout(500);
-
-  // Select the first search result (menu item with 'bool' in it)
-  // TODO: DATA TESTID
   const firstResult = page.locator('[data-sidebar="menu-item"], [data-sidebar="menu-sub-item"]').filter({ hasText: /Bool Input/i }).first();
+  
   await expect(firstResult).toBeVisible();
   await firstResult.click();
 
