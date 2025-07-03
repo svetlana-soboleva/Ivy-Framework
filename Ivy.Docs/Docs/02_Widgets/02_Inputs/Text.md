@@ -22,7 +22,8 @@ public class BasicUsageDemo : ViewBase
     { 
         var withoutValue = UseState((string?)null);
         return Layout.Horizontal()
-            | new TextInput(withoutValue, placeholder: "Enter text here...");
+            | new TextInput(withoutValue)
+                  .Placeholder("Enter text here...");
     }
 }
 ```
@@ -50,8 +51,9 @@ public class PasswordCaptureDemo: ViewBase
         var password = UseState("");
         return Layout.Horizontal()
                | Text.Block("Enter Password")
-               | new TextInput(password, placeholder: "Password")
-                .Variant(TextInputs.Password);         
+               | new TextInput(password)
+                     .Placeholder("Password")
+                     .Variant(TextInputs.Password);         
     }
 }
 ```
@@ -71,7 +73,8 @@ public class CaptureAddressDemo: ViewBase
         var address = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Address")
-                | new TextInput(address, placeholder: "Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
+                | new TextInput(address)
+                               .Placeholder("Åkervägen 9, \n132 39 Saltsjö-Boo, \nSweden")
                                .Variant(TextInputs.Textarea)
                                .Height(30)
                                .Width(100);         
@@ -97,7 +100,8 @@ public class SearchBarDemo: ViewBase
         var searchThis = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Search")
-                | new TextInput(searchThis, placeholder: "search for?")
+                | new TextInput(searchThis)
+                               .Placeholder("search for?")
                                .Variant(TextInputs.Search);
     }
 }
@@ -117,8 +121,9 @@ public class EmailEnterDemo: ViewBase
         var email = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Email")
-                | new TextInput(email, placeholder: "user@domain.com")
-                      .Variant(TextInputs.Email);
+                | new TextInput(email)
+                       .Placeholder("user@domain.com")
+                       .Variant(TextInputs.Email);
     }
 }
 ```
@@ -137,8 +142,9 @@ public class PhoneEnterDemo: ViewBase
         var tel = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Phone")
-                | new TextInput(tel, placeholder: "+1-123-3456")
-                                .Variant(TextInputs.Tel);
+                | new TextInput(tel)
+                      .Placeholder("+1-123-3456")
+                      .Variant(TextInputs.Tel);
     }
 }
 ```
@@ -157,8 +163,9 @@ public class URLEnterDemo: ViewBase
         var url = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Website")
-                | new TextInput(url, placeholder: "https://ivy.app/")
-                               .Variant(TextInputs.Url);
+                | new TextInput(url)
+                      .Placeholder("https://ivy.app/")
+                      .Variant(TextInputs.Url);
     }
 }
 ```
@@ -210,7 +217,8 @@ When something goes wrong capturing the inputs, `Invalid` style is recommended t
 The following code shows how to make an `TextInput` use the `Invalid` style.
 
 ```csharp
-new TextInput(withoutValue, placeholder: "Styled Input")
+new TextInput(withoutValue)
+    .Placeholder("Styled Input")
     .Invalid("Invalid input")
 ```
 
@@ -223,7 +231,8 @@ public class InvalidInputDemo: ViewBase
     public override object? Build()
     {
         var withoutValue = UseState("");
-        return new TextInput(withoutValue, placeholder: "a@")
+        return new TextInput(withoutValue)
+                   .Placeholder("a@")
                    .Invalid("Invalid email!");
     }
 }
@@ -237,7 +246,8 @@ When it is needed to disable a `TextInput` variant, `Disabled` style is needed.
 The following code shows how to disable a `TextInput`.
 
 ```csharp
-new TextInput(withoutValue, placeholder: "Styled Input")
+new TextInput(withoutValue)
+    .Placeholder("Styled Input")
     .Disabled()
 ```
 
@@ -249,7 +259,9 @@ public class DisabledInputDemo : ViewBase
     public override object? Build()
     {
         return Layout.Horizontal()
-                | new TextInput(UseState(""), placeholder: "Disabled Input").Disabled();
+                | new TextInput(UseState(""))
+                     .Placeholder("Disabled Input")
+                     .Disabled();
     }
 }
 ```
@@ -263,8 +275,9 @@ needed for the form.
 We can use associate keyboard shortcuts to text inputs the following way.
 
 ```csharp
- new TextInput(name, placeholder: "Name (Ctrl+N)")
-                     .ShortcutKey("Ctrl+N")   
+ new TextInput(name)
+    .Placeholder("Name (Ctrl+N)")
+    .ShortcutKey("Ctrl+N")   
 ```
 
 The following demo shows this in action with multiple text inputs each
@@ -281,14 +294,17 @@ public class ShortCutDemo : ViewBase
         return Layout.Vertical()
                 | new TextBlock("Keyboard Shortcuts Demo")
                 | new TextBlock("Ctrl+N - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")  
-                | new TextInput(name, placeholder: "Name (Ctrl+N)")
-                               .ShortcutKey("Ctrl+N")    
-                | new TextInput(email, placeholder: "Email (Ctrl+E)")
-                               .ShortcutKey("Ctrl+E")
-                               .Variant(TextInputs.Email)    
-                | new TextInput(message, placeholder: "Message (Ctrl+M)")
-                               .ShortcutKey("Ctrl+M")
-                               .Variant(TextInputs.Textarea);
+                | new TextInput(name)
+                      .Placeholder("Name (Ctrl+N)")
+                      .ShortcutKey("Ctrl+N")    
+                | new TextInput(email)
+                      .Placeholder("Email (Ctrl+E)")
+                      .ShortcutKey("Ctrl+E")
+                      .Variant(TextInputs.Email)    
+                | new TextInput(message)
+                      .Placeholder("Message (Ctrl+M)")
+                      .ShortcutKey("Ctrl+M")
+                      .Variant(TextInputs.Textarea);
     }
 }
 ```
@@ -313,24 +329,30 @@ public class DataCaptureUsingExtensionDemo: ViewBase
         return Layout.Vertical()
                 | Layout.Horizontal()
                    | Text.Block("Username")
-                   | userName.ToTextInput(placeholder: "User name") 
+                   | userName.ToTextInput()
+                             .Placeholder("User name") 
                 | Layout.Horizontal()
                    | Text.Block("Password")
                    | password.ToPasswordInput(placeholder: "Password")
                              .Disabled(userName.Value.Length == 0)
                 | Layout.Horizontal()
                    | Text.Block("Email")
-                   | email.ToEmailInput(placeholder: "Email")
+                   | email.ToEmailInput()
+                           .Placeholder("Email")
                 | Layout.Horizontal() 
                    | Text.Block("Mobile")
-                   | tel.ToTelInput(placeholder: "Mobile")
+                   | tel.ToTelInput()
+                        .Placeholder("Mobile")
                 | Layout.Horizontal()
                    | Text.Block("Address")  
-                   | address.ToTextAreaInput(placeholder: "Address Line1\nAddress Line2\nAddress Line 3")
-                            .Height(40).Width(100)
+                   | address.ToTextAreaInput()
+                            .Placeholder("Address Line1\nAddress Line2\nAddress Line 3")
+                            .Height(40)
+                            .Width(100)
                 | Layout.Horizontal()
                    | Text.Block("Website")
-                   | website.ToUrlInput(placeholder: "https://ivy.app/");                             
+                   | website.ToUrlInput()
+                            .Placeholder("https://ivy.app/");                             
     }
 }
 ```
