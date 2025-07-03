@@ -16,6 +16,9 @@ public class NumberInputApp : SampleBase
         var onBlurLabel = UseState("");
 
         var dataBinding = CreateNumericTypeTests();
+        var currencyExamples = CreateCurrencyExamples();
+
+        const string loremIpsumString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros";
 
         return Layout.Vertical()
                | Text.H1("Number Inputs")
@@ -28,25 +31,39 @@ public class NumberInputApp : SampleBase
                   | Text.Block("Invalid")
 
                   | Text.InlineCode("ToNumberInput()")
-                  | nullIntValue.ToNumberInput().Placeholder("Placeholder")
+                  | nullIntValue
+                    .ToNumberInput()
+                    .Placeholder("Placeholder")
                   | intValue.ToNumberInput()
-                  | intValue.ToNumberInput().Disabled()
-                  | intValue.ToNumberInput().Invalid("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros")
+                  | intValue
+                    .ToNumberInput()
+                    .Disabled()
+                  | intValue
+                    .ToNumberInput()
+                    .Invalid(loremIpsumString)
 
                   | Text.InlineCode("ToSliderInput()")
-                  | nullIntValue.ToSliderInput().Placeholder("Placeholder")
+                  | nullIntValue
+                    .ToSliderInput()
+                    .Placeholder("Placeholder")
                   | intValue.ToSliderInput()
-                  | intValue.ToSliderInput().Disabled()
-                  | intValue.ToSliderInput().Invalid("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros")
+                  | intValue
+                    .ToSliderInput()
+                    .Disabled()
+                  | intValue
+                    .ToSliderInput()
+                    .Invalid(loremIpsumString)
                )
 
-               //Data Binding:
-
+               // Data Binding:
                | Text.H2("Data Binding")
                | dataBinding
 
-               //Events: 
+               // Currency Examples:
+               | Text.H2("Currency Examples")
+               | currencyExamples
 
+               // Events: 
                | Text.H2("Events")
                | Text.H3("OnChange")
                | Layout.Horizontal(
@@ -56,31 +73,174 @@ public class NumberInputApp : SampleBase
                        onChangeLabel.Set("Changed");
                    }),
                    onChangeLabel
-                )
+               )
                | Text.H3("OnBlur")
                | Layout.Horizontal(
-                   onBlurState.ToNumberInput().HandleBlur(e => onBlurLabel.Set("Blur")),
+                   onBlurState
+                    .ToNumberInput()
+                    .HandleBlur(e => onBlurLabel.Set("Blur")),
                    onBlurLabel
                )
             ;
+    }
+
+    private object CreateCurrencyExamples()
+    {
+        var usdValue = UseState(1234.56m);
+        var eurValue = UseState(987.65m);
+        var gbpValue = UseState(567.89m);
+        var jpyValue = UseState(12345m);
+        var nullCurrencyValue = UseState<decimal?>(() => null);
+
+        return Layout.Vertical()
+               | Text.H3("Different Currencies")
+               | (Layout.Grid().Columns(3)
+                  | Text.InlineCode("Currency")
+                  | Text.InlineCode("Number Input")
+                  | Text.InlineCode("Slider Input")
+
+                  | Text.Block("USD (Default)")
+                  | usdValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("USD")
+                  | usdValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("USD")
+
+                  | Text.Block("EUR")
+                  | eurValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("EUR")
+                  | eurValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("EUR")
+
+                  | Text.Block("GBP")
+                  | gbpValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("GBP")
+                  | gbpValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("GBP")
+
+                  | Text.Block("JPY")
+                  | jpyValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("JPY")
+                  | jpyValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("JPY")
+
+                  | Text.Block("Null Value")
+                  | nullCurrencyValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("USD")
+                  | nullCurrencyValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("USD")
+               )
+
+               | Text.H3("Format Styles")
+               | (Layout.Grid().Columns(4)
+                  | Text.InlineCode("Style")
+                  | Text.InlineCode("Example")
+                  | Text.InlineCode("Number Input")
+                  | Text.InlineCode("Slider Input")
+
+                  | Text.Block("Decimal")
+                  | Text.Block("1234.56")
+                  | usdValue
+                    .ToNumberInput()
+                    .FormatStyle(NumberFormatStyle.Decimal)
+                  | usdValue
+                    .ToSliderInput()
+                    .FormatStyle(NumberFormatStyle.Decimal)
+
+                  | Text.Block("Currency")
+                  | Text.Block("$1,234.56")
+                  | usdValue
+                    .ToNumberInput()
+                    .FormatStyle(NumberFormatStyle.Currency)
+                    .Currency("USD")
+                  | usdValue
+                    .ToSliderInput()
+                    .FormatStyle(NumberFormatStyle.Currency)
+                    .Currency("USD")
+
+                  | Text.Block("Percent")
+                  | Text.Block("123.46%")
+                  | usdValue
+                    .ToNumberInput()
+                    .FormatStyle(NumberFormatStyle.Percent)
+                  | usdValue
+                    .ToSliderInput()
+                    .FormatStyle(NumberFormatStyle.Percent)
+               )
+
+               | Text.H3("Currency with Constraints")
+               | (Layout.Grid().Columns(3)
+                  | Text.InlineCode("Description")
+                  | Text.InlineCode("Number Input")
+                  | Text.InlineCode("Slider Input")
+
+                  | Text.Block("USD with Min/Max")
+                  | usdValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("USD")
+                    .Min(0)
+                    .Max(10000)
+                  | usdValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("USD")
+                    .Min(0)
+                    .Max(10000)
+
+                  | Text.Block("EUR with Step")
+                  | eurValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("EUR")
+                    .Step(0.01)
+                  | eurValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("EUR")
+                    .Step(0.01)
+
+                  | Text.Block("GBP with Precision")
+                  | gbpValue
+                    .ToMoneyInput("Enter amount")
+                    .Currency("GBP")
+                    .Precision(2)
+                  | gbpValue
+                    .ToMoneyInput("Enter amount")
+                    .Variant(NumberInputs.Slider)
+                    .Currency("GBP")
+                    .Precision(2)
+               );
     }
 
     private object CreateNumericTypeTests()
     {
         var numericTypes = new (string TypeName, object NonNullableState, object NullableState)[]
         {
-         // Signed integer types
-         ("short", UseState((short)0), UseState((short?)null)),
-         ("int", UseState(0), UseState((int?)null)),
-         ("long", UseState((long)0), UseState((long?)null)),
-         
-         // Unsigned integer types
-         ("byte", UseState((byte)0), UseState((byte?)null)),
-         
-         // Floating-point types
-         ("float", UseState(0.0f), UseState((float?)null)),
-         ("double", UseState(0.0), UseState((double?)null)),
-         ("decimal", UseState((decimal)0), UseState((decimal?)null))
+            // Signed integer types
+            ("short", UseState((short)0), UseState((short?)null)),
+            ("int", UseState(0), UseState((int?)null)),
+            ("long", UseState((long)0), UseState((long?)null)),
+
+            // Unsigned integer types
+            ("byte", UseState((byte)0), UseState((byte?)null)),
+
+            // Floating-point types
+            ("float", UseState(0.0f), UseState((float?)null)),
+            ("double", UseState(0.0), UseState((double?)null)),
+            ("decimal", UseState((decimal)0), UseState((decimal?)null))
         };
 
         var gridItems = new List<object>
@@ -108,6 +268,7 @@ public class NumberInputApp : SampleBase
                 var prop = nonNullableAnyState.GetType().GetProperty("Value");
                 nonNullableValue = prop?.GetValue(nonNullableAnyState);
             }
+
             gridItems.Add(FormatStateValue(typeName, nonNullableValue, false));
 
             // Nullable columns (next 3)
@@ -118,9 +279,12 @@ public class NumberInputApp : SampleBase
             object? value = null;
             if (anyState != null)
             {
-                var prop = anyState.GetType().GetProperty("Value");
+                var prop = anyState
+                            .GetType()
+                            .GetProperty("Value");
                 value = prop?.GetValue(anyState);
             }
+
             gridItems.Add(FormatStateValue(typeName, value, true));
         }
 
