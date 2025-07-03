@@ -54,70 +54,135 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   invalid,
   options = [],
   eventHandler,
+  selectMany = false,
+  separator = ",",
   nullable = false
 }) => {
   const validOptions = options.filter(option => 
     option.value != null && option.value.toString().trim() !== ''
   );
-  const stringValue = value != null && value.toString().trim() !== '' 
-    ? value.toString() 
-    : undefined;
+  
+  // Handle both single and multiple selection
+  let selectedValues: (string | number)[] = [];
+  if (selectMany) {
+    if (Array.isArray(value)) {
+      selectedValues = value;
+    } else if (value != null && value.toString().trim() !== '') {
+      selectedValues = value.toString().split(separator).map(v => v.trim());
+    }
+  } else {
+    const stringValue = value != null && value.toString().trim() !== '' 
+      ? value.toString() 
+      : undefined;
+    if (stringValue !== undefined) {
+      selectedValues = [stringValue];
+    }
+  }
 
-  const hasValue = stringValue !== undefined;
+  const hasValue = selectedValues.length > 0;
 
   // Outer container
   const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
-        <ToggleGroup
-          type="single"
-          value={stringValue}
-          onValueChange={(newValue: string) => eventHandler("OnChange", id, [newValue])}
-          disabled={disabled}
-          className="flex flex-wrap gap-2"
-        >
-          {validOptions.map((option) => {
-            const isSelected = stringValue === option.value.toString();
-            const isInvalid = !!invalid && isSelected;
-            const toggleItem = (
-              <ToggleGroupItem
-                key={option.value}
-                value={option.value.toString()}
-                aria-label={option.label}
-                className={cn(
-                  "px-3 py-2",
-                  isInvalid
-                    ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
-                    : isSelected
-                      ? "data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900"
-                      : undefined
-                )}
-              >
-                {option.label}
-              </ToggleGroupItem>
-            );
-            if (isInvalid) {
-              return (
-                <TooltipProvider key={option.value}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
-                    <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                      <div className="max-w-60">{invalid}</div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+        {selectMany ? (
+          <ToggleGroup
+            type="multiple"
+            value={selectedValues.map(v => v.toString())}
+            onValueChange={(newValue: string[]) => {
+              eventHandler("OnChange", id, [newValue]);
+            }}
+            disabled={disabled}
+            className="flex flex-wrap gap-2"
+          >
+            {validOptions.map((option) => {
+              const isSelected = selectedValues.includes(option.value);
+              const isInvalid = !!invalid && isSelected;
+              const toggleItem = (
+                <ToggleGroupItem
+                  key={option.value}
+                  value={option.value.toString()}
+                  aria-label={option.label}
+                  className={cn(
+                    "px-3 py-2",
+                    isInvalid
+                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      : isSelected
+                        ? "data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900"
+                        : undefined
+                  )}
+                >
+                  {option.label}
+                </ToggleGroupItem>
               );
-            }
-            return toggleItem;
-          })}
-        </ToggleGroup>
+              if (isInvalid) {
+                return (
+                  <TooltipProvider key={option.value}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                        <div className="max-w-60">{invalid}</div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                );
+              }
+              return toggleItem;
+            })}
+          </ToggleGroup>
+        ) : (
+          <ToggleGroup
+            type="single"
+            value={selectedValues[0]?.toString()}
+            onValueChange={(newValue: string) => {
+              eventHandler("OnChange", id, [newValue]);
+            }}
+            disabled={disabled}
+            className="flex flex-wrap gap-2"
+          >
+            {validOptions.map((option) => {
+              const isSelected = selectedValues[0] === option.value.toString();
+              const isInvalid = !!invalid && isSelected;
+              const toggleItem = (
+                <ToggleGroupItem
+                  key={option.value}
+                  value={option.value.toString()}
+                  aria-label={option.label}
+                  className={cn(
+                    "px-3 py-2",
+                    isInvalid
+                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      : isSelected
+                        ? "data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900"
+                        : undefined
+                  )}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              );
+              if (isInvalid) {
+                return (
+                  <TooltipProvider key={option.value}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                        <div className="max-w-60">{invalid}</div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                );
+              }
+              return toggleItem;
+            })}
+          </ToggleGroup>
+        )}
       </div>
       {nullable && hasValue && !disabled && (
         <button
           type="button"
           tabIndex={-1}
-          aria-label="Clear"
-          onClick={() => eventHandler("OnChange", id, [null])}
+          aria-label={selectMany ? "Clear All" : "Clear"}
+          onClick={() => eventHandler("OnChange", id, [selectMany ? [] : null])}
           className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
         >
           <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
