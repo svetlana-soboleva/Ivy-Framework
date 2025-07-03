@@ -444,9 +444,7 @@ public class LoginForm : ViewBase
                 | Layout.Horizontal()
                     | new Button("Login")
                         .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
-                             string.IsNullOrWhiteSpace(passwordState.Value)); 
-                            
+                             string.IsNullOrWhiteSpace(passwordState.Value));                             
     }     
 }
-
 ```

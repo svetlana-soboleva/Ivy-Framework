@@ -41,6 +41,7 @@ public class LanguageHighlightDemo : ViewBase
     public override object? Build()
     {    
         var jsCode = UseState("console.log('hello world!');");
+        var csCode = UseState("Console.WriteLine(\"Hello World!\");");
         var pyCode = UseState("print('hello world!')");
         var sqlCode = UseState("select * from employees;");
         var htmlCode = UseState("<h1> Hello World! </h1>");
@@ -71,6 +72,11 @@ public class LanguageHighlightDemo : ViewBase
                     | Text.H3("JavaScript")
                     | Text.Small("Enter JavaScript code below!") 
                 | jsCode.ToCodeInput().Language(Languages.Javascript)
+            | Layout.Grid().Columns(2)
+                | Layout.Vertical()
+                    | Text.H3("C#")
+                    | Text.Small("Enter C# code below!")
+                | csCode.ToCodeInput().Language(Languages.Csharp)
             | Layout.Grid().Columns(2)
                 | Layout.Vertical()
                     | Text.H3("Python")
