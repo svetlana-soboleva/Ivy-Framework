@@ -28,6 +28,14 @@ jobs:
         # Wait for server to be ready
         timeout 30 bash -c 'until curl -f http://localhost:5010/ > /dev/null 2>&1; do sleep 1; done'
     
+    - name: Start frontend dev server
+      working-directory: ./frontend
+      run: |
+        npm run dev &
+        echo $! > frontend.pid
+        # Wait for frontend to be ready
+        timeout 30 bash -c 'until curl -f http://localhost:5173/ > /dev/null 2>&1; do sleep 1; done'
+    
     # Setup Node.js and frontend
     - uses: actions/setup-node@v4
       with:
@@ -41,12 +49,12 @@ jobs:
       working-directory: ./frontend
       run: npx playwright install --with-deps
     
-    # Update Playwright config to use the backend server
-    - name: Configure Playwright for backend
+    # Update Playwright config to use the frontend server
+    - name: Configure Playwright for frontend
       working-directory: ./frontend
       run: |
-        # Create a temporary config that points to our backend
-        cat > playwright.config.backend.ts << 'EOF'
+        # Create a temporary config that points to our frontend
+        cat > playwright.config.frontend.ts << 'EOF'
         import { defineConfig, devices } from '@playwright/test';
         
         export default defineConfig({
@@ -57,7 +65,7 @@ jobs:
           workers: process.env.CI ? 1 : undefined,
           reporter: 'html',
           use: {
-            baseURL: 'http://localhost:5010',
+            baseURL: 'http://localhost:5173',
             trace: 'on-first-retry',
           },
           projects: [
@@ -79,15 +87,19 @@ jobs:
     
     - name: Run Playwright tests
       working-directory: ./frontend
-      run: npx playwright test --config=playwright.config.backend.ts
+      run: npx playwright test --config=playwright.config.frontend.ts
     
-    # Cleanup backend server
-    - name: Stop backend server
+    # Cleanup servers
+    - name: Stop servers
       if: always()
       run: |
         if [ -f backend.pid ]; then
           kill $(cat backend.pid) || true
           rm backend.pid
+        fi
+        if [ -f frontend.pid ]; then
+          kill $(cat frontend.pid) || true
+          rm frontend.pid
         fi
     
     - uses: actions/upload-artifact@v4
