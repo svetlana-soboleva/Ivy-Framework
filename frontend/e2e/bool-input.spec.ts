@@ -31,7 +31,12 @@ test("debug sidebar search", async ({ page }) => {
   await expect(page.locator('body')).toBeVisible();
 
   // Look for h1 saying "Bool Input"
-  const h1 = page.locator("h1");
-  await expect(h1).toHaveText("BoolInput");
+  const appFrameElement = await page.waitForSelector('iframe[src*="bool-input"]');
+  const appFrame = await appFrameElement.contentFrame();
+  expect(appFrame).not.toBeNull();
+
+  // Now look for the h1 in the app frame
+  const h1 = appFrame!.locator("h1");
+  await expect(h1).toContainText("BoolInput");
 
 });
