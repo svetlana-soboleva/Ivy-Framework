@@ -1,4 +1,5 @@
 ﻿using Ivy.Console.Helpers;
+using Ivy.Console.Tui;
 using Ivy.Database.Generator.Toolkit.Databases;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
