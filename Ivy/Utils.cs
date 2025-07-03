@@ -50,6 +50,7 @@ public static class Utils
     public static bool IsCollectionType(this Type? type)
     {
         if (type == null) return false;
+        if (type == typeof(string)) return false;
 
         // Handle arrays
         if (type.IsArray) return true;
