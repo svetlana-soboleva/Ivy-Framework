@@ -1,4 +1,3 @@
-import { DialogDescription } from '@/components/ui/dialog';
 import React from 'react';
 
 interface DialogBodyWidgetProps {
@@ -9,7 +8,9 @@ interface DialogBodyWidgetProps {
 export const DialogBodyWidget: React.FC<DialogBodyWidgetProps> = ({
   children
 }) => (
-  <DialogDescription>
+  <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+    <div className="flex-1 min-h-0 overflow-auto">
       {children}
-  </DialogDescription>
+    </div>
+  </div>
 );
