@@ -37,16 +37,15 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
         // Boolean types
         typeof(bool), typeof(bool?),
         // Signed integer types
-        typeof(sbyte), typeof(sbyte?), typeof(short), typeof(short?),
-        typeof(int), typeof(int?), typeof(long), typeof(long?),
-        typeof(Int128), typeof(Int128?),
+        typeof(short), typeof(short?),
+        typeof(int), typeof(int?),
+        typeof(long), typeof(long?),
         // Unsigned integer types
-        typeof(byte), typeof(byte?), typeof(ushort), typeof(ushort?),
-        typeof(uint), typeof(uint?), typeof(ulong), typeof(ulong?),
-        typeof(UInt128), typeof(UInt128?),
+        typeof(byte), typeof(byte?),
         // Floating-point types
         typeof(float), typeof(float?),
-        typeof(double), typeof(double?), typeof(decimal), typeof(decimal?)
+        typeof(double), typeof(double?),
+        typeof(decimal), typeof(decimal?)
     ];
 }
 
