@@ -1,8 +1,10 @@
 # NumberInput
+
 The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for 
 setting minimum/maximum values, step increments, and formatting.
 
 ## Basic Usage
+
 Here's a simple example of a `NumberInput` that allows users to input a number. It also allows to set a minimum
 and a maximum limit.
 
@@ -21,9 +23,11 @@ public class SimpleNumericValueDemo : ViewBase
 ```
 
 ## Variants
+
 NumberInputs come in several variants to suit different use cases
 
 ### Slider
+
 This variant helps create a slider that changes the value as the slider is pulled.
 This creates the `NumberInputs.Slider` variant.
 
@@ -32,15 +36,15 @@ public class NumberSliderInput : ViewBase
 {
     public override object? Build()
     {        
-        var books = UseState(1);
+        var tapes = UseState(1);
         var cart = UseState("");
         return Layout.Horizontal()
-            | Text.Block("Books")
+            | Text.Block("Tapes")
             | new NumberInput<int>(
-                books.Value,
+                tapes.Value,
                 e => {
-                        books.Set(e);
-                        cart.Set($"Added {books} books to your cart"); 
+                        tapes.Set(e);
+                        cart.Set($"Added {tapes}m tape to your cart"); 
                     }
             )
             .Min(1)
@@ -53,6 +57,7 @@ public class NumberSliderInput : ViewBase
 
 
 ### Money
+
 To enable users to enter money amounts, this variant should be used. The extension function `ToMoneyInput`
 should be used to create this variant. This is the idiomatic way to use Ivy.
 
@@ -61,21 +66,49 @@ public class MoneyInputDemo : ViewBase
 {
     public override object? Build()
     {
-        var moneyInUSD = UseState(0);
-        var moneyInGBP = UseState(0);
-        var moneyInEUR = UseState(0);
+        var moneyInUSD = UseState<decimal>(0.00M);
+        var moneyInGBP = UseState<decimal>(0.00M);
+        var moneyInEUR = UseState<decimal>(0.00M);
+        
+        var euroToUSD = 1.80M;
+        var euroToGBP = 0.86M;
+        
         return Layout.Vertical()
-            | moneyInUSD.ToMoneyInput(placeholder: "Amount in USD", currency : "USD")
-            | moneyInGBP.ToMoneyInput(placeholder: "Amount in GBP", currency : "GBP")
-            | moneyInEUR.ToMoneyInput(placeholder: "Amount in EUR", currency : "EUR");      
+                | Text.H2("Simple Currency Converter")
+                | Text.Label("Enter EUR amount:")
+                | new NumberInput<decimal>(
+                    moneyInEUR.Value,
+                    e => {
+                        moneyInEUR.Set(e);
+                        moneyInUSD.Set(e * euroToUSD);
+                        moneyInGBP.Set(e * euroToGBP);
+                    }
+                )
+                .FormatStyle(NumberFormatStyle.Currency)
+                .Currency("EUR")
+                .Placeholder("€0.00")
+                .Min(1)
+                .Max(10000)
+                    
+                | Text.Label("USD:")
+                | moneyInUSD.ToMoneyInput()
+                            .Currency("USD")
+                            .Disabled()
+                    
+                | Text.Label("GBP:")
+                | moneyInGBP.ToMoneyInput()
+                            .Currency("GBP")
+                            .Disabled();
     }
 }
 ```
 
 ## Styling
+
 `NumberInput`s can be customized with various styling options:
 
 ### Invalid
+
 To render a red border around the number input and mark the input as invalid, this style should be used.
 This can be used via the extension function `Invalid`.
 
@@ -84,14 +117,17 @@ public class InvalidDemo : ViewBase
 {
     public override object? Build()
     {
-        var num = UseState(3.14);
+        var num = UseState<double>(3.14);
         return Layout.Vertical()
-            | num.ToNumberInput().Invalid("Value should be less than 3.1");
+                | Text.Small("The value should be less than 3.1")
+                | num.ToNumberInput()
+                     .Invalid(num.Value > 3.1 ? "Value should be less than 3.1": "");
     }
 }
 ```
 
 ### Disabled
+
 To disable a number input this style should be used. This can be used via the extension function `Disabled`.
 
 ```csharp demo-below
@@ -107,6 +143,7 @@ public class DisabledDemo : ViewBase
 ```
 
 ### FormatStyle
+
 There are three different kinds of formats that a number input can have. The following shows these in action.
 
 ```csharp demo-below
