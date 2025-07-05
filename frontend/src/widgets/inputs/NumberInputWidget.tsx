@@ -29,6 +29,7 @@ interface NumberInputBaseProps {
   nullable?: boolean;
   onValueChange: (value: number | null) => void;
   currency?: string | undefined;
+  showArrows?: boolean;
 }
 
 interface NumberInputWidgetProps extends Omit<NumberInputBaseProps, 'onValueChange'> {
@@ -112,7 +113,8 @@ const NumberVariant = memo(({
   invalid,
   nullable = false,
   onValueChange,
-  currency
+  currency,
+  showArrows = false
 }: NumberInputBaseProps) => {
   const formatConfig = useMemo(() => ({
     style: formatStyleMap[formatStyle],
@@ -148,6 +150,7 @@ const NumberVariant = memo(({
           invalid && "pr-8"
         )}
         nullable={nullable}
+        showArrows={showArrows}
       />
       {invalid && (
         <div className="absolute right-8 top-2">
@@ -185,7 +188,7 @@ export const NumberInputWidget = memo(({
   return variant === "Slider" ? (
     <SliderVariant id={id} {...props} value={normalizedValue} onValueChange={handleChange} />
   ) : (
-    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} />
+    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} showArrows={props.showArrows} />
   );
 });
 
