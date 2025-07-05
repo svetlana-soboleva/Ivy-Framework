@@ -1,6 +1,7 @@
 import path from "path"
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 const injectIvyHost = (mode: string) => {
  return {
@@ -15,7 +16,7 @@ const injectIvyHost = (mode: string) => {
 }};
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), injectIvyHost(mode)],
+  plugins: [react(), tailwindcss(), injectIvyHost(mode)],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -26,8 +27,8 @@ export default defineConfig(({ mode }) => ({
     assetsDir: "assets", 
     rollupOptions: {
       input: {
-        main: 'index.html',
-        app: 'app.html'
+        main: path.resolve(__dirname, 'index.html'),
+        app: path.resolve(__dirname, 'app.html')
       },
       output: {
         entryFileNames: 'assets/[name].[hash].js',
