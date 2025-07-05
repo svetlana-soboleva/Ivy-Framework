@@ -1,3 +1,6 @@
+import { InvalidIcon } from "@/components/InvalidIcon";
+import { Input } from "@/components/ui/input";
+import { ChevronUp, ChevronDown, X } from "lucide-react";
 import React, {
   useState,
   useCallback,
@@ -7,9 +10,7 @@ import React, {
   FocusEvent,
   WheelEvent,
   MouseEvent as ReactMouseEvent,
-} from 'react';
-import { Input } from '@/components/ui/input';
-import { ChevronUp, ChevronDown, X } from 'lucide-react';
+} from "react";
 
 interface NumberInputProps {
   min?: number;
@@ -24,6 +25,7 @@ interface NumberInputProps {
   allowNegative?: boolean;
   className?: string;
   nullable?: boolean;
+  showArrows?: boolean;
 }
 
 interface DragState {
@@ -40,25 +42,26 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       max,
       step = 1,
       disabled = false,
-      placeholder = '',
+      placeholder = "",
       value,
       onChange,
       onBlur,
       format = {
-        style: 'decimal',
+        style: "decimal",
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
         useGrouping: true,
-        notation: 'standard',
+        notation: "standard",
       },
       allowNegative = true,
-      className = '',
+      className = "",
       nullable = false,
+      showArrows = false,
       ...props
     },
     ref
   ) => {
-    const [displayValue, setDisplayValue] = useState<string>('');
+    const [displayValue, setDisplayValue] = useState<string>("");
     const [isFocused, setIsFocused] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [dragState, setDragState] = useState<DragState | null>(null);
@@ -66,22 +69,16 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const formatter = useMemo(
       () => new Intl.NumberFormat(undefined, format),
-      [
-        format.style,
-        format.minimumFractionDigits,
-        format.maximumFractionDigits,
-        format.useGrouping,
-        format.notation,
-      ]
+      [format]
     );
 
     const formatValue = useCallback(
       (num: number | null): string => {
-        if (num === null) return '';
+        if (num === null) return "";
         try {
           return isFocused ? num.toString() : formatter.format(num);
         } catch {
-          return '';
+          return "";
         }
       },
       [formatter, isFocused]
@@ -91,9 +88,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       (input: string, shouldRound = true): number | null => {
         if (!input) return null;
 
-        const cleaned = input.replace(/[^\d.-]/g, '');
-        const parts = cleaned.split('.');
-        const sanitized = parts[0] + (parts.length > 1 ? '.' + parts[1] : '');
+        const cleaned = input.replace(/[^\d.-]/g, "");
+        const parts = cleaned.split(".");
+        const sanitized = parts[0] + (parts.length > 1 ? "." + parts[1] : "");
         const parsed = parseFloat(sanitized);
 
         if (isNaN(parsed)) return null;
@@ -164,7 +161,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
         e.preventDefault();
 
-        document.body.style.cursor = 'ew-resize';
+        document.body.style.cursor = "ew-resize";
 
         inputRef.current.focus();
       },
@@ -184,25 +181,28 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         );
 
         if (newValue !== null && newValue !== dragState.lastValue) {
-          onChange?.(newValue);
           setDisplayValue(formatValue(newValue));
-          setDragState(prev =>
+          setDragState((prev) =>
             prev ? { ...prev, lastValue: newValue } : null
           );
         }
       };
 
       const handleMouseUp = () => {
+        // Call onChange only when mouse is released
+        if (dragState && dragState.lastValue !== dragState.startValue) {
+          onChange?.(dragState.lastValue);
+        }
         setDragState(null);
-        document.body.style.cursor = '';
+        document.body.style.cursor = "";
       };
 
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
 
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
       };
     }, [dragState, calculateDragValue, onChange, formatValue]);
 
@@ -211,11 +211,11 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         if (disabled) return;
 
         switch (e.key) {
-          case 'ArrowUp':
+          case "ArrowUp":
             e.preventDefault();
             handleStep(1);
             break;
-          case 'ArrowDown':
+          case "ArrowDown":
             e.preventDefault();
             handleStep(-1);
             break;
@@ -238,8 +238,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
-        if (inputValue === '') {
-          setDisplayValue('');
+        if (inputValue === "") {
+          setDisplayValue("");
           setIsValid(true);
           onChange?.(null);
           return;
@@ -258,14 +258,14 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleFocus = useCallback(() => {
       setIsFocused(true);
-      setDisplayValue(value?.toString() ?? '');
+      setDisplayValue(value?.toString() ?? "");
     }, [value]);
 
     const handleBlur = useCallback(
       (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(false);
         if (value === null) {
-          setDisplayValue('');
+          setDisplayValue("");
         } else {
           setDisplayValue(formatValue(value));
         }
@@ -283,9 +283,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div className="relative">
         <Input
-          ref={node => {
+          ref={(node) => {
             inputRef.current = node;
-            if (typeof ref === 'function') {
+            if (typeof ref === "function") {
               ref(node);
             } else if (ref) {
               ref.current = node;
@@ -305,53 +305,82 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           step={step}
           disabled={disabled}
           placeholder={placeholder}
-          className={`${className} pr-14 ${!isValid ? 'border-red-500' : ''} ${dragState?.isDragging ? 'select-none' : ''}`}
+          className={`${className} ${showArrows ? "pr-14" : ""} ${
+            !isValid ? "border-red-500" : ""
+          } ${dragState?.isDragging ? "select-none" : ""}`}
           {...props}
         />
-        {nullable && value !== null && !disabled && onChange && (
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label="Clear"
-            onClick={() => {
-              setDisplayValue('');
-              onChange(null);
-            }}
-            className="absolute right-8 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        {/* Right-side icon container */}
+        {(!isValid ||
+          (nullable && value !== null && !disabled && onChange)) && (
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 flex items-center gap-1 ${
+              showArrows ? "right-14" : "right-2"
+            }`}
             style={{ zIndex: 2 }}
           >
-            <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-          </button>
+            {/* Invalid icon */}
+            {!isValid && (
+              <span className="flex items-center">
+                <InvalidIcon
+                  message={
+                    typeof placeholder === "string"
+                      ? placeholder
+                      : "Invalid value"
+                  }
+                />
+              </span>
+            )}
+            {/* Clear (X) button */}
+            {nullable && value !== null && !disabled && onChange && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={() => {
+                  setDisplayValue("");
+                  onChange(null);
+                }}
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+          </div>
         )}
-        <div className="absolute right-0 top-0 bottom-0 flex flex-col border-l">
-          <button
-            type="button"
-            tabIndex={-1}
-            disabled={
-              disabled || (max !== undefined && value !== null && value >= max)
-            }
-            onClick={() => handleStep(1)}
-            className="flex-1 px-1 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronUp className="h-3 w-3" />
-          </button>
-          <button
-            type="button"
-            tabIndex={-1}
-            disabled={
-              disabled || (min !== undefined && value !== null && value <= min)
-            }
-            onClick={() => handleStep(-1)}
-            className="flex-1 px-1 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed border-t"
-          >
-            <ChevronDown className="h-3 w-3" />
-          </button>
-        </div>
+        {showArrows && (
+          <div className="absolute right-0 top-0 bottom-0 flex flex-col border-l">
+            <button
+              type="button"
+              tabIndex={-1}
+              disabled={
+                disabled ||
+                (max !== undefined && value !== null && value >= max)
+              }
+              onClick={() => handleStep(1)}
+              className="flex-1 px-1 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronUp className="h-3 w-3" />
+            </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              disabled={
+                disabled ||
+                (min !== undefined && value !== null && value <= min)
+              }
+              onClick={() => handleStep(-1)}
+              className="flex-1 px-1 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed border-t"
+            >
+              <ChevronDown className="h-3 w-3" />
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 );
 
-NumberInput.displayName = 'NumberInput';
+NumberInput.displayName = "NumberInput";
 
 export default NumberInput;
