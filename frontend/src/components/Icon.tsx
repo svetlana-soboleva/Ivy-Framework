@@ -18,6 +18,7 @@ import {
   FaApple,
   FaGithub,
 } from 'react-icons/fa';
+import { IconType } from 'react-icons';
 import { VscAzure } from 'react-icons/vsc';
 import { SiNotion } from 'react-icons/si';
 
@@ -35,7 +36,7 @@ const Icon: React.FC<IconProps> = ({ name, color, size, className, style }) => {
   }
 
   // Handle react-icons
-  const reactIcons: { [key: string]: React.ComponentType<any> } = {
+  const reactIcons: { [key: string]: IconType } = {
     Google: FaGoogle,
     Azure: VscAzure,
     Amazon: FaAmazon,
