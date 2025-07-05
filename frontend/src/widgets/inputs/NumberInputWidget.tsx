@@ -29,6 +29,7 @@ interface NumberInputBaseProps {
   nullable?: boolean;
   onValueChange: (value: number | null) => void;
   currency?: string | undefined;
+  showArrows?: boolean;
 }
 
 interface NumberInputWidgetProps extends Omit<NumberInputBaseProps, 'onValueChange'> {
@@ -112,7 +113,8 @@ const NumberVariant = memo(({
   invalid,
   nullable = false,
   onValueChange,
-  currency
+  currency,
+  showArrows = false
 }: NumberInputBaseProps) => {
   const formatConfig = useMemo(() => ({
     style: formatStyleMap[formatStyle],
@@ -121,7 +123,7 @@ const NumberVariant = memo(({
     useGrouping: true,
     notation: 'standard' as const,
     currency: currency || undefined
-  }), [formatStyle, precision]);
+  }), [currency, formatStyle, precision]);
 
   const handleNumberChange = useCallback((newValue: number | null) => {
     // If not nullable and value is null, convert to 0
@@ -148,9 +150,13 @@ const NumberVariant = memo(({
           invalid && "pr-8"
         )}
         nullable={nullable}
+        showArrows={showArrows}
       />
       {invalid && (
-        <div className="absolute right-8 top-2">
+        <div className={cn(
+          "absolute top-2",
+          showArrows ? "right-8" : "right-2"
+        )}>
           <InvalidIcon message={invalid} />
         </div>
       )}
@@ -185,7 +191,7 @@ export const NumberInputWidget = memo(({
   return variant === "Slider" ? (
     <SliderVariant id={id} {...props} value={normalizedValue} onValueChange={handleChange} />
   ) : (
-    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} />
+    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} showArrows={props.showArrows} />
   );
 });
 
