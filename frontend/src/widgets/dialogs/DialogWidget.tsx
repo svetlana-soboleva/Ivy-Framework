@@ -19,7 +19,7 @@ export const DialogWidget: React.FC<DialogWidgetProps> = ({
     ...getWidth(width),
   };
   return (
-    <Dialog open={true} onOpenChange={_ => eventHandler('OnClose', id, [])}>
+    <Dialog open={true} onOpenChange={() => eventHandler('OnClose', id, [])}>
       <DialogContent style={styles}>{children}</DialogContent>
     </Dialog>
   );
