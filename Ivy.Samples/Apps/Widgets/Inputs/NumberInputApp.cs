@@ -72,10 +72,11 @@ public class NumberInputApp : SampleBase
 
                // Show Arrows Examples:
                | Text.H2("Show Arrows Examples")
-               | (Layout.Grid().Columns(3)
+               | (Layout.Grid().Columns(4)
                   | Text.InlineCode("Default (No Arrows)")
                   | Text.InlineCode("With Arrows")
                   | Text.InlineCode("With Arrows (Disabled)")
+                  | Text.InlineCode("With Arrows + Invalid")
 
                   | intValue.ToNumberInput()
                   | intValue
@@ -85,6 +86,10 @@ public class NumberInputApp : SampleBase
                     .ToNumberInput()
                     .ShowArrows()
                     .Disabled()
+                  | intValue
+                    .ToNumberInput()
+                    .ShowArrows()
+                    .Invalid("Invalid value")
                )
 
                // Events: 
