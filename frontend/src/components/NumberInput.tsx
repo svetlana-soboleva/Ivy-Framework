@@ -181,7 +181,6 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         );
 
         if (newValue !== null && newValue !== dragState.lastValue) {
-          onChange?.(newValue);
           setDisplayValue(formatValue(newValue));
           setDragState((prev) =>
             prev ? { ...prev, lastValue: newValue } : null
@@ -190,6 +189,10 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       };
 
       const handleMouseUp = () => {
+        // Call onChange only when mouse is released
+        if (dragState && dragState.lastValue !== dragState.startValue) {
+          onChange?.(dragState.lastValue);
+        }
         setDragState(null);
         document.body.style.cursor = "";
       };
