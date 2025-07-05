@@ -40,9 +40,8 @@ public static class ChromeSettingsExtensions
         return settings with { DefaultAppId = descriptor.Id };
     }
     public static ChromeSettings Navigation(this ChromeSettings settings, ChromeNavigation navigation) => settings with { Navigation = navigation };
-    public static ChromeSettings UseTabs(this ChromeSettings settings) => settings with { Navigation = ChromeNavigation.Tabs };
+    public static ChromeSettings UseTabs(this ChromeSettings settings, bool preventDuplicates = false) => settings with { Navigation = ChromeNavigation.Tabs, PreventTabDuplicates = preventDuplicates };
     public static ChromeSettings UsePages(this ChromeSettings settings) => settings with { Navigation = ChromeNavigation.Pages };
-    public static ChromeSettings PreventTabDuplicates(this ChromeSettings settings, bool preventDuplicates = true) => settings with { PreventTabDuplicates = preventDuplicates };
 }
 
 [Signal(BroadcastType.Chrome)]
