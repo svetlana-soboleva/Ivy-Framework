@@ -110,29 +110,33 @@ const SliderVariant = memo(
 
 SliderVariant.displayName = 'SliderVariant';
 
-const NumberVariant = memo(({
-  placeholder = "",
-  value,
-  min = 0,
-  max = 100,
-  step = 1,
-  formatStyle = 'Decimal',
-  precision = 2,
-  disabled = false,
-  invalid,
-  nullable = false,
-  onValueChange,
-  currency,
-  showArrows = false
-}: NumberInputBaseProps) => {
-  const formatConfig = useMemo(() => ({
-    style: formatStyleMap[formatStyle],
-    minimumFractionDigits: 0,
-    maximumFractionDigits: precision,
-    useGrouping: true,
-    notation: 'standard' as const,
-    currency: currency || undefined
-  }), [currency, formatStyle, precision]);
+const NumberVariant = memo(
+  ({
+    placeholder = '',
+    value,
+    min = 0,
+    max = 100,
+    step = 1,
+    formatStyle = 'Decimal',
+    precision = 2,
+    disabled = false,
+    invalid,
+    nullable = false,
+    onValueChange,
+    currency,
+    showArrows = false,
+  }: NumberInputBaseProps) => {
+    const formatConfig = useMemo(
+      () => ({
+        style: formatStyleMap[formatStyle],
+        minimumFractionDigits: 0,
+        maximumFractionDigits: precision,
+        useGrouping: true,
+        notation: 'standard' as const,
+        currency: currency || undefined,
+      }),
+      [currency, formatStyle, precision]
+    );
 
     const handleNumberChange = useCallback(
       (newValue: number | null) => {
@@ -146,35 +150,32 @@ const NumberVariant = memo(({
       [onValueChange, nullable]
     );
 
-  return (
-    <div className="relative">
-      <NumberInput 
-        min={min}
-        max={max}
-        step={step}
-        format={formatConfig}
-        placeholder={placeholder}
-        value={value}
-        disabled={disabled}
-        onChange={handleNumberChange}
-        className={cn(
-          invalid && inputStyles.invalid,
-          invalid && "pr-8"
+    return (
+      <div className="relative">
+        <NumberInput
+          min={min}
+          max={max}
+          step={step}
+          format={formatConfig}
+          placeholder={placeholder}
+          value={value}
+          disabled={disabled}
+          onChange={handleNumberChange}
+          className={cn(invalid && inputStyles.invalid, invalid && 'pr-8')}
+          nullable={nullable}
+          showArrows={showArrows}
+        />
+        {invalid && (
+          <div
+            className={cn('absolute top-2', showArrows ? 'right-8' : 'right-2')}
+          >
+            <InvalidIcon message={invalid} />
+          </div>
         )}
-        nullable={nullable}
-        showArrows={showArrows}
-      />
-      {invalid && (
-        <div className={cn(
-          "absolute top-2",
-          showArrows ? "right-8" : "right-2"
-        )}>
-          <InvalidIcon message={invalid} />
-        </div>
-      )}
-    </div>
-  );
-});
+      </div>
+    );
+  }
+);
 
 NumberVariant.displayName = 'NumberVariant';
 
@@ -208,11 +209,24 @@ export const NumberInputWidget = memo(
       [eventHandler, id, props.min, props.max]
     );
 
-  return variant === "Slider" ? (
-    <SliderVariant id={id} {...props} value={normalizedValue} onValueChange={handleChange} />
-  ) : (
-    <NumberVariant id={id} {...props} value={normalizedValue} nullable={nullable} onValueChange={handleChange} showArrows={props.showArrows} />
-  );
-});
+    return variant === 'Slider' ? (
+      <SliderVariant
+        id={id}
+        {...props}
+        value={normalizedValue}
+        onValueChange={handleChange}
+      />
+    ) : (
+      <NumberVariant
+        id={id}
+        {...props}
+        value={normalizedValue}
+        nullable={nullable}
+        onValueChange={handleChange}
+        showArrows={props.showArrows}
+      />
+    );
+  }
+);
 
 NumberInputWidget.displayName = 'NumberInputWidget';
