@@ -3,7 +3,7 @@ import React from 'react';
 
 interface ColorInputWidgetProps {
   id: string;
-  value: any;
+  value: string;
 }
 
 export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
