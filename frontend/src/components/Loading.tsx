@@ -13,7 +13,7 @@ const CELLS_TO_MUTATE_PER_STEP = 2;
 const MUTATION_STEPS_FORWARD = 6;
 const PAUSE_DURATION_MS = 1000;
 
-export function Loading({}: {}) {
+export function Loading() {
   const initialMatrix = useMemo(
     () => [
       [2, 0, 0],
