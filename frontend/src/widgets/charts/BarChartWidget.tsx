@@ -38,12 +38,15 @@ import {
   generateLegendProps,
 } from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
-import { LayoutType, StackOffsetType } from 'recharts/types/util/types';
-import { camelCase } from 'lodash';
+import { StackOffsetType } from 'recharts/types/util/types';
+
+interface BarChartData {
+  [key: string]: string | number;
+}
 
 interface BarChartWidgetProps {
   id: string;
-  data: any;
+  data: BarChartData[];
   width?: string;
   height?: string;
   bars?: ExtendedBarProps[];
@@ -91,13 +94,13 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   };
 
   const chartConfig = {} satisfies ChartConfig;
-  const [colorGenerator, _] = getColorGenerator(colorScheme);
+  const [colorGenerator] = getColorGenerator(colorScheme);
 
   return (
     <ChartContainer config={chartConfig} style={styles} className="mt-4">
       <BarChart
         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-        layout={camelCase(layout) as LayoutType}
+        layout={layout}
         accessibilityLayer
         data={data}
         stackOffset={stackOffset}
@@ -120,12 +123,15 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
 
         {/* {legend && <ChartLegend {...generateLegendProps(legend)} content={<ChartLegendContent />} />}         */}
 
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceAreas?.map(({ ref, ...props }, index) => (
           <ReferenceArea key={`refArea${index}`} {...props} />
         ))}
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceLines?.map(({ ref, ...props }, index) => (
           <ReferenceLine key={`refLine${index}`} {...props} />
         ))}
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceDots?.map(({ ref, ...props }, index) => (
           <ReferenceDot key={`refDot${index}`} {...props} />
         ))}
