@@ -44,7 +44,13 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
     [Prop] public NumberFormatStyle FormatStyle { get; set; }
     [Prop] public string? Currency { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [];
+    public Type[] SupportedStateTypes() => [
+        typeof(int), typeof(int?),
+        typeof(long), typeof(long?),
+        typeof(float), typeof(float?),
+        typeof(double), typeof(double?),
+        typeof(decimal), typeof(decimal?)
+    ];
 }
 
 public record NumberInput<TNumber> : NumberInputBase, IInput<TNumber>, IAnyNumberInput
