@@ -25,11 +25,11 @@ public class NumberInputApp : SampleBase
                | Text.H2("Variants")
                | (Layout.Grid().Columns(6)
                   | null!
-                  | Text.Block("Null")
-                  | Text.Block("With Value")
-                  | Text.Block("Disabled")
-                  | Text.Block("Invalid")
-                  | Text.Block("With Arrows")
+                  | Text.InlineCode("Null")
+                  | Text.InlineCode("With Value")
+                  | Text.InlineCode("Disabled")
+                  | Text.InlineCode("Invalid")
+                  | Text.InlineCode("With Arrows")
 
                   | Text.InlineCode("ToNumberInput()")
                   | nullIntValue
