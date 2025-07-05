@@ -41,6 +41,10 @@ export const DropDownMenuWidget: React.FC<DropDownMenuWidgetProps> = ({
   sideOffset = 8,
   alignOffset = 0,
 }) => {
+  const eventHandler = useEventHandler();
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   if (!slots?.Trigger) {
     return (
       <div className="text-red-500">
@@ -48,10 +52,6 @@ export const DropDownMenuWidget: React.FC<DropDownMenuWidgetProps> = ({
       </div>
     );
   }
-
-  const eventHandler = useEventHandler();
-  const [open, setOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const onItemClick = (item: MenuItem) => {
     if (!item.tag) return;
