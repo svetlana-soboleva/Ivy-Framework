@@ -83,7 +83,7 @@ export function Loading({}: {}) {
         );
 
         const indicesMutatedThisStep = new Set<number>();
-        let pickableIndices = [...availableForMutationThisStep];
+        const pickableIndices = [...availableForMutationThisStep];
 
         while (
           indicesMutatedThisStep.size < cellsToMutateCount &&
