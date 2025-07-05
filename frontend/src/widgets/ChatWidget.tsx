@@ -51,7 +51,6 @@ interface ChatWidgetProps {
   width?: string;
   height?: string;
 }
-1;
 
 export const ChatWidget: React.FC<ChatWidgetProps> = ({
   id,
@@ -65,7 +64,8 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
   const messageWidgets = React.Children.toArray(children).filter(
     child =>
       React.isValidElement(child) &&
-      (child.type as any)?.displayName === 'ChatMessageWidget'
+      (child.type as React.ComponentType<unknown>)?.displayName ===
+        'ChatMessageWidget'
   );
 
   const [input, setInput] = useState('');
@@ -119,9 +119,9 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
   );
 };
 
-interface ChatLoadingWidgetProps {}
+type ChatLoadingWidgetProps = Record<never, never>;
 
-export const ChatLoadingWidget: React.FC<ChatLoadingWidgetProps> = ({}) => {
+export const ChatLoadingWidget: React.FC<ChatLoadingWidgetProps> = () => {
   return <MessageLoading />;
 };
 
