@@ -15,21 +15,23 @@ public class SimpleNumericValueDemo : ViewBase
     {
         var value = UseState(0);
         return Layout.Horizontal() 
-           | new NumberInput<double>(value)
-             .Min(-10)
-             .Max(10);
+                | new NumberInput<double>(value)
+                     .Min(-10)
+                     .Max(10);
     }
 }
 ```
 
 ## Variants
 
-NumberInputs come in several variants to suit different use cases
+`NumberInput`s come in several variants to suit different use cases. 
 
 ### Slider
 
-This variant helps create a slider that changes the value as the slider is pulled.
+This variant helps create a slider that changes the value as the slider is pulled to the right.
 This creates the `NumberInputs.Slider` variant.
+
+The following demo shows how a slider can be used to give a visual clue. 
 
 ```csharp demo-below
 public class NumberSliderInput : ViewBase 
@@ -39,18 +41,17 @@ public class NumberSliderInput : ViewBase
         var tapes = UseState(1);
         var cart = UseState("");
         return Layout.Horizontal()
-            | Text.Block("Tapes")
-            | new NumberInput<int>(
-                tapes.Value,
-                e => {
-                        tapes.Set(e);
-                        cart.Set($"Added {tapes}m tape to your cart"); 
-                    }
-            )
-            .Min(1)
-            .Max(5)
-            .Variant(NumberInputs.Slider)
-            | Text.Block(cart);
+                | Text.Block("Tapes")
+                | new NumberInput<int>(
+                      tapes.Value,
+                      e => {
+                             tapes.Set(e);
+                             cart.Set($"Added {tapes}m tape to your cart"); 
+                     })
+                     .Min(1)
+                     .Max(5)
+                     .Variant(NumberInputs.Slider)
+                | Text.Block(cart);
     }
 }
 ```
@@ -61,6 +62,9 @@ public class NumberSliderInput : ViewBase
 To enable users to enter money amounts, this variant should be used. The extension function `ToMoneyInput`
 should be used to create this variant. This is the idiomatic way to use Ivy.
 
+The following demo uses `NumberInputs.Number` with `NumberFormatStyle.Currency` to create 
+`NumberInput`s that can take money inputs. `ToMoneyInput` hides all these complexities. 
+
 ```csharp demo-below
 public class MoneyInputDemo : ViewBase 
 {
@@ -69,12 +73,13 @@ public class MoneyInputDemo : ViewBase
         var moneyInUSD = UseState<decimal>(0.00M);
         var moneyInGBP = UseState<decimal>(0.00M);
         var moneyInEUR = UseState<decimal>(0.00M);
-        
+
+        // Currency Conversion Rates
         var euroToUSD = 1.80M;
         var euroToGBP = 0.86M;
         
         return Layout.Vertical()
-                | Text.H2("Simple Currency Converter")
+                | Text.H3("Simple Currency Converter")
                 | Text.Label("Enter EUR amount:")
                 | new NumberInput<decimal>(
                     moneyInEUR.Value,
@@ -87,8 +92,6 @@ public class MoneyInputDemo : ViewBase
                 .FormatStyle(NumberFormatStyle.Currency)
                 .Currency("EUR")
                 .Placeholder("€0.00")
-                .Min(1)
-                .Max(10000)
                     
                 | Text.Label("USD:")
                 | moneyInUSD.ToMoneyInput()
@@ -117,7 +120,7 @@ public class InvalidDemo : ViewBase
 {
     public override object? Build()
     {
-        var num = UseState<double>(3.14);
+        var num = UseState<double>(0);
         return Layout.Vertical()
                 | Text.Small("The value should be less than 3.1")
                 | num.ToNumberInput()
@@ -128,7 +131,7 @@ public class InvalidDemo : ViewBase
 
 ### Disabled
 
-To disable a number input this style should be used. This can be used via the extension function `Disabled`.
+To disable a `NumberInput` this style should be used. This can be used via the extension function `Disabled`.
 
 ```csharp demo-below
 public class DisabledDemo : ViewBase
@@ -137,17 +140,44 @@ public class DisabledDemo : ViewBase
     {
         var num = UseState(3.14);
         return Layout.Vertical()
-            | num.ToNumberInput().Disabled();
+                | num.ToNumberInput().Disabled();
+    }
+}
+```
+
+### Precision and Step 
+
+To set the precision of a `NumberInput` this style should be used. This can be used via the extension function
+`Precision`. To customize the amount by which the value of a `NumberInput` is changed can be set by `Step`. 
+
+The following demo shows these two in action. 
+
+
+
+```csharp demo-below
+public class MoneyPrecisionDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var precValue = UseState(0.50);
+        return Layout.Horizontal() 
+                | Text.Label("Min 0, Max 100, Step 0.5, Precision 2")
+                | new NumberInput<double>(precValue)
+                     .Min(0.0)
+                     .Max(100.0)
+                     .Step(0.5)
+                     .Precision(2)
+                     .FormatStyle(NumberFormatStyle.Currency)
+                     .Currency("USD");
     }
 }
 ```
 
 ### FormatStyle
 
-There are three different kinds of formats that a number input can have. The following shows these in action.
+There are three different kinds of formats that a `NumberInput` can have. The following shows these in action.
 
 ```csharp demo-below
-
 public class FormatStyleDemos : ViewBase
 {
     public override object? Build()
@@ -157,35 +187,17 @@ public class FormatStyleDemos : ViewBase
         var passingPercentage = UseState(0.35);
         
         return Layout.Vertical()
-            | num.ToNumberInput().FormatStyle(NumberFormatStyle.Decimal)
-            | amount.ToNumberInput().FormatStyle(NumberFormatStyle.Currency).Currency("GBP")
-            | passingPercentage.ToNumberInput(variant: NumberInputs.Number).FormatStyle(NumberFormatStyle.Percent);
+                | num.ToNumberInput().FormatStyle(NumberFormatStyle.Decimal)
+                | amount.ToNumberInput().FormatStyle(NumberFormatStyle.Currency).Currency("GBP")
+                | passingPercentage.ToNumberInput().FormatStyle(NumberFormatStyle.Percent);
     }
 }
 
 ```
 
-### Currency
-
-```csharp demo-below
-public class MoneyPrecisionDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var precValue = UseState(0.50);
-      return Layout.Horizontal() 
-         |    new NumberInput<double>(precValue)
-              .Min(0.0)
-              .Max(100.0)
-              .Step(0.5)
-              .Precision(2)
-              .FormatStyle(NumberFormatStyle.Currency)
-              .Currency("USD");
-    }
-}
-```
 
 ## Event Handling
+
 NumberInputs can handle change and blur events:
 
 ```csharp
@@ -204,14 +216,48 @@ new NumberInput<int>(onChangedState.Value, e =>
 
 ## Examples
 
-### Advanced Usage
+### Simple Grocery App 
+The following shows a realistic example of how several `NumberInput`s can be used.
 
-```csharp
-var intValue = UseState(12345);
-intValue.ToNumberInput().Placeholder("Enter a number")
-    .Min(0)
-    .Max(10000)
-    .Step(1)
-    .Precision(0)
-    .FormatStyle(NumberFormatStyle.Decimal);
-``` 
+```csharp demo-tabs
+public class GroceryAppDemo : ViewBase
+{
+ 
+    public override object? Build()
+    {
+        var eggs = UseState(0);
+        var breads = UseState(0);
+        var eggCost = 3.45;
+        var breadCost = 6.13;
+        return Layout.Vertical()
+                | (Layout.Horizontal() 
+                   | Text.Label("Egg").Width(10)
+                   | eggs.ToNumberInput()
+                         .Min(0)
+                         .Max(12)
+                         .Width(10)
+                   | Text.Html("<i>Maximum 12</i>"))  
+        
+                | (Layout.Horizontal()
+                   | Text.Label("Bread").Width(10)
+                   | breads.ToNumberInput()
+                              .Min(0)
+                              .Max(5)
+                              .Width(10)
+                   | Text.Html("<i>Maximum 5</i>"))
+                | Text.Large($"{eggs} eggs and {breads} breads")
+                | (Layout.Horizontal()
+                   | Text.Large("Bill : ")
+                   // Since it is disabled, no need to have an onChange event
+                   | new NumberInput<double>(eggs.Value * eggCost + breadCost * breads.Value,_ => { })
+                                     .Disabled()
+                                     .Variant(NumberInputs.Number)
+                                     .Precision(2)
+                                     .FormatStyle(NumberFormatStyle.Currency)
+                                     .Currency("EUR"));
+                   
+    }
+}
+
+```
+
