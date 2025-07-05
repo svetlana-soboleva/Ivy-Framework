@@ -33,9 +33,13 @@ import {
 } from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
 
+interface LineChartData {
+  [key: string]: string | number;
+}
+
 interface LineChartWidgetProps {
   id: string;
-  data: any;
+  data: LineChartData[];
   width?: string;
   height?: string;
   lines?: ExtendedLineProps[];
@@ -71,7 +75,7 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   };
 
   const chartConfig = {} satisfies ChartConfig;
-  const [colorGenerator, _] = getColorGenerator(colorScheme);
+  const [colorGenerator] = getColorGenerator(colorScheme);
 
   return (
     <ChartContainer config={chartConfig} style={styles} className="mt-4">
@@ -91,13 +95,15 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
         ))}
 
         {legend && <Legend {...generateLegendProps(legend)} />}
-
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceAreas?.map(({ ref, ...props }, index) => (
           <ReferenceArea key={`refArea${index}`} {...props} />
         ))}
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceLines?.map(({ ref, ...props }, index) => (
           <ReferenceLine key={`refLine${index}`} {...props} />
         ))}
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {referenceDots?.map(({ ref, ...props }, index) => (
           <ReferenceDot key={`refDot${index}`} {...props} />
         ))}

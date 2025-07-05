@@ -76,7 +76,7 @@ export const generateXAxisProps = (props: ExtendedXAxisProps) => {
     dataKey: camelCase(dataKey),
     scale: camelCase(scale) as XAxisProps['scale'],
     type: camelCase(type) as XAxisProps['type'],
-    domain: [domainStart, domainEnd],
+    domain: [domainStart, domainEnd] as [string | number, string | number],
     orientation: camelCase(orientation) as XAxisProps['orientation'],
     ...xAxisProps,
   };
@@ -101,7 +101,7 @@ export const generateYAxisProps = (props: ExtendedYAxisProps) => {
     dataKey: camelCase(dataKey),
     scale: camelCase(scale) as YAxisProps['scale'],
     type: camelCase(type) as YAxisProps['type'],
-    domain: [domainStart, domainEnd],
+    domain: [domainStart, domainEnd] as [string | number, string | number],
     orientation: camelCase(orientation) as YAxisProps['orientation'],
     ...yAxisProps,
   };
