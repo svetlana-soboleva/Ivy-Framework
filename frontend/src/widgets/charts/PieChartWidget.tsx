@@ -30,9 +30,13 @@ interface PieChartTotalProps {
   label: string;
 }
 
+interface PieChartData {
+  [key: string]: string | number;
+}
+
 interface PieChartWidgetProps {
   id: string;
-  data: any[];
+  data: PieChartData[];
   width?: string;
   height?: string;
   pies?: ExtendedPieProps[];
@@ -58,7 +62,7 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
   };
 
   const chartConfig = {} satisfies ChartConfig;
-  const [colorGenerator, _] = getColorGenerator(colorScheme);
+  const [colorGenerator] = getColorGenerator(colorScheme);
 
   return (
     <ChartContainer config={chartConfig} style={styles}>
