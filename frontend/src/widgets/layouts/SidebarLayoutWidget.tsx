@@ -7,6 +7,7 @@ import {
   SidebarHeader,
   SidebarTrigger,
   SidebarProvider,
+  SidebarInset,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
@@ -53,10 +54,10 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
             {slots?.SidebarFooter}
           </SidebarFooter>}
         </Sidebar>
-        <main className='flex-1 min-w-0 flex flex-col'>
+        <SidebarInset>
           <SidebarTrigger className='absolute z-50 ml-2 mt-3'/>
           {slots?.MainContent}
-        </main>
+        </SidebarInset>
       </SidebarProvider>
     </div>
   );
