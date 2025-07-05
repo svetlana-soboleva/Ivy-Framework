@@ -16,7 +16,8 @@ import { cpp } from '@codemirror/lang-cpp';
 
 const dbmlMode = {
   startState: () => ({}),
-  token: (stream: any, _state: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any,
+  token: (stream: any) => {
     if (stream.match(/\/\//)) {
       stream.skipToEnd();
       return 'comment';
@@ -38,11 +39,11 @@ const dbmlMode = {
       return 'attribute';
     }
 
-    if (stream.match(/[\{\}\[\]\(\),;]/)) {
+    if (stream.match(/[{}[\](),;]/)) {
       return 'bracket';
     }
 
-    if (stream.match(/[a-zA-Z_][\w\-]*/)) {
+    if (stream.match(/[a-zA-Z_][\w-]*/)) {
       return 'variableName';
     }
 
