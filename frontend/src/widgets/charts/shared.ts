@@ -40,7 +40,7 @@ const rainbowColors = [
 
 export const getColorGenerator = (
   scheme: ColorScheme
-): [(index: number) => string, JSX.Element | null] => {
+): [(index: number) => string, null] => {
   switch (scheme) {
     case 'Rainbow':
       return [
@@ -58,8 +58,8 @@ export const getColorGenerator = (
 };
 
 export interface ExtendedXAxisProps extends XAxisProps {
-  domainStart: any;
-  domainEnd: any;
+  domainStart: number | string;
+  domainEnd: number | string;
 }
 
 export const generateXAxisProps = (props: ExtendedXAxisProps) => {
@@ -83,8 +83,8 @@ export const generateXAxisProps = (props: ExtendedXAxisProps) => {
 };
 
 export interface ExtendedYAxisProps extends YAxisProps {
-  domainStart: any;
-  domainEnd: any;
+  domainStart: number | string;
+  domainEnd: number | string;
 }
 
 export const generateYAxisProps = (props: ExtendedYAxisProps) => {
@@ -108,8 +108,7 @@ export const generateYAxisProps = (props: ExtendedYAxisProps) => {
 };
 
 export const generateLegendProps = (legend: LegendProps) => {
-  const { ref, layout, align, verticalAlign, iconType, ...legendProps } =
-    legend;
+  const { layout, align, verticalAlign, iconType, ...legendProps } = legend;
   return {
     layout: camelCase(layout) as LegendProps['layout'],
     align: camelCase(align) as LegendProps['align'],
@@ -136,7 +135,6 @@ export const generateLineProps = (
   colorGenerator: (index: number) => string
 ) => {
   const {
-    ref,
     animated,
     legendType,
     stroke,
@@ -167,7 +165,7 @@ export const generateLineProps = (
   };
 };
 
-export interface ExtendedTooltipProps extends TooltipProps<any, any> {
+export interface ExtendedTooltipProps extends TooltipProps<number, string> {
   animated: boolean;
 }
 
@@ -184,7 +182,6 @@ export const generateAreaProps = (
   colorGenerator: (index: number) => string
 ) => {
   const {
-    ref,
     animated,
     legendType,
     stroke,
@@ -233,7 +230,6 @@ export const generateBarProps = (
   colorGenerator: (index: number) => string
 ) => {
   const {
-    ref,
     animated,
     legendType,
     stroke,
@@ -267,7 +263,6 @@ export interface ExtendedPieProps extends PieProps {
 
 export const generatePieProps = (props: ExtendedPieProps) => {
   const {
-    ref,
     animated,
     legendType,
     stroke,
@@ -298,15 +293,17 @@ export interface FormatterDefinitions {
 }
 
 export interface ExtendedLabelListProps
-  extends LabelListProps<any>,
+  extends LabelListProps<Record<string, unknown>>,
     FormatterDefinitions {}
 
 export const generateLabelListProps = (props: ExtendedLabelListProps) => {
-  const { ref, fill, position, dataKey, ...labelListProps } = props;
+  const { fill, position, dataKey, ...labelListProps } = props;
   const formatter = getFormatter(props);
   return {
     dataKey: camelCase(dataKey),
-    position: camelCase(position) as LabelListProps<any>['position'],
+    position: camelCase(position) as LabelListProps<
+      Record<string, unknown>
+    >['position'],
     fill: fill && `var(--${fill.toLowerCase()})`,
     formatter,
     ...labelListProps,
@@ -315,7 +312,7 @@ export const generateLabelListProps = (props: ExtendedLabelListProps) => {
 
 export const getFormatter = (defs: FormatterDefinitions) => {
   const { numberFormat } = defs;
-  return (value: any) => {
+  return (value: unknown) => {
     const dataFormatter = new DataFormatter();
     if (value === null || value === undefined) {
       return '';
