@@ -1,6 +1,6 @@
 export const inputStyles = {
   invalid:
-    'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500',
+    'bg-destructive border-destructive text-destructive-foreground placeholder-destructive-foreground focus:ring-destructive focus:border-destructive',
 };
 
 export const getWidth = (width?: string): React.CSSProperties => {
@@ -18,7 +18,7 @@ export const getWidth = (width?: string): React.CSSProperties => {
 const _getWantedWidth = (width?: string): React.CSSProperties => {
   if (!width) return {};
   const [sizeType, value] = width.split(':');
-  switch (sizeType.toLowerCase()) {
+    switch (sizeType.toLowerCase()) {
     case 'units':
       return { width: `${parseFloat(value) * 0.25}rem` };
     case 'px':
