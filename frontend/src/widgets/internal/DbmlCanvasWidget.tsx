@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, ReactNode } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -11,6 +11,7 @@ import ReactFlow, {
   Position,
   MarkerType,
   Handle,
+  NodeProps,
 } from 'reactflow';
 import dagre from 'dagre';
 import 'reactflow/dist/style.css';
@@ -33,11 +34,90 @@ interface DbmlError {
   snippet?: string;
 }
 
+interface DatabaseSchemaNodeProps {
+  children: ReactNode;
+  selected?: boolean;
+  className?: string;
+}
+
+interface DatabaseSchemaNodeHeaderProps {
+  children: ReactNode;
+}
+
+interface DatabaseSchemaNodeBodyProps {
+  children: ReactNode;
+}
+
+interface DatabaseSchemaTableRowProps {
+  children: ReactNode;
+}
+
+interface DatabaseSchemaTableCellProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface LabeledHandleProps {
+  id: string;
+  title: string;
+  type: string;
+  position: string;
+  className?: string;
+  handleClassName?: string;
+  labelClassName?: string;
+}
+
+interface DbmlField {
+  name: string;
+  type: string;
+  pk: boolean;
+  isSource: boolean;
+  isTarget: boolean;
+  nullable: boolean;
+}
+
+interface DbmlTableData {
+  label: string;
+  fields: DbmlField[];
+}
+
+interface DbmlTableNodeProps extends NodeProps<DbmlTableData> {
+  data: DbmlTableData;
+  selected: boolean;
+}
+
+interface DbmlRef {
+  endpoints: Array<{
+    tableName: string;
+    fieldNames: string[];
+  }>;
+}
+
+interface DbmlTable {
+  name: string;
+  fields: Array<{
+    name: string;
+    type: { type_name: string };
+    pk: boolean;
+    not_null: boolean;
+  }>;
+}
+
+interface DbmlParseError {
+  diags: Array<{
+    message: string;
+    location?: {
+      start?: { line: number; col: number };
+      end?: { line: number; col: number };
+    };
+  }>;
+}
+
 export const DatabaseSchemaNode = ({
   children,
   selected,
   className = '',
-}: any) => {
+}: DatabaseSchemaNodeProps) => {
   return (
     <div
       className={`rounded-md border bg-white shadow-sm ${selected ? 'border-blue-500' : 'border-gray-200'} ${className}`}
@@ -47,7 +127,9 @@ export const DatabaseSchemaNode = ({
   );
 };
 
-export const DatabaseSchemaNodeHeader = ({ children }: any) => {
+export const DatabaseSchemaNodeHeader = ({
+  children,
+}: DatabaseSchemaNodeHeaderProps) => {
   return (
     <div className="border-b border-gray-200 px-4 py-2 font-semibold">
       {children}
@@ -55,17 +137,24 @@ export const DatabaseSchemaNodeHeader = ({ children }: any) => {
   );
 };
 
-export const DatabaseSchemaNodeBody = ({ children }: any) => {
+export const DatabaseSchemaNodeBody = ({
+  children,
+}: DatabaseSchemaNodeBodyProps) => {
   return <div className="px-4 py-2">{children}</div>;
 };
 
-export const DatabaseSchemaTableRow = ({ children }: any) => {
+export const DatabaseSchemaTableRow = ({
+  children,
+}: DatabaseSchemaTableRowProps) => {
   return (
     <div className="flex items-center justify-between py-1">{children}</div>
   );
 };
 
-export const DatabaseSchemaTableCell = ({ children, className = '' }: any) => {
+export const DatabaseSchemaTableCell = ({
+  children,
+  className = '',
+}: DatabaseSchemaTableCellProps) => {
   return <div className={`flex items-center ${className}`}>{children}</div>;
 };
 
@@ -77,7 +166,7 @@ export const LabeledHandle = ({
   className = '',
   handleClassName = '',
   labelClassName = '',
-}: any) => {
+}: LabeledHandleProps) => {
   return (
     <div className={`flex items-center ${className}`}>
       <div
@@ -92,12 +181,12 @@ export const LabeledHandle = ({
   );
 };
 
-const DbmlTableNode: React.FC<any> = ({ data, selected }) => {
+const DbmlTableNode: React.FC<DbmlTableNodeProps> = ({ data, selected }) => {
   return (
     <DatabaseSchemaNode selected={selected}>
       <DatabaseSchemaNodeHeader>{data.label}</DatabaseSchemaNodeHeader>
       <DatabaseSchemaNodeBody>
-        {data.fields.map((field: any) => (
+        {data.fields.map((field: DbmlField) => (
           <DatabaseSchemaTableRow key={field.name}>
             {field.isTarget && (
               <Handle
@@ -229,8 +318,11 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({
       }
 
       // First, collect all relationships to mark fields that are part of relationships
-      const relationships = new Map();
-      parsed.schemas[0].refs.forEach((ref: any) => {
+      const relationships = new Map<
+        string,
+        { sources: Set<string>; targets: Set<string> }
+      >();
+      parsed.schemas[0].refs.forEach((ref: DbmlRef) => {
         const sourceTable = ref.endpoints[0].tableName;
         const targetTable = ref.endpoints[1].tableName;
         const sourceField = ref.endpoints[0].fieldNames[0];
@@ -249,13 +341,21 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({
           });
         }
 
-        relationships.get(sourceTable).sources.add(sourceField);
-        relationships.get(targetTable).targets.add(targetField);
+        const sourceTableRelations = relationships.get(sourceTable);
+        const targetTableRelations = relationships.get(targetTable);
+        if (!sourceTableRelations) {
+          console.error(`Source table relations not found for: ${sourceTable}`);
+        }
+        if (!targetTableRelations) {
+          console.error(`Target table relations not found for: ${targetTable}`);
+        }
+        sourceTableRelations!.sources.add(sourceField);
+        targetTableRelations!.targets.add(targetField);
       });
 
       // Convert tables to nodes (without positions first)
       const initialNodes: Node[] = parsed.schemas[0].tables.map(
-        (table: any) => {
+        (table: DbmlTable) => {
           const tableRelations = relationships.get(table.name) || {
             sources: new Set(),
             targets: new Set(),
@@ -267,7 +367,7 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({
             position: { x: 0, y: 0 }, // Initial position will be updated by dagre
             data: {
               label: table.name,
-              fields: table.fields.map((field: any) => ({
+              fields: table.fields.map((field: DbmlTable['fields'][0]) => ({
                 name: field.name,
                 type: field.type.type_name,
                 pk: field.pk || false,
@@ -282,7 +382,7 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({
 
       // Create edges
       const initialEdges: Edge[] = parsed.schemas[0].refs.map(
-        (ref: any, index: number) => ({
+        (ref: DbmlRef, index: number) => ({
           id: `edge-${index}`,
           source: ref.endpoints[0].tableName,
           target: ref.endpoints[1].tableName,
@@ -310,8 +410,8 @@ export const DbmlCanvasWidget: React.FC<DbmlCanvasWidgetProps> = ({
 
       setNodes(layoutedNodes);
       setEdges(layoutedEdges);
-    } catch (errors: any) {
-      const error = errors.diags[0];
+    } catch (errors: unknown) {
+      const error = (errors as DbmlParseError).diags[0];
 
       console.error('Failed to parse DBML:', error);
 
