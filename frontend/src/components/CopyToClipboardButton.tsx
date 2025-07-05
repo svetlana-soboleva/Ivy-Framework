@@ -9,8 +9,8 @@ const CopyToClipboardButton = ({ textToCopy = '', label = '' }) => {
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      //ignore
+    } catch (err: unknown) {
+      console.error(err);
     }
   };
 
