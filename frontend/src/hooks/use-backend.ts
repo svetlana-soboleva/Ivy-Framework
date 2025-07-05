@@ -85,7 +85,7 @@ export const useBackend = () => {
           return;
         }
       } catch (error) {
-        //ignore
+        console.error(error);
         return;
       }
       console.log(xml);
