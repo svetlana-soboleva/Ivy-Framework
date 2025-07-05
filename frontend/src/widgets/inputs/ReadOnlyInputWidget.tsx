@@ -10,17 +10,18 @@ interface ReadOnlyInputWidgetProps {
 export const ReadOnlyInputWidget: React.FC<ReadOnlyInputWidgetProps> = ({
   id,
   value,
-  showCopyButton = true
+  showCopyButton = true,
 }) => {
   return (
-    <div key={id} className='text-sm text-gray-500 flex flex-row items-center w-full'>
-      <div className='flex-1'>
+    <div
+      key={id}
+      className="text-sm text-gray-500 flex flex-row items-center w-full"
+    >
+      <div className="flex-1">
         {value && value}
         {!value && '-'}
       </div>
-      {showCopyButton && 
-       <CopyToClipboardButton textToCopy={value} label=""/>
-      }
+      {showCopyButton && <CopyToClipboardButton textToCopy={value} label="" />}
     </div>
   );
 };

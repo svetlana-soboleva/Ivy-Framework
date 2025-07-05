@@ -42,6 +42,7 @@ npm run lint:fix
 ### Pre-commit Hooks
 
 The project uses Git pre-commit hooks to automatically:
+
 - Run ESLint with auto-fix on staged files
 - Format staged files with Prettier
 - Block commits if any issues remain
@@ -135,12 +136,12 @@ Tests are automatically run in GitHub Actions on push to main/master branches an
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Check for linting issues |
-| `npm run lint:fix` | Fix linting issues automatically |
-| `npm run format` | Format all files with Prettier |
+| Script                 | Description                           |
+| ---------------------- | ------------------------------------- |
+| `npm run dev`          | Start development server              |
+| `npm run build`        | Build for production                  |
+| `npm run preview`      | Preview production build              |
+| `npm run lint`         | Check for linting issues              |
+| `npm run lint:fix`     | Fix linting issues automatically      |
+| `npm run format`       | Format all files with Prettier        |
 | `npm run format:check` | Check if files are properly formatted |

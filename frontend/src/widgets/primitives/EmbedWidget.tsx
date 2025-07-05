@@ -34,7 +34,11 @@ interface PinterestEmbedProps {
   url: string;
 }
 
-const YouTubeEmbed: React.FC<YouTubeEmbedProps> = ({ url, width = '100%', height = '100%' }) => {
+const YouTubeEmbed: React.FC<YouTubeEmbedProps> = ({
+  url,
+  width = '100%',
+  height = '100%',
+}) => {
   const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const YouTubeEmbed: React.FC<YouTubeEmbedProps> = ({ url, width = '100%', height
       if (match) return match[1];
       match = ytUrl.match(/youtube\.com\/embed\/([^?]+)/);
       if (match) return match[1];
-      
+
       return null;
     };
 
@@ -89,21 +93,26 @@ const TwitterEmbed: React.FC<TwitterEmbedProps> = ({ url }) => {
 
   return (
     <div className="twitter-embed">
-      <blockquote 
-        className="twitter-tweet" 
-        data-theme="light"
-        data-dnt="true"
-      >
+      <blockquote className="twitter-tweet" data-theme="light" data-dnt="true">
         <a href={url}></a>
       </blockquote>
-      <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
+      <script
+        async
+        src="https://platform.twitter.com/widgets.js"
+        charSet="utf-8"
+      ></script>
     </div>
   );
 };
 
 const FacebookEmbed: React.FC<FacebookEmbedProps> = ({ url }) => {
   return (
-    <div className="fb-post" data-href={url} data-width="auto" data-show-text="true">
+    <div
+      className="fb-post"
+      data-href={url}
+      data-width="auto"
+      data-show-text="true"
+    >
       <blockquote cite={url} className="fb-xfbml-parse-ignore">
         <a href={url}>View on Facebook</a>
       </blockquote>
@@ -160,11 +169,7 @@ const TikTokEmbed: React.FC<TikTokEmbedProps> = ({ url }) => {
 
   return (
     <div className="tiktok-embed">
-      <blockquote 
-        className="tiktok-embed" 
-        cite={url}
-        data-video-id={videoId}
-      >
+      <blockquote className="tiktok-embed" cite={url} data-video-id={videoId}>
         <section></section>
       </blockquote>
       <script async src="https://www.tiktok.com/embed.js"></script>
@@ -190,11 +195,7 @@ const LinkedInEmbed: React.FC<LinkedInEmbedProps> = ({ url }) => {
 const PinterestEmbed: React.FC<PinterestEmbedProps> = ({ url }) => {
   return (
     <div className="pinterest-embed">
-      <a 
-        data-pin-do="embedPin" 
-        data-pin-width="medium"
-        href={url}
-      >
+      <a data-pin-do="embedPin" data-pin-width="medium" href={url}>
         View on Pinterest
       </a>
       <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
@@ -221,7 +222,7 @@ const EmbedWidget: React.FC<EmbedWidgetProps> = ({ url }) => {
         <div className="absolute top-0 left-0 w-full h-full">
           <YouTubeEmbed url={url} width="100%" height="100%" />
         </div>
-      </div>  
+      </div>
     );
   }
   if (url.includes('linkedin.com')) {

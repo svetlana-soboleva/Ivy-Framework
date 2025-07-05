@@ -7,7 +7,7 @@ interface JsonWidgetProps {
 }
 
 const JsonWidget: React.FC<JsonWidgetProps> = ({ id, content }) => (
-    <JsonRenderer data={content} key={id} />
+  <JsonRenderer data={content} key={id} />
 );
 
 export default JsonWidget;

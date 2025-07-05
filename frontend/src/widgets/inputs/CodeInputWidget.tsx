@@ -10,8 +10,8 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
-import "./CodeInputWidget.css";
-import { StreamLanguage } from "@codemirror/language";
+import './CodeInputWidget.css';
+import { StreamLanguage } from '@codemirror/language';
 import { cpp } from '@codemirror/lang-cpp';
 
 const dbmlMode = {
@@ -19,36 +19,36 @@ const dbmlMode = {
   token: (stream: any, _state: any) => {
     if (stream.match(/\/\//)) {
       stream.skipToEnd();
-      return "comment";
+      return 'comment';
     }
 
     if (stream.match(/"(.*?)"/) || stream.match(/'(.*?)'/)) {
-      return "string";
+      return 'string';
     }
 
     if (stream.match(/\b(Table|Ref|Enum|Project|TableGroup|Note)\b/i)) {
-      return "keyword";
+      return 'keyword';
     }
 
     if (stream.match(/\b(int|uuid|varchar|boolean|text|datetime)\b/i)) {
-      return "typeName";
+      return 'typeName';
     }
 
     if (stream.match(/\b(primary key|not null|unique|increment)\b/i)) {
-      return "attribute";
+      return 'attribute';
     }
 
     if (stream.match(/[\{\}\[\]\(\),;]/)) {
-      return "bracket";
+      return 'bracket';
     }
 
     if (stream.match(/[a-zA-Z_][\w\-]*/)) {
-      return "variableName";
+      return 'variableName';
     }
 
     stream.next();
     return null;
-  }
+  },
 };
 
 export const dbml = () => StreamLanguage.define(dbmlMode);
@@ -98,10 +98,13 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
     }
   }, [value, isFocused]);
 
-  const handleChange = useCallback((value: string) => {
-    setLocalValue(value);
-    if (events.includes('OnChange')) eventHandler('OnChange', id, [value]);
-  }, [eventHandler, id, events]);
+  const handleChange = useCallback(
+    (value: string) => {
+      setLocalValue(value);
+      if (events.includes('OnChange')) eventHandler('OnChange', id, [value]);
+    },
+    [eventHandler, id, events]
+  );
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
@@ -114,18 +117,17 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
 
   const styles: React.CSSProperties = {
     ...getWidth(width),
-    ...getHeight(height)
+    ...getHeight(height),
   };
   const extensions = useMemo(() => {
-    const lang = language ? languageExtensions[language as keyof typeof languageExtensions] : undefined;
+    const lang = language
+      ? languageExtensions[language as keyof typeof languageExtensions]
+      : undefined;
     return lang ? [lang()] : [];
   }, [language]);
 
   return (
-    <div 
-      style={styles} 
-      className="relative w-full h-full overflow-hidden"
-    >
+    <div style={styles} className="relative w-full h-full overflow-hidden">
       <CodeMirror
         value={localValue}
         extensions={extensions}
@@ -145,7 +147,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
         basicSetup={{
           lineNumbers: true,
           highlightActiveLine: true,
-          foldGutter: false
+          foldGutter: false,
         }}
       />
       {invalid && (
@@ -157,4 +159,4 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
   );
 };
 
-export default CodeInputWidget; 
+export default CodeInputWidget;

@@ -7,7 +7,7 @@ interface XmlWidgetProps {
 }
 
 const XmlWidget: React.FC<XmlWidgetProps> = ({ id, content }) => (
-    <XmlRenderer data={content} key={id} />
+  <XmlRenderer data={content} key={id} />
 );
 
 export default XmlWidget;
