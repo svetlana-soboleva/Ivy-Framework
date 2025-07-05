@@ -2,13 +2,12 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
-
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -173,7 +172,7 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile } = useSidebar()
 
     if (collapsible === "none") {
       return (
@@ -193,20 +192,16 @@ const Sidebar = React.forwardRef<
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-          <SheetContent
-            data-sidebar="sidebar"
-            data-mobile="true"
-            className="bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
-            style={
-              {
-                width: SIDEBAR_WIDTH_MOBILE,
-              } as React.CSSProperties
-            }
-            side={side}
-          />
-          <div className="flex h-full w-full flex-col">{children}</div>
-        </Sheet>
+        <div className="md:hidden">
+          {openMobile && (
+            <div
+              className="fixed inset-0 z-50 bg-sidebar p-0 text-sidebar-foreground"
+              style={{ width: SIDEBAR_WIDTH_MOBILE }}
+            >
+              {children}
+            </div>
+          )}
+        </div>
       )
     }
 
