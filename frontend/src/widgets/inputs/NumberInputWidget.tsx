@@ -123,7 +123,7 @@ const NumberVariant = memo(({
     useGrouping: true,
     notation: 'standard' as const,
     currency: currency || undefined
-  }), [formatStyle, precision]);
+  }), [currency, formatStyle, precision]);
 
   const handleNumberChange = useCallback((newValue: number | null) => {
     // If not nullable and value is null, convert to 0
