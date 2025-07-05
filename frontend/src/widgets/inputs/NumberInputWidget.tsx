@@ -153,7 +153,10 @@ const NumberVariant = memo(({
         showArrows={showArrows}
       />
       {invalid && (
-        <div className="absolute right-8 top-2">
+        <div className={cn(
+          "absolute top-2",
+          showArrows ? "right-8" : "right-2"
+        )}>
           <InvalidIcon message={invalid} />
         </div>
       )}
