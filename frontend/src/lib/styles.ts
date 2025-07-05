@@ -18,7 +18,7 @@ export const getWidth = (width?: string): React.CSSProperties => {
 const _getWantedWidth = (width?: string): React.CSSProperties => {
   if (!width) return {};
   const [sizeType, value] = width.split(':');
-    switch (sizeType.toLowerCase()) {
+  switch (sizeType.toLowerCase()) {
     case 'units':
       return { width: `${parseFloat(value) * 0.25}rem` };
     case 'px':
