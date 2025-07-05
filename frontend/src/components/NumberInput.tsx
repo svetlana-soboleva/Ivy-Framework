@@ -257,20 +257,35 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(({
         className={`${className} ${showArrows ? 'pr-14' : ''} ${!isValid ? 'border-red-500' : ''} ${dragState?.isDragging ? 'select-none' : ''}`}
         {...props}
       />
-      {nullable && value !== null && !disabled && onChange && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label="Clear"
-          onClick={() => {
-            setDisplayValue('');
-            onChange(null);
-          }}
-          className="absolute right-8 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+      {/* Right-side icon container */}
+      {(!isValid || (nullable && value !== null && !disabled && onChange)) && (
+        <div
+          className={`absolute top-1/2 -translate-y-1/2 flex items-center gap-1 ${showArrows ? 'right-14' : 'right-2'}`}
           style={{ zIndex: 2 }}
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-        </button>
+          {/* Invalid icon */}
+          {!isValid && (
+            <span className="flex items-center">
+              {/* You may want to use your InvalidIcon component here if available */}
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-500"><circle cx="12" cy="12" r="10" strokeWidth="2"/><line x1="12" y1="8" x2="12" y2="12" strokeWidth="2"/><circle cx="12" cy="16" r="1"/></svg>
+            </span>
+          )}
+          {/* Clear (X) button */}
+          {nullable && value !== null && !disabled && onChange && (
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-label="Clear"
+              onClick={() => {
+                setDisplayValue('');
+                onChange(null);
+              }}
+              className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+            >
+              <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          )}
+        </div>
       )}
       {showArrows && (
         <div className="absolute right-0 top-0 bottom-0 flex flex-col border-l">

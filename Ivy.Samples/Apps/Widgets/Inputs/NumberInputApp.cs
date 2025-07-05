@@ -18,6 +18,8 @@ public class NumberInputApp : SampleBase
         var dataBinding = CreateNumericTypeTests();
         var currencyExamples = CreateCurrencyExamples();
 
+        var nullIntInvalid = UseState<int?>();
+
         const string loremIpsumString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros";
 
         return Layout.Vertical()
@@ -72,11 +74,12 @@ public class NumberInputApp : SampleBase
 
                // Show Arrows Examples:
                | Text.H2("Show Arrows Examples")
-               | (Layout.Grid().Columns(4)
+               | (Layout.Grid().Columns(5)
                   | Text.InlineCode("Default (No Arrows)")
                   | Text.InlineCode("With Arrows")
                   | Text.InlineCode("With Arrows (Disabled)")
                   | Text.InlineCode("With Arrows + Invalid")
+                  | Text.InlineCode("With Arrows + Invalid (Nullable)")
 
                   | intValue.ToNumberInput()
                   | intValue
@@ -87,6 +90,10 @@ public class NumberInputApp : SampleBase
                     .ShowArrows()
                     .Disabled()
                   | intValue
+                    .ToNumberInput()
+                    .ShowArrows()
+                    .Invalid("Invalid value")
+                  | nullIntInvalid
                     .ToNumberInput()
                     .ShowArrows()
                     .Invalid("Invalid value")
