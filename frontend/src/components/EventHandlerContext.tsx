@@ -28,4 +28,4 @@ export const useEventHandler = (): WidgetEventHandlerType => {
   return context.eventHandler;
 };
 
-export type EventHandler = (event: string, id: string, args: any[]) => void;
+export type EventHandler = (event: string, id: string, args: unknown[]) => void;
