@@ -2,8 +2,15 @@ import React, { Suspense } from 'react';
 import { WidgetNode } from '@/types/widgets';
 import { widgetMap } from '@/widgets/widgetMap';
 
-const isLazyComponent = (component: React.ComponentType<any>): boolean => {
-  return component && (component as any).$$typeof === Symbol.for('react.lazy');
+const isLazyComponent = (
+  component:
+    | React.ComponentType<Record<string, unknown>>
+    | React.LazyExoticComponent<React.ComponentType<Record<string, unknown>>>
+): boolean => {
+  return (
+    component &&
+    (component as { $$typeof?: symbol }).$$typeof === Symbol.for('react.lazy')
+  );
 };
 
 const flattenChildren = (children: WidgetNode[]): WidgetNode[] => {
@@ -16,7 +23,9 @@ const flattenChildren = (children: WidgetNode[]): WidgetNode[] => {
 };
 
 export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
-  const Component = widgetMap[node.type] as React.ComponentType<any>;
+  const Component = widgetMap[node.type] as React.ComponentType<
+    Record<string, unknown>
+  >;
 
   if (!Component) {
     return <div>{`Unknown component type: ${node.type}`}</div>;
