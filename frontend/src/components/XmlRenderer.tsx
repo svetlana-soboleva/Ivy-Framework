@@ -71,6 +71,7 @@ export const XmlRenderer = ({ data }: XmlRendererProps) => {
 
       return convertDomToNode(xmlDoc.documentElement);
     } catch (error) {
+      console.error(error);
       return null;
     }
   };
@@ -96,7 +97,7 @@ export const XmlRenderer = ({ data }: XmlRendererProps) => {
     ));
   };
 
-  const renderNode = (node: XmlNode, path: string): JSX.Element => {
+  const renderNode = (node: XmlNode, path: string): React.ReactElement => {
     if (node.type === 'text') {
       return <span className="text-gray-800">{node.value}</span>;
     }
