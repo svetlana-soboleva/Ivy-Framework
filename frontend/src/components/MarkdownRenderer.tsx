@@ -189,11 +189,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   );
 
   const plugins = useMemo(() => {
-    const remarkPlugins: any[] = [remarkGfm, remarkGemoji];
-    if (contentFeatures.hasMath) remarkPlugins.push(remarkMath);
+    const remarkPlugins = [remarkGfm, remarkGemoji];
+    if (contentFeatures.hasMath)
+      remarkPlugins.push(remarkMath as typeof remarkGfm);
 
-    const rehypePlugins: any[] = [rehypeRaw];
-    if (contentFeatures.hasMath) rehypePlugins.push(rehypeKatex);
+    const rehypePlugins = [rehypeRaw];
+    if (contentFeatures.hasMath)
+      rehypePlugins.push(rehypeKatex as unknown as typeof rehypeRaw);
 
     return { remarkPlugins, rehypePlugins };
   }, [contentFeatures.hasMath]);
@@ -242,8 +244,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       )),
 
       // Code blocks - with memoization and optimized rendering
-      code: (props: any) => (
-        <CodeBlock {...props} hasCodeBlocks={contentFeatures.hasCodeBlocks} />
+      code: (props: React.ComponentProps<'code'>) => (
+        <CodeBlock
+          className={props.className}
+          children={props.children || ''}
+          hasCodeBlocks={contentFeatures.hasCodeBlocks}
+        />
       ),
 
       // Pre tag (for code blocks)
@@ -318,7 +324,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   return (
     <div className="flex flex-col gap-8">
       <ReactMarkdown
-        components={components as any}
+        components={
+          components as React.ComponentProps<typeof ReactMarkdown>['components']
+        }
         remarkPlugins={plugins.remarkPlugins}
         rehypePlugins={plugins.rehypePlugins}
         urlTransform={urlTransform}
