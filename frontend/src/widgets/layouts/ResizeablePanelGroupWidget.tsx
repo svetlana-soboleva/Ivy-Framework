@@ -43,7 +43,9 @@ export const ResizeablePanelGroupWidget: React.FC<
   const panelWidgets = React.Children.toArray(children).filter(
     child =>
       React.isValidElement(child) &&
-      (child.type as any)?.displayName === 'ResizeablePanelWidget'
+      typeof child.type === 'function' &&
+      (child.type as { displayName?: string })?.displayName ===
+        'ResizeablePanelWidget'
   );
 
   if (panelWidgets.length === 0)
