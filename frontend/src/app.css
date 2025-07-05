@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-scheme: light;
+}
+
 @layer base {
   :root {    
     --background: oklch(1.00 0 0);
@@ -34,6 +38,115 @@
     --sidebar-accent-foreground: oklch(0.33 0 0);
     --sidebar-border: oklch(0.94 0 0);
     --sidebar-ring: oklch(0.77 0 0);
+    /* Custom color palette with variants */
+    --black: #000000;
+    --black-foreground: #FFFFFF;
+    --black-light: #B5B5B5;
+    --black-dark: #212221;
+    --white: #FFFFFF;
+    --white-foreground: #000000;
+    --white-light: #FFFFFF;
+    --white-dark: #6B6C6B;
+    --slate: #6A7489;
+    --slate-foreground: #000000;
+    --slate-light: #CED1D7;
+    --slate-dark: #393D43;
+    --gray: #6E727F;
+    --gray-foreground: #000000;
+    --gray-light: #CFD0D4;
+    --gray-dark: #3A3D40;
+    --zinc: #717179;
+    --zinc-foreground: #FFFFFF;
+    --zinc-light: #D0D0D3;
+    --zinc-dark: #3B3C3F;
+    --neutral: #737373;
+    --neutral-foreground: #FFFFFF;
+    --neutral-light: #D0D0D0;
+    --neutral-dark: #3C3D3C;
+    --stone: #76716D;
+    --stone-foreground: #FFFFFF;
+    --stone-light: #D1D0CE;
+    --stone-dark: #3D3C3A;
+    --red: #DD5860;
+    --red-foreground: #000000;
+    --red-light: #EFC5C9;
+    --red-dark: #5D3235;
+    --orange: #DC824D;
+    --orange-foreground: #000000;
+    --orange-light: #F1D4C1;
+    --orange-dark: #5E412E;
+    --amber: #DEB145;
+    --amber-foreground: #000000;
+    --amber-light: #F3E4BA;
+    --amber-dark: #605129;
+    --yellow: #E5E04C;
+    --yellow-foreground: #000000;
+    --yellow-light: #F5F4B3;
+    --yellow-dark: #626125;
+    --lime: #AFD953;
+    --lime-foreground: #000000;
+    --lime-light: #E3F2C0;
+    --lime-dark: #4F5F2E;
+    --green: #86D26F;
+    --green-foreground: #000000;
+    --green-light: #D2EFCD;
+    --green-dark: #405D3A;
+    --emerald: #76CD94;
+    --emerald-foreground: #000000;
+    --emerald-light: #C2EEDA;
+    --emerald-dark: #355A47;
+    --teal: #5B9BA8;
+    --teal-foreground: #000000;
+    --teal-light: #BEDDE2;
+    --teal-dark: #2E4A4E;
+    --cyan: #4469C0;
+    --cyan-foreground: #FFFFFF;
+    --cyan-light: #BACDE9;
+    --cyan-dark: #293A55;
+    --sky: #373BDA;
+    --sky-foreground: #FFFFFF;
+    --sky-light: #B8BCF1;
+    --sky-dark: #25295E;
+    --blue: #381FF4;
+    --blue-foreground: #FFFFFF;
+    --blue-light: #B5ACF9;
+    --blue-dark: #231A66;
+    --indigo: #4B28E2;
+    --indigo-foreground: #FFFFFF;
+    --indigo-light: #C0B4F4;
+    --indigo-dark: #2C2161;
+    --violet: #6637D1;
+    --violet-foreground: #FFFFFF;
+    --violet-light: #CABBEF;
+    --violet-dark: #36285B;
+    --purple: #844CC0;
+    --purple-foreground: #FFFFFF;
+    --purple-light: #D4C2E9;
+    --purple-dark: #412F55;
+    --fuchsia: #A361AF;
+    --fuchsia-foreground: #000000;
+    --fuchsia-light: #DFC9E4;
+    --fuchsia-dark: #4B3750;
+    --pink: #C377A0;
+    --pink-foreground: #000000;
+    --pink-light: #EAD1DF;
+    --pink-dark: #563E4B;
+    --rose: #E48E91;
+    --rose-foreground: #000000;
+    --rose-light: #F4D8DA;
+    --rose-dark: #614647;
+    --primary: #74C997;
+    --primary-foreground: #000000;
+    --primary-light: #C2EEDA;
+    --primary-dark: #355A47;
+    --secondary: #C2CBC7;
+    --secondary-foreground: #000000;
+    --secondary-light: #EAEEEC;
+    --secondary-dark: #565B58;
+    --destructive: #DD5860;
+    --destructive-foreground: #000000;
+    --destructive-light: #EFC5C9;
+    --destructive-dark: #5D3235;
     --font-sans: Inter, sans-serif;
     --font-serif: Inter, sans-serif;
     --font-mono: IBM Plex Mono, monospace;
@@ -128,6 +241,39 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+    /* Custom color palette */
+    --color-black: #000000;
+    --color-white: #FFFFFF;
+    --color-slate: #6A7489;
+    --color-gray: #6E727F;
+    --color-zinc: #717179;
+    --color-neutral: #737373;
+    --color-stone: #76716D;
+    --color-red: #DD5860;
+    --color-orange: #DC824D;
+    --color-amber: #DEB145;
+    --color-yellow: #E5E04C;
+    --color-lime: #AFD953;
+    --color-green: #86D26F;
+    --color-emerald: #76CD94;
+    --color-teal: #5B9BA8;
+    --color-cyan: #4469C0;
+    --color-sky: #373BDA;
+    --color-blue: #381FF4;
+    --color-indigo: #4B28E2;
+    --color-violet: #6637D1;
+    --color-purple: #844CC0;
+    --color-fuchsia: #A361AF;
+    --color-pink: #C377A0;
+    --color-rose: #E48E91;
+    --color-primary: #74C997;
+    --color-secondary: #C2CBC7;
+    --color-destructive: #DD5860;
+    /* Border radius */
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
     --font-sans: var(--font-sans);
     --font-mono: var(--font-mono);
     --font-serif: var(--font-serif);
@@ -153,6 +299,29 @@
   body {
     letter-spacing: var(--tracking-normal);
   }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
 @layer base {
