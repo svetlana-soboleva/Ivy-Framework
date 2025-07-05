@@ -27,6 +27,8 @@ export const SheetWidget: React.FC<SheetWidgetProps> = ({
   id,
   width,
 }) => {
+  const eventHandler = useEventHandler();
+
   if (!slots?.Content) {
     return (
       <div className="text-red-500">
@@ -34,14 +36,13 @@ export const SheetWidget: React.FC<SheetWidgetProps> = ({
       </div>
     );
   }
-  const eventHandler = useEventHandler();
 
   const styles: React.CSSProperties = {
     ...getWidth(width),
   };
 
   return (
-    <Sheet open={true} onOpenChange={_ => eventHandler('OnClose', id, [])}>
+    <Sheet open={true} onOpenChange={() => eventHandler('OnClose', id, [])}>
       <SheetContent
         style={styles}
         className={cn('h-full flex flex-col p-0 gap-0')}
