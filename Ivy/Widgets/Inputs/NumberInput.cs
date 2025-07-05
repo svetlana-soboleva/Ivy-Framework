@@ -47,11 +47,16 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
     [Prop] public bool ShowArrows { get; set; } = false;
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [
+        // Signed numeric types
+        typeof(short), typeof(short?),
         typeof(int), typeof(int?),
         typeof(long), typeof(long?),
         typeof(float), typeof(float?),
         typeof(double), typeof(double?),
-        typeof(decimal), typeof(decimal?)
+        typeof(decimal), typeof(decimal?),
+
+        // Unsigned integer types
+        typeof(byte), typeof(byte?)
     ];
 }
 
