@@ -8,14 +8,6 @@ export interface WidgetNode {
   events: string[];
 }
 
-export interface WidgetMap {
-  [key: string]:
-    | React.ComponentType<{ [key: string]: unknown }>
-    | React.LazyExoticComponent<
-        React.ComponentType<{ [key: string]: unknown }>
-      >;
-}
-
 export type WidgetEventHandlerType = (
   eventName: string,
   widgetId: string,
