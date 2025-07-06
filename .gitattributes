@@ -21,6 +21,9 @@
 *.txt text eol=lf
 *.sh text eol=lf
 *.ps1 text eol=lf
+*.cs text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout
 *.bat text eol=crlf
