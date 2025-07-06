@@ -273,8 +273,8 @@ export const generatePieProps = (props: ExtendedPieProps) => {
     ...pieProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
-    nameKey: camelCase(nameKey),
+    dataKey: camelCase(dataKey) as string,
+    nameKey: camelCase(nameKey) as string,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
     stroke:
@@ -300,7 +300,7 @@ export const generateLabelListProps = (props: ExtendedLabelListProps) => {
   const { fill, position, dataKey, ...labelListProps } = props;
   const formatter = getFormatter(props);
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     position: camelCase(position) as LabelListProps<
       Record<string, unknown>
     >['position'],
