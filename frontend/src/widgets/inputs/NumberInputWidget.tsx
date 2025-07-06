@@ -33,6 +33,7 @@ interface NumberInputBaseProps {
   onValueChange: (value: number | null) => void;
   currency?: string | undefined;
   showArrows?: boolean;
+  'data-testid'?: string;
 }
 
 interface NumberInputWidgetProps
@@ -125,6 +126,7 @@ const NumberVariant = memo(
     onValueChange,
     currency,
     showArrows = false,
+    'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     const formatConfig = useMemo(
       () => ({
@@ -164,6 +166,7 @@ const NumberVariant = memo(
           className={cn(invalid && inputStyles.invalid, invalid && 'pr-8')}
           nullable={nullable}
           showArrows={showArrows}
+          data-testid={dataTestId}
         />
         {invalid && (
           <div
