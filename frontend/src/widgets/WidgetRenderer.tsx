@@ -37,6 +37,11 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
     events: node.events,
   };
 
+  if ('testId' in props && props.testId) {
+    props['data-testid'] = props.testId;
+    delete props.testId;
+  }
+
   const children = flattenChildren(node.children || []);
 
   // Process children, grouping by Slot widgets
