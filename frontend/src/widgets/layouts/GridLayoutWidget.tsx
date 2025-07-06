@@ -86,7 +86,11 @@ export const GridLayoutWidget: React.FC<GridLayoutWidgetProps> = ({
           columnSpan={childColumnSpan[index]}
           row={childRow[index]}
           rowSpan={childRowSpan[index]}
-          className={React.isValidElement(child) ? child.props.className : ''}
+          className={
+            React.isValidElement(child)
+              ? (child.props as { className?: string }).className
+              : ''
+          }
         >
           {child}
         </GridLayoutCell>
