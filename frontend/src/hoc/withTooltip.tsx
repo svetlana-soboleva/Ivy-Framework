@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import React, { ComponentType } from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -7,13 +7,13 @@ import {
 } from '@/components/ui/tooltip';
 
 type WithTooltipProps<P> = P &
-  JSX.IntrinsicAttributes & {
+  React.JSX.IntrinsicAttributes & {
     tooltipText?: string;
     className?: string;
     style?: React.CSSProperties;
   };
 
-function withTooltip<P extends JSX.IntrinsicAttributes>(
+function withTooltip<P extends React.JSX.IntrinsicAttributes>(
   Component: ComponentType<P>
 ) {
   return function TooltipHOC(props: WithTooltipProps<P>) {

@@ -193,7 +193,7 @@ export const generateAreaProps = (
     ...areaProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     type: camelCase(curveType) as CurveType,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
@@ -239,7 +239,7 @@ export const generateBarProps = (
     ...barProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
     stroke:
