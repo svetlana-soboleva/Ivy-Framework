@@ -75,7 +75,11 @@ public class TypeUtilsTests
     private void GetExtensionMethods_ReturnsExpected(Type baseType, Type extensionTypes, PropertyInfo propertyInfo, string expectedResult)
     {
         string result = TypeUtils.GetExtensionMethods(propertyInfo, baseType, [extensionTypes]);
-        Assert.Equal(expectedResult, result);
+        Assert.Equal(
+            // Normalize line endings for cross-platform testing
+            expectedResult.Replace("\r\n", "\n"),
+            result.Replace("\r\n", "\n")
+        );
     }
 }
 
