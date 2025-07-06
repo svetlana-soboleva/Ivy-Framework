@@ -37,12 +37,6 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
     events: node.events,
   };
 
-  // Map TestId to data-testid for HTML elements
-  if (node.props.testId) {
-    props['data-testid'] = node.props.testId;
-    delete props.testId;
-  }
-
   const children = flattenChildren(node.children || []);
 
   // Process children, grouping by Slot widgets
@@ -70,6 +64,8 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
 
   return isLazyComponent(Component) ? (
     <Suspense key={node.id}>{content}</Suspense>
+  ) : node.props.testId ? (
+    <div data-testid={node.props.testId}>{content}</div>
   ) : (
     content
   );
