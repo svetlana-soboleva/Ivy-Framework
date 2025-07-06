@@ -36,33 +36,38 @@ test.describe('Number Inputs - Variants Section', () => {
     const appFrame = await appFrameElement.contentFrame();
     expect(appFrame).not.toBeNull();
 
+    // Assert that the frame exists before using it
+    if (!appFrame) {
+      throw new Error('App frame not found');
+    }
+
     // Check that the variants section exists
     await expect(
-      appFrame!.locator('h2').filter({ hasText: 'Variants' })
+      appFrame.locator('h2').filter({ hasText: 'Variants' })
     ).toBeVisible();
 
     await expect(
-      appFrame!.getByTestId('number-input-nullable-main')
+      appFrame.getByTestId('number-input-nullable-main')
     ).toBeVisible();
-    await expect(appFrame!.getByTestId('number-input-int-main')).toBeVisible();
+    await expect(appFrame.getByTestId('number-input-int-main')).toBeVisible();
     await expect(
-      appFrame!.getByTestId('number-input-int-disabled-main')
+      appFrame.getByTestId('number-input-int-disabled-main')
     ).toBeVisible();
     await expect(
-      appFrame!.getByTestId('number-input-int-invalid-main')
+      appFrame.getByTestId('number-input-int-invalid-main')
     ).toBeVisible();
 
     await expect(
-      appFrame!.getByTestId('number-input-nullable-slider-main')
+      appFrame.getByTestId('number-input-nullable-slider-main')
     ).toBeVisible();
     await expect(
-      appFrame!.getByTestId('number-input-int-slider-main')
+      appFrame.getByTestId('number-input-int-slider-main')
     ).toBeVisible();
     await expect(
-      appFrame!.getByTestId('number-input-int-disabled-slider-main')
+      appFrame.getByTestId('number-input-int-disabled-slider-main')
     ).toBeVisible();
     await expect(
-      appFrame!.getByTestId('number-input-int-invalid-slider-main')
+      appFrame.getByTestId('number-input-int-invalid-slider-main')
     ).toBeVisible();
   });
 });
