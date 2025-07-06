@@ -80,25 +80,20 @@ const getEasing = (easing?: string) => {
 
     // Anticipate easings (with slight anticipation)
     case 'Anticipate':
-      return 'anticipate';
     case 'AnticipateOut':
-      return 'anticipateOut';
+      return 'anticipate';
 
-    // Bounce easings
+    // Bounce easings - map to valid easings
     case 'BounceIn':
-      return 'bounceIn';
     case 'BounceOut':
-      return 'bounceOut';
     case 'BounceInOut':
-      return 'bounceInOut';
+      return 'easeInOut';
 
-    // Elastic easings (with spring-like motion)
+    // Elastic easings - map to valid easings
     case 'ElasticIn':
-      return 'elasticIn';
     case 'ElasticOut':
-      return 'elasticOut';
     case 'ElasticInOut':
-      return 'elasticInOut';
+      return 'easeInOut';
 
     default:
       return 'easeInOut';

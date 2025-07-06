@@ -97,7 +97,7 @@ const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
 
 const useCursorPosition = (
   value?: string,
-  externalRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>
+  externalRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>
 ) => {
   const internalRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(
     null
@@ -129,7 +129,7 @@ const DefaultVariant: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ type, props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef);
@@ -185,7 +185,7 @@ const TextareaVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef);
@@ -242,7 +242,7 @@ const PasswordVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 }> = ({ props, onChange, onBlur, onFocus, inputRef }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [hasLastPass, setHasLastPass] = useState(false);
@@ -337,7 +337,7 @@ const SearchVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(

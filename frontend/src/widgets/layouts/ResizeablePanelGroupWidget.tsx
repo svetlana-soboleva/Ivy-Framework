@@ -59,7 +59,7 @@ export const ResizeablePanelGroupWidget: React.FC<
   return (
     <ResizablePanelGroup
       style={style}
-      direction={camelCase(direction)}
+      direction={camelCase(direction) as 'horizontal' | 'vertical'}
       className="remove-ancestor-padding"
       id={id}
     >

@@ -170,8 +170,10 @@ export const DropDownMenuWidget: React.FC<DropDownMenuWidgetProps> = ({
         <div>{slots.Trigger}</div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align={camelCase(align)}
-        side={camelCase(side)}
+        align={camelCase(align) as 'center' | 'end' | 'start' | undefined}
+        side={
+          camelCase(side) as 'top' | 'right' | 'bottom' | 'left' | undefined
+        }
         sideOffset={sideOffset}
         alignOffset={alignOffset}
       >

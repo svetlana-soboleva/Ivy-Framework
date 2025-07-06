@@ -1,4 +1,3 @@
-import { WidgetMap } from '@/types/widgets';
 import * as Widgets from '@/widgets';
 import * as Layouts from '@/widgets/layouts';
 import * as Inputs from '@/widgets/inputs';
@@ -12,7 +11,7 @@ import * as Primitives from '@/widgets/primitives';
 import React from 'react';
 import { LoadingScreen } from '@/components/LoadingScreen';
 
-export const widgetMap: WidgetMap = {
+export const widgetMap = {
   $loading: LoadingScreen,
 
   // Primitives
