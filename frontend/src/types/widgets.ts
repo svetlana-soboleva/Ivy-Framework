@@ -10,8 +10,10 @@ export interface WidgetNode {
 
 export interface WidgetMap {
   [key: string]:
-    | React.ComponentType<unknown>
-    | React.LazyExoticComponent<React.ComponentType<unknown>>;
+    | React.ComponentType<{ [key: string]: unknown }>
+    | React.LazyExoticComponent<
+        React.ComponentType<{ [key: string]: unknown }>
+      >;
 }
 
 export type WidgetEventHandlerType = (

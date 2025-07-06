@@ -39,7 +39,7 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
   const slots = children.reduce(
     (acc, child) => {
       if (child.type === 'Ivy.Slot') {
-        const slotName = child.props.name;
+        const slotName = child.props.name as string;
         acc[slotName] = (child.children || []).map(slotChild =>
           renderWidgetTree(slotChild)
         );
