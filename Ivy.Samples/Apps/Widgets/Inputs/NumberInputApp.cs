@@ -55,6 +55,7 @@ public class NumberInputApp : SampleBase
               | intValue
                 .ToNumberInput()
                 .ShowArrows()
+                .TestId("number-input-int-arrows-main")
 
               | Text.InlineCode("ToSliderInput()")
               | nullIntValue

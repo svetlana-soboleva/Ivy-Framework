@@ -50,6 +50,7 @@ const SliderVariant = memo(
     disabled = false,
     invalid,
     onValueChange,
+    'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     // Local state for live feedback (optional, fallback to prop value)
     const [localValue, setLocalValue] = React.useState<number | null>(value);
@@ -91,6 +92,7 @@ const SliderVariant = memo(
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
           className={cn(invalid && inputStyles.invalid)}
+          data-testid={dataTestId}
         />
         <span
           className="mt-4 flex w-full items-center justify-between gap-1 text-xs font-sm text-muted-foreground"
