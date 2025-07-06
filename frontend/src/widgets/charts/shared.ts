@@ -73,7 +73,7 @@ export const generateXAxisProps = (props: ExtendedXAxisProps) => {
     ...xAxisProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     scale: camelCase(scale) as XAxisProps['scale'],
     type: camelCase(type) as XAxisProps['type'],
     domain: [domainStart, domainEnd] as [string | number, string | number],
@@ -98,7 +98,7 @@ export const generateYAxisProps = (props: ExtendedYAxisProps) => {
     ...yAxisProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     scale: camelCase(scale) as YAxisProps['scale'],
     type: camelCase(type) as YAxisProps['type'],
     domain: [domainStart, domainEnd] as [string | number, string | number],
@@ -146,7 +146,7 @@ export const generateLineProps = (
   } = props;
 
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     type: camelCase(curveType) as CurveType,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
@@ -193,7 +193,7 @@ export const generateAreaProps = (
     ...areaProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     type: camelCase(curveType) as CurveType,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
@@ -239,7 +239,7 @@ export const generateBarProps = (
     ...barProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
     stroke:
@@ -273,8 +273,8 @@ export const generatePieProps = (props: ExtendedPieProps) => {
     ...pieProps
   } = props;
   return {
-    dataKey: camelCase(dataKey),
-    nameKey: camelCase(nameKey),
+    dataKey: camelCase(dataKey) as string,
+    nameKey: camelCase(nameKey) as string,
     legendType: camelCase(legendType) as LegendType,
     isAnimationActive: animated,
     stroke:
@@ -300,7 +300,7 @@ export const generateLabelListProps = (props: ExtendedLabelListProps) => {
   const { fill, position, dataKey, ...labelListProps } = props;
   const formatter = getFormatter(props);
   return {
-    dataKey: camelCase(dataKey),
+    dataKey: camelCase(dataKey) as string,
     position: camelCase(position) as LabelListProps<
       Record<string, unknown>
     >['position'],

@@ -124,7 +124,7 @@ const TableOfContents = ({
   articleRef,
 }: {
   className?: string;
-  articleRef: React.RefObject<HTMLElement>;
+  articleRef: React.RefObject<HTMLElement | null>;
 }) => {
   const [headings, setHeadings] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');

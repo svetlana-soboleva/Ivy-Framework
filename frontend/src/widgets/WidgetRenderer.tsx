@@ -23,9 +23,9 @@ const flattenChildren = (children: WidgetNode[]): WidgetNode[] => {
 };
 
 export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
-  const Component = widgetMap[node.type] as React.ComponentType<
-    Record<string, unknown>
-  >;
+  const Component = widgetMap[
+    node.type as keyof typeof widgetMap
+  ] as React.ComponentType<Record<string, unknown>>;
 
   if (!Component) {
     return <div>{`Unknown component type: ${node.type}`}</div>;
@@ -39,7 +39,7 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
   const slots = children.reduce(
     (acc, child) => {
       if (child.type === 'Ivy.Slot') {
-        const slotName = child.props.name;
+        const slotName = child.props.name as string;
         acc[slotName] = (child.children || []).map(slotChild =>
           renderWidgetTree(slotChild)
         );
