@@ -402,6 +402,7 @@ const SearchVariant: React.FC<{
         onBlur={handleBlur}
         onFocus={onFocus}
         onKeyDown={handleKeyDown}
+        autoComplete="off"
         className={cn(
           'pl-8',
           props.invalid && inputStyles.invalid,
