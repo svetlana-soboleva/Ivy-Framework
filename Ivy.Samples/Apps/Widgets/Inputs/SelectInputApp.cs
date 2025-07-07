@@ -111,8 +111,8 @@ public class SelectInputApp : SampleBase
 
     private object CreateMultiSelectVariantsSection()
     {
-        var colorStateList = UseState<Colors[]>();
-        var colorStateToggle = UseState<Colors[]>();
+        var colorStateList = UseState<Colors[]>([]);
+        var colorStateToggle = UseState<Colors[]>([]);
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(6)
