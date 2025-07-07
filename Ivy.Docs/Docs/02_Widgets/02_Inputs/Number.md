@@ -166,10 +166,10 @@ public class MoneyPrecisionDemo : ViewBase
 {
     public override object? Build()
     {
-        var precValue = UseState(0.50);
+        var precValue = UseState(0.50M);
         return Layout.Horizontal() 
                 | Text.Label("Min 0, Max 100, Step 0.5, Precision 2")
-                | new NumberInput<double>(precValue)
+                | new NumberInput<decimal>(precValue)
                      .ShowArrows()
                      .Min(0.0)
                      .Max(100.0)
@@ -234,8 +234,8 @@ public class GroceryAppDemo : ViewBase
     {
         var eggs = UseState(0);
         var breads = UseState(0);
-        var eggCost = 3.45;
-        var breadCost = 6.13;
+        var eggCost = 3.45M;
+        var breadCost = 6.13M;
         return Layout.Vertical()
                 | (Layout.Horizontal() 
                    | Text.Label("Egg").Width(10)
@@ -258,7 +258,7 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal()
                    | Text.Large("Bill : ")
                    // Since it is disabled, no need to have an onChange event
-                   | new NumberInput<double>(eggs.Value * eggCost + breadCost * breads.Value,_ => { })
+                   | new NumberInput<decimal>(eggs.Value * eggCost + breadCost * breads.Value,_ => { })
                                      .Disabled()
                                      .Variant(NumberInputs.Number)
                                      .Precision(2)
