@@ -106,7 +106,7 @@ public class SelectInputApp : SampleBase
                | colorState
                     .ToSelectInput(colorOptions)
                     .Variant(SelectInputs.Toggle)
-                    .Invalid("Invalid")
+                    .Invalid("Invalid");
     }
 
     private object CreateMultiSelectVariantsSection()
