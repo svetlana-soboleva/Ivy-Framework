@@ -158,7 +158,7 @@ const DefaultVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          props.invalid && inputStyles.invalid,
+          props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
@@ -215,7 +215,7 @@ const TextareaVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          props.invalid && inputStyles.invalid,
+          props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
@@ -291,7 +291,7 @@ const PasswordVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          props.invalid && inputStyles.invalid,
+          props.invalid && inputStyles.invalidInput,
           props.invalid ? 'pr-14' : 'pr-8',
           hasLastPass && 'pr-3',
           props.shortcutKey && !hasLastPass && 'pr-24'
@@ -404,7 +404,7 @@ const SearchVariant: React.FC<{
         onKeyDown={handleKeyDown}
         className={cn(
           'pl-8',
-          props.invalid && inputStyles.invalid,
+          props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
