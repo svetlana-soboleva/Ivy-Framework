@@ -2,3 +2,9 @@ root = true
 
 [*.cs]
 end_of_line = lf
+
+[*.tsx]
+end_of_line = lf
+
+[*.css]
+end_of_line = lf

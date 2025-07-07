@@ -1,0 +1,108 @@
+.rdp {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem;
+  width: 270px;
+}
+
+.rdp-month_caption {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--card-foreground);
+}
+
+.rdp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.rdp-button_previous,
+.rdp-button_next {
+  background: var(--muted);
+  border: none;
+  border-radius: var(--radius-md);
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 0 0.25rem;
+}
+.rdp-button_previous:hover,
+.rdp-button_next:hover {
+  background: var(--border);
+}
+
+.rdp-weekdays {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+  letter-spacing: 0.03em;
+}
+
+.rdp-weekday {
+  flex: 1;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.rdp-days {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.rdp-week {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rdp-day {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.98rem;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  margin: 1px 0;
+  background: transparent;
+  color: var(--card-foreground);
+}
+.rdp-day:hover:not(.rdp-day_outside):not(.rdp-day_selected):not(
+    .rdp-day_disabled
+  ) {
+  background: var(--muted);
+}
+
+.rdp-day_selected {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-radius: var(--radius-md);
+}
+
+.rdp-day_outside {
+  color: var(--muted-foreground);
+  cursor: default;
+}
+
+.rdp-day_disabled {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
