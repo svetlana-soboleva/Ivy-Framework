@@ -1,8 +1,14 @@
 .rdp {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  --rdp-accent-color: var(--primary);
+  --rdp-background-color: var(--background);
+  --rdp-foreground-color: var(--foreground);
+  --rdp-selected-color: var(--primary);
+  --rdp-selected-foreground: var(--primary-foreground, #fff);
+  --rdp-today-border: var(--primary);
+  background: var(--popover, #fff);
+  color: var(--foreground, #000);
+  border-radius: var(--radius-md, 0.375rem);
+  box-shadow: var(--shadow-md, 0 1px 3px 0px hsl(0 0% 0% / 0.1));
   padding: 0.5rem;
   width: 270px;
 }
@@ -90,10 +96,11 @@
   background: var(--muted);
 }
 
-.rdp-day_selected {
-  background: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-  border-radius: var(--radius-md);
+.rdp-day_selected,
+.rdp-day--selected {
+  background-color: var(--rdp-selected-color) !important;
+  color: var(--rdp-selected-foreground) !important;
+  border-radius: 0.375rem;
 }
 
 .rdp-day_outside {
@@ -101,8 +108,29 @@
   cursor: default;
 }
 
-.rdp-day_disabled {
-  color: var(--muted-foreground);
+.rdp-day_disabled,
+.rdp-day--disabled {
+  color: var(--muted-foreground, #aaa) !important;
+  background: none !important;
+  pointer-events: none;
   opacity: 0.5;
-  cursor: not-allowed;
+}
+
+.rdp-day_today:not(.rdp-day_selected):not(.rdp-day--selected) {
+  border: 1.5px solid var(--rdp-today-border);
+  border-radius: 0.375rem;
+}
+
+.rdp-day:not(.rdp-day_selected):not(.rdp-day--selected):not(
+    .rdp-day_disabled
+  ):not(.rdp-day--disabled):hover,
+.rdp-day:focus-visible {
+  background: var(--secondary, #f0f0f0);
+  color: var(--secondary-foreground, #000);
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.rdp-day:focus {
+  outline: none;
 }
