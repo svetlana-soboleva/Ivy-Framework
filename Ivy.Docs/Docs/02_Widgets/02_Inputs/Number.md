@@ -17,10 +17,14 @@ public class SimpleNumericValueDemo : ViewBase
         return Layout.Horizontal() 
                 | new NumberInput<double>(value)
                      .Min(-10)
-                     .Max(10);
+                     .Max(10)
+                     .ShowArrows();
     }
 }
 ```
+
+To indicate that the value of a `NumberInput` can be incremented or decremented, you can use
+`ShowArrows` function; as it's done in this example. By default, these arrows are hidden.
 
 ## Variants
 
@@ -38,18 +42,20 @@ public class NumberSliderInput : ViewBase
 {
     public override object? Build()
     {        
-        var tapes = UseState(1);
+        var tapes = UseState(1.0);
         var cart = UseState("");
         return Layout.Horizontal()
                 | Text.Block("Tapes")
-                | new NumberInput<int>(
+                | new NumberInput<double>(
                       tapes.Value,
                       e => {
                              tapes.Set(e);
-                             cart.Set($"Added {tapes}m tape to your cart"); 
+                             cart.Set($"Added {tapes} cm tape to your cart"); 
                      })
-                     .Min(1)
-                     .Max(5)
+                     .Min(30.0)
+                     .Max(500.0)
+                     .Precision(2)
+                     .Step(0.5)
                      .Variant(NumberInputs.Slider)
                 | Text.Block(cart);
     }
@@ -101,6 +107,7 @@ public class MoneyInputDemo : ViewBase
                 | Text.Label("GBP:")
                 | moneyInGBP.ToMoneyInput()
                             .Currency("GBP")
+                            .ShowArrows(false)
                             .Disabled();
     }
 }
@@ -112,7 +119,7 @@ public class MoneyInputDemo : ViewBase
 
 ### Invalid
 
-To render a red border around the number input and mark the input as invalid, this style should be used.
+To mark a number input as invalid, this style should be used.
 This can be used via the extension function `Invalid`.
 
 ```csharp demo-below
@@ -163,6 +170,7 @@ public class MoneyPrecisionDemo : ViewBase
         return Layout.Horizontal() 
                 | Text.Label("Min 0, Max 100, Step 0.5, Precision 2")
                 | new NumberInput<double>(precValue)
+                     .ShowArrows()
                      .Min(0.0)
                      .Max(100.0)
                      .Step(0.5)
@@ -222,7 +230,6 @@ The following shows a realistic example of how several `NumberInput`s can be use
 ```csharp demo-tabs
 public class GroceryAppDemo : ViewBase
 {
- 
     public override object? Build()
     {
         var eggs = UseState(0);
@@ -233,6 +240,7 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal() 
                    | Text.Label("Egg").Width(10)
                    | eggs.ToNumberInput()
+                         .ShowArrows()
                          .Min(0)
                          .Max(12)
                          .Width(10)
@@ -241,6 +249,7 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal()
                    | Text.Label("Bread").Width(10)
                    | breads.ToNumberInput()
+                              .ShowArrows()
                               .Min(0)
                               .Max(5)
                               .Width(10)
