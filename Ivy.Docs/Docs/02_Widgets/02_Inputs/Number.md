@@ -270,3 +270,6 @@ public class GroceryAppDemo : ViewBase
 
 ```
 
+For `NumberInput`s that use `NumberFormatStyle.Currency` the recommended type is `decimal` 
+like `new NumerInput<decimal>`
+
