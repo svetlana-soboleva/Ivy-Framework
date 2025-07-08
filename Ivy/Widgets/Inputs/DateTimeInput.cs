@@ -28,7 +28,15 @@ public abstract record DateTimeInputBase : WidgetBase<DateTimeInputBase>, IAnyDa
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [];
+
+    public Type[] SupportedStateTypes() =>
+    [
+        // DateTime types
+        typeof(DateTime), typeof(DateTime?),
+        typeof(DateTimeOffset), typeof(DateTimeOffset?),
+        typeof(DateOnly), typeof(DateOnly?),
+        typeof(TimeOnly), typeof(TimeOnly?),
+    ];
 }
 
 public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
@@ -54,7 +62,7 @@ public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
     }
 
     [Prop] public TDate Value { get; set; } = default!;
-    [Prop] public bool Nullable { get; set; } = typeof(TDate) == typeof(DateTime?) || typeof(TDate) == typeof(DateTimeOffset?) || typeof(TDate) == typeof(DateOnly?);
+    [Prop] public bool Nullable { get; set; } = typeof(TDate) == typeof(DateTime?) || typeof(TDate) == typeof(DateTimeOffset?) || typeof(TDate) == typeof(DateOnly?) || typeof(TDate) == typeof(TimeOnly?);
     [Event] public Action<Event<IInput<TDate>, TDate>>? OnChange { get; set; }
 }
 
@@ -66,9 +74,132 @@ public static class DateTimeInputExtensions
 
     public static DateTimeInputBase ToDateTimeInput(this IAnyState state, string? placeholder = null, bool disabled = false, DateTimeInputs variant = DateTimeInputs.DateTime)
     {
-        var type = state.GetStateType();
-        Type genericType = typeof(DateTimeInput<>).MakeGenericType(type);
-        DateTimeInputBase input = (DateTimeInputBase)Activator.CreateInstance(genericType, state, placeholder, disabled, variant)!;
+        var stateType = state.GetStateType();
+        var isNullable = stateType.IsNullableType();
+
+        // Create the appropriate DateTimeInput based on the original state type
+        if (isNullable)
+        {
+            var dateValue = ConvertToDateValue<object?>(state);
+            var input = new DateTimeInput<object?>(dateValue, e => SetStateValue(state, e.Value), placeholder, disabled, variant);
+            input.ScaffoldDefaults(null!, stateType);
+            input.Nullable = true;
+            return input;
+        }
+        else
+        {
+            var dateValue = ConvertToDateValue<object>(state);
+            var input = new DateTimeInput<object>(dateValue, e => SetStateValue(state, e.Value), placeholder, disabled, variant);
+            input.ScaffoldDefaults(null!, stateType);
+            return input;
+        }
+    }
+
+    private static T ConvertToDateValue<T>(IAnyState state)
+    {
+        var stateType = state.GetStateType();
+        var value = state.As<object>().Value;
+
+        // Convert to appropriate date value based on type
+        var dateValue = stateType switch
+        {
+            // DateTime types - direct conversion
+            _ when stateType == typeof(DateTime) => value,
+            _ when stateType == typeof(DateTime?) => value,
+            _ when stateType == typeof(DateTimeOffset) => value,
+            _ when stateType == typeof(DateTimeOffset?) => value,
+            _ when stateType == typeof(DateOnly) => value,
+            _ when stateType == typeof(DateOnly?) => value,
+            _ when stateType == typeof(TimeOnly) => value,
+            _ when stateType == typeof(TimeOnly?) => value,
+
+            // Other types - try BestGuessConvert, fallback to current date
+            _ => Core.Utils.BestGuessConvert(value, typeof(DateTime)) ?? DateTime.Now
+        };
+
+        return (T)dateValue!;
+    }
+
+    private static void SetStateValue(IAnyState state, object? dateValue)
+    {
+        var stateType = state.GetStateType();
+        var isNullable = stateType.IsNullableType();
+
+        // Convert date value back to the original state type
+        var convertedValue = stateType switch
+        {
+            // DateTime types - direct conversion
+            _ when stateType == typeof(DateTime) =>
+                dateValue is DateTime dt ? dt :
+                dateValue is string s ? DateTime.Parse(s) :
+                DateTime.Now,
+            _ when stateType == typeof(DateTime?) =>
+                dateValue is null ? null :
+                dateValue is DateTime dt ? dt :
+                dateValue is string s ? DateTime.Parse(s) :
+                (DateTime?)DateTime.Now,
+            _ when stateType == typeof(DateTimeOffset) => dateValue ?? DateTimeOffset.Now,
+            _ when stateType == typeof(DateTimeOffset?) => dateValue,
+            _ when stateType == typeof(DateOnly) =>
+                dateValue is DateOnly d ? d :
+                dateValue is string s ? DateOnly.FromDateTime(DateTime.Parse(s)) :
+                dateValue is DateTime dt ? DateOnly.FromDateTime(dt) :
+                DateOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(DateOnly?) =>
+                dateValue is null ? null :
+                dateValue is DateOnly d ? d :
+                dateValue is string s ? DateOnly.FromDateTime(DateTime.Parse(s)) :
+                dateValue is DateTime dt ? DateOnly.FromDateTime(dt) :
+                (DateOnly?)DateOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(TimeOnly) =>
+                dateValue is TimeOnly t ? t :
+                dateValue is string s ? ParseTimeOnly(s) :
+                dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
+                TimeOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(TimeOnly?) =>
+                dateValue is null ? null :
+                dateValue is string s && string.IsNullOrWhiteSpace(s) ? null :
+                dateValue is TimeOnly t ? t :
+                dateValue is string s2 ? ParseTimeOnly(s2) :
+                dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
+                (TimeOnly?)TimeOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(string) => dateValue?.ToString() ?? DateTime.Now.ToString("O"),
+
+            // Other types - use BestGuessConvert
+            _ => Core.Utils.BestGuessConvert(dateValue, stateType) ?? DateTime.Now
+        };
+
+        // Set the state value
+        state.As<object>().Set(convertedValue!);
+    }
+
+    private static TimeOnly ParseTimeOnly(string timeString)
+    {
+        // Try different time formats
+        var formats = new[] { "HH:mm:ss", "HH:mm", "H:mm:ss", "H:mm" };
+
+        foreach (var format in formats)
+        {
+            if (TimeOnly.TryParseExact(timeString, format, null, System.Globalization.DateTimeStyles.None, out var result))
+            {
+                return result;
+            }
+        }
+
+        // If all parsing fails, return current time
+        return TimeOnly.FromDateTime(DateTime.Now);
+    }
+
+    public static DateTimeInputBase ToTimeInput(this IAnyState state, string? placeholder = null, bool disabled = false)
+        => state.ToDateTimeInput(placeholder, disabled, DateTimeInputs.Time);
+
+    internal static IAnyDateTimeInput ScaffoldDefaults(this IAnyDateTimeInput input, string? name, Type type)
+    {
+        if (string.IsNullOrEmpty(input.Placeholder))
+        {
+            input.Placeholder = Utils.SplitPascalCase(name) ?? name;
+        }
+
         return input;
     }
 
