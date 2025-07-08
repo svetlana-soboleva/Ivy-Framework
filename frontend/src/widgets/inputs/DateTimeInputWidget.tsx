@@ -176,6 +176,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             !date && 'text-muted-foreground',
             invalid && inputStyles.invalid
           )}
+          data-testid={dataTestId}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
