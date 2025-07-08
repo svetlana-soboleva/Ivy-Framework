@@ -175,7 +175,7 @@ public static class DateTimeInputExtensions
     {
         // Try different time formats
         var formats = new[] { "HH:mm:ss", "HH:mm", "H:mm:ss", "H:mm" };
-        
+
         foreach (var format in formats)
         {
             if (TimeOnly.TryParseExact(timeString, format, null, System.Globalization.DateTimeStyles.None, out var result))
@@ -183,7 +183,7 @@ public static class DateTimeInputExtensions
                 return result;
             }
         }
-        
+
         // If all parsing fails, return current time
         return TimeOnly.FromDateTime(DateTime.Now);
     }

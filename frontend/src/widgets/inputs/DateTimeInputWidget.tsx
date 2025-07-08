@@ -9,10 +9,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import { inputStyles } from '@/lib/styles';
+import { InvalidIcon } from '@/components/InvalidIcon';
 
 type VariantType = 'Date' | 'DateTime' | 'Time';
 
@@ -56,6 +57,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
   value,
   placeholder,
   disabled,
+  nullable,
   invalid,
   onDateChange,
   format: formatProp,
@@ -63,6 +65,13 @@ const DateVariant: React.FC<DateVariantProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const date = value ? new Date(value) : undefined;
+  const showClear = nullable && !disabled && value != null && value !== '';
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDateChange(undefined);
+  };
 
   const handleSelect = useCallback(
     (selectedDate: Date | undefined) => {
@@ -73,35 +82,54 @@ const DateVariant: React.FC<DateVariantProps> = ({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          disabled={disabled}
-          variant="outline"
-          className={cn(
-            'w-full justify-start text-left font-normal',
-            !date && 'text-muted-foreground',
-            invalid && inputStyles.invalidInput
-          )}
-          data-testid={dataTestId}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, formatProp || 'yyyy-MM-dd')
-          ) : (
-            <span>{placeholder || 'Pick a date'}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <div className="relative flex items-center gap-2">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            disabled={disabled}
+            variant="outline"
+            className={cn(
+              'w-full justify-start text-left font-normal pr-14', // pr-14 for clear+icon
+              !date && 'text-muted-foreground',
+              invalid && inputStyles.invalidInput
+            )}
+            data-testid={dataTestId}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? (
+              format(date, formatProp || 'yyyy-MM-dd')
+            ) : (
+              <span>{placeholder || 'Pick a date'}</span>
+            )}
+            {showClear && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+                style={{ pointerEvents: 'auto' }}
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+            {invalid && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
+                <InvalidIcon message={invalid} />
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleSelect}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 
@@ -109,6 +137,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   value,
   placeholder,
   disabled,
+  nullable,
   invalid,
   onDateChange,
   onTimeChange,
@@ -117,6 +146,13 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const date = value ? new Date(value) : undefined;
+  const showClear = nullable && !disabled && value != null && value !== '';
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDateChange(undefined);
+  };
 
   // Use local state for the time input to make it uncontrolled
   const [localTimeValue, setLocalTimeValue] = useState(() => {
@@ -208,54 +244,73 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          disabled={disabled}
-          variant="outline"
-          className={cn(
-            'w-full justify-start text-left font-normal',
-            !date && 'text-muted-foreground',
-            invalid && inputStyles.invalidInput
-          )}
-          data-testid={dataTestId}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, formatProp || 'yyyy-MM-dd')
-          ) : (
-            <span>{placeholder || 'Pick a date & time'}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="flex flex-col gap-2 p-2">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-            initialFocus
-          />
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <Input
-              type="time"
-              step="1"
-              value={localTimeValue}
-              onChange={handleTimeChange}
-              onBlur={handleTimeBlur}
-              onKeyDown={handleTimeKeyDown}
-              disabled={disabled}
-              className={cn(
-                'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
-                invalid && inputStyles.invalidInput
-              )}
-              data-testid={dataTestId ? `${dataTestId}-time` : undefined}
+    <div className="relative flex items-center gap-2">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            disabled={disabled}
+            variant="outline"
+            className={cn(
+              'w-full justify-start text-left font-normal pr-14', // pr-14 for clear+icon
+              !date && 'text-muted-foreground',
+              invalid && inputStyles.invalidInput
+            )}
+            data-testid={dataTestId}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? (
+              format(date, formatProp || 'yyyy-MM-dd')
+            ) : (
+              <span>{placeholder || 'Pick a date & time'}</span>
+            )}
+            {showClear && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+                style={{ pointerEvents: 'auto' }}
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+            {invalid && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
+                <InvalidIcon message={invalid} />
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <div className="flex flex-col gap-2 p-2">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleDateSelect}
+              initialFocus
             />
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Input
+                type="time"
+                step="1"
+                value={localTimeValue}
+                onChange={handleTimeChange}
+                onBlur={handleTimeBlur}
+                onKeyDown={handleTimeKeyDown}
+                disabled={disabled}
+                className={cn(
+                  'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
+                  invalid && inputStyles.invalidInput
+                )}
+                data-testid={dataTestId ? `${dataTestId}-time` : undefined}
+              />
+            </div>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 
@@ -263,6 +318,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   value,
   placeholder,
   disabled,
+  nullable,
   invalid,
   onTimeChange,
   'data-testid': dataTestId,
@@ -313,6 +369,14 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
     }
   }, [value]);
 
+  const showClear = nullable && !disabled && value != null && value !== '';
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onTimeChange('');
+  };
+
   const handleTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newTimeValue = e.target.value;
@@ -337,7 +401,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   );
 
   return (
-    <div className="flex items-center gap-2" data-testid={dataTestId}>
+    <div className="relative flex items-center gap-2" data-testid={dataTestId}>
       <Clock className="h-4 w-4 text-muted-foreground" />
       <Input
         type="time"
@@ -349,10 +413,27 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
         disabled={disabled}
         placeholder={placeholder || 'Select time'}
         className={cn(
-          'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
+          'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden pr-14', // pr-14 for clear+icon
           invalid && inputStyles.invalidInput
         )}
       />
+      {showClear && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear"
+          onClick={handleClear}
+          className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+          style={{ pointerEvents: 'auto' }}
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
+      {invalid && (
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
+          <InvalidIcon message={invalid} />
+        </span>
+      )}
     </div>
   );
 };
