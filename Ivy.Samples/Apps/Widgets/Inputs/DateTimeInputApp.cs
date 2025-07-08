@@ -25,11 +25,11 @@ public class DateTimeInputApp : SampleBase
         // Variants grid
         var variantsGrid = Layout.Grid().Columns(6)
             | null!
-            | Text.Block("Normal")
-            | Text.Block("Disabled")
-            | Text.Block("Invalid")
-            | Text.Block("Nullable")
-            | Text.Block("Nullable + Invalid")
+            | Text.InlineCode("Normal")
+            | Text.InlineCode("Disabled")
+            | Text.InlineCode("Invalid")
+            | Text.InlineCode("Nullable")
+            | Text.InlineCode("Nullable + Invalid")
 
             | Text.InlineCode("Date")
             | dateState
@@ -123,9 +123,9 @@ public class DateTimeInputApp : SampleBase
 
         // Data binding grid
         var dataBindingGrid = Layout.Grid().Columns(3)
-            | Text.Block("Type")
-            | Text.Block("Input")
-            | Text.Block("Current Value")
+            | Text.InlineCode("Type")
+            | Text.InlineCode("Input")
+            | Text.InlineCode("Current Value")
 
             | Text.InlineCode("DateTime")
             | dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime).TestId("datetime-input-datetime-binding")
