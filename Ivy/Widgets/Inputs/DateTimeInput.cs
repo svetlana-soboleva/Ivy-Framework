@@ -152,13 +152,13 @@ public static class DateTimeInputExtensions
                 (DateOnly?)DateOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(TimeOnly) =>
                 dateValue is TimeOnly t ? t :
-                dateValue is string s ? TimeOnly.ParseExact(s, "HH:mm:ss") :
+                dateValue is string s ? ParseTimeOnly(s) :
                 dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
                 TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(TimeOnly?) =>
                 dateValue is null ? null :
                 dateValue is TimeOnly t ? t :
-                dateValue is string s ? TimeOnly.ParseExact(s, "HH:mm:ss") :
+                dateValue is string s ? ParseTimeOnly(s) :
                 dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
                 (TimeOnly?)TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(string) => dateValue?.ToString() ?? DateTime.Now.ToString("O"),
@@ -169,6 +169,23 @@ public static class DateTimeInputExtensions
 
         // Set the state value
         state.As<object>().Set(convertedValue!);
+    }
+
+    private static TimeOnly ParseTimeOnly(string timeString)
+    {
+        // Try different time formats
+        var formats = new[] { "HH:mm:ss", "HH:mm", "H:mm:ss", "H:mm" };
+        
+        foreach (var format in formats)
+        {
+            if (TimeOnly.TryParseExact(timeString, format, null, System.Globalization.DateTimeStyles.None, out var result))
+            {
+                return result;
+            }
+        }
+        
+        // If all parsing fails, return current time
+        return TimeOnly.FromDateTime(DateTime.Now);
     }
 
     public static DateTimeInputBase ToTimeInput(this IAnyState state, string? placeholder = null, bool disabled = false)

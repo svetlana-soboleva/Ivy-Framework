@@ -118,12 +118,22 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   const [open, setOpen] = useState(false);
   const date = value ? new Date(value) : undefined;
 
-  // Extract time from date or use current time
-  const timeValue = useMemo(() => {
+  // Use local state for the time input to make it uncontrolled
+  const [localTimeValue, setLocalTimeValue] = useState(() => {
     if (date) {
       return format(date, formatProp || 'HH:mm:ss');
     }
     return '00:00:00';
+  });
+
+  // Update local time when date changes
+  React.useEffect(() => {
+    if (date) {
+      const newTimeValue = format(date, formatProp || 'HH:mm:ss');
+      setLocalTimeValue(newTimeValue);
+    } else {
+      setLocalTimeValue('00:00:00');
+    }
   }, [date, formatProp]);
 
   const handleDateSelect = useCallback(
@@ -147,22 +157,54 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   );
 
   const handleTimeChange = useCallback(
-    (time: string) => {
-      if (date && time) {
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        const newDateTime = new Date(date);
-        newDateTime.setHours(hours, minutes, seconds);
-        onDateChange(newDateTime);
-      } else if (time) {
-        // If no date is selected, create a new date with the selected time
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        const newDateTime = new Date();
-        newDateTime.setHours(hours, minutes, seconds);
-        onDateChange(newDateTime);
-      }
-      onTimeChange(time);
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newTimeValue = e.target.value;
+      setLocalTimeValue(newTimeValue);
     },
-    [date, onDateChange, onTimeChange]
+    []
+  );
+
+  const handleTimeBlur = useCallback(() => {
+    // When time input loses focus, update the parent
+    if (date && localTimeValue) {
+      const [hours, minutes, seconds] = localTimeValue.split(':').map(Number);
+      const newDateTime = new Date(date);
+      newDateTime.setHours(hours, minutes, seconds);
+      onDateChange(newDateTime);
+    } else if (localTimeValue) {
+      // If no date is selected, create a new date with the selected time
+      const [hours, minutes, seconds] = localTimeValue.split(':').map(Number);
+      const newDateTime = new Date();
+      newDateTime.setHours(hours, minutes, seconds);
+      onDateChange(newDateTime);
+    }
+    onTimeChange(localTimeValue);
+  }, [date, localTimeValue, onDateChange, onTimeChange]);
+
+  const handleTimeKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // When user presses Enter, update the parent
+      if (e.key === 'Enter') {
+        if (date && localTimeValue) {
+          const [hours, minutes, seconds] = localTimeValue
+            .split(':')
+            .map(Number);
+          const newDateTime = new Date(date);
+          newDateTime.setHours(hours, minutes, seconds);
+          onDateChange(newDateTime);
+        } else if (localTimeValue) {
+          // If no date is selected, create a new date with the selected time
+          const [hours, minutes, seconds] = localTimeValue
+            .split(':')
+            .map(Number);
+          const newDateTime = new Date();
+          newDateTime.setHours(hours, minutes, seconds);
+          onDateChange(newDateTime);
+        }
+        onTimeChange(localTimeValue);
+      }
+    },
+    [date, localTimeValue, onDateChange, onTimeChange]
   );
 
   return (
@@ -199,8 +241,10 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             <Input
               type="time"
               step="1"
-              value={timeValue}
-              onChange={e => handleTimeChange(e.target.value)}
+              value={localTimeValue}
+              onChange={handleTimeChange}
+              onBlur={handleTimeBlur}
+              onKeyDown={handleTimeKeyDown}
               disabled={disabled}
               className={cn(
                 'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
@@ -223,18 +267,74 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   onTimeChange,
   'data-testid': dataTestId,
 }) => {
-  // Always use 24-hour format 'HH:mm:ss'
-  const timeValue = useMemo(() => {
+  // Use local state for the input value to make it uncontrolled
+  const [localTimeValue, setLocalTimeValue] = useState(() => {
     if (value) {
-      const date = new Date(
-        `1970-01-01T${value.length <= 5 ? value + ':00' : value}`
-      ); // Accept 'HH:mm' or 'HH:mm:ss'
-      if (!isNaN(date.getTime())) {
-        return format(date, 'HH:mm:ss');
+      // Parse the value to get time in HH:mm:ss format
+      try {
+        const date = new Date(value);
+        if (!isNaN(date.getTime())) {
+          return format(date, 'HH:mm:ss');
+        }
+      } catch {
+        // If parsing fails, try to use the value directly if it looks like a time
+        if (
+          typeof value === 'string' &&
+          /^\d{1,2}:\d{2}(:\d{2})?$/.test(value)
+        ) {
+          return value.length <= 5 ? value + ':00' : value;
+        }
       }
     }
     return '00:00:00';
+  });
+
+  // Update local state when value prop changes (from parent)
+  React.useEffect(() => {
+    if (value) {
+      try {
+        const date = new Date(value);
+        if (!isNaN(date.getTime())) {
+          const newTimeValue = format(date, 'HH:mm:ss');
+          setLocalTimeValue(newTimeValue);
+        }
+      } catch {
+        // If parsing fails, try to use the value directly if it looks like a time
+        if (
+          typeof value === 'string' &&
+          /^\d{1,2}:\d{2}(:\d{2})?$/.test(value)
+        ) {
+          const newTimeValue = value.length <= 5 ? value + ':00' : value;
+          setLocalTimeValue(newTimeValue);
+        }
+      }
+    } else {
+      setLocalTimeValue('00:00:00');
+    }
   }, [value]);
+
+  const handleTimeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newTimeValue = e.target.value;
+      setLocalTimeValue(newTimeValue);
+    },
+    []
+  );
+
+  const handleTimeBlur = useCallback(() => {
+    // When input loses focus, update the parent
+    onTimeChange(localTimeValue);
+  }, [localTimeValue, onTimeChange]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // When user presses Enter, update the parent
+      if (e.key === 'Enter') {
+        onTimeChange(localTimeValue);
+      }
+    },
+    [localTimeValue, onTimeChange]
+  );
 
   return (
     <div className="flex items-center gap-2">
@@ -242,8 +342,10 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
       <Input
         type="time"
         step="1"
-        value={timeValue}
-        onChange={e => onTimeChange(e.target.value)}
+        value={localTimeValue}
+        onChange={handleTimeChange}
+        onBlur={handleTimeBlur}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder={placeholder || 'Select time'}
         className={cn(
@@ -291,14 +393,19 @@ export const DateTimeInputWidget: React.FC<DateTimeInputWidgetProps> = ({
     (time: string) => {
       if (disabled) return;
 
-      // Create a date with the selected time
-      const [hours, minutes, seconds] = time.split(':').map(Number);
-      const newDateTime = new Date();
-      newDateTime.setHours(hours, minutes, seconds);
+      // For Time variant, send the time string directly
+      if (variant === 'Time') {
+        eventHandler('OnChange', id, [time]);
+      } else {
+        // For other variants, create a date with the selected time
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        const newDateTime = new Date();
+        newDateTime.setHours(hours, minutes, seconds);
 
-      eventHandler('OnChange', id, [newDateTime.toISOString()]);
+        eventHandler('OnChange', id, [newDateTime.toISOString()]);
+      }
     },
-    [disabled, eventHandler, id]
+    [disabled, eventHandler, id, variant]
   );
 
   const VariantComponent = useMemo(() => VariantComponents[variant], [variant]);
