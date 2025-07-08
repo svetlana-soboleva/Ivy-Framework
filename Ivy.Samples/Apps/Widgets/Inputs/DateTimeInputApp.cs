@@ -36,60 +36,72 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Date)
                 .Placeholder("Pick a date")
                 .Format("yyyy-MM-dd")
+                .TestId("datetime-input-date-main")
             | disabledDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Date)
                 .Placeholder("Pick a date")
                 .Disabled()
+                .TestId("datetime-input-date-disabled-main")
             | invalidDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Date)
                 .Placeholder("Pick a date")
                 .Format("yyyy-MM-dd")
                 .Invalid("Invalid date")
+                .TestId("datetime-input-date-invalid-main")
             | nullableDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Date)
                 .Placeholder("Pick a date")
+                .TestId("datetime-input-date-nullable-main")
 
             | Text.InlineCode("DateTime")
             | dateTimeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
                 .Placeholder("Pick date & time")
+                .TestId("datetime-input-datetime-main")
             | disabledDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
                 .Placeholder("Pick date & time")
                 .Disabled()
+                .TestId("datetime-input-datetime-disabled-main")
             | invalidDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
                 .Placeholder("Pick date & time")
                 .Invalid("Invalid datetime")
+                .TestId("datetime-input-datetime-invalid-main")
             | nullableDateState.ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
                 .Placeholder("Pick date & time")
+                .TestId("datetime-input-datetime-nullable-main")
 
             | Text.InlineCode("Time")
             | timeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
                 .Placeholder("Pick a time")
+                .TestId("datetime-input-time-main")
             | timeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
                 .Placeholder("Pick a time")
                 .Disabled()
+                .TestId("datetime-input-time-disabled-main")
             | timeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
                 .Placeholder("Pick a time")
                 .Invalid("Invalid time")
+                .TestId("datetime-input-time-invalid-main")
             | nullableTimeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
                 .Placeholder("Pick a time")
+                .TestId("datetime-input-time-nullable-main")
             ;
 
         // Data binding grid
@@ -100,7 +112,7 @@ public class DateTimeInputApp : SampleBase
             | Text.Block("Nullable?")
 
             | Text.InlineCode("DateTime")
-            | dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime)
+            | dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime).TestId("datetime-input-datetime-binding")
             | Text.InlineCode($"{dateState.Value:yyyy-MM-dd HH:mm:ss}")
             | Text.Block("No")
 
@@ -108,6 +120,7 @@ public class DateTimeInputApp : SampleBase
             | dateOnlyState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Date)
+                .TestId("datetime-input-dateonly-binding")
             | Text.InlineCode($"{dateOnlyState.Value:yyyy-MM-dd}")
             | Text.Block("No")
 
@@ -115,6 +128,7 @@ public class DateTimeInputApp : SampleBase
             | timeOnlyState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
+                .TestId("datetime-input-timeonly-binding")
             | Text.InlineCode($"{timeOnlyState.Value:HH:mm:ss}")
             | Text.Block("No")
 
@@ -122,6 +136,7 @@ public class DateTimeInputApp : SampleBase
             | stringState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
+                .TestId("datetime-input-string-binding")
             | Text.InlineCode(stringState.Value)
             | Text.Block("No")
 
@@ -129,6 +144,7 @@ public class DateTimeInputApp : SampleBase
             | nullableDateState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.DateTime)
+                .TestId("datetime-input-datetime-nullable-binding")
             | Text.InlineCode(nullableDateState.Value?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null")
             | Text.Block("Yes")
 
@@ -136,6 +152,7 @@ public class DateTimeInputApp : SampleBase
             | nullableDateOnlyState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Date)
+                .TestId("datetime-input-dateonly-nullable-binding")
             | Text.InlineCode(nullableDateOnlyState.Value?.ToString("yyyy-MM-dd") ?? "null")
             | Text.Block("Yes")
             
@@ -143,6 +160,7 @@ public class DateTimeInputApp : SampleBase
             | nullableTimeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
+                .TestId("datetime-input-timeonly-nullable-binding")
             | Text.InlineCode(nullableTimeState.Value?.ToString("HH:mm:ss") ?? "null")
             | Text.Block("Yes")
             ;
