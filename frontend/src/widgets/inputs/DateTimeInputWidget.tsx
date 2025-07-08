@@ -89,7 +89,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-14', // pr-14 for clear+icon
+              'w-full justify-start text-left font-normal pr-20', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
               invalid && inputStyles.invalidInput
             )}
@@ -101,21 +101,22 @@ const DateVariant: React.FC<DateVariantProps> = ({
             ) : (
               <span>{placeholder || 'Pick a date'}</span>
             )}
-            {showClear && (
-              <button
-                type="button"
-                tabIndex={-1}
-                aria-label="Clear"
-                onClick={handleClear}
-                className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
-                style={{ pointerEvents: 'auto' }}
-              >
-                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-            {invalid && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
-                <InvalidIcon message={invalid} />
+            {/* Icons absolutely positioned inside the button */}
+            {(showClear || invalid) && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-auto">
+                {showClear && (
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    aria-label="Clear"
+                    onClick={handleClear}
+                    className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                    style={{ pointerEvents: 'auto' }}
+                  >
+                    <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  </button>
+                )}
+                {invalid && <InvalidIcon message={invalid} />}
               </span>
             )}
           </Button>
@@ -251,7 +252,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-14', // pr-14 for clear+icon
+              'w-full justify-start text-left font-normal pr-20', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
               invalid && inputStyles.invalidInput
             )}
@@ -263,21 +264,22 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             ) : (
               <span>{placeholder || 'Pick a date & time'}</span>
             )}
-            {showClear && (
-              <button
-                type="button"
-                tabIndex={-1}
-                aria-label="Clear"
-                onClick={handleClear}
-                className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
-                style={{ pointerEvents: 'auto' }}
-              >
-                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-            {invalid && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
-                <InvalidIcon message={invalid} />
+            {/* Icons absolutely positioned inside the button */}
+            {(showClear || invalid) && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-auto">
+                {showClear && (
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    aria-label="Clear"
+                    onClick={handleClear}
+                    className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                    style={{ pointerEvents: 'auto' }}
+                  >
+                    <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  </button>
+                )}
+                {invalid && <InvalidIcon message={invalid} />}
               </span>
             )}
           </Button>
@@ -403,37 +405,39 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   return (
     <div className="relative flex items-center gap-2" data-testid={dataTestId}>
       <Clock className="h-4 w-4 text-muted-foreground" />
-      <Input
-        type="time"
-        step="1"
-        value={localTimeValue}
-        onChange={handleTimeChange}
-        onBlur={handleTimeBlur}
-        onKeyDown={handleKeyDown}
-        disabled={disabled}
-        placeholder={placeholder || 'Select time'}
-        className={cn(
-          'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden pr-14', // pr-14 for clear+icon
-          invalid && inputStyles.invalidInput
+      <div className="relative w-full">
+        <Input
+          type="time"
+          step="1"
+          value={localTimeValue}
+          onChange={handleTimeChange}
+          onBlur={handleTimeBlur}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          placeholder={placeholder || 'Select time'}
+          className={cn(
+            'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden pr-20', // pr-20 for clear+icon
+            invalid && inputStyles.invalidInput
+          )}
+        />
+        {(showClear || invalid) && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-auto">
+            {showClear && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                style={{ pointerEvents: 'auto' }}
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+            {invalid && <InvalidIcon message={invalid} />}
+          </span>
         )}
-      />
-      {showClear && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label="Clear"
-          onClick={handleClear}
-          className="absolute right-9 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
-          style={{ pointerEvents: 'auto' }}
-        >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-        </button>
-      )}
-      {invalid && (
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-auto">
-          <InvalidIcon message={invalid} />
-        </span>
-      )}
+      </div>
     </div>
   );
 };

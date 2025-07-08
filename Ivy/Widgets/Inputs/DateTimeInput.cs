@@ -83,6 +83,7 @@ public static class DateTimeInputExtensions
             var dateValue = ConvertToDateValue<object?>(state);
             var input = new DateTimeInput<object?>(dateValue, e => SetStateValue(state, e.Value), placeholder, disabled, variant);
             input.ScaffoldDefaults(null!, stateType);
+            input.Nullable = true;
             return input;
         }
         else
