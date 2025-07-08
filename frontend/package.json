@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.3",

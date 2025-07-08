@@ -121,7 +121,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
                       : isSelected
                         ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
                         : undefined
@@ -167,7 +167,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
                       : isSelected
                         ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
                         : undefined
@@ -247,7 +247,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 id={`${id}-${option.value}`}
                 className={cn(
                   stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalid
+                    ? inputStyles.invalidInput
                     : undefined
                 )}
               />
@@ -255,7 +255,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 htmlFor={`${id}-${option.value}`}
                 className={cn(
                   stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalid
+                    ? inputStyles.invalidInput
                     : undefined
                 )}
               >
@@ -352,7 +352,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                           }
                           disabled={disabled}
                           className={cn(
-                            inputStyles.invalid +
+                            inputStyles.invalidInput +
                               ' !bg-red-50 !border-red-500 !text-red-900'
                           )}
                         />
@@ -379,7 +379,9 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                 )}
                 <Label
                   htmlFor={`${id}-${option.value}`}
-                  className={cn(isInvalid ? inputStyles.invalid : undefined)}
+                  className={cn(
+                    isInvalid ? inputStyles.invalidInput : undefined
+                  )}
                 >
                   {option.label}
                 </Label>
@@ -448,7 +450,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
           onValueChange={newValue => eventHandler('OnChange', id, [newValue])}
           data-testid={dataTestId}
         >
-          <SelectTrigger className={cn(invalid && inputStyles.invalid)}>
+          <SelectTrigger className={cn(invalid && inputStyles.invalidInput)}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>

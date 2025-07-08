@@ -91,7 +91,7 @@ const SliderVariant = memo(
           disabled={disabled}
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
-          className={cn(invalid && inputStyles.invalid)}
+          className={cn(invalid && inputStyles.invalidInput)}
           data-testid={dataTestId}
         />
         <span
@@ -165,7 +165,7 @@ const NumberVariant = memo(
           value={value}
           disabled={disabled}
           onChange={handleNumberChange}
-          className={cn(invalid && inputStyles.invalid, invalid && 'pr-8')}
+          className={cn(invalid && inputStyles.invalidInput, invalid && 'pr-8')}
           nullable={nullable}
           showArrows={showArrows}
           data-testid={dataTestId}
