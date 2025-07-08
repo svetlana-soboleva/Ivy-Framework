@@ -43,4 +43,16 @@ test('debug sidebar search', async ({ page }) => {
   // Now look for the h2 in the app frame
   const h2 = appFrame!.locator('h2');
   await expect(h2.nth(0)).toContainText('Variants');
+
+  await expect(
+    appFrame!.locator('code', { hasText: 'BoolInputs.Checkbox' })
+  ).toBeVisible();
+
+  await expect(
+    appFrame!.locator('code', { hasText: 'BoolInputs.Switch' })
+  ).toBeVisible();
+
+  await expect(
+    appFrame!.locator('code', { hasText: 'BoolInputs.Toggle' })
+  ).toBeVisible();
 });
