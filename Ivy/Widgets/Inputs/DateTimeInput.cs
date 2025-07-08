@@ -158,8 +158,9 @@ public static class DateTimeInputExtensions
                 TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(TimeOnly?) =>
                 dateValue is null ? null :
+                dateValue is string s && string.IsNullOrWhiteSpace(s) ? null :
                 dateValue is TimeOnly t ? t :
-                dateValue is string s ? ParseTimeOnly(s) :
+                dateValue is string s2 ? ParseTimeOnly(s2) :
                 dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
                 (TimeOnly?)TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(string) => dateValue?.ToString() ?? DateTime.Now.ToString("O"),
