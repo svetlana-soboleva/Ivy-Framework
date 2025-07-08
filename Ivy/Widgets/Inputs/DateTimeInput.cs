@@ -128,14 +128,39 @@ public static class DateTimeInputExtensions
         var convertedValue = stateType switch
         {
             // DateTime types - direct conversion
-            _ when stateType == typeof(DateTime) => dateValue ?? DateTime.Now,
-            _ when stateType == typeof(DateTime?) => dateValue,
+            _ when stateType == typeof(DateTime) =>
+                dateValue is DateTime dt ? dt :
+                dateValue is string s ? DateTime.Parse(s) :
+                DateTime.Now,
+            _ when stateType == typeof(DateTime?) =>
+                dateValue is null ? null :
+                dateValue is DateTime dt ? dt :
+                dateValue is string s ? DateTime.Parse(s) :
+                (DateTime?)DateTime.Now,
             _ when stateType == typeof(DateTimeOffset) => dateValue ?? DateTimeOffset.Now,
             _ when stateType == typeof(DateTimeOffset?) => dateValue,
-            _ when stateType == typeof(DateOnly) => dateValue ?? DateOnly.FromDateTime(DateTime.Now),
-            _ when stateType == typeof(DateOnly?) => dateValue,
-            _ when stateType == typeof(TimeOnly) => dateValue ?? TimeOnly.FromDateTime(DateTime.Now),
-            _ when stateType == typeof(TimeOnly?) => dateValue,
+            _ when stateType == typeof(DateOnly) =>
+                dateValue is DateOnly d ? d :
+                dateValue is string s ? DateOnly.Parse(s) :
+                dateValue is DateTime dt ? DateOnly.FromDateTime(dt) :
+                DateOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(DateOnly?) =>
+                dateValue is null ? null :
+                dateValue is DateOnly d ? d :
+                dateValue is string s ? DateOnly.Parse(s) :
+                dateValue is DateTime dt ? DateOnly.FromDateTime(dt) :
+                (DateOnly?)DateOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(TimeOnly) =>
+                dateValue is TimeOnly t ? t :
+                dateValue is string s ? TimeOnly.Parse(s) :
+                dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
+                TimeOnly.FromDateTime(DateTime.Now),
+            _ when stateType == typeof(TimeOnly?) =>
+                dateValue is null ? null :
+                dateValue is TimeOnly t ? t :
+                dateValue is string s ? TimeOnly.Parse(s) :
+                dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
+                (TimeOnly?)TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(string) => dateValue?.ToString() ?? DateTime.Now.ToString("O"),
 
             // Other types - use BestGuessConvert
