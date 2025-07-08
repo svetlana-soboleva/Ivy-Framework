@@ -28,14 +28,14 @@ To indicate that the value of a `NumberInput` can be incremented or decremented,
 
 ## Variants
 
-`NumberInput`s come in several variants to suit different use cases. 
+`NumberInput`s come in several variants to suit different use cases.
 
 ### Slider
 
 This variant helps create a slider that changes the value as the slider is pulled to the right.
 This creates the `NumberInputs.Slider` variant.
 
-The following demo shows how a slider can be used to give a visual clue. 
+The following demo shows how a slider can be used to give a visual clue.
 
 ```csharp demo-below
 public class NumberSliderInput : ViewBase 
@@ -68,8 +68,8 @@ public class NumberSliderInput : ViewBase
 To enable users to enter money amounts, this variant should be used. The extension function `ToMoneyInput`
 should be used to create this variant. This is the idiomatic way to use Ivy.
 
-The following demo uses `NumberInputs.Number` with `NumberFormatStyle.Currency` to create 
-`NumberInput`s that can take money inputs. `ToMoneyInput` hides all these complexities. 
+The following demo uses `NumberInputs.Number` with `NumberFormatStyle.Currency` to create
+`NumberInput`s that can take money inputs. `ToMoneyInput` hides all these complexities.
 
 ```csharp demo-below
 public class MoneyInputDemo : ViewBase 
@@ -152,14 +152,12 @@ public class DisabledDemo : ViewBase
 }
 ```
 
-### Precision and Step 
+### Precision and Step
 
 To set the precision of a `NumberInput` this style should be used. This can be used via the extension function
-`Precision`. To customize the amount by which the value of a `NumberInput` is changed can be set by `Step`. 
+`Precision`. To customize the amount by which the value of a `NumberInput` is changed can be set by `Step`.
 
-The following demo shows these two in action. 
-
-
+The following demo shows these two in action.
 
 ```csharp demo-below
 public class MoneyPrecisionDemo : ViewBase
@@ -203,7 +201,6 @@ public class FormatStyleDemos : ViewBase
 
 ```
 
-
 ## Event Handling
 
 NumberInputs can handle change and blur events:
@@ -221,10 +218,10 @@ new NumberInput<int>(onChangedState.Value, e =>
 
 <WidgetDocs Type="Ivy.NumberInput" ExtensionTypes="Ivy.NumberInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/NumberInput.cs"/>
 
-
 ## Examples
 
-### Simple Grocery App 
+### Simple Grocery App
+
 The following shows a realistic example of how several `NumberInput`s can be used.
 
 ```csharp demo-tabs
@@ -270,6 +267,5 @@ public class GroceryAppDemo : ViewBase
 
 ```
 
-For `NumberInput`s that use `NumberFormatStyle.Currency` the recommended type is `decimal` 
+For `NumberInput`s that use `NumberFormatStyle.Currency` the recommended type is `decimal`
 like `new NumberInput<decimal>`
-
