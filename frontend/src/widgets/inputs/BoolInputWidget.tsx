@@ -62,7 +62,7 @@ const InputLabel: React.FC<{
   if (!label && !description) return null;
 
   return (
-    <div className="grid gap-1.5 leading-none bg-background">
+    <div>
       {label && <Label htmlFor={id}>{label}</Label>}
       {description && (
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -113,7 +113,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-start space-x-2"
+          className="flex items-center gap-2"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(checkboxElement, invalid)}
@@ -149,7 +149,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-start space-x-2"
+          className="flex items-center gap-2"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(switchElement, invalid)}
@@ -189,7 +189,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-start space-x-2"
+          className="flex items-center space-x-2"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(toggleElement, invalid)}
