@@ -155,7 +155,7 @@ public class DateTimeInputApp : SampleBase
                 .TestId("datetime-input-dateonly-nullable-binding")
             | Text.InlineCode(nullableDateOnlyState.Value?.ToString("yyyy-MM-dd") ?? "null")
             | Text.Block("Yes")
-            
+
             | Text.InlineCode("TimeOnly?")
             | nullableTimeState
                 .ToDateTimeInput()
