@@ -88,7 +88,7 @@ public record BoolInput : BoolInput<bool>
     }
 
     public BoolInput(bool value, Action<Event<IInput<bool>, bool>> onChange, string? label = null,
-        bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) 
+        bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
         : base(value, onChange, label, disabled, variant)
     {
     }
