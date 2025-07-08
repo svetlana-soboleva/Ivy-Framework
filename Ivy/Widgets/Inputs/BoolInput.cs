@@ -79,6 +79,26 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
     [Event] public Action<Event<IInput<TBool>, TBool>>? OnChange { get; }
 }
 
+public record BoolInput : BoolInput<bool>
+{
+    public BoolInput(IAnyState state, string? label = null, bool disabled = false,
+        BoolInputs variant = BoolInputs.Checkbox)
+        : base(state, label, disabled, variant)
+    {
+    }
+
+    public BoolInput(bool value, Action<Event<IInput<bool>, bool>> onChange, string? label = null,
+        bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) 
+        : base(value, onChange, label, disabled, variant)
+    {
+    }
+
+    public BoolInput(string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
+        : base(label, disabled, variant)
+    {
+    }
+}
+
 public static class BoolInputExtensions
 {
     public static BoolInputBase ToBoolInput(this IAnyState state, string? label = null, bool disabled = false,
