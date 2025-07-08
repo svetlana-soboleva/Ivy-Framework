@@ -221,18 +221,20 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   disabled,
   invalid,
   onTimeChange,
-  format: formatProp,
   'data-testid': dataTestId,
 }) => {
+  // Always use 24-hour format 'HH:mm:ss'
   const timeValue = useMemo(() => {
     if (value) {
-      const date = new Date(value);
+      const date = new Date(
+        `1970-01-01T${value.length <= 5 ? value + ':00' : value}`
+      ); // Accept 'HH:mm' or 'HH:mm:ss'
       if (!isNaN(date.getTime())) {
-        return format(date, formatProp || 'HH:mm:ss');
+        return format(date, 'HH:mm:ss');
       }
     }
-    return '';
-  }, [value, formatProp]);
+    return '00:00:00';
+  }, [value]);
 
   return (
     <div className="flex items-center gap-2">

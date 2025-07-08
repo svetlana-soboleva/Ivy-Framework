@@ -121,10 +121,10 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
 
     const timeInput = appFrame.getByTestId('datetime-input-time-main');
     await expect(timeInput).toBeVisible();
-    // Change the time
+    // Change the time (24-hour format)
     const input = timeInput.locator('input[type="time"]');
     await input.fill('08:00:00');
-    // Check that the value updated in the input (should show 08:00)
+    // Check that the value updated in the input (should show 08:00:00)
     await expect(input).toHaveValue('08:00:00');
   });
 

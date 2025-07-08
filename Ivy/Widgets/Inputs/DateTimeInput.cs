@@ -152,13 +152,13 @@ public static class DateTimeInputExtensions
                 (DateOnly?)DateOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(TimeOnly) =>
                 dateValue is TimeOnly t ? t :
-                dateValue is string s ? TimeOnly.Parse(s) :
+                dateValue is string s ? TimeOnly.ParseExact(s, "HH:mm:ss") :
                 dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
                 TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(TimeOnly?) =>
                 dateValue is null ? null :
                 dateValue is TimeOnly t ? t :
-                dateValue is string s ? TimeOnly.Parse(s) :
+                dateValue is string s ? TimeOnly.ParseExact(s, "HH:mm:ss") :
                 dateValue is DateTime dt ? TimeOnly.FromDateTime(dt) :
                 (TimeOnly?)TimeOnly.FromDateTime(DateTime.Now),
             _ when stateType == typeof(string) => dateValue?.ToString() ?? DateTime.Now.ToString("O"),
