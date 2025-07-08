@@ -1,6 +1,6 @@
 # NumberInput
 
-The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for 
+The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for
 setting minimum/maximum values, step increments, and formatting.
 
 ## Basic Usage
@@ -61,7 +61,6 @@ public class NumberSliderInput : ViewBase
     }
 }
 ```
-
 
 ### Money
 

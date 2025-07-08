@@ -90,7 +90,7 @@ const variantMap: VariantMap = {
     </h4>
   ),
   Block: ({ children, className, style }) => (
-    <div className={className} style={style}>
+    <div className={cn('flex items-center', className)} style={style}>
       {children}
     </div>
   ),
