@@ -14,7 +14,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
 
     const firstResult = page
       .locator('[data-sidebar="menu-item"], [data-sidebar="menu-sub-item"]')
-      .filter({ hasText: /DateTimeInput/i })
+      .filter({ hasText: /date\s*time\s*input/i })
       .first();
 
     await expect(firstResult).toBeVisible();
