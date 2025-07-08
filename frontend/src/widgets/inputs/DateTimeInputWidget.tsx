@@ -337,7 +337,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   );
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-testid={dataTestId}>
       <Clock className="h-4 w-4 text-muted-foreground" />
       <Input
         type="time"
@@ -352,7 +352,6 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
           'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
           invalid && inputStyles.invalid
         )}
-        data-testid={dataTestId}
       />
     </div>
   );
