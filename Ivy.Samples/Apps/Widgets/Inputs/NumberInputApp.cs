@@ -23,9 +23,12 @@ public class NumberInputApp : SampleBase
         const string loremIpsumString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros";
 
         return Layout.Vertical()
+
+               // Main grid with variants
                | Text.H1("Number Inputs")
                | Text.H2("Variants")
                | (Layout.Grid().Columns(6)
+
                   | null!
                   | Text.InlineCode("Null")
                   | Text.InlineCode("With Value")
@@ -37,28 +40,39 @@ public class NumberInputApp : SampleBase
                   | nullIntValue
                     .ToNumberInput()
                     .Placeholder("Placeholder")
-                  | intValue.ToNumberInput()
+                    .TestId("number-input-nullable-main")
+                  | intValue
+                    .ToNumberInput()
+                    .TestId("number-input-int-main")
                   | intValue
                     .ToNumberInput()
                     .Disabled()
+                    .TestId("number-input-int-disabled-main")
                   | intValue
                     .ToNumberInput()
                     .Invalid(loremIpsumString)
+                    .TestId("number-input-int-invalid-main")
                   | intValue
                     .ToNumberInput()
                     .ShowArrows()
+                    .TestId("number-input-int-arrows-main")
 
                   | Text.InlineCode("ToSliderInput()")
                   | nullIntValue
                     .ToSliderInput()
                     .Placeholder("Placeholder")
-                  | intValue.ToSliderInput()
+                    .TestId("number-input-nullable-slider-main")
+                  | intValue
+                    .ToSliderInput()
+                    .TestId("number-input-int-slider-main")
                   | intValue
                     .ToSliderInput()
                     .Disabled()
+                    .TestId("number-input-int-disabled-slider-main")
                   | intValue
                     .ToSliderInput()
                     .Invalid(loremIpsumString)
+                    .TestId("number-input-int-invalid-slider-main")
                   | intValue
                     .ToSliderInput()
                     .ShowArrows()

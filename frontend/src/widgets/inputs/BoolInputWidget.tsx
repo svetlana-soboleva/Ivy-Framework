@@ -26,6 +26,7 @@ interface BoolInputWidgetProps {
   invalid?: string;
   variant: VariantType;
   icon?: string;
+  'data-testid'?: string;
 }
 
 interface BaseVariantProps {
@@ -36,6 +37,7 @@ interface BaseVariantProps {
   nullable?: boolean;
   value: NullableBoolean;
   disabled: boolean;
+  'data-testid'?: string;
 }
 
 interface CheckboxVariantProps extends BaseVariantProps {
@@ -95,6 +97,7 @@ const VariantComponents = {
       nullable,
       invalid,
       onCheckedChange,
+      'data-testid': dataTestId,
     }: CheckboxVariantProps) => {
       const checkboxElement = (
         <Checkbox
@@ -104,6 +107,7 @@ const VariantComponents = {
           disabled={disabled}
           nullable={nullable}
           className={cn(invalid && inputStyles.invalid)}
+          data-testid={dataTestId}
         />
       );
 
@@ -130,6 +134,7 @@ const VariantComponents = {
       disabled,
       invalid,
       onCheckedChange,
+      'data-testid': dataTestId,
     }: SwitchVariantProps) => {
       const switchElement = (
         <Switch
@@ -138,6 +143,7 @@ const VariantComponents = {
           onCheckedChange={onCheckedChange}
           disabled={disabled}
           className={cn(invalid && inputStyles.invalid)}
+          data-testid={dataTestId}
         />
       );
 
@@ -165,6 +171,7 @@ const VariantComponents = {
       icon,
       invalid,
       onPressedChange,
+      'data-testid': dataTestId,
     }: ToggleVariantProps) => {
       const toggleElement = (
         <Toggle
@@ -174,6 +181,7 @@ const VariantComponents = {
           disabled={disabled}
           aria-label={label}
           className={cn(invalid && inputStyles.invalid)}
+          data-testid={dataTestId}
         >
           {icon && <Icon className="h-4 w-4" name={icon} />}
         </Toggle>
@@ -204,6 +212,7 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
   nullable = false,
   variant,
   icon,
+  'data-testid': dataTestId,
 }) => {
   const eventHandler = useEventHandler();
 
@@ -232,6 +241,7 @@ export const BoolInputWidget: React.FC<BoolInputWidgetProps> = ({
       invalid={invalid}
       onCheckedChange={handleChange}
       onPressedChange={handleChange}
+      data-testid={dataTestId}
     />
   );
 };

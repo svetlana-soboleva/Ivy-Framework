@@ -34,6 +34,7 @@ interface TextInputWidgetProps {
   width?: string;
   height?: string;
   shortcutKey?: string;
+  'data-testid'?: string;
 }
 
 // Utility to detect Mac platform
@@ -162,6 +163,7 @@ const DefaultVariant: React.FC<{
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
+        data-testid={props['data-testid']}
       />
       {props.invalid && (
         <div className="absolute right-2.5 top-2.5">
@@ -219,6 +221,7 @@ const TextareaVariant: React.FC<{
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
+        data-testid={props['data-testid']}
       />
       {props.invalid && (
         <div className="absolute right-2.5 top-2.5 h-4 w-4">
@@ -296,6 +299,7 @@ const PasswordVariant: React.FC<{
           hasLastPass && 'pr-3',
           props.shortcutKey && !hasLastPass && 'pr-24'
         )}
+        data-testid={props['data-testid']}
       />
 
       {!hasLastPass && (
@@ -409,7 +413,7 @@ const SearchVariant: React.FC<{
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
         )}
-        data-testid="sidebar-search"
+        data-testid={props['data-testid']}
       />
 
       {/* Error Icon */}
@@ -442,6 +446,7 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
   height,
   events,
   shortcutKey,
+  'data-testid': dataTestId,
 }) => {
   const eventHandler = useEventHandler();
   const [localValue, setLocalValue] = useState(value);
@@ -523,6 +528,7 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
       height,
       events,
       shortcutKey,
+      'data-testid': dataTestId,
     }),
     [
       id,
@@ -534,6 +540,7 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
       width,
       height,
       shortcutKey,
+      dataTestId,
     ]
   );
 
