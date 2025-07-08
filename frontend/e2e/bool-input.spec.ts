@@ -39,4 +39,8 @@ test('debug sidebar search', async ({ page }) => {
   // Now look for the h1 in the app frame
   const h1 = appFrame!.locator('h1');
   await expect(h1).toContainText('BoolInput');
+
+  // Now look for the h2 in the app frame
+  const h2 = appFrame!.locator('h2');
+  await expect(h2.nth(0)).toContainText('Variants');
 });
