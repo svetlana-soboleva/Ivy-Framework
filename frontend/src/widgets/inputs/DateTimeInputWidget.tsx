@@ -58,6 +58,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
   disabled,
   invalid,
   onDateChange,
+  format: formatProp,
   'data-testid': dataTestId,
 }) => {
   const [open, setOpen] = useState(false);
@@ -86,7 +87,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
-            format(date, 'yyyy-MM-dd')
+            format(date, formatProp || 'yyyy-MM-dd')
           ) : (
             <span>{placeholder || 'Pick a date'}</span>
           )}
@@ -111,6 +112,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   invalid,
   onDateChange,
   onTimeChange,
+  format: formatProp,
   'data-testid': dataTestId,
 }) => {
   const [open, setOpen] = useState(false);
@@ -119,10 +121,10 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   // Extract time from date or use current time
   const timeValue = useMemo(() => {
     if (date) {
-      return format(date, 'HH:mm:ss');
+      return format(date, formatProp || 'HH:mm:ss');
     }
     return '00:00:00';
-  }, [date]);
+  }, [date, formatProp]);
 
   const handleDateSelect = useCallback(
     (selectedDate: Date | undefined) => {
@@ -177,7 +179,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
-            format(date, 'yyyy-MM-dd')
+            format(date, formatProp || 'yyyy-MM-dd')
           ) : (
             <span>{placeholder || 'Pick a date & time'}</span>
           )}
@@ -218,17 +220,18 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   disabled,
   invalid,
   onTimeChange,
+  format: formatProp,
   'data-testid': dataTestId,
 }) => {
   const timeValue = useMemo(() => {
     if (value) {
       const date = new Date(value);
       if (!isNaN(date.getTime())) {
-        return format(date, 'HH:mm:ss');
+        return format(date, formatProp || 'HH:mm:ss');
       }
     }
     return '';
-  }, [value]);
+  }, [value, formatProp]);
 
   return (
     <div className="flex items-center gap-2">
