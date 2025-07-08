@@ -49,6 +49,7 @@ const SliderVariant = memo(
     step = 1,
     disabled = false,
     invalid,
+    currency,
     onValueChange,
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
@@ -89,6 +90,7 @@ const SliderVariant = memo(
           step={step}
           value={[sliderValue]}
           disabled={disabled}
+          currency={currency}
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
           className={cn(invalid && inputStyles.invalidInput)}
