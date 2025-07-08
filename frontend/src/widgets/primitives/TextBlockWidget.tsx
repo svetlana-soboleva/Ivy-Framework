@@ -153,29 +153,29 @@ const variantMap: VariantMap = {
     </div>
   ),
   Danger: ({ children, className, style }) => (
-    <div className={cn('text-red-600 font-semibold', className)} style={style}>
+    <div
+      className={cn('text-destructive font-semibold', className)}
+      style={style}
+    >
       {children}
     </div>
   ),
   Warning: ({ children, className, style }) => (
-    <div
-      className={cn('text-yellow-600 font-semibold', className)}
-      style={style}
-    >
+    <div className={cn('text-amber font-semibold', className)} style={style}>
       {children}
     </div>
   ),
   Success: ({ children, className, style }) => (
-    <div
-      className={cn('text-green-600 font-semibold', className)}
-      style={style}
-    >
+    <div className={cn('text-green font-semibold', className)} style={style}>
       {children}
     </div>
   ),
   Label: ({ children, className, style }) => (
     <div
-      className={cn('text-sm font-medium leading-none mt-2 -mb-2', className)}
+      className={cn(
+        'text-sm font-medium leading-none flex items-center',
+        className
+      )}
       style={style}
     >
       {children}
