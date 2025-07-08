@@ -23,12 +23,13 @@ public class DateTimeInputApp : SampleBase
         var nullableDateOnlyState = UseState<DateOnly?>(() => null);
 
         // Variants grid
-        var variantsGrid = Layout.Grid().Columns(5)
+        var variantsGrid = Layout.Grid().Columns(6)
             | null!
             | Text.Block("Normal")
             | Text.Block("Disabled")
             | Text.Block("Invalid")
             | Text.Block("Nullable")
+            | Text.Block("Nullable + Invalid")
 
             | Text.InlineCode("Date")
             | dateState
@@ -55,6 +56,12 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Date)
                 .Placeholder("Pick a date")
                 .TestId("datetime-input-date-nullable-main")
+            | nullableDateState
+                .ToDateTimeInput()
+                .Variant(DateTimeInputs.Date)
+                .Placeholder("Pick a date")
+                .Invalid("Nullable invalid date")
+                .TestId("datetime-input-date-nullable-invalid-main")
 
             | Text.InlineCode("DateTime")
             | dateTimeState
@@ -78,6 +85,11 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.DateTime)
                 .Placeholder("Pick date & time")
                 .TestId("datetime-input-datetime-nullable-main")
+            | nullableDateState.ToDateTimeInput()
+                .Variant(DateTimeInputs.DateTime)
+                .Placeholder("Pick date & time")
+                .Invalid("Nullable invalid datetime")
+                .TestId("datetime-input-datetime-nullable-invalid-main")
 
             | Text.InlineCode("Time")
             | timeState
@@ -102,7 +114,12 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Time)
                 .Placeholder("Pick a time")
                 .TestId("datetime-input-time-nullable-main")
-            ;
+            | nullableTimeState
+                .ToDateTimeInput()
+                .Variant(DateTimeInputs.Time)
+                .Placeholder("Pick a time")
+                .Invalid("Nullable invalid time")
+                .TestId("datetime-input-time-nullable-invalid-main");
 
         // Data binding grid
         var dataBindingGrid = Layout.Grid().Columns(3)
