@@ -15,7 +15,7 @@ const Slider = React.forwardRef<
   const formattedValue = React.useMemo(() => {
     if (!currency) return currentValue;
     try {
-      return new Intl.NumberFormat('en-Us', {
+      return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency,
         minimumFractionDigits: 0,
