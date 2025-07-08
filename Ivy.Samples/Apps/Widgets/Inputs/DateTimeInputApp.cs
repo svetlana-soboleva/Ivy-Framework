@@ -105,16 +105,14 @@ public class DateTimeInputApp : SampleBase
             ;
 
         // Data binding grid
-        var dataBindingGrid = Layout.Grid().Columns(4)
+        var dataBindingGrid = Layout.Grid().Columns(3)
             | Text.Block("Type")
             | Text.Block("Input")
             | Text.Block("Current Value")
-            | Text.Block("Nullable?")
 
             | Text.InlineCode("DateTime")
             | dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime).TestId("datetime-input-datetime-binding")
             | Text.InlineCode($"{dateState.Value:yyyy-MM-dd HH:mm:ss}")
-            | Text.Block("No")
 
             | Text.InlineCode("DateOnly")
             | dateOnlyState
@@ -122,7 +120,6 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Date)
                 .TestId("datetime-input-dateonly-binding")
             | Text.InlineCode($"{dateOnlyState.Value:yyyy-MM-dd}")
-            | Text.Block("No")
 
             | Text.InlineCode("TimeOnly")
             | timeOnlyState
@@ -130,7 +127,6 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Time)
                 .TestId("datetime-input-timeonly-binding")
             | Text.InlineCode($"{timeOnlyState.Value:HH:mm:ss}")
-            | Text.Block("No")
 
             | Text.InlineCode("string (ISO)")
             | stringState
@@ -138,7 +134,6 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.DateTime)
                 .TestId("datetime-input-string-binding")
             | Text.InlineCode(stringState.Value)
-            | Text.Block("No")
 
             | Text.InlineCode("DateTime?")
             | nullableDateState
@@ -146,7 +141,6 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.DateTime)
                 .TestId("datetime-input-datetime-nullable-binding")
             | Text.InlineCode(nullableDateState.Value?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null")
-            | Text.Block("Yes")
 
             | Text.InlineCode("DateOnly?")
             | nullableDateOnlyState
@@ -154,16 +148,13 @@ public class DateTimeInputApp : SampleBase
                 .Variant(DateTimeInputs.Date)
                 .TestId("datetime-input-dateonly-nullable-binding")
             | Text.InlineCode(nullableDateOnlyState.Value?.ToString("yyyy-MM-dd") ?? "null")
-            | Text.Block("Yes")
 
             | Text.InlineCode("TimeOnly?")
             | nullableTimeState
                 .ToDateTimeInput()
                 .Variant(DateTimeInputs.Time)
                 .TestId("datetime-input-timeonly-nullable-binding")
-            | Text.InlineCode(nullableTimeState.Value?.ToString("HH:mm:ss") ?? "null")
-            | Text.Block("Yes")
-            ;
+            | Text.InlineCode(nullableTimeState.Value?.ToString("HH:mm:ss") ?? "null");
 
         // Current values section
         var currentValues = Layout.Vertical()
