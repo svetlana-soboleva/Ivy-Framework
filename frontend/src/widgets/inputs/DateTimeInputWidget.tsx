@@ -81,7 +81,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
           className={cn(
             'w-full justify-start text-left font-normal',
             !date && 'text-muted-foreground',
-            invalid && inputStyles.invalid
+            invalid && inputStyles.invalidInput
           )}
           data-testid={dataTestId}
         >
@@ -216,7 +216,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
           className={cn(
             'w-full justify-start text-left font-normal',
             !date && 'text-muted-foreground',
-            invalid && inputStyles.invalid
+            invalid && inputStyles.invalidInput
           )}
           data-testid={dataTestId}
         >
@@ -248,7 +248,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
               disabled={disabled}
               className={cn(
                 'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
-                invalid && inputStyles.invalid
+                invalid && inputStyles.invalidInput
               )}
               data-testid={dataTestId ? `${dataTestId}-time` : undefined}
             />
@@ -350,7 +350,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
         placeholder={placeholder || 'Select time'}
         className={cn(
           'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden',
-          invalid && inputStyles.invalid
+          invalid && inputStyles.invalidInput
         )}
       />
     </div>
