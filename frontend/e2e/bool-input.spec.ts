@@ -55,4 +55,33 @@ test('debug sidebar search', async ({ page }) => {
   await expect(
     appFrame!.locator('code', { hasText: 'BoolInputs.Toggle' })
   ).toBeVisible();
+
+  const checkboxButton = appFrame!.locator('#glju9s8ied');
+  const checkedSpan = checkboxButton.locator('span[data-state="checked"]');
+  const checkBoxButtonLower = appFrame!.locator('#q2fgjba5yb');
+  const checkedSpanButtonLower = checkBoxButtonLower.locator(
+    'span[data-state="checked"]'
+  );
+  const disabledCheckboxButton = appFrame!.locator('#lnax7xp7yk');
+  const checkedSpanDisabledCheckboxButton = disabledCheckboxButton.locator(
+    'span[data-state="checked"]'
+  );
+  const disabledCheckboxButtonLower = appFrame!.locator('#b6qatvj0yf');
+  const checkedSpanDisabledCheckboxButtonLower =
+    disabledCheckboxButtonLower.locator('span[data-state="checked"]');
+  const invalidCheckboxButton = appFrame!.locator('#udbffh201n');
+  const checkedSpanInvalidCheckboxButton = invalidCheckboxButton.locator(
+    'span[data-state="checked"]'
+  );
+  const invalidCheckboxButtonLower = appFrame!.locator('#m05keqhbfb');
+  const checkedSpanInvalidCheckboxButtonLower =
+    invalidCheckboxButtonLower.locator('span[data-state="checked"]');
+
+  await checkboxButton.click();
+  await expect(checkedSpan).toBeHidden();
+  await expect(checkedSpanButtonLower).toBeHidden();
+  await expect(checkedSpanDisabledCheckboxButton).toBeHidden();
+  await expect(checkedSpanDisabledCheckboxButtonLower).toBeHidden();
+  await expect(checkedSpanInvalidCheckboxButton).toBeHidden();
+  await expect(checkedSpanInvalidCheckboxButtonLower).toBeHidden();
 });
