@@ -44,7 +44,7 @@ public class SelectVariantDemo : ViewBase
     {
         var langs = new string[]{"C#","Java","Go","JavaScript","F#","Kotlin","VB.NET","Rust"};
         
-        var favLang = UseState("");
+        var favLang = UseState("C#");
         return Layout.Vertical() 
                 | Text.Label("Select your favourite progrmming language")
                 | favLang.ToSelectInput(langs.ToOptions()).Variant(SelectInputs.Select);
@@ -55,8 +55,6 @@ public class SelectVariantDemo : ViewBase
 ### List 
 
 If it is required to render the select options as checkboxes, then this variant `SelectInputs.List` should be used.
-
-
 
 ```csharp demo-below
 // Option 1: Single Select (probably what you want)
@@ -83,7 +81,6 @@ The following example shows how to use it.
 ```csharp demo-below    
 public class MealComboDemo : ViewBase
 {
-      // Price dictionaries
         private static readonly Dictionary<string, decimal> BurgerPrices = new()
         {
             ["Big Mac"] = 5.99m,
@@ -117,8 +114,6 @@ public class MealComboDemo : ViewBase
         var fries = UseState("Medium Fries");
         var drink = UseState("Water");
         
-      
-        
         return Layout.Vertical()
             | H3("Create your meal")
             | (Layout.Horizontal()
@@ -145,28 +140,146 @@ public class MealComboDemo : ViewBase
 
 ## Multiple Selections
 
-Enable multiple selections using the `SelectMany` property:
+Multiple selection is implicit when the state to receive the result is a collection instead of a 
+single element. The following example shows this in action. 
 
+### Multiple selection in List variant 
+
+The following example shows how a `SelectInputs.List` allows multiple selection. 
+
+```csharp demo-below
+public class SelectMultiVariantDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var langs = new string[]{"Swedish","English","German","French"};
+        
+        var langSpeaks = UseState(new string[]{"English"});
+        return Layout.Vertical() 
+                | Text.Label("Languages you can speak")
+                | langSpeaks.ToSelectInput(langs.ToOptions())
+                            .Variant(SelectInputs.List);                             
+    }    
+}
+```
+
+### Multiple selection in Toggle variant
+
+The following example shows how a `SelectInputs.Toggle` allows multiple selection.
+```csharp demo-below
+public class SelectMultiVariantDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var seats = new string[]{"1A","1B","1C","1D"};
+        
+        var seatsBooked = UseState(new string[]{"1C"});
+        return Layout.Vertical() 
+                | Text.Label("Seats you want")
+                | seatsBooked.ToSelectInput(seats.ToOptions())
+                            .Variant(SelectInputs.Toggle);                             
+    }    
+}
+```
 
 ## Event Handling
 
-Handle change events using the `OnChange` parameter:
+Handle change events using the `onChange` parameter:
 
-```csharp
-var colorState = this.UseState(Color.Red);
-var colorInput = colorState.ToSelectInput(typeof(Color).ToOptions(), onChange: e => Console.WriteLine($"Selected: {e.Value}"));
+```csharp demo-below
+public class SelectVariantDemoSingleSelect : ViewBase
+{
+    public override object? Build()
+    {
+        var options = new List<string>() { "Email", "Phone", "Both" };
+        var selectedNotice = UseState("");
+        var showEmail = UseState(false);
+        var showPhone = UseState(false);
+        
+        return Layout.Vertical() 
+                | Text.Label("How would you like to be notified?") 
+                | new SelectInput<string>(
+                            value: selectedNotice.Value, 
+                            onChange: e =>
+                                    {
+                                        selectedNotice.Set(e.Value);
+                                        switch(e.Value)
+                                        {
+                                            case "Email":
+                                                 showEmail.Set(true);
+                                                 showPhone.Set(false); 
+                                                break;
+                                            case "Phone":
+                                                 showEmail.Set(false);
+                                                 showPhone.Set(true);
+                                                break;
+                                            case "Both":
+                                                showEmail.Set(true);
+                                                showPhone.Set(true);
+                                                break;
+                                        }
+                                    }, 
+                                    options.ToOptions()) 
+                | new TextInput()
+                        .Placeholder("email")
+                        .Variant(TextInputs.Email)
+                        .Disabled(!showEmail.Value) 
+                | new TextInput()
+                        .Placeholder("phone")
+                        .Variant(TextInputs.Tel)
+                        .Disabled(!showPhone.Value);
+    }
+}
 ```
+
 
 ## Styling
 
-Customize the SelectInput with various styling options:
+Customize the `SelectInput` with various styling options:
 
-```csharp
-var colorInput = colorState.ToSelectInput(typeof(Color).ToOptions())
-    .Placeholder("Select a color")
-    .Disabled()
-    .Invalid("Invalid selection");
+### Invalid
+
+A `SelectInput` can be rendered as invalid using the `Invalid` function. 
+
+### Disabled
+
+A `SelectInput` can be rendered as disabled using the `Disabled` function. 
+
+The following code shows how to use these functions and how it will render
+
+
+```csharp demo-below
+
+public class SimpleSelectDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var normalSelect = UseState("");
+        var invalidSelect = UseState("");
+        var disabledSelect = UseState("");
+        
+        var options = new[]{"Option 1", "Option 2", "Option 3"}.ToOptions();
+        
+        return Layout.Vertical()
+            | Text.Label("Normal SelectInput:")
+            | normalSelect.ToSelectInput(options)
+                .Placeholder("Choose an option...")
+            
+            | Text.Label("Invalid SelectInput:")
+            | invalidSelect.ToSelectInput(options)
+                .Placeholder("This has an error...")
+                .Invalid("This field is required")
+            
+            | Text.Label("Disabled SelectInput:")
+            | disabledSelect.ToSelectInput(options)
+                .Placeholder("This is disabled...")
+                .Disabled(true);
+    }
+}
 ```
+
+
+
 
 <WidgetDocs Type="Ivy.SelectInput" ExtensionTypes="Ivy.SelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/SelectInput.cs"/>
 
@@ -174,7 +287,8 @@ var colorInput = colorState.ToSelectInput(typeof(Color).ToOptions())
 
 ### Coffee Condiments Selection
 
-The following 
+The following demo shows how different condiment options for different coffees can be shown possibly
+in a software designed for a coffee shop.  
 
 ```csharp demo-tabs
 public class CoffeeShopDemo: ViewBase
@@ -223,32 +337,34 @@ public class CoffeeShopDemo: ViewBase
             "Nutmeg", "Vanilla extract" 
         }
     };
+    string[] coffeeSizes = new string[]{"Short", "Tall", "Grande", "Venti", "Trenta"};
     
     public override object? Build()
     {
         var coffee = UseState("Cappuccino");
-        var selectedCondiments = UseState<List<string>>(new List<string>());
+        var coffeeSize = UseState("Tall");
+        var selectedCondiments = UseState(new string[]{"Sugar cubes"});
         var previousCoffee = UseState("Cappuccino");
         var lastClickTime = UseState(DateTime.MinValue);
-        var coffeeSelected = coffee.Value;
+        var coffeeSelected = coffeeSize + " " + coffee.Value;
         var coffeeInput = coffee.ToSelectInput(CoffeeAccompaniments.Keys.ToOptions());
         
         if (previousCoffee.Value != coffee.Value)
         {
-            selectedCondiments.Set(new List<string>());
+            selectedCondiments.Set(new string[]{});
             previousCoffee.Set(coffee.Value);
         }
         
+        var coffeeSizeMenu = coffeeSize.ToSelectInput(coffeeSizes.ToOptions())
+                                       .Variant(SelectInputs.List);
         var availableCondiments = CoffeeAccompaniments[coffee.Value];
         
         var condimentMenu = selectedCondiments.ToSelectInput(availableCondiments.ToOptions())
-            .SelectMany()
             .Variant(SelectInputs.Toggle);
-           
-      
-        if (selectedCondiments.Value.Count > 0)
+        
+        if (selectedCondiments.Value.Length > 0)
         {
-            if(selectedCondiments.Value.Count == 1)
+            if(selectedCondiments.Value.Length == 1)
             {
                 coffeeSelected += "  with " + selectedCondiments
                                             .Value.Aggregate((a,b) =>  a + "," + b);
@@ -256,16 +372,17 @@ public class CoffeeShopDemo: ViewBase
             else
             {                  
                  coffeeSelected += "  with " + selectedCondiments
-                                                 .Value.Take(selectedCondiments.Value.Count - 1)
+                                                 .Value.Take(selectedCondiments.Value.Length - 1)
                                                  .Aggregate((a,b) =>  a + "," + b)
-                                                 + " and " + selectedCondiments.Value[selectedCondiments.Value.Count - 1];
+                                                 + " and " + selectedCondiments.Value[selectedCondiments.Value.Length - 1];
             }
         }
         
         return Layout.Vertical()
-                | H3("Coffee Condiment Menu")
                 | Text.Block("Coffee ")
                 | coffeeInput
+                | Text.Block("Size ")
+                | coffeeSizeMenu
                 | Text.Block("Condiments ")
                 | condimentMenu
                 | Text.Small("You are ordering...")

@@ -25,7 +25,7 @@ public abstract record SelectInputBase : WidgetBase<SelectInputBase>, IAnySelect
     [Prop] public string? Invalid { get; set; }
     [Prop] public string? Placeholder { get; set; }
     [Prop] public SelectInputs Variant { get; set; }
-    [Prop] protected bool SelectMany { get; set; } = false;
+    [Prop] public bool SelectMany { get; set; } = false;
     [Prop] public char Separator { get; set; } = ';';
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [];
@@ -122,5 +122,10 @@ public static class SelectInputExtensions
     public static SelectInputBase List(this SelectInputBase widget)
     {
         return widget with { Variant = SelectInputs.List };
+    }
+
+    public static SelectInputBase SelectMany(this SelectInputBase widget, bool selectMany = true)
+    {
+        return widget with { SelectMany = selectMany };
     }
 }
