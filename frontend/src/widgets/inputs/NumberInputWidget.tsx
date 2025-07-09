@@ -83,7 +83,7 @@ const SliderVariant = memo(
     const sliderValue = localValue ?? 0;
 
     return (
-      <div className="relative w-full flex flex-col gap-4">
+      <div className="relative w-full flex flex-col gap-1 py-6 my-auto">
         <Slider
           min={min}
           max={max}
