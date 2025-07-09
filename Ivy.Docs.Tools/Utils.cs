@@ -19,7 +19,7 @@ public static class Utils
         // Normalize the source path to handle cross-platform separators
         var normalizedSource = source.Replace('\\', '/');
         var sourceDir = Path.GetDirectoryName(normalizedSource) ?? "";
-        
+
         // Handle relative paths
         if (link.StartsWith("./"))
         {
@@ -30,17 +30,17 @@ public static class Utils
             // Handle parent directory navigation
             var sourceParts = sourceDir.Split('/', StringSplitOptions.RemoveEmptyEntries);
             var linkParts = link.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            
+
             var upCount = linkParts.TakeWhile(p => p == "..").Count();
             var actualLinkParts = linkParts.Skip(upCount);
-            
+
             var resultParts = sourceParts.Take(sourceParts.Length - upCount).Concat(actualLinkParts);
             return string.Join("/", resultParts);
         }
-        
+
         // Combine paths and normalize
         var combined = string.IsNullOrEmpty(sourceDir) ? link : $"{sourceDir}/{link}";
-        
+
         // Normalize path separators to forward slashes for consistency
         return combined.Replace('\\', '/');
     }
@@ -113,7 +113,7 @@ public static class Utils
         var normalizedInputFolder = NormalizePath(inputFolder);
         var normalizedInputFile = NormalizePath(inputFile);
         var fileDirectory = GetDirectoryName(normalizedInputFile);
-        
+
         // Calculate relative path manually for cross-platform compatibility
         var relativePath = GetRelativePath(normalizedInputFolder, fileDirectory);
         var parts = relativePath
@@ -124,11 +124,11 @@ public static class Utils
 
         // Use Path.Combine for cross-platform compatibility, then normalize to expected format
         var result = Path.Combine(parts);
-        
+
         // Handle the case where result is "." (current directory)
         if (result == "." || string.IsNullOrEmpty(result))
             return "";
-            
+
         // Normalize path separators to match expected test format (backslashes for Windows-style paths)
         // This ensures tests pass on both Windows and Unix systems
         return result.Replace(Path.DirectorySeparatorChar, '\\').Replace(Path.AltDirectorySeparatorChar, '\\');
@@ -141,14 +141,14 @@ public static class Utils
         {
             // Convert Windows-style paths to Unix-style for processing
             path = path.Replace('\\', '/');
-            
+
             // Handle Windows drive letters by removing them
             if (path.Length >= 2 && path[1] == ':')
             {
                 path = path[2..];
             }
         }
-        
+
         // Remove trailing separators
         return path.TrimEnd('\\', '/');
     }
@@ -160,7 +160,7 @@ public static class Utils
         {
             path = path.Replace('\\', '/');
         }
-        
+
         var lastSeparator = path.LastIndexOfAny(['\\', '/']);
         return lastSeparator >= 0 ? path[..lastSeparator] : "";
     }
@@ -173,27 +173,27 @@ public static class Utils
             fromPath = fromPath.Replace('\\', '/');
             toPath = toPath.Replace('\\', '/');
         }
-        
+
         // If paths are the same, return "."
         if (fromPath.Equals(toPath, StringComparison.OrdinalIgnoreCase))
             return ".";
-            
+
         // If fromPath is empty, return toPath
         if (string.IsNullOrEmpty(fromPath))
             return toPath;
-            
+
         // If toPath is empty, return "."
         if (string.IsNullOrEmpty(toPath))
             return ".";
-            
+
         // Split paths into parts
         var fromParts = fromPath.Split(['\\', '/'], StringSplitOptions.RemoveEmptyEntries);
         var toParts = toPath.Split(['\\', '/'], StringSplitOptions.RemoveEmptyEntries);
-        
+
         // Find common prefix
         var commonLength = 0;
         var minLength = Math.Min(fromParts.Length, toParts.Length);
-        
+
         for (int i = 0; i < minLength; i++)
         {
             if (string.Equals(fromParts[i], toParts[i], StringComparison.OrdinalIgnoreCase))
@@ -201,22 +201,22 @@ public static class Utils
             else
                 break;
         }
-        
+
         // Build relative path
         var relativeParts = new List<string>();
-        
+
         // Add ".." for each directory level to go up from fromPath
         for (int i = commonLength; i < fromParts.Length; i++)
         {
             relativeParts.Add("..");
         }
-        
+
         // Add remaining parts from toPath
         for (int i = commonLength; i < toParts.Length; i++)
         {
             relativeParts.Add(toParts[i]);
         }
-        
+
         return string.Join(Path.DirectorySeparatorChar, relativeParts);
     }
 
