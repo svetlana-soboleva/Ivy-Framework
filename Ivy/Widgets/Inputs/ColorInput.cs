@@ -1,6 +1,7 @@
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
+using Ivy.Shared;
 using Ivy.Widgets.Inputs;
 
 // ReSharper disable once CheckNamespace
@@ -17,7 +18,7 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
     [Prop] public string? Invalid { get; set; }
     [Prop] public string? Placeholder { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [typeof(string)];
+    public Type[] SupportedStateTypes() => [typeof(string), typeof(Colors), typeof(Colors?)];
 }
 
 public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
@@ -58,7 +59,7 @@ public static class ColorInputExtensions
         return input;
     }
 
-    public static ColorInputBase Disabled(this ColorInputBase widget, bool disabled)
+    public static ColorInputBase Disabled(this ColorInputBase widget, bool disabled = true)
     {
         return widget with { Disabled = disabled };
     }
