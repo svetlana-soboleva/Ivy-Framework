@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\Ivy\Directory.Build.props" Condition="Exists('..\..\Ivy\Directory.Build.props')" />
+  <Import Project="../../Ivy/Directory.Build.props" Condition="Exists('../../Ivy/Directory.Build.props')" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Generated/" />
-    <Folder Include="Samples\Todo\" />
+    <Folder Include="Samples/Todo/" />
   </ItemGroup>
 
   <Target Name="TransformMarkdown" BeforeTargets="CoreCompile">
@@ -58,7 +58,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="Samples\**\*.*" />
+    <Compile Remove="Samples/**/*.*" />
   </ItemGroup>
   
 </Project>
