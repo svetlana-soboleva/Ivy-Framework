@@ -53,6 +53,7 @@ interface SelectInputWidgetProps {
   eventHandler: EventHandler;
   selectMany: boolean;
   separator: string;
+  'data-testid'?: string;
 }
 
 const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
@@ -65,6 +66,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   selectMany = false,
   separator = ',',
   nullable = false,
+  'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -106,6 +108,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
             }}
             disabled={disabled}
             className="flex flex-wrap gap-2"
+            data-testid={dataTestId}
           >
             {validOptions.map(option => {
               const isSelected = selectedValues.includes(option.value);
@@ -118,7 +121,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
                       : isSelected
                         ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
                         : undefined
@@ -151,6 +154,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
             }}
             disabled={disabled}
             className="flex flex-wrap gap-2"
+            data-testid={dataTestId}
           >
             {validOptions.map(option => {
               const isSelected = selectedValues[0] === option.value.toString();
@@ -163,7 +167,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalid} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
                       : isSelected
                         ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
                         : undefined
@@ -214,6 +218,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   options = [],
   eventHandler,
   nullable = false,
+  'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -233,6 +238,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
           onValueChange={newValue => eventHandler('OnChange', id, [newValue])}
           disabled={disabled}
           className="flex flex-col space-y-2"
+          data-testid={dataTestId}
         >
           {validOptions.map(option => (
             <div key={option.value} className="flex items-center space-x-2">
@@ -241,7 +247,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 id={`${id}-${option.value}`}
                 className={cn(
                   stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalid
+                    ? inputStyles.invalidInput
                     : undefined
                 )}
               />
@@ -249,7 +255,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 htmlFor={`${id}-${option.value}`}
                 className={cn(
                   stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalid
+                    ? inputStyles.invalidInput
                     : undefined
                 )}
               >
@@ -296,6 +302,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   eventHandler,
   separator = ',',
   nullable = false,
+  'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -327,7 +334,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
-        <div className="flex flex-col space-y-2 gap-2">
+        <div className="flex flex-col space-y-2 gap-2" data-testid={dataTestId}>
           {validOptions.map(option => {
             const isSelected = selectedValues.includes(option.value);
             const isInvalid = !!invalid && isSelected;
@@ -345,7 +352,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                           }
                           disabled={disabled}
                           className={cn(
-                            inputStyles.invalid +
+                            inputStyles.invalidInput +
                               ' !bg-red-50 !border-red-500 !text-red-900'
                           )}
                         />
@@ -372,7 +379,9 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                 )}
                 <Label
                   htmlFor={`${id}-${option.value}`}
-                  className={cn(isInvalid ? inputStyles.invalid : undefined)}
+                  className={cn(
+                    isInvalid ? inputStyles.invalidInput : undefined
+                  )}
                 >
                   {option.label}
                 </Label>
@@ -406,6 +415,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   options = [],
   eventHandler,
   nullable = false,
+  'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -438,8 +448,9 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
           disabled={disabled}
           value={stringValue}
           onValueChange={newValue => eventHandler('OnChange', id, [newValue])}
+          data-testid={dataTestId}
         >
-          <SelectTrigger className={cn(invalid && inputStyles.invalid)}>
+          <SelectTrigger className={cn(invalid && inputStyles.invalidInput)}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>

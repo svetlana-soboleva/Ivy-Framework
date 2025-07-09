@@ -33,6 +33,7 @@ interface NumberInputBaseProps {
   onValueChange: (value: number | null) => void;
   currency?: string | undefined;
   showArrows?: boolean;
+  'data-testid'?: string;
 }
 
 interface NumberInputWidgetProps
@@ -48,7 +49,9 @@ const SliderVariant = memo(
     step = 1,
     disabled = false,
     invalid,
+    currency,
     onValueChange,
+    'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     // Local state for live feedback (optional, fallback to prop value)
     const [localValue, setLocalValue] = React.useState<number | null>(value);
@@ -87,9 +90,11 @@ const SliderVariant = memo(
           step={step}
           value={[sliderValue]}
           disabled={disabled}
+          currency={currency}
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
-          className={cn(invalid && inputStyles.invalid)}
+          className={cn(invalid && inputStyles.invalidInput)}
+          data-testid={dataTestId}
         />
         <span
           className="mt-4 flex w-full items-center justify-between gap-1 text-xs font-sm text-muted-foreground"
@@ -125,6 +130,7 @@ const NumberVariant = memo(
     onValueChange,
     currency,
     showArrows = false,
+    'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     const formatConfig = useMemo(
       () => ({
@@ -161,9 +167,10 @@ const NumberVariant = memo(
           value={value}
           disabled={disabled}
           onChange={handleNumberChange}
-          className={cn(invalid && inputStyles.invalid, invalid && 'pr-8')}
+          className={cn(invalid && inputStyles.invalidInput, invalid && 'pr-8')}
           nullable={nullable}
           showArrows={showArrows}
+          data-testid={dataTestId}
         />
         {invalid && (
           <div

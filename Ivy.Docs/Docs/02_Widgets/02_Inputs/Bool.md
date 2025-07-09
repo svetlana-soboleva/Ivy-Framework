@@ -13,10 +13,37 @@ public class BoolInputDemo : ViewBase
     {
         var state = this.UseState(false);
         return Layout.Horizontal()
-               | new BoolInput<bool>(state).Label("Accept Terms");
+               | new BoolInput(state).Label("Accept Terms");
     }
 }
 ```
+
+### Creating BoolInput Instances
+
+You can create `BoolInput` instances in several ways:
+
+1. **Using the non-generic constructor (defaults to `bool` type):**
+
+   ```csharp
+   var input = new BoolInput(); // Creates BoolInput<bool> with default values
+   var labeledInput = new BoolInput("My Label"); // With custom label
+   ```
+
+2. **Using the generic constructor for specific types:**
+
+   ```csharp
+   var nullableInput = new BoolInput<bool?>(); // For nullable boolean
+   var intInput = new BoolInput<int>(); // For integer-based boolean (0/1)
+   ```
+
+3. **Using extension methods from state:**
+
+   ```csharp
+   var state = UseState(false);
+   var input = state.ToBoolInput(); // Creates BoolInput from state
+   ```
+
+The non-generic `BoolInput` constructor is the most convenient when you need a simple boolean input without nullable types or other boolean-like representations.
 
 ## Variants
 
@@ -34,7 +61,7 @@ public class BoolInputDemo : ViewBase
         var state = UseState(false);
         var agreed = UseState(""); 
         return Layout.Horizontal()
-               | new BoolInput<bool>(state.Value, e => 
+               | new BoolInput(state.Value, e => 
                      {
                           if(e.Value)
                           {
@@ -70,7 +97,7 @@ public class BoolInputDemo : ViewBase
         
         return Layout.Vertical()
                | Layout.Horizontal()
-                 | new BoolInput<bool>(read.Value, e => 
+                 | new BoolInput(read.Value, e => 
                  {
                     if(e.Value)
                        readMessage.Set("User has readonly access!");
@@ -79,12 +106,12 @@ public class BoolInputDemo : ViewBase
                     read.Set(e.Value);
                  }, variant: BoolInputs.Switch).Label("Readonly")
                  | Text.Block(readMessage)
-              | new BoolInput<bool>(write, variant: BoolInputs.Switch)
+              | new BoolInput(write, variant: BoolInputs.Switch)
                    .Label("Can write")
                    .Disabled(read.Value)
-              | new BoolInput<bool>(delete, variant: BoolInputs.Switch).Label("Can delete")
+              | new BoolInput(delete, variant: BoolInputs.Switch).Label("Can delete")
                    .Disabled(read.Value)
-              | new BoolInput<bool>(dark, variant: BoolInputs.Switch)
+              | new BoolInput(dark, variant: BoolInputs.Switch)
                    .Label("Round trip");
     }
 }

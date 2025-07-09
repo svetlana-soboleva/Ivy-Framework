@@ -26,6 +26,7 @@ interface NumberInputProps {
   className?: string;
   nullable?: boolean;
   showArrows?: boolean;
+  'data-testid'?: string;
 }
 
 interface DragState {
@@ -57,6 +58,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       className = '',
       nullable = false,
       showArrows = false,
+      'data-testid': dataTestId,
       ...props
     },
     ref
@@ -308,6 +310,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           className={`${className} ${showArrows ? 'pr-14' : ''} ${
             !isValid ? 'border-red-500' : ''
           } ${dragState?.isDragging ? 'select-none' : ''}`}
+          data-testid={dataTestId}
           {...props}
         />
         {/* Right-side icon container */}
