@@ -45,7 +45,7 @@ public static class InputExtensions
             { } t when t == typeof(Colors) => new ColorInput<T>(state, placeholder, disabled),
 
             //todo:enums and IEnumerable
-
+            
             _ => throw new InvalidOperationException($"Invalid state type: {state.GetType()} for ToInput conversion.")
         };
     }

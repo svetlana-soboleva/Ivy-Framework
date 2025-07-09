@@ -43,8 +43,8 @@ public static class ColorUtils
         if (string.IsNullOrWhiteSpace(colorString))
             return false;
 
-        return IsValidHexColor(colorString) ||
-               IsValidRgbColor(colorString) ||
+        return IsValidHexColor(colorString) || 
+               IsValidRgbColor(colorString) || 
                IsValidOklchColor(colorString) ||
                IsValidColorsEnum(colorString);
     }
@@ -146,4 +146,4 @@ public static class ColorUtils
         // Otherwise return the original string
         return colorString;
     }
-}
+} 
