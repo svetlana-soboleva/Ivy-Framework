@@ -1,5 +1,4 @@
 using Ivy.Core.Hooks;
-using Ivy.Shared;
 
 namespace Ivy.Widgets.Inputs;
 
@@ -40,12 +39,11 @@ public static class InputExtensions
             { } t when t == typeof(DateTimeOffset) => new DateTimeInput<T>(state, placeholder, disabled),
             { } t when t == typeof(DateTimeOffset?) => new DateTimeInput<T>(state, placeholder, disabled),
 
-            //colors:
-            { } t when t == typeof(string) => new ColorInput<T>(state, placeholder, disabled),
-            { } t when t == typeof(Colors) => new ColorInput<T>(state, placeholder, disabled),
-
             //todo:enums and IEnumerable
-            
+
+            //colors:
+            //{ } t when t == typeof(Color) => new ColorInput<T>(state, placeholder, disabled),
+
             _ => throw new InvalidOperationException($"Invalid state type: {state.GetType()} for ToInput conversion.")
         };
     }
