@@ -1,5 +1,7 @@
 # Frontend
 
+**Node.js Version Requirement**: This project requires Node.js version 22.12.0 or greater.
+
 ## Development
 
 ```bash
