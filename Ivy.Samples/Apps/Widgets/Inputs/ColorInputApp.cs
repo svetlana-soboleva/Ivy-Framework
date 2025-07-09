@@ -7,7 +7,7 @@ public class ColorInputApp : SampleBase
 {
     protected override object? BuildSample()
     {
-        var colorState = this.UseState("#ff0000");
+        var colorState = UseState("#ff0000");
         return Layout.Horizontal(
             colorState.ToColorInput(),
             colorState
