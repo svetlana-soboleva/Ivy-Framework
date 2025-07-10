@@ -79,7 +79,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             else
             {
                 var url = navigateArgs.GetUrl(args.ConnectionId);
-                var tabId = $"{app.Id}-{url.GetHashCode()}";
+                var tabId = Guid.NewGuid().ToString("N");
 
                 if (settings.PreventTabDuplicates)
                 {
