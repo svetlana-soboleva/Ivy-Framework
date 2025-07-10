@@ -76,7 +76,7 @@ export function EmojiRating({
         ))}
       </div>
       {invalid && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4">
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 z-10">
           <InvalidIcon message={invalid} />
         </div>
       )}
