@@ -263,17 +263,15 @@ public class SimpleFlightBooking : ViewBase
                                   .Variant(DateTimeInputs.Date)
                                   .Placeholder("Select departure date")
                 // Return Date (only visible when round trip is on)
-                | (isRoundTrip.Value 
-                    ? Layout.Vertical()
+                | (Layout.Vertical()
                        | Text.Label("Return Date:")
                        | returnDate.ToDateTimeInput()
                                    .Variant(DateTimeInputs.Date)
                                    .Placeholder("Select return date")
-                    : null!)
+                                   .Disabled(!isRoundTrip.Value))
                 // Summary
-                | Text.Block(isRoundTrip.Value 
-                   ? $"Round trip: {departureDate.Value:MMM dd} → {returnDate.Value:MMM dd}"
-                   : $"One way: {departureDate.Value:MMM dd}");
+                | Text.Small($"Round trip: {departureDate.Value:MMM dd} → {returnDate.Value:MMM dd}")
+                | Text.Small($"One way: {departureDate.Value:MMM dd}");
     }
 }
 ```
