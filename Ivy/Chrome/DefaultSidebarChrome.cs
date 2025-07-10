@@ -13,9 +13,9 @@ namespace Ivy.Chrome;
 [App(isVisible: false, removeIvyBranding: true)]
 public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 {
-    private record TabState(string Title, string Url, Icons? Icon, long RefreshToken)
+    private record TabState(string Id, string Title, string Url, Icons? Icon, long RefreshToken)
     {
-        public Tab ToTab() => new Tab(Title, new Iframe(Url, refreshToken: RefreshToken)).Icon(Icon);
+        public Tab ToTab() => new Tab(Title, new Iframe(Url, refreshToken: RefreshToken)).Icon(Icon).Key(Id);
     }
 
     public override object? Build()
@@ -79,6 +79,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             else
             {
                 var url = navigateArgs.GetUrl(args.ConnectionId);
+                var tabId = $"{app.Id}-{url.GetHashCode()}";
 
                 if (settings.PreventTabDuplicates)
                 {
@@ -99,7 +100,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     }
                 }
 
-                var newTabs = tabs.Value.Add(new TabState(app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
+                var newTabs = tabs.Value.Add(new TabState(tabId, app.Title, url, app.Icon, DateTime.UtcNow.Ticks));
                 tabs.Set(newTabs);
                 selectedIndex.Set(newTabs.Length - 1);
             }
@@ -140,13 +141,27 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 
         void OnTabClose(Event<TabsLayout, int> @event)
         {
-            //[0,1,|2|,3] -> 2
-            //[0,1,|2|] -> 1
-            //[0,|1|] -> 0
-            //[|0|] -> null
-            var newIndex = Math.Min(@event.Value, tabs.Value.Length - 2);
-            selectedIndex.Set(newIndex >= 0 ? newIndex : (int?)null);
-            tabs.Set(tabs.Value.RemoveAt(@event.Value));
+            var closedIndex = @event.Value;
+            var wasSelected = selectedIndex.Value == closedIndex;
+            var newTabs = tabs.Value.RemoveAt(closedIndex);
+            int? newIndex = null;
+            if (newTabs.Length > 0)
+            {
+                if (wasSelected)
+                {
+                    newIndex = Math.Min(closedIndex, newTabs.Length - 1);
+                }
+                else if (selectedIndex.Value > closedIndex)
+                {
+                    newIndex = selectedIndex.Value - 1;
+                }
+                else
+                {
+                    newIndex = selectedIndex.Value;
+                }
+            }
+            selectedIndex.Set(newIndex);
+            tabs.Set(newTabs);
         }
 
         void OnTabRefresh(Event<TabsLayout, int> @event)
