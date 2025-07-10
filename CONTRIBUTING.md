@@ -148,7 +148,7 @@ dotnet test Ivy.Test
 
 # Run frontend tests
 cd frontend
-npm test
+npx playwright test
 ```
 
 ### Writing Tests
@@ -167,21 +167,6 @@ npm test
 - Use proper Markdown formatting
 - Include code examples where appropriate
 - Keep documentation up to date with code changes
-- Use the custom syntax for demo blocks:
-
-```csharp demo-below
-new Button("Styled Button")
-    .Icon(Icons.ArrowRight, Align.Right)
-    .BorderRadius(BorderRadius.Full)
-    .Large() 
-```
-
-### Documentation Types
-
-- `csharp demo-below` - Code block with Ivy demo below
-- `csharp demo-tabs` - Tabbed code/demo blocks
-- `csharp` - Regular code block
-- `terminal` - Terminal commands
 
 ## Reporting Issues
 
@@ -224,12 +209,5 @@ When reporting an issue, include:
 - **GitHub Issues** - For bugs and feature requests
 - **GitHub Discussions** - For questions and general discussion
 - **Documentation** - Check the [Ivy.Docs](Ivy.Docs/) for guides and examples
-
-## Recognition
-
-Contributors will be recognized in:
-- Release notes
-- Contributors list
-- Special thanks for significant contributions
 
 Thank you for contributing to Ivy Framework! Your contributions help make Ivy better for everyone. 
