@@ -65,7 +65,9 @@ export function EmojiRating({
             <span
               className={cn(
                 'transition-opacity duration-200',
-                (hover || value) >= index + 1 ? 'opacity-100' : 'opacity-40'
+                (hover || value) >= index + 1
+                  ? 'text-primary opacity-100'
+                  : 'text-muted-foreground opacity-40'
               )}
             >
               {emoji}
@@ -74,7 +76,7 @@ export function EmojiRating({
         ))}
       </div>
       {invalid && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4">
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 z-10">
           <InvalidIcon message={invalid} />
         </div>
       )}

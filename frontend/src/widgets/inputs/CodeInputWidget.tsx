@@ -152,7 +152,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
         }}
       />
       {invalid && (
-        <div className="absolute right-2.5 top-2.5">
+        <div className="absolute right-4 top-2.5">
           <InvalidIcon message={invalid} />
         </div>
       )}

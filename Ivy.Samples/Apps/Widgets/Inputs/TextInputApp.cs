@@ -46,10 +46,10 @@ public class TextInputApp : SampleBase
                | Text.H2("Variants")
                | (Layout.Grid().Columns(5)
                   | null!
-                  | Text.Block("Empty")
-                  | Text.Block("With Value")
-                  | Text.Block("Disabled")
-                  | Text.Block("Invalid")
+                  | Text.InlineCode("Empty")
+                  | Text.InlineCode("With Value")
+                  | Text.InlineCode("Disabled")
+                  | Text.InlineCode("Invalid")
 
                   | Text.InlineCode("TextInputs.Text")
                   | withoutValue.ToTextInput().Placeholder("Placeholder")

@@ -67,7 +67,9 @@ export function StarRating({
               <motion.div
                 className={cn(
                   'transition-colors duration-300',
-                  (hover || value) >= star ? 'text-primary' : 'text-muted'
+                  (hover || value) >= star
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
                 )}
                 initial={{ scale: 1 }}
                 animate={{
@@ -87,7 +89,7 @@ export function StarRating({
         )}
       </div>
       {invalid && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4">
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 z-10">
           <InvalidIcon message={invalid} />
         </div>
       )}
