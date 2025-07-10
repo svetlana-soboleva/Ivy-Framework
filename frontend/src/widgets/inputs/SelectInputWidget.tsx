@@ -441,8 +441,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   const hasValue = stringValue !== undefined;
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex-1 relative">
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1 relative w-full">
         <Select
           key={`${id}-${stringValue ?? 'null'}`}
           disabled={disabled}
