@@ -14,6 +14,37 @@ interface ColorInputWidgetProps {
   nullable?: boolean;
 }
 
+// Hoisted color map for backend Colors enum
+const enumColorsToCssVar: Record<string, string> = {
+  black: 'var(--color-black)',
+  white: 'var(--color-white)',
+  slate: 'var(--color-slate)',
+  gray: 'var(--color-gray)',
+  zinc: 'var(--color-zinc)',
+  neutral: 'var(--color-neutral)',
+  stone: 'var(--color-stone)',
+  red: 'var(--color-red)',
+  orange: 'var(--color-orange)',
+  amber: 'var(--color-amber)',
+  yellow: 'var(--color-yellow)',
+  lime: 'var(--color-lime)',
+  green: 'var(--color-green)',
+  emerald: 'var(--color-emerald)',
+  teal: 'var(--color-teal)',
+  cyan: 'var(--color-cyan)',
+  sky: 'var(--color-sky)',
+  blue: 'var(--color-blue)',
+  indigo: 'var(--color-indigo)',
+  violet: 'var(--color-violet)',
+  purple: 'var(--color-purple)',
+  fuchsia: 'var(--color-fuchsia)',
+  pink: 'var(--color-pink)',
+  rose: 'var(--color-rose)',
+  primary: 'var(--color-primary)',
+  secondary: 'var(--color-secondary)',
+  destructive: 'var(--color-destructive)',
+};
+
 export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   id,
   value,
@@ -84,32 +115,9 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       );
       return `#${(hash % 0xffffff).toString(16).padStart(6, '0')}`;
     }
-    const namedColors: Record<string, string> = {
-      red: '#ff0000',
-      green: '#00ff00',
-      blue: '#0000ff',
-      black: '#000000',
-      white: '#ffffff',
-      gray: '#808080',
-      grey: '#808080',
-      yellow: '#ffff00',
-      cyan: '#00ffff',
-      magenta: '#ff00ff',
-      orange: '#ffa500',
-      purple: '#800080',
-      pink: '#ffc0cb',
-      brown: '#a52a2a',
-      lime: '#00ff00',
-      navy: '#000080',
-      teal: '#008080',
-      silver: '#c0c0c0',
-      gold: '#ffd700',
-      maroon: '#800000',
-      olive: '#808000',
-    };
     const lowerValue = colorValue.toLowerCase();
-    if (namedColors[lowerValue]) {
-      return namedColors[lowerValue];
+    if (enumColorsToCssVar[lowerValue]) {
+      return enumColorsToCssVar[lowerValue];
     }
     return colorValue;
   };
