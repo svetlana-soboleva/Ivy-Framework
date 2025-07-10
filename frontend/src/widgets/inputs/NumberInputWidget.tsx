@@ -104,7 +104,7 @@ const SliderVariant = memo(
           <span>{max}</span>
         </span>
         {invalid && (
-          <div className="absolute right-2.5 top-2.5">
+          <div className="absolute right-2.5 translate-y-1/2 -top-1.5">
             <InvalidIcon message={invalid} />
           </div>
         )}
@@ -174,7 +174,10 @@ const NumberVariant = memo(
         />
         {invalid && (
           <div
-            className={cn('absolute top-2', showArrows ? 'right-8' : 'right-2')}
+            className={cn(
+              'absolute top-1/2 -translate-y-1/2 top-5.25',
+              showArrows ? 'right-8' : 'right-2'
+            )}
           >
             <InvalidIcon message={invalid} />
           </div>
