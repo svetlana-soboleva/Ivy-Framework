@@ -113,7 +113,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 select-none"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(checkboxElement, invalid)}
@@ -149,7 +149,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 select-none"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(switchElement, invalid)}
@@ -189,7 +189,7 @@ const VariantComponents = {
 
       const content = (
         <div
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 select-none"
           onClick={e => e.stopPropagation()}
         >
           {withTooltip(toggleElement, invalid)}
