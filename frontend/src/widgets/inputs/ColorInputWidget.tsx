@@ -1,4 +1,6 @@
 import { useEventHandler } from '@/components/EventHandlerContext';
+import { InvalidIcon } from '@/components/InvalidIcon';
+import { inputStyles } from '@/lib/styles';
 import React, { useState, useEffect } from 'react';
 
 interface ColorInputWidgetProps {
@@ -131,28 +133,32 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           value={getDisplayColor()}
           onChange={handleColorChange}
           disabled={disabled}
-          className={`w-10 h-10 p-1 border rounded-lg cursor-pointer ${
+          className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
             disabled ? 'opacity-50 cursor-not-allowed' : ''
-          } ${invalid ? 'border-red-500' : 'border-gray-300'}`}
+          } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
+        />
+      </div>
+      <div className="relative">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
+          placeholder={placeholder || 'Enter color'}
+          disabled={disabled}
+          className={`px-2 py-1 text-sm rounded border ${
+            disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : ''
+          } ${invalid ? inputStyles.invalidInput + ' pr-8' : 'border-gray-300'}`}
         />
         {invalid && (
-          <div className="absolute -top-6 left-0 text-xs text-red-500">
-            {invalid}
+          <div className="absolute top-1/2 -translate-y-1/2 flex items-center right-2">
+            <span className="flex items-center">
+              <InvalidIcon message={invalid} />
+            </span>
           </div>
         )}
       </div>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onBlur={handleInputBlur}
-        onKeyDown={handleInputKeyDown}
-        placeholder={placeholder || 'Enter color'}
-        disabled={disabled}
-        className={`px-2 py-1 text-sm border rounded ${
-          disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : ''
-        } ${invalid ? 'border-red-500' : 'border-gray-300'}`}
-      />
       {displayValue && (
         <div className="text-xs text-gray-500 min-w-0">{displayValue}</div>
       )}
