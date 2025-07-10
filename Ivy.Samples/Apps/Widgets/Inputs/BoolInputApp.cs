@@ -13,11 +13,11 @@ public class BoolInputApp : SampleBase
 
         var variants = Layout.Grid().Columns(6)
                        | null!
-                       | Text.Block("True")
-                       | Text.Block("False")
-                       | Text.Block("Disabled")
-                       | Text.Block("Invalid")
-                       | Text.Block("Nullable")
+                       | Text.InlineCode("True")
+                       | Text.InlineCode("False")
+                       | Text.InlineCode("Disabled")
+                       | Text.InlineCode("Invalid")
+                       | Text.InlineCode("Nullable")
                        | Text.InlineCode("BoolInputs.Checkbox")
                        | trueState
                            .ToBoolInput()
