@@ -13,6 +13,7 @@ interface ColorInputWidgetProps {
   placeholder?: string;
   nullable?: boolean;
   events?: string[];
+  variant?: 'text' | 'picker' | 'text-and-picker';
 }
 
 // Hoisted color map for backend Colors enum
@@ -54,6 +55,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   placeholder,
   nullable = false,
   events = [],
+  variant = 'text-and-picker',
 }) => {
   const eventHandler = useEventHandler();
   const [displayValue, setDisplayValue] = useState(value ?? '');
@@ -149,52 +151,56 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="relative">
-        <input
-          type="color"
-          value={getDisplayColor()}
-          onChange={handleColorChange}
-          disabled={disabled}
-          className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
-        />
-      </div>
-      <div className="relative">
-        <Input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          onBlur={handleInputBlur}
-          onKeyDown={handleInputKeyDown}
-          placeholder={placeholder || 'Enter color'}
-          disabled={disabled}
-          className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
-        />
-        {(invalid || (nullable && value !== null && !disabled)) && (
-          <div
-            className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
-            style={{ zIndex: 2 }}
-          >
-            {invalid && (
-              <span className="flex items-center">
-                <InvalidIcon message={invalid} />
-              </span>
-            )}
-            {nullable && value !== null && !disabled && (
-              <button
-                type="button"
-                tabIndex={-1}
-                aria-label="Clear"
-                onClick={handleClear}
-                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
-              >
-                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+      {variant !== 'text' && (
+        <div className="relative">
+          <input
+            type="color"
+            value={getDisplayColor()}
+            onChange={handleColorChange}
+            disabled={disabled}
+            className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
+              disabled ? 'opacity-50 cursor-not-allowed' : ''
+            } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
+          />
+        </div>
+      )}
+      {variant !== 'picker' && (
+        <div className="relative">
+          <Input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleInputKeyDown}
+            placeholder={placeholder || 'Enter color'}
+            disabled={disabled}
+            className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
+          />
+          {(invalid || (nullable && value !== null && !disabled)) && (
+            <div
+              className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
+              style={{ zIndex: 2 }}
+            >
+              {invalid && (
+                <span className="flex items-center">
+                  <InvalidIcon message={invalid} />
+                </span>
+              )}
+              {nullable && value !== null && !disabled && (
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label="Clear"
+                  onClick={handleClear}
+                  className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                >
+                  <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
