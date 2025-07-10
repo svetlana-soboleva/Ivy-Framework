@@ -115,37 +115,47 @@ public class BoolInputApp : SampleBase
                            .ToToggleInput(Icons.Magnet)
                            .Label("Label")
                            .Description("Description")
+                           .TestId("toggle-true-state-width-description")
+
 
                        | falseState
                            .ToToggleInput(Icons.Magnet)
                            .Label("Label")
                            .Description("Description")
+                           .TestId("toggle-false-state-width-description")
                        | trueState
                            .ToToggleInput(Icons.Magnet)
                            .Label("Label")
                            .Description("Description")
                            .Disabled()
+                           .TestId("toggle-true-state-width-description-disabled")
                        | trueState
                            .ToToggleInput(Icons.Magnet)
                            .Label("Label")
                            .Description("Description")
                            .Invalid("Invalid")
+                           .TestId("toggle-true-state-width-description-invalid")
                        | new Box("N/A")
                        | null!
                        | trueState
                            .ToToggleInput(Icons.Baby)
                            .Label("Label")
+                           .TestId("toggle-true-state-width")
                        | falseState
                            .ToToggleInput(Icons.Baby)
                            .Label("Label")
+                           .TestId("toggle-false-state-width")
                        | trueState
                            .ToToggleInput(Icons.Baby)
                            .Label("Label").Disabled()
+                           .TestId("toggle-true-state-width-disabled")
                        | trueState
                            .ToToggleInput(Icons.Baby)
                            .Label("Label")
                            .Invalid("Invalid")
+                           .TestId("toggle-true-state-width-invalid")
                        | new Box("N/A")
+
             ;
 
         var dataBinding = CreateNumericTypeTests();

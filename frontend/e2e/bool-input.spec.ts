@@ -56,6 +56,77 @@ test('debug sidebar search', async ({ page }) => {
     appFrame!.locator('code', { hasText: 'BoolInputs.Toggle' })
   ).toBeVisible();
 
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-false-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width-description-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width-description-invalid')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-null-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-false-state-width')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-true-state-width-invalid')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('checkbox-null-state-width')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-true-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-false-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-true-state-width-description-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-true-state-width-description-invalid')
+  ).toBeVisible();
+  await expect(appFrame!.getByTestId('switch-true-state-width')).toBeVisible();
+  await expect(appFrame!.getByTestId('switch-false-state-width')).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-true-state-width-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('switch-true-state-width-description-invalid')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-true-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-false-state-width-description')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-true-state-width-description-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-true-state-width-description-invalid')
+  ).toBeVisible();
+  await expect(appFrame!.getByTestId('toggle-true-state-width')).toBeVisible();
+  await expect(appFrame!.getByTestId('toggle-false-state-width')).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-true-state-width-disabled')
+  ).toBeVisible();
+  await expect(
+    appFrame!.getByTestId('toggle-true-state-width-invalid')
+  ).toBeVisible();
+
   const checkboxButton = appFrame!.locator('#glju9s8ied');
   const checkedSpan = checkboxButton.locator('span[data-state="checked"]');
   const checkBoxButtonLower = appFrame!.locator('#q2fgjba5yb');
