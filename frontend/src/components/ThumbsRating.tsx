@@ -51,10 +51,11 @@ const ThumbsRating = ({
           disabled={disabled}
           className={cn(
             'p-2 rounded-full transition-all',
-            'hover:bg-red-100 dark:hover:bg-red-900/30',
+            'hover:bg-destructive/20',
             'focus-visible:outline-none focus-visible:ring-2',
             'focus-visible:ring-ring focus-visible:ring-offset-2',
-            value === ThumbsEnum.Down && 'bg-red-100 dark:bg-red-900/30',
+            value === ThumbsEnum.Down &&
+              'bg-destructive text-destructive-foreground',
             disabled &&
               'cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent',
             invalid && inputStyles.invalid
@@ -65,7 +66,7 @@ const ThumbsRating = ({
             className={cn(
               'transition-colors',
               value === ThumbsEnum.Down
-                ? 'text-red-600 dark:text-red-400'
+                ? 'text-destructive-foreground'
                 : 'text-muted-foreground'
             )}
           />
@@ -76,10 +77,10 @@ const ThumbsRating = ({
           disabled={disabled}
           className={cn(
             'p-2 rounded-full transition-all',
-            'hover:bg-green-100 dark:hover:bg-green-900/30',
+            'hover:bg-primary/20',
             'focus-visible:outline-none focus-visible:ring-2',
             'focus-visible:ring-ring focus-visible:ring-offset-2',
-            value === ThumbsEnum.Up && 'bg-green-100 dark:bg-green-900/30',
+            value === ThumbsEnum.Up && 'bg-primary text-primary-foreground',
             disabled &&
               'cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent',
             invalid && inputStyles.invalid
@@ -90,14 +91,14 @@ const ThumbsRating = ({
             className={cn(
               'transition-colors',
               value === ThumbsEnum.Up
-                ? 'text-green-600 dark:text-green-400'
+                ? 'text-primary-foreground'
                 : 'text-muted-foreground'
             )}
           />
         </button>
       </div>
       {invalid && (
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4">
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 z-10">
           <InvalidIcon message={invalid} />
         </div>
       )}

@@ -26,6 +26,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import { X } from 'lucide-react';
+import { useCallback } from 'react';
 
 export type NullableSelectValue =
   | string
@@ -55,6 +56,70 @@ interface SelectInputWidgetProps {
   separator: string;
   'data-testid'?: string;
 }
+
+// Helper function to convert string values back to their original types
+const convertValuesToOriginalType = (
+  stringValues: string[],
+  originalValue: NullableSelectValue,
+  options: Option[]
+): NullableSelectValue => {
+  if (stringValues.length === 0) {
+    return originalValue instanceof Array ? [] : null;
+  }
+
+  const optionsMap = new Map<string, Option>();
+  for (const option of options) {
+    optionsMap.set(option.value.toString(), option);
+  }
+
+  // If original value is an array, preserve the array type
+  if (originalValue instanceof Array) {
+    // Check if original array contains numbers
+    if (originalValue.length > 0 && typeof originalValue[0] === 'number') {
+      return stringValues.map(v => {
+        const option = optionsMap.get(v);
+        return option ? Number(option.value) : Number(v);
+      });
+    }
+    // Check if original array contains strings
+    else if (originalValue.length > 0 && typeof originalValue[0] === 'string') {
+      return stringValues.map(v => {
+        const option = optionsMap.get(v);
+        return option ? String(option.value) : v;
+      });
+    }
+    // Default to string array
+    return stringValues;
+  }
+
+  // For single values, return the first value with proper type
+  const firstValue = stringValues[0];
+  const option = optionsMap.get(firstValue);
+  if (option) {
+    return option.value;
+  }
+  return firstValue;
+};
+
+const useSelectValueHandler = (
+  id: string,
+  value: NullableSelectValue,
+  options: Option[],
+  eventHandler: EventHandler
+) => {
+  return useCallback(
+    (newValue: string | string[]) => {
+      const stringArray = Array.isArray(newValue) ? newValue : [newValue];
+      const convertedValue = convertValuesToOriginalType(
+        stringArray,
+        value,
+        options
+      );
+      eventHandler('OnChange', id, [convertedValue]);
+    },
+    [id, value, options, eventHandler]
+  );
+};
 
 const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   id,
@@ -95,6 +160,13 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
 
   const hasValue = selectedValues.length > 0;
 
+  const handleValueChange = useSelectValueHandler(
+    id,
+    value,
+    validOptions,
+    eventHandler
+  );
+
   // Outer container
   const container = (
     <div className="flex items-center gap-2">
@@ -103,9 +175,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           <ToggleGroup
             type="multiple"
             value={selectedValues.map(v => v.toString())}
-            onValueChange={(newValue: string[]) => {
-              eventHandler('OnChange', id, [newValue]);
-            }}
+            onValueChange={handleValueChange}
             disabled={disabled}
             className="flex flex-wrap gap-2"
             data-testid={dataTestId}
@@ -149,9 +219,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           <ToggleGroup
             type="single"
             value={selectedValues[0]?.toString()}
-            onValueChange={(newValue: string) => {
-              eventHandler('OnChange', id, [newValue]);
-            }}
+            onValueChange={handleValueChange}
             disabled={disabled}
             className="flex flex-wrap gap-2"
             data-testid={dataTestId}
@@ -230,12 +298,19 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
 
   const hasValue = stringValue !== undefined;
 
+  const handleValueChange = useSelectValueHandler(
+    id,
+    value,
+    validOptions,
+    eventHandler
+  );
+
   const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <RadioGroup
           value={stringValue}
-          onValueChange={newValue => eventHandler('OnChange', id, [newValue])}
+          onValueChange={handleValueChange}
           disabled={disabled}
           className="flex flex-col space-y-2"
           data-testid={dataTestId}
@@ -316,18 +391,23 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
       .split(separator)
       .map(v => v.trim());
   }
-  const handleCheckboxChange = (
-    optionValue: string | number,
-    checked: boolean
-  ) => {
-    let newValues: (string | number)[];
-    if (checked) {
-      newValues = [...selectedValues, optionValue];
-    } else {
-      newValues = selectedValues.filter(v => v !== optionValue);
-    }
-    eventHandler('OnChange', id, [newValues]);
-  };
+  const handleCheckboxChange = useCallback(
+    (optionValue: string | number, checked: boolean) => {
+      let newValues: (string | number)[];
+      if (checked) {
+        newValues = [...selectedValues, optionValue];
+      } else {
+        newValues = selectedValues.filter(v => v !== optionValue);
+      }
+      const convertedValue = convertValuesToOriginalType(
+        newValues.map(v => v.toString()),
+        value,
+        validOptions
+      );
+      eventHandler('OnChange', id, [convertedValue]);
+    },
+    [selectedValues, value, validOptions, eventHandler, id]
+  );
 
   const hasValues = selectedValues.length > 0;
 
@@ -440,18 +520,48 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
 
   const hasValue = stringValue !== undefined;
 
+  const handleValueChange = useSelectValueHandler(
+    id,
+    value,
+    validOptions,
+    eventHandler
+  );
+
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex-1 relative">
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1 relative w-full">
         <Select
           key={`${id}-${stringValue ?? 'null'}`}
           disabled={disabled}
           value={stringValue}
-          onValueChange={newValue => eventHandler('OnChange', id, [newValue])}
+          onValueChange={handleValueChange}
           data-testid={dataTestId}
         >
-          <SelectTrigger className={cn(invalid && inputStyles.invalidInput)}>
+          <SelectTrigger
+            className={cn('relative', invalid && inputStyles.invalidInput)}
+          >
             <SelectValue placeholder={placeholder} />
+            {nullable && hasValue && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  eventHandler('OnChange', id, [null]);
+                }}
+                className="absolute top-1/2 -translate-y-1/2 right-8 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+                style={{ pointerEvents: 'auto' }}
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+            {invalid && (
+              <div className="absolute top-1/2 -translate-y-1/2 right-8 z-10">
+                <InvalidIcon message={invalid} />
+              </div>
+            )}
           </SelectTrigger>
           <SelectContent>
             {Object.entries(groupedOptions).map(([group, options]) => (
@@ -469,24 +579,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
             ))}
           </SelectContent>
         </Select>
-        {nullable && hasValue && !disabled && (
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label="Clear"
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              eventHandler('OnChange', id, [null]);
-            }}
-            className="absolute top-1/2 -translate-y-1/2 right-8 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
-            style={{ pointerEvents: 'auto' }}
-          >
-            <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-          </button>
-        )}
       </div>
-      {invalid && <InvalidIcon message={invalid} className="flex-shrink-0" />}
     </div>
   );
 };

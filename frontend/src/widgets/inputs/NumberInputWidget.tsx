@@ -83,7 +83,7 @@ const SliderVariant = memo(
     const sliderValue = localValue ?? 0;
 
     return (
-      <div className="relative w-full flex flex-col gap-1 pt-6 pb-2 my-auto justify-center flex-1">
+      <div className="relative w-full flex-1 flex flex-col gap-1 pt-6 pb-2 my-auto justify-center">
         <Slider
           min={min}
           max={max}
@@ -104,7 +104,7 @@ const SliderVariant = memo(
           <span>{max}</span>
         </span>
         {invalid && (
-          <div className="absolute right-2.5 top-2.5">
+          <div className="absolute right-2.5 translate-y-1/2 -top-1.5">
             <InvalidIcon message={invalid} />
           </div>
         )}
@@ -157,7 +157,7 @@ const NumberVariant = memo(
     );
 
     return (
-      <div className="relative">
+      <div className="relative w-full flex-1">
         <NumberInput
           min={min}
           max={max}
@@ -174,7 +174,10 @@ const NumberVariant = memo(
         />
         {invalid && (
           <div
-            className={cn('absolute top-2', showArrows ? 'right-8' : 'right-2')}
+            className={cn(
+              'absolute top-5.25 -translate-y-1/2',
+              showArrows ? 'right-8' : 'right-2'
+            )}
           >
             <InvalidIcon message={invalid} />
           </div>
