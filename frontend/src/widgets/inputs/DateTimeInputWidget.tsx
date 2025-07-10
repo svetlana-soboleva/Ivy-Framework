@@ -405,7 +405,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
   return (
     <div className="relative flex items-center gap-2" data-testid={dataTestId}>
       <Clock className="h-4 w-4 text-muted-foreground" />
-      <div className="relative w-full select-none">
+      <div className="relative w-full">
         <Input
           type="time"
           step="1"

@@ -157,7 +157,7 @@ const NumberVariant = memo(
     );
 
     return (
-      <div className="relative select-none">
+      <div className="relative">
         <NumberInput
           min={min}
           max={max}

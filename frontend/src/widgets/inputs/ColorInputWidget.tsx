@@ -149,65 +149,70 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   };
 
   // --- Variant rendering logic ---
-  // For 'Text' and 'Picker' variants, merge flex and relative into one div if possible.
   if (variant === 'Text') {
     return (
-      <div className="flex relative items-center space-x-2 select-none">
-        <Input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          onBlur={handleInputBlur}
-          onKeyDown={handleInputKeyDown}
-          placeholder={placeholder || 'Enter color'}
-          disabled={disabled}
-          className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
-        />
-        {(invalid || (nullable && value !== null && !disabled)) && (
-          <div
-            className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
-            style={{ zIndex: 2 }}
-          >
-            {invalid && (
-              <span className="flex items-center">
-                <InvalidIcon message={invalid} />
-              </span>
-            )}
-            {nullable && value !== null && !disabled && (
-              <button
-                type="button"
-                tabIndex={-1}
-                aria-label="Clear"
-                onClick={handleClear}
-                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
-              >
-                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-          </div>
-        )}
+      <div className="flex items-center space-x-2">
+        <div className="relative">
+          <Input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleInputKeyDown}
+            placeholder={placeholder || 'Enter color'}
+            disabled={disabled}
+            className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
+          />
+          {(invalid || (nullable && value !== null && !disabled)) && (
+            <div
+              className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
+              style={{ zIndex: 2 }}
+            >
+              {invalid && (
+                <span className="flex items-center">
+                  <InvalidIcon message={invalid} />
+                </span>
+              )}
+              {nullable && value !== null && !disabled && (
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label="Clear"
+                  onClick={handleClear}
+                  className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                >
+                  <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
+
   if (variant === 'Picker') {
     return (
-      <div className="flex relative items-center space-x-2 select-none">
-        <input
-          type="color"
-          value={getDisplayColor()}
-          onChange={handleColorChange}
-          disabled={disabled}
-          className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
-        />
+      <div className="flex items-center space-x-2">
+        <div className="relative">
+          <input
+            type="color"
+            value={getDisplayColor()}
+            onChange={handleColorChange}
+            disabled={disabled}
+            className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
+              disabled ? 'opacity-50 cursor-not-allowed' : ''
+            } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
+          />
+        </div>
       </div>
     );
   }
-  // For 'TextAndPicker', keep both for layout.
+
+  // Default: TextAndPicker
   return (
-    <div className="flex items-center space-x-2 select-none">
-      <div className="relative select-none">
+    <div className="flex items-center space-x-2">
+      <div className="relative">
         <input
           type="color"
           value={getDisplayColor()}
@@ -218,7 +223,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
         />
       </div>
-      <div className="relative select-none">
+      <div className="relative">
         <Input
           type="text"
           value={inputValue}

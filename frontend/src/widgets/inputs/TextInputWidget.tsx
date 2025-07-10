@@ -147,7 +147,7 @@ const DefaultVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative select-none" style={styles}>
+    <div className="relative" style={styles}>
       <Input
         ref={elementRef as React.RefObject<HTMLInputElement>}
         id={props.id}
@@ -205,7 +205,7 @@ const TextareaVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative select-none">
+    <div className="relative">
       <Textarea
         style={styles}
         ref={elementRef as React.RefObject<HTMLTextAreaElement>}
@@ -282,7 +282,7 @@ const PasswordVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative select-none" style={styles} ref={containerRef}>
+    <div className="relative" style={styles} ref={containerRef}>
       <Input
         ref={elementRef}
         id={props.id}
@@ -382,7 +382,7 @@ const SearchVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative select-none" style={styles}>
+    <div className="relative" style={styles}>
       {/* Search Icon */}
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
 
