@@ -439,11 +439,15 @@ export const TabsLayoutWidget = ({
                 >
                   {orderedTabWidgets.map(tabWidget => {
                     if (!React.isValidElement(tabWidget)) return null;
-                    const { id } = tabWidget.props as TabWidgetProps;
+                    const props = tabWidget.props as Partial<TabWidgetProps> & {
+                      key?: string;
+                    };
+                    if (!props.id) return null;
+                    const { id, key } = props;
 
                     return (
                       <SortableTabTrigger
-                        key={id}
+                        key={key ?? id}
                         id={id}
                         value={id}
                         onMouseEnter={() => setHoveredTabId(id)}
@@ -500,11 +504,16 @@ export const TabsLayoutWidget = ({
                     <div className="flex flex-col w-48">
                       {orderedTabWidgets.map(tabWidget => {
                         if (!React.isValidElement(tabWidget)) return null;
-                        const { title, id } = tabWidget.props as TabWidgetProps;
+                        const props =
+                          tabWidget.props as Partial<TabWidgetProps> & {
+                            key?: string;
+                          };
+                        if (!props.id) return null;
+                        const { title, id, key } = props;
 
                         return (
                           <SortableDropdownMenuItem
-                            key={id}
+                            key={key ?? id}
                             id={id}
                             onClick={() => handleTabSelect(id)}
                             isActive={activeTabId === id}
@@ -543,13 +552,17 @@ export const TabsLayoutWidget = ({
       <div className="flex-1 overflow-hidden">
         {orderedTabWidgets.map(tabWidget => {
           if (!React.isValidElement(tabWidget)) return null;
-          const { id } = tabWidget.props as TabWidgetProps;
+          const props = tabWidget.props as Partial<TabWidgetProps> & {
+            key?: string;
+          };
+          if (!props.id) return null;
+          const { id, key } = props;
 
           if (!loadedTabs.has(id)) return null;
 
           return (
             <div
-              key={id}
+              key={key ?? id}
               className={cn(
                 'h-full overflow-auto',
                 activeTabId === id ? 'block' : 'hidden'
