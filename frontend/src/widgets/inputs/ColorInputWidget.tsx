@@ -96,6 +96,15 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
     eventHandler('OnChange', id, [null]);
   };
 
+  const getThemeColorHex = (cssVar: string): string | undefined => {
+    if (typeof window === 'undefined') return undefined;
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue(cssVar)
+      .trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(value)) return value;
+    return undefined;
+  };
+
   const convertToHex = (colorValue: string): string => {
     if (!colorValue) return '';
     if (colorValue.startsWith('#')) {
@@ -112,14 +121,20 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       /oklch\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
     );
     if (oklchMatch) {
+      // TODO: Replace this placeholder with a real OKLCH → HEX conversion.
       const hash = Math.abs(
         colorValue.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
       );
       return `#${(hash % 0xffffff).toString(16).padStart(6, '0')}`;
     }
+    // Use theme color if available
     const lowerValue = colorValue.toLowerCase();
     if (enumColorsToCssVar[lowerValue]) {
-      return enumColorsToCssVar[lowerValue];
+      const cssVar = enumColorsToCssVar[lowerValue]
+        .replace('var(', '')
+        .replace(')', '');
+      const themeHex = getThemeColorHex(cssVar);
+      if (themeHex) return themeHex;
     }
     return colorValue;
   };
@@ -127,6 +142,8 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   const getDisplayColor = (): string => {
     if (!displayValue) return '#000000';
     const hexValue = convertToHex(displayValue);
+    // If the result is a CSS variable, fallback to black or a default color
+    if (hexValue.startsWith('var(')) return '#000000';
     return hexValue.startsWith('#') ? hexValue : '#000000';
   };
 
