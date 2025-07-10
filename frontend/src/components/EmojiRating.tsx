@@ -65,7 +65,9 @@ export function EmojiRating({
             <span
               className={cn(
                 'transition-opacity duration-200',
-                (hover || value) >= index + 1 ? 'opacity-100' : 'opacity-40'
+                (hover || value) >= index + 1
+                  ? 'text-primary opacity-100'
+                  : 'text-muted-foreground opacity-40'
               )}
             >
               {emoji}
