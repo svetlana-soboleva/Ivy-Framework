@@ -1,6 +1,7 @@
 import { useEventHandler } from '@/components/EventHandlerContext';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { inputStyles } from '@/lib/styles';
+import { Input } from '@/components/ui/input';
 import React, { useState, useEffect } from 'react';
 
 interface ColorInputWidgetProps {
@@ -139,7 +140,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
         />
       </div>
       <div className="relative">
-        <input
+        <Input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
@@ -147,9 +148,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           onKeyDown={handleInputKeyDown}
           placeholder={placeholder || 'Enter color'}
           disabled={disabled}
-          className={`px-2 py-1 text-sm rounded border ${
-            disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : ''
-          } ${invalid ? inputStyles.invalidInput + ' pr-8' : 'border-gray-300'}`}
+          className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
         />
         {invalid && (
           <div className="absolute top-1/2 -translate-y-1/2 flex items-center right-2">
