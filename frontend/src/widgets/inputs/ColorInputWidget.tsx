@@ -12,6 +12,7 @@ interface ColorInputWidgetProps {
   invalid?: string;
   placeholder?: string;
   nullable?: boolean;
+  events?: string[];
 }
 
 // Hoisted color map for backend Colors enum
@@ -52,6 +53,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   invalid,
   placeholder,
   nullable = false,
+  events = [],
 }) => {
   const eventHandler = useEventHandler();
   const [displayValue, setDisplayValue] = useState(value ?? '');
@@ -79,7 +81,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
     setDisplayValue(convertedValue);
     setInputValue(convertedValue);
     eventHandler('OnChange', id, [convertedValue]);
-    eventHandler('OnBlur', id, [convertedValue]);
+    if (events.includes('OnBlur')) eventHandler('OnBlur', id, [convertedValue]);
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
