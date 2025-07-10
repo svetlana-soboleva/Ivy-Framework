@@ -176,9 +176,6 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           </div>
         )}
       </div>
-      {displayValue && (
-        <div className="text-xs text-gray-500 min-w-0">{displayValue}</div>
-      )}
     </div>
   );
 };
