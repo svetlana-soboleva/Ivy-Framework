@@ -66,19 +66,24 @@ const convertValuesToOriginalType = (
     return originalValue instanceof Array ? [] : null;
   }
 
+  const optionsMap = new Map<string, Option>();
+  for (const option of options) {
+    optionsMap.set(option.value.toString(), option);
+  }
+
   // If original value is an array, preserve the array type
   if (originalValue instanceof Array) {
     // Check if original array contains numbers
     if (originalValue.length > 0 && typeof originalValue[0] === 'number') {
       return stringValues.map(v => {
-        const option = options.find(opt => opt.value.toString() === v);
+        const option = optionsMap.get(v);
         return option ? Number(option.value) : Number(v);
       });
     }
     // Check if original array contains strings
     else if (originalValue.length > 0 && typeof originalValue[0] === 'string') {
       return stringValues.map(v => {
-        const option = options.find(opt => opt.value.toString() === v);
+        const option = optionsMap.get(v);
         return option ? String(option.value) : v;
       });
     }
@@ -88,7 +93,7 @@ const convertValuesToOriginalType = (
 
   // For single values, return the first value with proper type
   const firstValue = stringValues[0];
-  const option = options.find(opt => opt.value.toString() === firstValue);
+  const option = optionsMap.get(firstValue);
   if (option) {
     return option.value;
   }
