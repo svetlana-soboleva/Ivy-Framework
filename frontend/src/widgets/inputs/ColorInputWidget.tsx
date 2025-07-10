@@ -13,7 +13,7 @@ interface ColorInputWidgetProps {
   placeholder?: string;
   nullable?: boolean;
   events?: string[];
-  variant?: 'text' | 'picker' | 'text-and-picker';
+  variant?: 'Text' | 'Picker' | 'TextAndPicker';
 }
 
 // Hoisted color map for backend Colors enum
@@ -55,7 +55,7 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   placeholder,
   nullable = false,
   events = [],
-  variant = 'text-and-picker',
+  variant = 'TextAndPicker',
 }) => {
   const eventHandler = useEventHandler();
   const [displayValue, setDisplayValue] = useState(value ?? '');
@@ -144,27 +144,14 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   const getDisplayColor = (): string => {
     if (!displayValue) return '#000000';
     const hexValue = convertToHex(displayValue);
-    // If the result is a CSS variable, fallback to black or a default color
     if (hexValue.startsWith('var(')) return '#000000';
     return hexValue.startsWith('#') ? hexValue : '#000000';
   };
 
-  return (
-    <div className="flex items-center space-x-2">
-      {variant !== 'text' && (
-        <div className="relative">
-          <input
-            type="color"
-            value={getDisplayColor()}
-            onChange={handleColorChange}
-            disabled={disabled}
-            className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
-              disabled ? 'opacity-50 cursor-not-allowed' : ''
-            } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
-          />
-        </div>
-      )}
-      {variant !== 'picker' && (
+  // --- Variant rendering logic ---
+  if (variant === 'Text') {
+    return (
+      <div className="flex items-center space-x-2">
         <div className="relative">
           <Input
             type="text"
@@ -200,7 +187,77 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
             </div>
           )}
         </div>
-      )}
+      </div>
+    );
+  }
+
+  if (variant === 'Picker') {
+    return (
+      <div className="flex items-center space-x-2">
+        <div className="relative">
+          <input
+            type="color"
+            value={getDisplayColor()}
+            onChange={handleColorChange}
+            disabled={disabled}
+            className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
+              disabled ? 'opacity-50 cursor-not-allowed' : ''
+            } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Default: TextAndPicker
+  return (
+    <div className="flex items-center space-x-2">
+      <div className="relative">
+        <input
+          type="color"
+          value={getDisplayColor()}
+          onChange={handleColorChange}
+          disabled={disabled}
+          className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
+            disabled ? 'opacity-50 cursor-not-allowed' : ''
+          } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
+        />
+      </div>
+      <div className="relative">
+        <Input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
+          placeholder={placeholder || 'Enter color'}
+          disabled={disabled}
+          className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
+        />
+        {(invalid || (nullable && value !== null && !disabled)) && (
+          <div
+            className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
+            style={{ zIndex: 2 }}
+          >
+            {invalid && (
+              <span className="flex items-center">
+                <InvalidIcon message={invalid} />
+              </span>
+            )}
+            {nullable && value !== null && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
