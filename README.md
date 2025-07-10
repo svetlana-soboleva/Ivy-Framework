@@ -69,11 +69,27 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
 ### Developer Build
 
 1. **Install dependencies**:
-   - [Node & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-   - [Vite](https://vitejs.dev/)
+   - [Node 22.12+ & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+   - [Vite 7](https://vitejs.dev/)
    - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 2. **Fork and clone this repository**.
-3. **Build the frontend**:
+3. **Pre-generate documentation files** (first time only):
+
+   **Windows (PowerShell):**
+
+   ```powershell
+   cd Ivy.Docs
+   .\Regenerate.ps1
+   ```
+
+   **Mac/Linux (Bash):**
+   
+   ```bash
+   cd Ivy.Docs
+   sh ./Regenerate.sh
+   ```
+
+4. **Build the frontend**:
 
    ```bash
    cd frontend
@@ -82,14 +98,21 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
    npm run dev
    ```
 
-4. **Run Ivy.Samples backend**:
+5. **Run the backend** (choose one):
 
+   **For Ivy.Samples (testing components):**
    ```bash
    cd Ivy.Samples
    dotnet watch
    ```
 
-5. **Open** [http://localhost:5137](http://localhost:5173) in your browser.
+   **For Ivy.Docs (documentation):**
+   ```bash
+   cd Ivy.Docs
+   dotnet watch
+   ```
+
+6. **Open** [http://localhost:5173/app](http://localhost:5173/app) in your browser.
 
 Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy.
 
@@ -100,3 +123,5 @@ Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples wi
 3. **Submit** a pull request.
 
 Feel free to file issues and feature requests.
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).

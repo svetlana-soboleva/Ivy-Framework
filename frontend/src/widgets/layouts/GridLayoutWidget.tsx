@@ -44,7 +44,10 @@ const GridLayoutCell: React.FC<GridLayoutCellProps> = ({
   };
 
   return (
-    <div style={styles} className={className}>
+    <div
+      style={styles}
+      className={`flex items-center h-full w-full ${className}`}
+    >
       {children}
     </div>
   );
@@ -79,7 +82,7 @@ export const GridLayoutWidget: React.FC<GridLayoutWidgetProps> = ({
   };
 
   return (
-    <div style={styles} className={className}>
+    <div style={styles} className={`place-items-center ${className}`}>
       {React.Children.map(children, (child, index) => (
         <GridLayoutCell
           column={childColumn[index]}

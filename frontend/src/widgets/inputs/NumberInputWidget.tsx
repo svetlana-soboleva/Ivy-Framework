@@ -83,7 +83,7 @@ const SliderVariant = memo(
     const sliderValue = localValue ?? 0;
 
     return (
-      <div className="relative w-full mt-8">
+      <div className="relative w-full flex flex-col gap-1 pt-6 pb-2 my-auto justify-center flex-1">
         <Slider
           min={min}
           max={max}
@@ -97,7 +97,7 @@ const SliderVariant = memo(
           data-testid={dataTestId}
         />
         <span
-          className="mt-4 flex w-full items-center justify-between gap-1 text-xs font-sm text-muted-foreground"
+          className="flex w-full items-center justify-between gap-1 text-xs font-sm text-muted-foreground"
           aria-hidden="true"
         >
           <span>{min}</span>
