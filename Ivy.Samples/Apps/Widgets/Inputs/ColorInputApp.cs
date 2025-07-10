@@ -24,40 +24,41 @@ public class ColorInputApp : SampleBase
 
     private object CreateVariantsSection()
     {
-        var hexState = UseState("#ff0000");
-        var rgbState = UseState("rgb(255, 0, 0)");
-        var oklchState = UseState("oklch(0.5, 0.2, 240)");
-        var nullState = UseState((string?)null);
+        var textState = UseState("#381ff4");
+        var pickerState = UseState("#dd5860");
+        var bothState = UseState("#6637d1");
+        var nullTextState = UseState((string?)null);
+        var nullPickerState = UseState((string?)null);
+        var nullBothState = UseState((string?)null);
 
         return Layout.Grid().Columns(6)
-               | null!
-               | Text.Block("Default")
-               | Text.Block("Disabled")
-               | Text.Block("Invalid")
-               | Text.Block("With Placeholder")
-               | Text.Block("Nullable")
+            | Text.Block("")
+            | Text.Block("Default")
+            | Text.Block("Invalid")
+            | Text.Block("Disabled")
+            | Text.Block("Nullable")
+            | Text.Block("Nullable + Invalid")
 
-               | Text.InlineCode("Hex")
-               | hexState.ToColorInput()
-               | hexState.ToColorInput().Disabled()
-               | hexState.ToColorInput().Invalid("Invalid color")
-               | hexState.ToColorInput().Placeholder("Select color")
-               | nullState.ToColorInput()
+            | Text.Block("Text Only")
+            | textState.ToColorInput().Variant(ColorInputVariant.Text)
+            | textState.ToColorInput().Variant(ColorInputVariant.Text).Invalid("Invalid color")
+            | textState.ToColorInput().Variant(ColorInputVariant.Text).Disabled()
+            | nullTextState.ToColorInput().Variant(ColorInputVariant.Text)
+            | nullTextState.ToColorInput().Variant(ColorInputVariant.Text).Invalid("Invalid color")
 
-               | Text.InlineCode("RGB")
-               | rgbState.ToColorInput()
-               | rgbState.ToColorInput().Disabled()
-               | rgbState.ToColorInput().Invalid("Invalid color")
-               | rgbState.ToColorInput().Placeholder("Select color")
-               | null!
+            | Text.Block("Picker Only")
+            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker)
+            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker).Invalid("Invalid color")
+            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker).Disabled()
+            | nullPickerState.ToColorInput().Variant(ColorInputVariant.Picker)
+            | nullPickerState.ToColorInput().Variant(ColorInputVariant.Picker).Invalid("Invalid color")
 
-               | Text.InlineCode("OKLCH")
-               | oklchState.ToColorInput()
-               | oklchState.ToColorInput().Disabled()
-               | oklchState.ToColorInput().Invalid("Invalid color")
-               | oklchState.ToColorInput().Placeholder("Select color")
-               | null!
-            ;
+            | Text.Block("Text and Picker")
+            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
+            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Invalid("Invalid color")
+            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Disabled()
+            | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
+            | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Invalid("Invalid color");
     }
 
     private object CreateFormatTests()
