@@ -147,7 +147,7 @@ const DefaultVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative" style={styles}>
+    <div className="relative w-full" style={styles}>
       <Input
         ref={elementRef as React.RefObject<HTMLInputElement>}
         id={props.id}
@@ -159,6 +159,7 @@ const DefaultVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
+          'w-full',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
@@ -205,7 +206,7 @@ const TextareaVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Textarea
         style={styles}
         ref={elementRef as React.RefObject<HTMLTextAreaElement>}
@@ -217,6 +218,7 @@ const TextareaVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
+          'w-full',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
@@ -282,7 +284,7 @@ const PasswordVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative" style={styles} ref={containerRef}>
+    <div className="relative w-full" style={styles} ref={containerRef}>
       <Input
         ref={elementRef}
         id={props.id}
@@ -294,6 +296,7 @@ const PasswordVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
+          'w-full',
           props.invalid && inputStyles.invalidInput,
           props.invalid ? 'pr-14' : 'pr-8',
           hasLastPass && 'pr-3',
@@ -382,7 +385,7 @@ const SearchVariant: React.FC<{
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative" style={styles}>
+    <div className="relative w-full" style={styles}>
       {/* Search Icon */}
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
 
@@ -408,7 +411,7 @@ const SearchVariant: React.FC<{
         onKeyDown={handleKeyDown}
         autoComplete="off"
         className={cn(
-          'pl-8',
+          'w-full pl-8',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           props.shortcutKey && !isFocused && 'pr-16'
