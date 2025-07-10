@@ -175,7 +175,7 @@ const NumberVariant = memo(
         {invalid && (
           <div
             className={cn(
-              'absolute top-1/2 -translate-y-1/2 top-5.25',
+              'absolute top-5.25 -translate-y-1/2',
               showArrows ? 'right-8' : 'right-2'
             )}
           >
