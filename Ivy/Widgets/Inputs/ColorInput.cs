@@ -17,8 +17,12 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Prop] public string? Placeholder { get; set; }
+    [Prop] public bool Nullable { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [typeof(string), typeof(Colors), typeof(Colors?)];
+    public Type[] SupportedStateTypes() => [
+        typeof(string),
+        typeof(Colors), typeof(Colors?)
+        ];
 }
 
 public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
@@ -46,6 +50,7 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
 
     [Prop] public TColor Value { get; } = default!;
 
+
     [Event] public Action<Event<IInput<TColor>, TColor>>? OnChange { get; }
 }
 
@@ -56,6 +61,7 @@ public static class ColorInputExtensions
         var type = state.GetStateType();
         Type genericType = typeof(ColorInput<>).MakeGenericType(type);
         ColorInputBase input = (ColorInputBase)Activator.CreateInstance(genericType, state, placeholder, disabled)!;
+        input.Nullable = type.IsNullableType();
         return input;
     }
 

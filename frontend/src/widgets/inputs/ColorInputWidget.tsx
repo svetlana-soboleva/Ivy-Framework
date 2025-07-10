@@ -2,14 +2,16 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { inputStyles } from '@/lib/styles';
 import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 interface ColorInputWidgetProps {
   id: string;
-  value: string;
+  value: string | null;
   disabled?: boolean;
   invalid?: string;
   placeholder?: string;
+  nullable?: boolean;
 }
 
 export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
@@ -18,14 +20,15 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
   disabled = false,
   invalid,
   placeholder,
+  nullable = false,
 }) => {
   const eventHandler = useEventHandler();
-  const [displayValue, setDisplayValue] = useState(value);
-  const [inputValue, setInputValue] = useState(value);
+  const [displayValue, setDisplayValue] = useState(value ?? '');
+  const [inputValue, setInputValue] = useState(value ?? '');
 
   useEffect(() => {
-    setDisplayValue(value);
-    setInputValue(value);
+    setDisplayValue(value ?? '');
+    setInputValue(value ?? '');
   }, [value]);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,15 +57,17 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
     }
   };
 
+  const handleClear = () => {
+    setDisplayValue('');
+    setInputValue('');
+    eventHandler('OnChange', id, [null]);
+  };
+
   const convertToHex = (colorValue: string): string => {
     if (!colorValue) return '';
-
-    // If it's already a hex color, return as is
     if (colorValue.startsWith('#')) {
       return colorValue;
     }
-
-    // Try to parse RGB format
     const rgbMatch = colorValue.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
     if (rgbMatch) {
       const r = parseInt(rgbMatch[1]);
@@ -70,21 +75,15 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       const b = parseInt(rgbMatch[3]);
       return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
-
-    // Try to parse OKLCH format (simplified conversion)
     const oklchMatch = colorValue.match(
       /oklch\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
     );
     if (oklchMatch) {
-      // For demo purposes, convert to a simple hex
-      // In a real implementation, you'd want proper OKLCH to RGB conversion
       const hash = Math.abs(
         colorValue.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
       );
       return `#${(hash % 0xffffff).toString(16).padStart(6, '0')}`;
     }
-
-    // If it's a named color, try to convert
     const namedColors: Record<string, string> = {
       red: '#ff0000',
       green: '#00ff00',
@@ -108,20 +107,15 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       maroon: '#800000',
       olive: '#808000',
     };
-
     const lowerValue = colorValue.toLowerCase();
     if (namedColors[lowerValue]) {
       return namedColors[lowerValue];
     }
-
-    // If we can't parse it, return the original value
     return colorValue;
   };
 
   const getDisplayColor = (): string => {
     if (!displayValue) return '#000000';
-
-    // Try to convert to hex for display
     const hexValue = convertToHex(displayValue);
     return hexValue.startsWith('#') ? hexValue : '#000000';
   };
@@ -150,11 +144,27 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           disabled={disabled}
           className={`${invalid ? inputStyles.invalidInput + ' pr-8' : ''}`}
         />
-        {invalid && (
-          <div className="absolute top-1/2 -translate-y-1/2 flex items-center right-2">
-            <span className="flex items-center">
-              <InvalidIcon message={invalid} />
-            </span>
+        {(invalid || (nullable && value !== null && !disabled)) && (
+          <div
+            className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 right-2"
+            style={{ zIndex: 2 }}
+          >
+            {invalid && (
+              <span className="flex items-center">
+                <InvalidIcon message={invalid} />
+              </span>
+            )}
+            {nullable && value !== null && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
           </div>
         )}
       </div>
