@@ -111,6 +111,22 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ## Code Style and Standards
 
+### Linting and Formatting
+
+Before submitting your code, ensure it follows the project's linting and formatting rules:
+
+#### Backend (C#)
+- Use `dotnet format` to format C# code according to the project's ruleset
+- Run this command in the root directory or specific project directories
+
+#### Frontend (TypeScript/React)
+- Use `npm run lint:fix` to automatically fix ESLint issues
+- Use `npm run format` to format code with Prettier
+- These commands should be run from the `frontend/` directory
+
+#### Pre-commit Hooks
+The project uses pre-commit hooks that will automatically run linting and formatting on staged files. Make sure your code passes these checks before committing.
+
 ### C# Guidelines
 
 - Follow [Microsoft C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
