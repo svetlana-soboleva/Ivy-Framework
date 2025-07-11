@@ -5,11 +5,11 @@ prepare: |
 
 # ColorInput
 
-The ColorInput widget provides a color picker interface for selecting color values. It allows users to visually choose colors and returns the selected color in a format suitable for use in styles and themes.
+The `ColorInput` widget provides a color picker interface for selecting color values. It allows users to visually choose colors and returns the selected color in a format suitable for use in styles and themes.
 
 ## Basic Usage
 
-Here's a simple example of a ColorInput that updates a state with the selected color:
+Here's a simple example of a `ColorInput` that updates a state with the selected color:
 
 ```csharp demo-below
 public class ColorDemo : ViewBase
@@ -23,20 +23,6 @@ public class ColorDemo : ViewBase
 }
 ```
 
-
-```csharp demo-below
-public class ColorDemo : ViewBase
-{
-    public override object? Build()
-    {    
-        var colorState = this.UseState("#ff0000");
-        return Layout.Horizontal()
-                | colorState.ToColorInput().Variant(ColorInputVariant.Text);
-    }   
-}
-```
-
-
 ## Variants
 
 `ColorInput` has three variants. `ColorInputVariant.Text` variant should be used to let users enter color hex codes
@@ -45,7 +31,7 @@ select the color and copy the selected color in the textbox. This is also the de
 Sometimes, it may be necessary to just use the color picker. In such situations `ColorInputVariant.Picker`
 should be used. 
 
-The following code shows all these tree variants in a vertical layout. 
+The following code shows all these three variants in action. 
 
 ```csharp demo-below
 public class ColorDemo : ViewBase
@@ -99,7 +85,8 @@ public class ColorChangedDemo : ViewBase
         };
         return Layout.Vertical() 
                 | H3("Hex Color Picker")
-                | new ColorInput<string>(colorState.Value, onChangeHandler)
+                | new ColorInput<string>
+                       (colorState.Value, onChangeHandler)
                       .Variant(ColorInputVariant.Picker) 
                 | new Code(colorName.Value)
                      .ShowCopyButton()
@@ -175,21 +162,22 @@ public class CSSColorDemo : ViewBase
                 | H3("CSS Block Generator")
                 | (Layout.Horizontal()
                    | Text.InlineCode("color")
-                         .Width(25)
+                         .Width(35)
                    | color.ToColorInput()
                           .Variant(ColorInputVariant.Picker))
                 | (Layout.Horizontal()
                    | Text.InlineCode("background-color")
-                         .Width(25)
+                         .Width(35)
                    | bgColor.ToColorInput()
                           .Variant(ColorInputVariant.Picker))
                 | (Layout.Horizontal()
                    | Text.InlineCode("border")
-                         .Width(25)
+                         .Width(35)
                    | border.ToColorInput()
                           .Variant(ColorInputVariant.Picker))
-                | genCode.ToCodeInput()
-                         .Language(Languages.Css);
+                   | new Code(genCode.Value)
+                         .Language(Languages.Css)
+                         .ShowCopyButton();
     }
 }
 
