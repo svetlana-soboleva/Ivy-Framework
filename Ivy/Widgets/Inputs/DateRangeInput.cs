@@ -20,7 +20,7 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
     [Prop] public string? Invalid { get; set; }
     [Prop] public bool Nullable { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    
+
     public Type[] SupportedStateTypes() =>
     [
         // Only DateOnly tuple types
