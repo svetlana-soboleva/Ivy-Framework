@@ -117,6 +117,47 @@ test.describe('Bool Input Tests', () => {
     appFrame = await setupBoolInputPage(page);
   });
 
+  // Helper function to test toggle behavior
+  async function testToggleBehavior(
+    testId: string,
+    attributeName: 'aria-checked' | 'aria-pressed',
+    initialState: string,
+    expectedAfterClick: string
+  ) {
+    const element = appFrame!.getByTestId(testId);
+
+    await expect(element).toHaveAttribute(attributeName, initialState);
+    await element.click();
+    await expect(element).toHaveAttribute(attributeName, expectedAfterClick);
+    await element.click();
+    await expect(element).toHaveAttribute(attributeName, initialState);
+  }
+
+  // Helper function to test disabled state
+  async function testDisabledState(
+    testId: string,
+    attributeName: 'aria-checked' | 'aria-pressed',
+    expectedState: string
+  ) {
+    const element = appFrame!.getByTestId(testId);
+
+    await expect(element).toHaveAttribute(attributeName, expectedState);
+    await expect(element).toBeDisabled();
+  }
+
+  // Helper function to test null state cycling (mixed -> true -> false -> mixed)
+  async function testNullStateCycling(testId: string) {
+    const element = appFrame!.getByTestId(testId);
+
+    await expect(element).toHaveAttribute('aria-checked', 'mixed');
+    await element.click();
+    await expect(element).toHaveAttribute('aria-checked', 'true');
+    await element.click();
+    await expect(element).toHaveAttribute('aria-checked', 'false');
+    await element.click();
+    await expect(element).toHaveAttribute('aria-checked', 'mixed');
+  }
+
   test.describe('Page Navigation', () => {
     test('should navigate to bool input page and verify elements', async () => {
       expect(appFrame).not.toBeNull();
@@ -128,118 +169,83 @@ test.describe('Bool Input Tests', () => {
     test.describe('Checkboxes', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-true-state-width-description'
+          await testToggleBehavior(
+            'checkbox-true-state-width-description',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
         });
 
         test('false state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-false-state-width-description'
+          await testToggleBehavior(
+            'checkbox-false-state-width-description',
+            'aria-checked',
+            'false',
+            'true'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
         });
 
         test('disabled state should remain checked', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-true-state-width-description-disabled'
+          await testDisabledState(
+            'checkbox-true-state-width-description-disabled',
+            'aria-checked',
+            'true'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await expect(checkbox).toBeDisabled();
-          // Note: Disabled checkboxes should not change state when clicked
         });
 
         test('invalid state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-true-state-width-description-invalid'
+          await testToggleBehavior(
+            'checkbox-true-state-width-description-invalid',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
         });
 
         test('null state should cycle through mixed -> true -> false', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-null-state-width-description'
-          );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+          await testNullStateCycling('checkbox-null-state-width-description');
         });
       });
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId('checkbox-true-state-width');
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
+          await testToggleBehavior(
+            'checkbox-true-state-width',
+            'aria-checked',
+            'true',
+            'false'
+          );
         });
 
         test('false state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId('checkbox-false-state-width');
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
+          await testToggleBehavior(
+            'checkbox-false-state-width',
+            'aria-checked',
+            'false',
+            'true'
+          );
         });
 
         test('disabled state should remain checked', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-true-state-width-disabled'
+          await testDisabledState(
+            'checkbox-true-state-width-disabled',
+            'aria-checked',
+            'true'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await expect(checkbox).toBeDisabled();
         });
 
         test('invalid state should toggle correctly', async () => {
-          const checkbox = appFrame!.getByTestId(
-            'checkbox-true-state-width-invalid'
+          await testToggleBehavior(
+            'checkbox-true-state-width-invalid',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
         });
 
         test('null state should cycle through mixed -> true -> false', async () => {
-          const checkbox = appFrame!.getByTestId('checkbox-null-state-width');
-
-          await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'false');
-          await checkbox.click();
-          await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+          await testNullStateCycling('checkbox-null-state-width');
         });
       });
     });
@@ -247,93 +253,75 @@ test.describe('Bool Input Tests', () => {
     test.describe('Switches', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-true-state-width-description'
+          await testToggleBehavior(
+            'switch-true-state-width-description',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
         });
 
         test('false state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-false-state-width-description'
+          await testToggleBehavior(
+            'switch-false-state-width-description',
+            'aria-checked',
+            'false',
+            'true'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
         });
 
         test('disabled state should remain checked', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-true-state-width-description-disabled'
+          await testDisabledState(
+            'switch-true-state-width-description-disabled',
+            'aria-checked',
+            'true'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await expect(switchButton).toBeDisabled();
         });
 
         test('invalid state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-true-state-width-description-invalid'
+          await testToggleBehavior(
+            'switch-true-state-width-description-invalid',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
         });
       });
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId('switch-true-state-width');
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
+          await testToggleBehavior(
+            'switch-true-state-width',
+            'aria-checked',
+            'true',
+            'false'
+          );
         });
 
         test('false state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-false-state-width'
+          await testToggleBehavior(
+            'switch-false-state-width',
+            'aria-checked',
+            'false',
+            'true'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
         });
 
         test('disabled state should remain checked', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-true-state-width-disabled'
+          await testDisabledState(
+            'switch-true-state-width-disabled',
+            'aria-checked',
+            'true'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await expect(switchButton).toBeDisabled();
         });
 
         test('invalid state should toggle correctly', async () => {
-          const switchButton = appFrame!.getByTestId(
-            'switch-true-state-width-invalid'
+          await testToggleBehavior(
+            'switch-true-state-width-invalid',
+            'aria-checked',
+            'true',
+            'false'
           );
-
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'false');
-          await switchButton.click();
-          await expect(switchButton).toHaveAttribute('aria-checked', 'true');
         });
       });
     });
@@ -341,93 +329,75 @@ test.describe('Bool Input Tests', () => {
     test.describe('Toggles', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-true-state-width-description'
+          await testToggleBehavior(
+            'toggle-true-state-width-description',
+            'aria-pressed',
+            'true',
+            'false'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
         });
 
         test('false state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-false-state-width-description'
+          await testToggleBehavior(
+            'toggle-false-state-width-description',
+            'aria-pressed',
+            'false',
+            'true'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
         });
 
         test('disabled state should remain pressed', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-true-state-width-description-disabled'
+          await testDisabledState(
+            'toggle-true-state-width-description-disabled',
+            'aria-pressed',
+            'true'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await expect(toggleButton).toBeDisabled();
         });
 
         test('invalid state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-true-state-width-description-invalid'
+          await testToggleBehavior(
+            'toggle-true-state-width-description-invalid',
+            'aria-pressed',
+            'true',
+            'false'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
         });
       });
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId('toggle-true-state-width');
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
+          await testToggleBehavior(
+            'toggle-true-state-width',
+            'aria-pressed',
+            'true',
+            'false'
+          );
         });
 
         test('false state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-false-state-width'
+          await testToggleBehavior(
+            'toggle-false-state-width',
+            'aria-pressed',
+            'false',
+            'true'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
         });
 
         test('disabled state should remain pressed', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-true-state-width-disabled'
+          await testDisabledState(
+            'toggle-true-state-width-disabled',
+            'aria-pressed',
+            'true'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await expect(toggleButton).toBeDisabled();
         });
 
         test('invalid state should toggle correctly', async () => {
-          const toggleButton = appFrame!.getByTestId(
-            'toggle-true-state-width-invalid'
+          await testToggleBehavior(
+            'toggle-true-state-width-invalid',
+            'aria-pressed',
+            'true',
+            'false'
           );
-
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
-          await toggleButton.click();
-          await expect(toggleButton).toHaveAttribute('aria-pressed', 'true');
         });
       });
     });
