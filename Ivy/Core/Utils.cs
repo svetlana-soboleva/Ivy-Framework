@@ -181,7 +181,7 @@ public static class Utils
                     var t when t == typeof(ulong) => (ulong)Math.Min(Math.Max(doubleValue, ulong.MinValue), ulong.MaxValue),
                     var t when t == typeof(float) => (float)Math.Min(Math.Max(doubleValue, float.MinValue), float.MaxValue),
                     var t when t == typeof(double) => doubleValue,
-                    var t when t == typeof(decimal) => (decimal)Math.Min(Math.Max((double)decimal.MinValue, doubleValue), (double)decimal.MaxValue),
+                    var t when t == typeof(decimal) => Math.Min(Math.Max((decimal)doubleValue, decimal.MinValue), decimal.MaxValue),
                     _ => Activator.CreateInstance(targetType)
                 };
             }
