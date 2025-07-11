@@ -384,5 +384,92 @@ test('checkbox and related spans visibility after click', async ({ page }) => {
   );
   await switchButtonTrueInvalid.click();
 
-  // Toggles with description aria-checked tests
+  // Toggles with description aria-pressed tests
+  // Toggle true state with description should be unpressed after click
+  const toggleButtonTrueDescription = appFrame!.getByTestId(
+    'toggle-true-state-width-description'
+  );
+  await expect(toggleButtonTrueDescription).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await toggleButtonTrueDescription.click();
+  await expect(toggleButtonTrueDescription).toHaveAttribute(
+    'aria-pressed',
+    'false'
+  );
+  await toggleButtonTrueDescription.click();
+  // Toggle false state with description should be pressed after click
+  const toggleButtonFalseDescription = appFrame!.getByTestId(
+    'toggle-false-state-width-description'
+  );
+  await expect(toggleButtonFalseDescription).toHaveAttribute(
+    'aria-pressed',
+    'false'
+  );
+  await toggleButtonFalseDescription.click();
+  await expect(toggleButtonFalseDescription).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await toggleButtonFalseDescription.click();
+  // Toggle true state disabled should be pressed and unable to be clicked
+  const toggleButtonTrueDescriptionDisabled = appFrame!.getByTestId(
+    'toggle-true-state-width-description-disabled'
+  );
+  await expect(toggleButtonTrueDescriptionDisabled).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  // Toggle true state invalid should be unpressed after click
+  const toggleButtonTrueDescriptionInvalid = appFrame!.getByTestId(
+    'toggle-true-state-width-description-invalid'
+  );
+  await expect(toggleButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await toggleButtonTrueDescriptionInvalid.click();
+  await expect(toggleButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-pressed',
+    'false'
+  );
+  await toggleButtonTrueDescriptionInvalid.click();
+
+  // Toggles without description aria-checked tests
+  // Toggle true state should be unpressed after click
+  const toggleButtonTrue = appFrame!.getByTestId('toggle-true-state-width');
+  await expect(toggleButtonTrue).toHaveAttribute('aria-pressed', 'true');
+  await toggleButtonTrue.click();
+  await expect(toggleButtonTrue).toHaveAttribute('aria-pressed', 'false');
+  await toggleButtonTrue.click();
+
+  // Toggle false state should be pressed after click
+  const toggleButtonFalse = appFrame!.getByTestId('toggle-false-state-width');
+  await expect(toggleButtonFalse).toHaveAttribute('aria-pressed', 'false');
+  await toggleButtonFalse.click();
+  await expect(toggleButtonFalse).toHaveAttribute('aria-pressed', 'true');
+  await toggleButtonFalse.click();
+
+  // Toggle true state disabled should be pressed and unable to be clicked
+  const toggleButtonTrueDisabled = appFrame!.getByTestId(
+    'toggle-true-state-width-disabled'
+  );
+  await expect(toggleButtonTrueDisabled).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  // Toggle true state invalid should be unpressed after click
+  const toggleButtonTrueInvalid = appFrame!.getByTestId(
+    'toggle-true-state-width-invalid'
+  );
+  await expect(toggleButtonTrueInvalid).toHaveAttribute('aria-pressed', 'true');
+  await toggleButtonTrueInvalid.click();
+  await expect(toggleButtonTrueInvalid).toHaveAttribute(
+    'aria-pressed',
+    'false'
+  );
+  await toggleButtonTrueInvalid.click();
+
+  // Toggles without description aria-checked tests
 });
