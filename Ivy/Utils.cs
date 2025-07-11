@@ -317,7 +317,22 @@ public static class Utils
 
     public static double SuggestStep(this Type type)
     {
-        return 1.0;
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            type = type.GetGenericArguments()[0];
+        }
+
+        return Type.GetTypeCode(type) switch
+        {
+            TypeCode.Decimal => 0.01, // 2 decimal places for currency/decimal
+            TypeCode.Double => 0.01,  // 2 decimal places for double
+            TypeCode.Single => 0.01f, // 2 decimal places for float
+            TypeCode.Int16 => 1.0,
+            TypeCode.Int32 => 1.0,
+            TypeCode.Int64 => 1.0,
+            TypeCode.Byte => 1.0,
+            _ => 1.0,
+        };
     }
 
     public static double SuggestMin(this Type type)
