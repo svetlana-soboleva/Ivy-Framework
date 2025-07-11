@@ -296,4 +296,93 @@ test('checkbox and related spans visibility after click', async ({ page }) => {
   await checkboxButtonNull.click();
   await expect(checkboxButtonNull).toHaveAttribute('aria-checked', 'false');
   await checkboxButtonNull.click();
+
+  // Switche with description aria-checked tests
+  //Switch true state with description should be unchecked after click
+  const switchButtonTrueDescription = appFrame!.getByTestId(
+    'switch-true-state-width-description'
+  );
+  await expect(switchButtonTrueDescription).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await switchButtonTrueDescription.click();
+  await expect(switchButtonTrueDescription).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await switchButtonTrueDescription.click();
+  // Switch false state with description should be checked after click
+  const switchButtonFalseDescription = appFrame!.getByTestId(
+    'switch-false-state-width-description'
+  );
+  await expect(switchButtonFalseDescription).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await switchButtonFalseDescription.click();
+  await expect(switchButtonFalseDescription).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await switchButtonFalseDescription.click();
+  // Switch true state disabled should be checked and unable to be clicked
+  const switchButtonTrueDescriptionDisabled = appFrame!.getByTestId(
+    'switch-true-state-width-description-disabled'
+  );
+  await expect(switchButtonTrueDescriptionDisabled).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  // Switch true state invalid should be unchecked after click
+  const switchButtonTrueDescriptionInvalid = appFrame!.getByTestId(
+    'switch-true-state-width-description-invalid'
+  );
+  await expect(switchButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await switchButtonTrueDescriptionInvalid.click();
+  await expect(switchButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await switchButtonTrueDescriptionInvalid.click();
+
+  // Switches without description aria-checked tests
+  // Switch true state should be unchecked after click
+  const switchButtonTrue = appFrame!.getByTestId('switch-true-state-width');
+  await expect(switchButtonTrue).toHaveAttribute('aria-checked', 'true');
+  await switchButtonTrue.click();
+  await expect(switchButtonTrue).toHaveAttribute('aria-checked', 'false');
+  await switchButtonTrue.click();
+
+  // Switch false state should be checked after click
+  const switchButtonFalse = appFrame!.getByTestId('switch-false-state-width');
+  await expect(switchButtonFalse).toHaveAttribute('aria-checked', 'false');
+  await switchButtonFalse.click();
+  await expect(switchButtonFalse).toHaveAttribute('aria-checked', 'true');
+  await switchButtonFalse.click();
+
+  // Switch true state disabled should be checked and unable to be clicked
+  const switchButtonTrueDisabled = appFrame!.getByTestId(
+    'switch-true-state-width-disabled'
+  );
+  await expect(switchButtonTrueDisabled).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  // Switch true state invalid should be unchecked after click
+  const switchButtonTrueInvalid = appFrame!.getByTestId(
+    'switch-true-state-width-invalid'
+  );
+  await expect(switchButtonTrueInvalid).toHaveAttribute('aria-checked', 'true');
+  await switchButtonTrueInvalid.click();
+  await expect(switchButtonTrueInvalid).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await switchButtonTrueInvalid.click();
+
+  // Toggles with description aria-checked tests
 });
