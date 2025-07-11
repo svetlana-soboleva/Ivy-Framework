@@ -329,9 +329,9 @@ public static class Utils
 
         return Type.GetTypeCode(type) switch
         {
-            TypeCode.Decimal => Convert.ToDouble(decimal.MinValue),
-            TypeCode.Double => double.MinValue,
-            TypeCode.Single => float.MinValue,
+            TypeCode.Decimal => -999999999999.99, // Practical limit for currency/decimal values
+            TypeCode.Double => -999999999999.99,  // Practical limit for double values
+            TypeCode.Single => -999999999999.99f, // Practical limit for float values
             TypeCode.Int16 => short.MinValue,
             TypeCode.Int32 => int.MinValue,
             TypeCode.Int64 => long.MinValue,
@@ -349,9 +349,9 @@ public static class Utils
 
         return Type.GetTypeCode(type) switch
         {
-            TypeCode.Decimal => Convert.ToDouble(decimal.MaxValue),
-            TypeCode.Double => double.MaxValue,
-            TypeCode.Single => float.MaxValue,
+            TypeCode.Decimal => 999999999999.99, // Practical limit for currency/decimal values
+            TypeCode.Double => 999999999999.99,  // Practical limit for double values
+            TypeCode.Single => 999999999999.99f, // Practical limit for float values
             TypeCode.Int16 => short.MaxValue,
             TypeCode.Int32 => int.MaxValue,
             TypeCode.Int64 => long.MaxValue,

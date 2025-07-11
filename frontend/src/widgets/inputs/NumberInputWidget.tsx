@@ -28,12 +28,9 @@ const TYPE_LIMITS = {
   uint: { min: 0, max: 4294967295 },
   long: { min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER },
   ulong: { min: 0, max: Number.MAX_SAFE_INTEGER },
-  float: { min: -3.402823e38, max: 3.402823e38 },
-  double: { min: Number.MIN_VALUE, max: Number.MAX_VALUE },
-  decimal: {
-    min: Number.MIN_SAFE_INTEGER,
-    max: Number.MAX_SAFE_INTEGER,
-  },
+  float: { min: -999999.99, max: 999999.99 }, // Practical limits for float
+  double: { min: -999999.99, max: 999999.99 }, // Practical limits for double
+  decimal: { min: -999999.99, max: 999999.99 }, // Practical limits for decimal
 } as const;
 
 interface NumberInputBaseProps {
