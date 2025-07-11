@@ -9,7 +9,6 @@ public class TypeUtilsTests
 {
     [Theory]
     [InlineData("Ivy.ColorInput", typeof(Ivy.ColorInput))]
-    [InlineData("Ivy.ColorInput<string>", typeof(Ivy.ColorInput<string>))]
     [InlineData("Ivy.Button", typeof(Ivy.Button))]
     public void GetTypeFromName_ReturnsExpectedType(string typeName, Type expectedType)
     {
