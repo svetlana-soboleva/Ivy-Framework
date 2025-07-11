@@ -49,13 +49,14 @@ public class CodeInputApp : SampleBase
             </html>
             """);
 
-        var variants = Layout.Grid().Columns(6)
+        var variants = Layout.Grid().Columns(7)
                | null!
                | Text.Block("Default")
                | Text.Block("Disabled")
                | Text.Block("Invalid")
                | Text.Block("With Placeholder")
                | Text.Block("Empty State")
+               | Text.Block("With Copy Button")
 
                | Text.InlineCode("C#")
                | csharpCode.ToCodeInput().Language(Languages.Csharp)
@@ -63,6 +64,7 @@ public class CodeInputApp : SampleBase
                | csharpCode.ToCodeInput().Language(Languages.Csharp).Invalid("Invalid code")
                | csharpCode.ToCodeInput().Language(Languages.Csharp).Placeholder("Enter C# code here...")
                | UseState("").ToCodeInput().Language(Languages.Csharp).Placeholder("Enter C# code here...")
+               | csharpCode.ToCodeInput().Language(Languages.Csharp).ShowCopyButton()
 
                | Text.InlineCode("JSON")
                | jsonCode.ToCodeInput().Language(Languages.Json)
@@ -70,6 +72,7 @@ public class CodeInputApp : SampleBase
                | jsonCode.ToCodeInput().Language(Languages.Json).Invalid("Invalid JSON")
                | jsonCode.ToCodeInput().Language(Languages.Json).Placeholder("Enter JSON here...")
                | UseState("").ToCodeInput().Language(Languages.Json).Placeholder("Enter JSON here...")
+               | jsonCode.ToCodeInput().Language(Languages.Json).ShowCopyButton()
 
                | Text.InlineCode("SQL")
                | sqlCode.ToCodeInput().Language(Languages.Sql)
@@ -77,6 +80,7 @@ public class CodeInputApp : SampleBase
                | sqlCode.ToCodeInput().Language(Languages.Sql).Invalid("Invalid SQL")
                | sqlCode.ToCodeInput().Language(Languages.Sql).Placeholder("Enter SQL query here...")
                | UseState("").ToCodeInput().Language(Languages.Sql).Placeholder("Enter SQL query here...")
+               | sqlCode.ToCodeInput().Language(Languages.Sql).ShowCopyButton()
 
                | Text.InlineCode("HTML")
                | htmlCode.ToCodeInput().Language(Languages.Html)
@@ -84,6 +88,7 @@ public class CodeInputApp : SampleBase
                | htmlCode.ToCodeInput().Language(Languages.Html).Invalid("Invalid HTML")
                | htmlCode.ToCodeInput().Language(Languages.Html).Placeholder("Enter HTML here...")
                | UseState("").ToCodeInput().Language(Languages.Html).Placeholder("Enter HTML here...")
+               | htmlCode.ToCodeInput().Language(Languages.Html).ShowCopyButton()
             ;
 
         var dataBinding = CreateStringTypeTests();
@@ -173,6 +178,7 @@ public class CodeInputApp : SampleBase
         // For non-nullable states, show all variants
         return Layout.Vertical()
                | anyState.ToCodeInput()
-               | anyState.ToCodeInput().Language(Languages.Csharp);
+               | anyState.ToCodeInput().Language(Languages.Csharp)
+               | anyState.ToCodeInput().Language(Languages.Csharp).ShowCopyButton();
     }
 }
