@@ -175,42 +175,76 @@ test('checkbox and related spans visibility after click', async ({ page }) => {
   const appFrame = await appFrameElement.contentFrame();
   expect(appFrame).not.toBeNull();
 
+  // Checkbox true state with description should be unchecked after click
   const checkboxButtonTrueDescription = appFrame!.getByTestId(
     'checkbox-true-state-width-description'
   );
   await expect(checkboxButtonTrueDescription).toHaveAttribute(
-    'data-state',
-    'checked'
+    'aria-checked',
+    'true'
   );
   await checkboxButtonTrueDescription.click();
   await expect(checkboxButtonTrueDescription).toHaveAttribute(
-    'data-state',
-    'unchecked'
+    'aria-checked',
+    'false'
   );
+  await checkboxButtonTrueDescription.click();
 
+  // Checkbox false state with description should be ckecked after click
   const checkboxButtonFalseDescription = appFrame!.getByTestId(
     'checkbox-false-state-width-description'
   );
   await expect(checkboxButtonFalseDescription).toHaveAttribute(
-    'data-state',
-    'unchecked'
+    'aria-checked',
+    'false'
   );
   await checkboxButtonFalseDescription.click();
   await expect(checkboxButtonFalseDescription).toHaveAttribute(
-    'data-state',
-    'checked'
+    'aria-checked',
+    'true'
   );
+  await checkboxButtonFalseDescription.click();
 
+  // Checkbox true state disabled should be checked and unable to be clicked
   const checkboxButtonTrueDescriptionDisabled = appFrame!.getByTestId(
     'checkbox-true-state-width-description-disabled'
   );
   await expect(checkboxButtonTrueDescriptionDisabled).toHaveAttribute(
-    'data-state',
-    'checked'
+    'aria-checked',
+    'true'
   );
-  await checkboxButtonTrueDescriptionDisabled.click();
-  await expect(checkboxButtonTrueDescriptionDisabled).toHaveAttribute(
-    'data-state',
-    'checked'
+  // Checkbox true state invalid should be unchecked after click
+  const checkboxButtonTrueDescriptionInvalid = appFrame!.getByTestId(
+    'checkbox-true-state-width-description-invalid'
   );
+  await expect(checkboxButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await checkboxButtonTrueDescriptionInvalid.click();
+  await expect(checkboxButtonTrueDescriptionInvalid).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await checkboxButtonTrueDescriptionInvalid.click();
+  // Checkbox null state with description should be mixed at the start, checked after first click
+  //  and unchecked after second click
+  const checkboxButtonNullDescription = appFrame!.getByTestId(
+    'checkbox-null-state-width-description'
+  );
+  await expect(checkboxButtonNullDescription).toHaveAttribute(
+    'aria-checked',
+    'mixed'
+  );
+  await checkboxButtonNullDescription.click();
+  await expect(checkboxButtonNullDescription).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await checkboxButtonNullDescription.click();
+  await expect(checkboxButtonNullDescription).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await checkboxButtonNullDescription.click();
 });
