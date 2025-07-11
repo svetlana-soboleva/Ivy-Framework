@@ -314,8 +314,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           {...props}
         />
         {/* Right-side icon container */}
-        {(!isValid ||
-          (nullable && value !== null && !disabled && onChange)) && (
+        {(nullable && value !== null && !disabled && onChange) || !isValid ? (
           <div
             className={`absolute top-1/2 -translate-y-1/2 flex items-center gap-1 ${
               showArrows ? 'right-14' : 'right-2'
@@ -350,7 +349,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               </button>
             )}
           </div>
-        )}
+        ) : null}
         {showArrows && (
           <div className="absolute right-0 top-0 bottom-0 flex flex-col border-l">
             <button
