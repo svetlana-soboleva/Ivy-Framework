@@ -35,12 +35,14 @@ public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange
         var typedState = state.As<TDateRange>();
         Value = typedState.Value;
         OnChange = e => typedState.Set(e.Value);
+        Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
 
     public DateRangeInput(TDateRange value, Action<Event<IInput<TDateRange>, TDateRange>> onChange, string? placeholder = null, bool disabled = false) : this(placeholder, disabled)
     {
         OnChange = onChange;
         Value = value;
+        Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
 
     public DateRangeInput(string? placeholder = null, bool disabled = false)

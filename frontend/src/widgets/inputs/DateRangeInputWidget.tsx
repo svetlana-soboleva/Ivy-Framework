@@ -18,6 +18,8 @@ import {
   subDays,
   subMonths,
   subYears,
+  format as formatDate,
+  isValid,
 } from 'date-fns';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import { InvalidIcon } from '@/components/InvalidIcon';
@@ -54,7 +56,12 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
     (e: DateRange) => {
       if (!events.includes('OnChange')) return;
       if (disabled) return;
-      eventHandler('OnChange', id, [{ item1: e.from, item2: e.to }]);
+      // Convert to yyyy-MM-dd or null
+      const item1 =
+        e.from && isValid(e.from) ? formatDate(e.from, 'yyyy-MM-dd') : null;
+      const item2 =
+        e.to && isValid(e.to) ? formatDate(e.to, 'yyyy-MM-dd') : null;
+      eventHandler('OnChange', id, [{ item1, item2 }]);
     },
     [id, disabled, events, eventHandler]
   );
@@ -140,7 +147,11 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
                 'w-full justify-start text-left font-normal',
                 !date && 'text-muted-foreground',
                 invalid && 'border-destructive focus-visible:ring-destructive',
-                (showClear || invalid) && 'pr-8'
+                showClear && invalid
+                  ? 'pr-16'
+                  : showClear || invalid
+                    ? 'pr-8'
+                    : ''
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -288,7 +299,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
         </Popover>
         {/* Icons absolutely positioned */}
         {(showClear || invalid) && (
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2">
             {showClear && (
               <button
                 type="button"
