@@ -13,16 +13,10 @@ dateRangeState.ToDateRangeInput()
 
 ## Supported Types
 
-DateRangeInput supports various datetime tuple types:
+DateRangeInput supports DateOnly tuple types:
 
-- `(DateTime, DateTime)` - Standard datetime range
-- `(DateTime?, DateTime?)` - Nullable datetime range
 - `(DateOnly, DateOnly)` - Date-only range
 - `(DateOnly?, DateOnly?)` - Nullable date-only range
-- `(TimeOnly, TimeOnly)` - Time-only range
-- `(TimeOnly?, TimeOnly?)` - Nullable time-only range
-- `(DateTimeOffset, DateTimeOffset)` - DateTimeOffset range
-- `(DateTimeOffset?, DateTimeOffset?)` - Nullable DateTimeOffset range
 
 ## Variants
 
@@ -43,7 +37,7 @@ dateRangeState.ToDateRangeInput().Invalid("Invalid date range")
 ### Nullable State
 
 ```csharp
-var nullableRange = this.UseState<(DateTime?, DateTime?)>(() => (DateTime.Today.AddDays(-7), DateTime.Today));
+var nullableRange = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
 nullableRange.ToDateRangeInput()
 ```
 
@@ -52,12 +46,12 @@ nullableRange.ToDateRangeInput()
 DateRangeInput can handle changes in the selected date range using the `OnChange` event:
 
 ```csharp
-var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
-var onChange = (Event<IInput<(DateTime, DateTime)>, (DateTime, DateTime)> e) =>
+var dateRangeState = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), to: DateOnly.FromDateTime(DateTime.Today)));
+var onChange = (Event<IInput<(DateOnly, DateOnly)>, (DateOnly, DateOnly)> e) =>
 {
     // Handle the change event
 };
-new DateRangeInput<(DateTime, DateTime)>(dateRangeState, onChange)
+new DateRangeInput<(DateOnly, DateOnly)>(dateRangeState, onChange)
 ```
 
 ## Styling
@@ -87,13 +81,6 @@ dateRangeState.ToDateRangeInput()
 
 ## Data Binding Examples
 
-### DateTime Range
-
-```csharp
-var dateTimeRange = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
-dateTimeRange.ToDateRangeInput()
-```
-
 ### DateOnly Range
 
 ```csharp
@@ -101,19 +88,9 @@ var dateOnlyRange = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.To
 dateOnlyRange.ToDateRangeInput()
 ```
 
-### TimeOnly Range
+### Nullable DateOnly Range
 
 ```csharp
-var timeOnlyRange = this.UseState(() => (from: TimeOnly.FromDateTime(DateTime.Now.AddHours(-2)), to: TimeOnly.FromDateTime(DateTime.Now)));
-timeOnlyRange.ToDateRangeInput()
-```
-
-### Nullable Ranges
-
-```csharp
-var nullableDateTimeRange = this.UseState<(DateTime?, DateTime?)>(() => (DateTime.Today.AddDays(-7), DateTime.Today));
-nullableDateTimeRange.ToDateRangeInput()
-
 var nullableDateOnlyRange = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
 nullableDateOnlyRange.ToDateRangeInput()
 ```
@@ -125,8 +102,8 @@ nullableDateOnlyRange.ToDateRangeInput()
 ### Complete Example with All Features
 
 ```csharp
-var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
-var nullableRangeState = this.UseState<(DateTime?, DateTime?)>(() => (DateTime.Today.AddDays(-7), DateTime.Today));
+var dateRangeState = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), to: DateOnly.FromDateTime(DateTime.Today)));
+var nullableRangeState = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
 
 return Layout.Vertical(
     dateRangeState.ToDateRangeInput().Placeholder("Select date range"),

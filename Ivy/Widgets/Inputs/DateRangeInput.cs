@@ -18,18 +18,13 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
     [Prop] public string? Format { get; set; }
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
+    [Prop] public bool Nullable { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     
     public Type[] SupportedStateTypes() =>
     [
-        // Tuple types with various datetime combinations
-        typeof((DateTime, DateTime)), typeof((DateTime?, DateTime?)),
-        typeof((DateTimeOffset, DateTimeOffset)), typeof((DateTimeOffset?, DateTimeOffset?)),
+        // Only DateOnly tuple types
         typeof((DateOnly, DateOnly)), typeof((DateOnly?, DateOnly?)),
-        typeof((TimeOnly, TimeOnly)), typeof((TimeOnly?, TimeOnly?)),
-        // Mixed types
-        typeof((DateTime, DateTimeOffset)), typeof((DateOnly, DateTime)),
-        typeof((TimeOnly, DateTime)), typeof((DateTime, DateOnly)),
     ];
 }
 
@@ -93,5 +88,10 @@ public static class DateRangeInputExtensions
     public static DateRangeInputBase Invalid(this DateRangeInputBase widget, string? invalid)
     {
         return widget with { Invalid = invalid };
+    }
+
+    public static DateRangeInputBase Nullable(this DateRangeInputBase widget, bool nullable = true)
+    {
+        return widget with { Nullable = nullable };
     }
 }

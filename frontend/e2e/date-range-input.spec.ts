@@ -8,22 +8,30 @@ test.describe('DateRangeInput', () => {
   test('should display all variants correctly', async ({ page }) => {
     // Check that all variant inputs are present
     await expect(
-      page.getByTestId('daterange-input-datetime-main')
+      page.getByTestId('daterange-input-dateonly-main')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-datetime-disabled-main')
+      page.getByTestId('daterange-input-dateonly-disabled-main')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-datetime-invalid-main')
+      page.getByTestId('daterange-input-dateonly-invalid-main')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-datetime-nullable-main')
+      page.getByTestId('daterange-input-dateonly-invalid-nullable-main')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-datetime-nullable-disabled-main')
+      page.getByTestId('daterange-input-dateonly-nullable-main')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-datetime-nullable-invalid-main')
+      page.getByTestId('daterange-input-dateonly-nullable-disabled-main')
+    ).toBeVisible();
+    await expect(
+      page.getByTestId('daterange-input-dateonly-nullable-invalid-main')
+    ).toBeVisible();
+    await expect(
+      page.getByTestId(
+        'daterange-input-dateonly-nullable-invalid-nullable-main'
+      )
     ).toBeVisible();
   });
 
@@ -36,34 +44,52 @@ test.describe('DateRangeInput', () => {
 
   test('should show invalid state correctly', async ({ page }) => {
     const invalidInput = page.getByTestId(
-      'daterange-input-datetime-invalid-main'
+      'daterange-input-dateonly-invalid-main'
     );
     // Check for invalid styling (this may vary based on your CSS classes)
     await expect(invalidInput).toBeVisible();
   });
 
+  test('should show invalid nullable state correctly', async ({ page }) => {
+    const invalidNullableInput = page.getByTestId(
+      'daterange-input-dateonly-invalid-nullable-main'
+    );
+    // Check for invalid styling (this may vary based on your CSS classes)
+    await expect(invalidNullableInput).toBeVisible();
+  });
+
+  test('should show nullable clear button when value is set', async ({
+    page,
+  }) => {
+    const nullableInput = page.getByTestId(
+      'daterange-input-dateonly-nullable-main'
+    );
+    await expect(nullableInput).toBeVisible();
+
+    // The clear button should be visible since the input has a default value
+    await expect(page.getByRole('button', { name: 'Clear' })).toBeVisible();
+  });
+
+  test('should clear value when clear button is clicked', async ({ page }) => {
+    const nullableInput = page.getByTestId(
+      'daterange-input-dateonly-nullable-main'
+    );
+    await expect(nullableInput).toBeVisible();
+
+    // Click the clear button
+    await page.getByRole('button', { name: 'Clear' }).click();
+
+    // The clear button should no longer be visible after clearing
+    await expect(page.getByRole('button', { name: 'Clear' })).not.toBeVisible();
+  });
+
   test('should display data binding inputs correctly', async ({ page }) => {
     // Check that all data binding inputs are present
-    await expect(
-      page.getByTestId('daterange-input-datetime-binding')
-    ).toBeVisible();
     await expect(
       page.getByTestId('daterange-input-dateonly-binding')
     ).toBeVisible();
     await expect(
-      page.getByTestId('daterange-input-timeonly-binding')
-    ).toBeVisible();
-    await expect(
-      page.getByTestId('daterange-input-string-binding')
-    ).toBeVisible();
-    await expect(
-      page.getByTestId('daterange-input-datetime-nullable-binding')
-    ).toBeVisible();
-    await expect(
       page.getByTestId('daterange-input-dateonly-nullable-binding')
-    ).toBeVisible();
-    await expect(
-      page.getByTestId('daterange-input-timeonly-nullable-binding')
     ).toBeVisible();
   });
 
@@ -74,17 +100,12 @@ test.describe('DateRangeInput', () => {
     ).toBeVisible();
 
     // Check that current values are displayed
-    await expect(page.getByText(/DateTime Range:/)).toBeVisible();
-    await expect(page.getByText(/Nullable DateTime Range:/)).toBeVisible();
     await expect(page.getByText(/DateOnly Range:/)).toBeVisible();
-    await expect(page.getByText(/TimeOnly Range:/)).toBeVisible();
-    await expect(page.getByText(/String Range:/)).toBeVisible();
     await expect(page.getByText(/Nullable DateOnly Range:/)).toBeVisible();
-    await expect(page.getByText(/Nullable TimeOnly Range:/)).toBeVisible();
   });
 
   test('should open calendar popup when clicked', async ({ page }) => {
-    const input = page.getByTestId('daterange-input-datetime-main');
+    const input = page.getByTestId('daterange-input-dateonly-main');
     await input.click();
 
     // Check that the calendar popup appears
@@ -92,7 +113,7 @@ test.describe('DateRangeInput', () => {
   });
 
   test('should allow date range selection', async ({ page }) => {
-    const input = page.getByTestId('daterange-input-datetime-main');
+    const input = page.getByTestId('daterange-input-dateonly-main');
     await input.click();
 
     // Wait for calendar to appear
@@ -107,7 +128,7 @@ test.describe('DateRangeInput', () => {
   });
 
   test('should display quick selection options', async ({ page }) => {
-    const input = page.getByTestId('daterange-input-datetime-main');
+    const input = page.getByTestId('daterange-input-dateonly-main');
     await input.click();
 
     // Check for quick selection buttons
@@ -132,7 +153,7 @@ test.describe('DateRangeInput', () => {
   });
 
   test('should handle quick selection', async ({ page }) => {
-    const input = page.getByTestId('daterange-input-datetime-main');
+    const input = page.getByTestId('daterange-input-dateonly-main');
     await input.click();
 
     // Click on "Today" quick selection
@@ -155,6 +176,7 @@ test.describe('DateRangeInput', () => {
     await expect(page.getByText('Normal')).toBeVisible();
     await expect(page.getByText('Disabled')).toBeVisible();
     await expect(page.getByText('Invalid')).toBeVisible();
+    await expect(page.getByText('Invalid + Nullable')).toBeVisible();
     await expect(page.getByText('Type')).toBeVisible();
     await expect(page.getByText('Input')).toBeVisible();
     await expect(page.getByText('Current Value')).toBeVisible();

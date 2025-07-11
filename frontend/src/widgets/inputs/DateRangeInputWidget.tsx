@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, X } from 'lucide-react';
 import {
   endOfMonth,
   endOfYear,
@@ -20,6 +20,7 @@ import {
   subYears,
 } from 'date-fns';
 import { useEventHandler } from '@/components/EventHandlerContext';
+import { InvalidIcon } from '@/components/InvalidIcon';
 
 interface DateRangeInputWidgetProps {
   id: string;
@@ -31,6 +32,7 @@ interface DateRangeInputWidgetProps {
   placeholder?: string;
   format?: string;
   invalid?: string;
+  nullable?: boolean;
   events: string[];
   'data-testid'?: string;
 }
@@ -42,6 +44,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
   placeholder = 'Pick a date range',
   format: formatProp,
   invalid,
+  nullable = false,
   events,
   'data-testid': dataTestId,
 }) => {
@@ -52,6 +55,17 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
       if (!events.includes('OnChange')) return;
       if (disabled) return;
       eventHandler('OnChange', id, [{ item1: e.from, item2: e.to }]);
+    },
+    [id, disabled, events, eventHandler]
+  );
+
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!events.includes('OnChange')) return;
+      if (disabled) return;
+      eventHandler('OnChange', id, [{ item1: null, item2: null }]);
     },
     [id, disabled, events, eventHandler]
   );
@@ -110,9 +124,12 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
   // Use custom format if provided, otherwise use default
   const displayFormat = formatProp || 'LLL dd, y';
 
+  // Show clear button if nullable, not disabled, and has a value
+  const showClear = nullable && !disabled && (date?.from || date?.to);
+
   return (
     <div>
-      <div className="w-full">
+      <div className="relative w-full">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -122,7 +139,8 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
               className={cn(
                 'w-full justify-start text-left font-normal',
                 !date && 'text-muted-foreground',
-                invalid && 'border-destructive focus-visible:ring-destructive'
+                invalid && 'border-destructive focus-visible:ring-destructive',
+                (showClear || invalid) && 'pr-8'
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -268,7 +286,23 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
             </div>
           </PopoverContent>
         </Popover>
-        {invalid && <p className="text-sm text-destructive mt-1">{invalid}</p>}
+        {/* Icons absolutely positioned */}
+        {(showClear || invalid) && (
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            {showClear && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={handleClear}
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+            {invalid && <InvalidIcon message={invalid} />}
+          </div>
+        )}
       </div>
     </div>
   );
