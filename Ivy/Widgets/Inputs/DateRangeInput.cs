@@ -19,7 +19,18 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [];
+    
+    public Type[] SupportedStateTypes() =>
+    [
+        // Tuple types with various datetime combinations
+        typeof((DateTime, DateTime)), typeof((DateTime?, DateTime?)),
+        typeof((DateTimeOffset, DateTimeOffset)), typeof((DateTimeOffset?, DateTimeOffset?)),
+        typeof((DateOnly, DateOnly)), typeof((DateOnly?, DateOnly?)),
+        typeof((TimeOnly, TimeOnly)), typeof((TimeOnly?, TimeOnly?)),
+        // Mixed types
+        typeof((DateTime, DateTimeOffset)), typeof((DateOnly, DateTime)),
+        typeof((TimeOnly, DateTime)), typeof((DateTime, DateOnly)),
+    ];
 }
 
 public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange>
@@ -53,6 +64,7 @@ public static class DateRangeInputExtensions
     {
         var type = state.GetStateType();
 
+        // Check if it's a tuple type with 2 elements
         if (!type.IsGenericType || type.GetGenericArguments().Length != 2)
         {
             throw new Exception("DateRangeInput can only be used with a tuple of two elements");

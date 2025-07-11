@@ -27,15 +27,23 @@ interface DateRangeInputWidgetProps {
     item1: string;
     item2: string;
   };
-  disabled: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  format?: string;
+  invalid?: string;
   events: string[];
+  'data-testid'?: string;
 }
 
 export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
   id,
   value,
-  disabled,
+  disabled = false,
+  placeholder = 'Pick a date range',
+  format: formatProp,
+  invalid,
   events,
+  'data-testid': dataTestId,
 }) => {
   const eventHandler = useEventHandler();
 
@@ -45,7 +53,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
       if (disabled) return;
       eventHandler('OnChange', id, [{ item1: e.from, item2: e.to }]);
     },
-    [id, disabled]
+    [id, disabled, events, eventHandler]
   );
 
   const today = new Date();
@@ -85,13 +93,22 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
     to: endOfYear(subYears(today, 1)),
   };
 
+  const parseDate = (val: string | null | undefined) => {
+    if (!val) return undefined;
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? undefined : d;
+  };
+
   const date: DateRange = {
-    from: new Date(value.item1),
-    to: new Date(value.item2),
+    from: parseDate(value.item1),
+    to: parseDate(value.item2),
   };
 
   const [month, setMonth] = useState(today);
   const [isOpen, setIsOpen] = useState(false);
+
+  // Use custom format if provided, otherwise use default
+  const displayFormat = formatProp || 'LLL dd, y';
 
   return (
     <div>
@@ -101,23 +118,25 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
             <Button
               variant="outline"
               disabled={disabled}
+              data-testid={dataTestId}
               className={cn(
                 'w-full justify-start text-left font-normal',
-                !date && 'text-muted-foreground'
+                !date && 'text-muted-foreground',
+                invalid && 'border-destructive focus-visible:ring-destructive'
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {date?.from ? (
                 date.to ? (
                   <>
-                    {format(date.from, 'LLL dd, y')} -{' '}
-                    {format(date.to, 'LLL dd, y')}
+                    {format(date.from, displayFormat)} -{' '}
+                    {format(date.to, displayFormat)}
                   </>
                 ) : (
-                  format(date.from, 'LLL dd, y')
+                  format(date.from, displayFormat)
                 )
               ) : (
-                <span>Pick a date range</span>
+                <span>{placeholder}</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -249,6 +268,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
             </div>
           </PopoverContent>
         </Popover>
+        {invalid && <p className="text-sm text-destructive mt-1">{invalid}</p>}
       </div>
     </div>
   );
