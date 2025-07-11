@@ -8,7 +8,7 @@ namespace Ivy.Docs.Test;
 public class TypeUtilsTests
 {
     [Theory]
-    [InlineData("Ivy.ColorInput", typeof(Ivy.ColorInput<>))]
+    [InlineData("Ivy.ColorInput", typeof(Ivy.ColorInput))]
     [InlineData("Ivy.Button", typeof(Ivy.Button))]
     public void GetTypeFromName_ReturnsExpectedType(string typeName, Type expectedType)
     {

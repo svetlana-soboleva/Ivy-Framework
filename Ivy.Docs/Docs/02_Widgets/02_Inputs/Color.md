@@ -27,9 +27,47 @@ return Layout.Horizontal(
 );
 ```
 
+### Using the Non-Generic Constructor
+
+For convenience, you can create a ColorInput without specifying the generic type, which defaults to `string`:
+
+```csharp
+// Using the non-generic constructor (defaults to string)
+var colorInput = new ColorInput();
+
+// With placeholder
+var colorInputWithPlaceholder = new ColorInput("Choose a color");
+
+// With all options
+var colorInputFull = new ColorInput(
+    placeholder: "Select your favorite color",
+    disabled: false,
+    variant: ColorInputVariant.TextAndPicker
+);
+```
+
 ## Variants
 
-Currently, the ColorInput does not have specific variants, but it can be customized using properties like `Disabled` and `Placeholder`.
+The ColorInput supports three variants:
+
+- **Text**: Shows only a text input field
+- **Picker**: Shows only a color picker
+- **TextAndPicker**: Shows both text input and color picker (default)
+
+```csharp
+var colorState = this.UseState("#ff0000");
+
+return Layout.Vertical(
+    Text.H3("Text Only"),
+    colorState.ToColorInput().Variant(ColorInputVariant.Text),
+    
+    Text.H3("Picker Only"),
+    colorState.ToColorInput().Variant(ColorInputVariant.Picker),
+    
+    Text.H3("Text and Picker"),
+    colorState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
+);
+```
 
 ## Event Handling
 
@@ -41,7 +79,7 @@ var onChangeHandler = (Event<IInput<string>, string> e) =>
 {
     colorState.Set(e.Value);
 };
-return new ColorInput<string>(colorState.Value, onChangeHandler);
+return new ColorInput(colorState.Value, onChangeHandler);
 ```
 
 ## Styling
@@ -49,7 +87,7 @@ return new ColorInput<string>(colorState.Value, onChangeHandler);
 ColorInput can be customized with various styling options, such as setting a placeholder or disabling the input:
 
 ```csharp
-new ColorInput<string>("#ff0000")
+new ColorInput("#ff0000")
     .Placeholder("Select a color")
     .Disabled(false);
 ```
@@ -66,4 +104,32 @@ return Layout.Horizontal(
     colorState.ToColorInput(),
     colorState
 );
+```
+
+### Using Different Variants
+
+```csharp
+var colorState = this.UseState("#ff0000");
+
+return Layout.Vertical(
+    Text.H3("Text Input Only"),
+    colorState.ToColorInput().Variant(ColorInputVariant.Text),
+    
+    Text.H3("Color Picker Only"),
+    colorState.ToColorInput().Variant(ColorInputVariant.Picker),
+    
+    Text.H3("Both Text and Picker"),
+    colorState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
+);
+```
+
+### With Custom Styling
+
+```csharp
+var colorState = this.UseState("#ff0000");
+
+return colorState.ToColorInput()
+    .Placeholder("Choose your favorite color")
+    .Disabled(false)
+    .Invalid("Please select a valid color");
 ``` 
