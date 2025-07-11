@@ -134,7 +134,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
     <div style={styles} className="relative w-full h-full overflow-hidden">
       {showCopyButton && (
         <div className="absolute top-2 right-2 z-10">
-          <CopyToClipboardButton textToCopy={localValue} />
+          <CopyToClipboardButton textToCopy={localValue} aria-label="Copy to clipboard" />
         </div>
       )}
       <CodeMirror
