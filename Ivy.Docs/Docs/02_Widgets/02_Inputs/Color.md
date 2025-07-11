@@ -55,10 +55,25 @@ public class ColorDemo : ViewBase
         var textColorState = UseState("#ff0000");
         var pickerColorState = UseState("#ff0000");
         var textAndPickerColorState = UseState("#ff0000");
-        return Layout.Horizontal()
-                | textColorState.ToColorInput().Variant(ColorInputVariant.Text)
-                | pickerColorState.ToColorInput().Variant(ColorInputVariant.Picker)
-                | textAndPickerColorState.ToColorInput().Variant(ColorInputVariant.TextAndPicker);
+        return Layout.Vertical()
+                | (Layout.Horizontal()
+                    | Text.Small("Just Text")
+                          .Width(25)
+                    | textColorState
+                          .ToColorInput()
+                          .Variant(ColorInputVariant.Text))
+                | (Layout.Horizontal()
+                    | Text.Small("Just Picker")
+                          .Width(25)
+                    | pickerColorState
+                          .ToColorInput()
+                          .Variant(ColorInputVariant.Picker))
+                | (Layout.Horizontal()
+                    | Text.Small("Text and Picker")
+                          .Width(25)
+                    | textAndPickerColorState
+                          .ToColorInput()
+                          .Variant(ColorInputVariant.TextAndPicker));
     }   
 }
 ```
@@ -83,6 +98,7 @@ public class ColorChangedDemo : ViewBase
             colorState.Set(e.Value);
         };
         return Layout.Vertical() 
+                | H3("Hex Color Picker")
                 | new ColorInput<string>(colorState.Value, onChangeHandler)
                       .Variant(ColorInputVariant.Picker) 
                 | new Code(colorName.Value)
@@ -98,12 +114,83 @@ public class ColorChangedDemo : ViewBase
 
 ### Disabled
 
-To render a disabled ColorInput
-```csharp
-new ColorInput<string>("#ff0000")
-    .Placeholder("Select a color")
-    .Disabled(false);
+To render a disabled ColorInput the function `Disabled` should be used.  
+
+```csharp demo-below
+public class DisabledColorInput : ViewBase
+{
+    public override object? Build()
+    {    
+        return Layout.Vertical()
+                | new ColorInput<string>(value:"#ff0000")
+                        .Disabled();
+    }
+}    
+```
+
+### Invalid 
+
+To represent that there is something wrong with a `ColorInput` the `Invalid` function 
+should be used. 
+
+```csharp demo-below
+public class InvalidStyleDemo : ViewBase
+{ 
+    public override object? Build()
+    {    
+        return Layout.Vertical()
+                | new ColorInput<string>(value:"#ff0000")
+                        .Invalid("This is not used now");
+    }
+}
 ```
 
 <WidgetDocs Type="Ivy.ColorInput" ExtensionTypes="Ivy.ColorInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ColorInput.cs"/>
 
+## Examples
+
+The following example shows how ColorPicker control can be used in a developer tool setting that 
+generates CSS blocks. 
+
+```csharp demo-tabs
+public class CSSColorDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var color = UseState("#333333");
+        var bgColor = UseState("#F5F5F5");
+        var border = UseState("#CCCCCC");
+        var template = """
+                     .my-element {
+                            color: [COLOR];
+                            background-color: [BG_COLOR];
+                            border: 1px solid [BORDER];
+                      }
+        """; 
+        var genCode = UseState("");
+        genCode.Set(template.Replace("[COLOR]",color.Value)
+                            .Replace("[BG_COLOR]",bgColor.Value)
+                            .Replace("[BORDER]",border.Value));
+        return Layout.Vertical()
+                | H3("CSS Block Generator")
+                | (Layout.Horizontal()
+                   | Text.InlineCode("color")
+                         .Width(25)
+                   | color.ToColorInput()
+                          .Variant(ColorInputVariant.Picker))
+                | (Layout.Horizontal()
+                   | Text.InlineCode("background-color")
+                         .Width(25)
+                   | bgColor.ToColorInput()
+                          .Variant(ColorInputVariant.Picker))
+                | (Layout.Horizontal()
+                   | Text.InlineCode("border")
+                         .Width(25)
+                   | border.ToColorInput()
+                          .Variant(ColorInputVariant.Picker))
+                | genCode.ToCodeInput()
+                         .Language(Languages.Css);
+    }
+}
+
+```
