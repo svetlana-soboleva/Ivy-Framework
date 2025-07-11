@@ -38,7 +38,7 @@ const ThumbsRating = ({
   };
 
   return (
-    <div className="relative">
+    <div className="flex items-center gap-2">
       <div
         className={cn(
           'flex gap-1 items-center',
@@ -97,11 +97,7 @@ const ThumbsRating = ({
           />
         </button>
       </div>
-      {invalid && (
-        <div className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 z-10">
-          <InvalidIcon message={invalid} />
-        </div>
-      )}
+      {invalid && <InvalidIcon message={invalid} />}
     </div>
   );
 };
