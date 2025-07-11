@@ -33,10 +33,17 @@ For convenience, you can create a ColorInput without specifying the generic type
 
 ```csharp
 // Using the non-generic constructor (defaults to string)
-var colorInput = new ColorInput("Select a color");
+var colorInput = new ColorInput();
 
-// Equivalent to:
-var colorInput = new ColorInput<string>("Select a color");
+// With placeholder
+var colorInputWithPlaceholder = new ColorInput("Choose a color");
+
+// With all options
+var colorInputFull = new ColorInput(
+    placeholder: "Select your favorite color",
+    disabled: false,
+    variant: ColorInputVariant.TextAndPicker
+);
 ```
 
 ## Variants

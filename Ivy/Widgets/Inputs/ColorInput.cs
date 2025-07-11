@@ -44,7 +44,7 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
         OnChange = e => typedState.Set(e.Value);
     }
 
-    public ColorInput(TColor value, Action<Event<IInput<TColor>, TColor>>? onChange = null, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(TColor value, Action<Event<IInput<TColor>, TColor>> onChange, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
         : this(placeholder, disabled, variant)
     {
         OnChange = onChange;
@@ -71,7 +71,7 @@ public record ColorInput : ColorInput<string>
     {
     }
 
-    public ColorInput(string value, Action<Event<IInput<string>, string>>? onChange = null, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(string value, Action<Event<IInput<string>, string>> onChange, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
         : base(value, onChange, placeholder, disabled, variant)
     {
     }
