@@ -168,7 +168,7 @@ public static class Utils
             {
                 // Try to convert to double first to get a numeric value
                 double doubleValue = convertible.ToDouble(null);
-                
+
                 return targetType switch
                 {
                     var t when t == typeof(byte) => (byte)Math.Min(Math.Max(doubleValue, byte.MinValue), byte.MaxValue),
@@ -190,7 +190,7 @@ public static class Utils
                 return Activator.CreateInstance(targetType);
             }
         }
-        
+
         return Activator.CreateInstance(targetType);
     }
 
