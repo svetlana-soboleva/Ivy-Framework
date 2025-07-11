@@ -10,9 +10,12 @@ public class ColorInputApp : SampleBase
         var variants = CreateVariantsSection();
         var dataBinding = CreateDataBindingTests();
         var formatTests = CreateFormatTests();
+        var nonGenericConstructor = CreateNonGenericConstructorSection();
 
         return Layout.Vertical()
                | Text.H1("ColorInput")
+               | Text.H2("Non-Generic Constructor")
+               | nonGenericConstructor
                | Text.H2("Variants")
                | variants
                | Text.H2("Format Tests")
@@ -59,6 +62,49 @@ public class ColorInputApp : SampleBase
             | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Disabled()
             | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
             | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Invalid("Invalid color");
+    }
+
+    private object CreateNonGenericConstructorSection()
+    {
+        var state1 = UseState("#ff0000");
+        var state2 = UseState("#00ff00");
+        var state3 = UseState("#0000ff");
+
+        return Layout.Grid().Columns(3)
+               | Text.InlineCode("Method")
+               | Text.InlineCode("ColorInput")
+               | Text.InlineCode("State Value")
+
+               | Text.InlineCode("Default Constructor")
+               | new ColorInput()
+               | Text.InlineCode("No state")
+
+               | Text.InlineCode("With Placeholder")
+               | new ColorInput("Select a color")
+               | Text.InlineCode("No state")
+
+               | Text.InlineCode("With State Binding")
+               | state1.ToColorInput()
+               | Text.InlineCode(state1.Value)
+
+               | Text.InlineCode("Disabled")
+               | new ColorInput(disabled: true)
+               | Text.InlineCode("No state")
+
+               | Text.InlineCode("Text Only Variant")
+               | new ColorInput(variant: ColorInputVariant.Text)
+               | Text.InlineCode("No state")
+
+               | Text.InlineCode("Picker Only Variant")
+               | new ColorInput(variant: ColorInputVariant.Picker)
+               | Text.InlineCode("No state")
+
+               | Text.InlineCode("Full Constructor")
+               | new ColorInput(
+                   placeholder: "Choose your color",
+                   disabled: false,
+                   variant: ColorInputVariant.TextAndPicker)
+               | Text.InlineCode("No state");
     }
 
     private object CreateFormatTests()

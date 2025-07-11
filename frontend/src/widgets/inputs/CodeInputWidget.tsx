@@ -10,6 +10,7 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
+import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import './CodeInputWidget.css';
 import { StreamLanguage } from '@codemirror/language';
 import { cpp } from '@codemirror/lang-cpp';
@@ -61,6 +62,7 @@ interface CodeInputWidgetProps {
   language?: string;
   disabled: boolean;
   invalid?: string;
+  showCopyButton?: boolean;
   events: string[];
   width?: string;
   height?: string;
@@ -84,6 +86,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
   language,
   disabled,
   invalid,
+  showCopyButton = false,
   width,
   height,
   events,
@@ -129,6 +132,14 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
 
   return (
     <div style={styles} className="relative w-full h-full overflow-hidden">
+      {showCopyButton && (
+        <div className="absolute top-2 right-2 z-10">
+          <CopyToClipboardButton
+            textToCopy={localValue}
+            aria-label="Copy to clipboard"
+          />
+        </div>
+      )}
       <CodeMirror
         value={localValue}
         extensions={extensions}

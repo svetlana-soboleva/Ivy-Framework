@@ -343,9 +343,8 @@ public class CoffeeShopDemo: ViewBase
     {
         var coffee = UseState("Cappuccino");
         var coffeeSize = UseState("Tall");
-        var selectedCondiments = UseState(new string[]{"Sugar cubes"});
+        var selectedCondiments = UseState(new string[]{});
         var previousCoffee = UseState("Cappuccino");
-        var lastClickTime = UseState(DateTime.MinValue);
         var coffeeSelected = coffeeSize + " " + coffee.Value;
         var coffeeInput = coffee.ToSelectInput(CoffeeAccompaniments.Keys.ToOptions());
         
@@ -366,14 +365,13 @@ public class CoffeeShopDemo: ViewBase
         {
             if(selectedCondiments.Value.Length == 1)
             {
-                coffeeSelected += "  with " + selectedCondiments
-                                            .Value.Aggregate((a,b) =>  a + "," + b);
+                coffeeSelected += " with " + selectedCondiments.Value[0];
             }
             else
             {                  
-                 coffeeSelected += "  with " + selectedCondiments
-                                                 .Value.Take(selectedCondiments.Value.Length - 1)
-                                                 .Aggregate((a,b) =>  a + "," + b)
+                 coffeeSelected += " with " + selectedCondiments.Value
+                                                 .Take(selectedCondiments.Value.Length - 1)
+                                                 .Aggregate((a,b) =>  a + ", " + b)
                                                  + " and " + selectedCondiments.Value[selectedCondiments.Value.Length - 1];
             }
         }
