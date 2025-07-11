@@ -99,23 +99,6 @@ return Layout.Horizontal(
 );
 ```
 
-### Using the Non-Generic Constructor
-
-```csharp
-// Simple usage with default string type
-var colorInput = new ColorInput();
-
-// With placeholder
-var colorInputWithPlaceholder = new ColorInput("Choose a color");
-
-// With all options
-var colorInputFull = new ColorInput(
-    placeholder: "Select your favorite color",
-    disabled: false,
-    variant: ColorInputVariant.TextAndPicker
-);
-```
-
 ### Using Different Variants
 
 ```csharp
