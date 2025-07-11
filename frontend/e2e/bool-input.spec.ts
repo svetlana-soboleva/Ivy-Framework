@@ -133,18 +133,6 @@ test.describe('Bool Input Tests', () => {
     await expect(element).toHaveAttribute(attributeName, initialState);
   }
 
-  // Helper function to test disabled state
-  async function testDisabledState(
-    testId: string,
-    attributeName: 'aria-checked' | 'aria-pressed',
-    expectedState: string
-  ) {
-    const element = appFrame!.getByTestId(testId);
-
-    await expect(element).toHaveAttribute(attributeName, expectedState);
-    await expect(element).toBeDisabled();
-  }
-
   // Helper function to test null state cycling (mixed -> true -> false -> mixed)
   async function testNullStateCycling(testId: string) {
     const element = appFrame!.getByTestId(testId);
@@ -156,6 +144,34 @@ test.describe('Bool Input Tests', () => {
     await expect(element).toHaveAttribute('aria-checked', 'false');
     await element.click();
     await expect(element).toHaveAttribute('aria-checked', 'mixed');
+  }
+  // Helper function to determine attribute based on test ID prefix
+  function getAttributeForTestId(
+    testId: string
+  ): 'aria-checked' | 'aria-pressed' {
+    if (testId.startsWith('toggle-')) {
+      return 'aria-pressed';
+    }
+    return 'aria-checked'; // checkbox and switch both use aria-checked
+  }
+
+  // Simplified helper functions that auto-determine the attribute
+  async function testTrueFalseToggle(testId: string) {
+    const attribute = getAttributeForTestId(testId);
+    await testToggleBehavior(testId, attribute, 'true', 'false');
+  }
+
+  async function testFalseTrueToggle(testId: string) {
+    const attribute = getAttributeForTestId(testId);
+    await testToggleBehavior(testId, attribute, 'false', 'true');
+  }
+
+  async function testDisabledState(testId: string) {
+    const attribute = getAttributeForTestId(testId);
+    const element = appFrame!.getByTestId(testId);
+
+    await expect(element).toHaveAttribute(attribute, 'true');
+    await expect(element).toBeDisabled();
   }
 
   test.describe('Page Navigation', () => {
@@ -169,37 +185,22 @@ test.describe('Bool Input Tests', () => {
     test.describe('Checkboxes', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-true-state-width-description',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('checkbox-true-state-width-description');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-false-state-width-description',
-            'aria-checked',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('checkbox-false-state-width-description');
         });
 
         test('disabled state should remain checked', async () => {
           await testDisabledState(
-            'checkbox-true-state-width-description-disabled',
-            'aria-checked',
-            'true'
+            'checkbox-true-state-width-description-disabled'
           );
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-true-state-width-description-invalid',
-            'aria-checked',
-            'true',
-            'false'
+          await testTrueFalseToggle(
+            'checkbox-true-state-width-description-invalid'
           );
         });
 
@@ -210,38 +211,19 @@ test.describe('Bool Input Tests', () => {
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-true-state-width',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('checkbox-true-state-width');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-false-state-width',
-            'aria-checked',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('checkbox-false-state-width');
         });
 
         test('disabled state should remain checked', async () => {
-          await testDisabledState(
-            'checkbox-true-state-width-disabled',
-            'aria-checked',
-            'true'
-          );
+          await testDisabledState('checkbox-true-state-width-disabled');
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'checkbox-true-state-width-invalid',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('checkbox-true-state-width-invalid');
         });
 
         test('null state should cycle through mixed -> true -> false', async () => {
@@ -253,75 +235,41 @@ test.describe('Bool Input Tests', () => {
     test.describe('Switches', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-true-state-width-description',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('switch-true-state-width-description');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-false-state-width-description',
-            'aria-checked',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('switch-false-state-width-description');
         });
 
         test('disabled state should remain checked', async () => {
           await testDisabledState(
-            'switch-true-state-width-description-disabled',
-            'aria-checked',
-            'true'
+            'switch-true-state-width-description-disabled'
           );
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-true-state-width-description-invalid',
-            'aria-checked',
-            'true',
-            'false'
+          await testTrueFalseToggle(
+            'switch-true-state-width-description-invalid'
           );
         });
       });
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-true-state-width',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('switch-true-state-width');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-false-state-width',
-            'aria-checked',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('switch-false-state-width');
         });
 
         test('disabled state should remain checked', async () => {
-          await testDisabledState(
-            'switch-true-state-width-disabled',
-            'aria-checked',
-            'true'
-          );
+          await testDisabledState('switch-true-state-width-disabled');
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'switch-true-state-width-invalid',
-            'aria-checked',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('switch-true-state-width-invalid');
         });
       });
     });
@@ -329,75 +277,41 @@ test.describe('Bool Input Tests', () => {
     test.describe('Toggles', () => {
       test.describe('With Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-true-state-width-description',
-            'aria-pressed',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('toggle-true-state-width-description');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-false-state-width-description',
-            'aria-pressed',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('toggle-false-state-width-description');
         });
 
         test('disabled state should remain pressed', async () => {
           await testDisabledState(
-            'toggle-true-state-width-description-disabled',
-            'aria-pressed',
-            'true'
+            'toggle-true-state-width-description-disabled'
           );
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-true-state-width-description-invalid',
-            'aria-pressed',
-            'true',
-            'false'
+          await testTrueFalseToggle(
+            'toggle-true-state-width-description-invalid'
           );
         });
       });
 
       test.describe('Without Description', () => {
         test('true state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-true-state-width',
-            'aria-pressed',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('toggle-true-state-width');
         });
 
         test('false state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-false-state-width',
-            'aria-pressed',
-            'false',
-            'true'
-          );
+          await testFalseTrueToggle('toggle-false-state-width');
         });
 
         test('disabled state should remain pressed', async () => {
-          await testDisabledState(
-            'toggle-true-state-width-disabled',
-            'aria-pressed',
-            'true'
-          );
+          await testDisabledState('toggle-true-state-width-disabled');
         });
 
         test('invalid state should toggle correctly', async () => {
-          await testToggleBehavior(
-            'toggle-true-state-width-invalid',
-            'aria-pressed',
-            'true',
-            'false'
-          );
+          await testTrueFalseToggle('toggle-true-state-width-invalid');
         });
       });
     });
