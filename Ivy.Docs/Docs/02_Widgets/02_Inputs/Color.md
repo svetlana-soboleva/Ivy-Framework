@@ -79,7 +79,7 @@ var onChangeHandler = (Event<IInput<string>, string> e) =>
 {
     colorState.Set(e.Value);
 };
-return new ColorInput<string>(colorState.Value, onChangeHandler);
+return new ColorInput(colorState.Value, onChangeHandler);
 ```
 
 ## Styling
@@ -87,7 +87,7 @@ return new ColorInput<string>(colorState.Value, onChangeHandler);
 ColorInput can be customized with various styling options, such as setting a placeholder or disabling the input:
 
 ```csharp
-new ColorInput<string>("#ff0000")
+new ColorInput("#ff0000")
     .Placeholder("Select a color")
     .Disabled(false);
 ```
