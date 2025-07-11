@@ -247,4 +247,53 @@ test('checkbox and related spans visibility after click', async ({ page }) => {
     'false'
   );
   await checkboxButtonNullDescription.click();
+
+  // Checkbox true state should be unchecked after click
+  const checkboxButtonTrue = appFrame!.getByTestId('checkbox-true-state-width');
+  await expect(checkboxButtonTrue).toHaveAttribute('aria-checked', 'true');
+  await checkboxButtonTrue.click();
+  await expect(checkboxButtonTrue).toHaveAttribute('aria-checked', 'false');
+  await checkboxButtonTrue.click();
+
+  // Checkbox false state should be unchecked after click
+  const checkboxButtonFalse = appFrame!.getByTestId(
+    'checkbox-false-state-width'
+  );
+  await expect(checkboxButtonFalse).toHaveAttribute('aria-checked', 'false');
+  await checkboxButtonFalse.click();
+  await expect(checkboxButtonFalse).toHaveAttribute('aria-checked', 'true');
+  await checkboxButtonFalse.click();
+
+  // Checkbox true state disabled should be checked and unable to be clicked
+  const checkboxButtonTrueDisabled = appFrame!.getByTestId(
+    'checkbox-true-state-width-disabled'
+  );
+  await expect(checkboxButtonTrueDisabled).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  // Checkbox true state invalid should be unchecked after click
+  const checkboxButtonTrueInvalid = appFrame!.getByTestId(
+    'checkbox-true-state-width-invalid'
+  );
+  await expect(checkboxButtonTrueInvalid).toHaveAttribute(
+    'aria-checked',
+    'true'
+  );
+  await checkboxButtonTrueInvalid.click();
+  await expect(checkboxButtonTrueInvalid).toHaveAttribute(
+    'aria-checked',
+    'false'
+  );
+  await checkboxButtonTrueInvalid.click();
+
+  // Checkbox null state should be mixed at the start, checked after first click
+  //  and unchecked after second click
+  const checkboxButtonNull = appFrame!.getByTestId('checkbox-null-state-width');
+  await expect(checkboxButtonNull).toHaveAttribute('aria-checked', 'mixed');
+  await checkboxButtonNull.click();
+  await expect(checkboxButtonNull).toHaveAttribute('aria-checked', 'true');
+  await checkboxButtonNull.click();
+  await expect(checkboxButtonNull).toHaveAttribute('aria-checked', 'false');
+  await checkboxButtonNull.click();
 });
