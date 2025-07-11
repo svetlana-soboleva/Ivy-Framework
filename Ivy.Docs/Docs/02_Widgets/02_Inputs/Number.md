@@ -3,6 +3,9 @@
 The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for
 setting minimum/maximum values, step increments, and formatting.
 
+> **Note:**
+> Unless you explicitly specify `Min` and `Max` for a `NumberInput`, common default values will be applied based on the numeric type. For example, integer types use their natural limits, while decimal, double, and float types use practical defaults (e.g., ±999,999.99 for sliders). If you need a specific range, always set `Min` and `Max` yourself.
+
 ## Basic Usage
 
 Here's a simple example of a `NumberInput` that allows users to input a number. It also allows to set a minimum
