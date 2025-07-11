@@ -47,15 +47,13 @@ test.describe('Bool Input Page Navigation', () => {
     await expect(h2.nth(0)).toContainText('Variants');
 
     await expect(
-      appFrame!.locator('code', { hasText: 'BoolInputs.Checkbox' })
+      appFrame!.locator('code:has-text("BoolInputs.Checkbox")')
     ).toBeVisible();
-
     await expect(
-      appFrame!.locator('code', { hasText: 'BoolInputs.Switch' })
+      appFrame!.locator('code:has-text("BoolInputs.Switch")')
     ).toBeVisible();
-
     await expect(
-      appFrame!.locator('code', { hasText: 'BoolInputs.Toggle' })
+      appFrame!.locator('code:has-text("BoolInputs.Toggle")')
     ).toBeVisible();
 
     // Checkboxes with description visible tests
