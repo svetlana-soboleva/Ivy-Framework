@@ -27,7 +27,10 @@ public abstract record FeedbackInputBase : WidgetBase<FeedbackInputBase>, IAnyFe
     [Prop] public string? Placeholder { get; set; }
     [Prop] public FeedbackInputs Variant { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [];
+    public Type[] SupportedStateTypes() => [
+        typeof(bool), typeof(bool?),
+        typeof(int), typeof(int?),
+    ];
 }
 
 public record FeedbackInput<TNumber> : FeedbackInputBase, IInput<TNumber>

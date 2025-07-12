@@ -317,4 +317,61 @@ public static class TypeUtils
 
         return type.Name;
     }
+
+    public static List<(string Group, object NonNullable, object Nullable)> GroupAndPairSupportedTypes(IEnumerable<Type> types)
+    {
+        // Define groups and their type sets
+        var groups = new List<(string Group, HashSet<Type> Types)>
+        {
+            ("Boolean", new HashSet<Type> { typeof(bool) }),
+            ("Numeric", new HashSet<Type> { typeof(short), typeof(int), typeof(long), typeof(byte), typeof(float), typeof(double), typeof(decimal) }),
+            ("Date/Time", new HashSet<Type> { typeof(DateTime), typeof(DateOnly), typeof(DateTimeOffset), typeof(TimeOnly) }),
+            ("Color", new HashSet<Type> { typeof(Colors) }),
+            ("Text", new HashSet<Type> { typeof(string) }),
+        };
+
+        // Flatten all types to base/non-nullable and nullable
+        var typeSet = new HashSet<Type>(types);
+        var result = new List<(string Group, object NonNullable, object Nullable)>();
+        var handled = new HashSet<Type>();
+
+        foreach (var (group, groupTypes) in groups)
+        {
+            foreach (var baseType in groupTypes)
+            {
+                var nonNullable = baseType;
+                Type? nullable = null;
+                if (baseType.IsValueType && Nullable.GetUnderlyingType(baseType) == null)
+                {
+                    nullable = typeof(Nullable<>).MakeGenericType(baseType);
+                }
+                var hasNonNullable = typeSet.Contains(nonNullable);
+                var hasNullable = nullable != null && typeSet.Contains(nullable);
+                if (hasNonNullable || hasNullable)
+                {
+                    result.Add((group,
+                        hasNonNullable ? GetTypeDescription(nonNullable, false) : null!,
+                        hasNullable ? GetTypeDescription(nullable!, true) : null!));
+                    handled.Add(nonNullable);
+                    if (nullable != null) handled.Add(nullable);
+                }
+            }
+        }
+        // Handle enums and other types not in the above groups
+        foreach (var t in typeSet)
+        {
+            if (handled.Contains(t)) continue;
+            var isNullable = Nullable.GetUnderlyingType(t) != null;
+            var baseType = Nullable.GetUnderlyingType(t) ?? t;
+            var group = baseType.IsEnum ? "Enum" : "Other";
+            // Pair nullable/non-nullable enums/other
+            if (!result.Any(r => r.NonNullable?.ToString() == GetTypeDescription(baseType, false).ToString()))
+            {
+                result.Add((group,
+                    typeSet.Contains(baseType) ? GetTypeDescription(baseType, false) : null!,
+                    typeSet.Contains(typeof(Nullable<>).MakeGenericType(baseType)) ? GetTypeDescription(baseType, true) : null!));
+            }
+        }
+        return result;
+    }
 }
