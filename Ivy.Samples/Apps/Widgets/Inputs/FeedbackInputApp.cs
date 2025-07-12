@@ -1,5 +1,4 @@
 ﻿using Ivy.Shared;
-using Microsoft.SemanticKernel.Text;
 
 namespace Ivy.Samples.Apps.Widgets.Inputs;
 
@@ -54,7 +53,7 @@ public class FeedbackInputApp : SampleBase
 
                           | Text.InlineCode("int?")
                           | nullableIntState.ToFeedbackInput()
-                          | (nullableIntState.Value == null ? Text.InlineCode("null") : Text.InlineCode(nullableIntState.Value.ToString()))!
+                          | (nullableIntState.Value == null ? Text.InlineCode("null") : Text.InlineCode(nullableIntState.Value.ToString() ?? "null"))
 
                           | Text.InlineCode("float")
                           | floatState.ToFeedbackInput()
@@ -62,7 +61,7 @@ public class FeedbackInputApp : SampleBase
 
                           | Text.InlineCode("float?")
                           | nullableFloatState.ToFeedbackInput()
-                          | (nullableFloatState.Value == null ? Text.InlineCode("null") : Text.InlineCode(nullableFloatState.Value.ToString()))!
+                          | (nullableFloatState.Value == null ? Text.InlineCode("null") : Text.InlineCode(nullableFloatState.Value.ToString() ?? "null"))
 
                           | Text.InlineCode("bool")
                           | boolState.ToFeedbackInput()

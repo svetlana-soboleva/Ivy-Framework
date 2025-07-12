@@ -237,7 +237,7 @@ public static class TypeUtils
 
     private static bool IsWidgetBaseType(this Type type)
     {
-        Type currentType = type.BaseType;
+        Type? currentType = type.BaseType;
 
         while (currentType != null && currentType != typeof(object))
         {

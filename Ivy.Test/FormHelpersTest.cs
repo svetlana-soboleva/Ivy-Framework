@@ -24,7 +24,7 @@ public class FormHelpersTest
         var propertyInfo = typeof(TestModel).GetProperty(nameof(TestModel.RequiredString));
 
         // Act
-        var result = FormHelpers.IsRequired(propertyInfo);
+        var result = FormHelpers.IsRequired(propertyInfo!);
 
         // Assert
         Assert.True(result);
@@ -37,7 +37,7 @@ public class FormHelpersTest
         var propertyInfo = typeof(TestModel).GetProperty(nameof(TestModel.NullableString));
 
         // Act
-        var result = FormHelpers.IsRequired(propertyInfo);
+        var result = FormHelpers.IsRequired(propertyInfo!);
 
         // Assert
         Assert.False(result);
@@ -50,7 +50,7 @@ public class FormHelpersTest
         var propertyInfo = typeof(TestModel).GetProperty(nameof(TestModel.NonNullableString));
 
         // Act
-        var result = FormHelpers.IsRequired(propertyInfo);
+        var result = FormHelpers.IsRequired(propertyInfo!);
 
         // Assert
         Assert.True(result);
@@ -63,7 +63,7 @@ public class FormHelpersTest
         var propertyInfo = typeof(TestModel).GetProperty(nameof(TestModel.Decimal));
 
         // Act
-        var result = FormHelpers.IsRequired(propertyInfo);
+        var result = FormHelpers.IsRequired(propertyInfo!);
 
         // Assert
         Assert.False(result);
