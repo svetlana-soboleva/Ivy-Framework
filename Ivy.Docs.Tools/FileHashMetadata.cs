@@ -26,7 +26,7 @@ public static class FileHashMetadata
                     RedirectStandardError = true,
                     UseShellExecute = false
                 };
-                using var proc = Process.Start(psi)!;
+                using var proc = Process.Start(psi) ?? throw new Exception("Failed to start process");
                 proc.WaitForExit();
                 if (proc.ExitCode != 0)
                     throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
@@ -41,7 +41,7 @@ public static class FileHashMetadata
                     RedirectStandardError = true,
                     UseShellExecute = false
                 };
-                using var proc = Process.Start(psi);
+                using var proc = Process.Start(psi) ?? throw new Exception("Failed to start process");
                 proc.WaitForExit();
                 if (proc.ExitCode != 0)
                     throw new Exception("Failed to write extended attribute: " + proc.StandardError.ReadToEnd());
@@ -70,8 +70,8 @@ public static class FileHashMetadata
                 RedirectStandardError = true,
                 UseShellExecute = false
             };
-            using var proc = Process.Start(psi);
-            var output = proc!.StandardOutput.ReadToEnd().Trim();
+            using var proc = Process.Start(psi) ?? throw new Exception("Failed to start process");
+            var output = proc.StandardOutput.ReadToEnd().Trim();
             proc.WaitForExit();
             return proc.ExitCode == 0 ? output : null;
         }
@@ -85,8 +85,8 @@ public static class FileHashMetadata
                 RedirectStandardError = true,
                 UseShellExecute = false
             };
-            using var proc = Process.Start(psi);
-            var output = proc!.StandardOutput.ReadToEnd().Trim();
+            using var proc = Process.Start(psi) ?? throw new Exception("Failed to start process");
+            var output = proc.StandardOutput.ReadToEnd().Trim();
             proc.WaitForExit();
             return proc.ExitCode == 0 ? output : null;
         }
