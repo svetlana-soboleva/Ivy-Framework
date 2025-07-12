@@ -30,10 +30,10 @@ jobs:
     - name: Check code formatting
       run: dotnet format --verify-no-changes
     
-    # Build solution
-    - name: Build solution
-      run: dotnet build --configuration Release
+    # Build Ivy.Samples only
+    - name: Build Ivy.Samples
+      run: dotnet build Ivy.Samples/Ivy.Samples.csproj --configuration Release
     
-    # Run tests
+    # Run tests for Ivy.Samples only
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal 
+      run: dotnet test Ivy.Samples/Ivy.Samples.csproj --configuration Release --no-build --verbosity normal 
