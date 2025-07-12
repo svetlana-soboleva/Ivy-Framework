@@ -53,7 +53,7 @@ public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectI
         Placeholder = placeholder;
         Variant = variant;
         Disabled = disabled;
-        Options = options.ToArray();
+        Options = [.. options];
         SelectMany = selectMany;
     }
 
@@ -112,11 +112,6 @@ public static class SelectInputExtensions
     public static SelectInputBase Invalid(this SelectInputBase widget, string? invalid)
     {
         return widget with { Invalid = invalid };
-    }
-
-    public static SelectInputBase SelectMany(this SelectInputBase widget, bool selectMany = true)
-    {
-        return widget with { SelectMany = selectMany };
     }
 
     public static SelectInputBase Separator(this SelectInputBase widget, char separator)

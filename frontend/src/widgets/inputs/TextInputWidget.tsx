@@ -1,6 +1,12 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Input } from "@/components/ui/input";
-import { EyeIcon, EyeOffIcon, Search } from 'lucide-react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
+import { Input } from '@/components/ui/input';
+import { EyeIcon, EyeOffIcon, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -14,17 +20,27 @@ interface TextInputWidgetProps {
   id: string;
   placeholder?: string;
   value?: string;
-  variant: "Text" | "Textarea" | "Email" | "Tel" | "Url" | "Password" | "Search";
+  variant:
+    | 'Text'
+    | 'Textarea'
+    | 'Email'
+    | 'Tel'
+    | 'Url'
+    | 'Password'
+    | 'Search';
   disabled: boolean;
   invalid?: string;
   events: string[];
   width?: string;
   height?: string;
   shortcutKey?: string;
+  'data-testid'?: string;
 }
 
 // Utility to detect Mac platform
-const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
+const isMac =
+  typeof navigator !== 'undefined' &&
+  /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
 
 // Parse the shortcut string into components
 const parseShortcut = (shortcutStr?: string) => {
@@ -34,8 +50,13 @@ const parseShortcut = (shortcutStr?: string) => {
     ctrl: !isMac && parts.includes('ctrl'),
     shift: parts.includes('shift'),
     alt: parts.includes('alt'),
-    meta: isMac ? (parts.includes('ctrl') || parts.includes('meta') || parts.includes('cmd') || parts.includes('command')) : false,
-    key: parts[parts.length - 1]
+    meta: isMac
+      ? parts.includes('ctrl') ||
+        parts.includes('meta') ||
+        parts.includes('cmd') ||
+        parts.includes('command')
+      : false,
+    key: parts[parts.length - 1],
   };
 };
 
@@ -44,15 +65,24 @@ const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
   if (!shortcutStr) return [];
   const parts = shortcutStr.split('+').map(p => p.trim());
   const result: React.ReactNode[] = [];
-  
+
   parts.forEach((part, index) => {
     if (index > 0) {
       result.push('+');
     }
-    
-    if (isMac && (part.toLowerCase() === 'ctrl' || part.toLowerCase() === 'cmd' || part.toLowerCase() === 'command' || part.toLowerCase() === 'meta')) {
+
+    if (
+      isMac &&
+      (part.toLowerCase() === 'ctrl' ||
+        part.toLowerCase() === 'cmd' ||
+        part.toLowerCase() === 'command' ||
+        part.toLowerCase() === 'meta')
+    ) {
       result.push(
-        <span key={`meta-${index}`} style={{ fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }}>
+        <span
+          key={`meta-${index}`}
+          style={{ fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }}
+        >
           ⌘
         </span>
       );
@@ -62,12 +92,17 @@ const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
       result.push(part.charAt(0).toUpperCase() + part.slice(1));
     }
   });
-  
+
   return result;
 };
 
-const useCursorPosition = (value?: string, externalRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>) => {
-  const internalRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+const useCursorPosition = (
+  value?: string,
+  externalRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>
+) => {
+  const internalRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(
+    null
+  );
   const elementRef = externalRef || internalRef;
   const cursorPositionRef = useRef<number | null>(null);
 
@@ -95,7 +130,7 @@ const DefaultVariant: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ type, props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef);
@@ -105,14 +140,14 @@ const DefaultVariant: React.FC<{
     onChange(e);
   };
 
-  const styles:React.CSSProperties = {
-    ...getWidth(props.width)
+  const styles: React.CSSProperties = {
+    ...getWidth(props.width),
   };
 
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative" style={styles}>
+    <div className="relative w-full select-none" style={styles}>
       <Input
         ref={elementRef as React.RefObject<HTMLInputElement>}
         id={props.id}
@@ -124,10 +159,12 @@ const DefaultVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          (props.invalid && inputStyles.invalid),   
-          (props.invalid && "pr-8"),
-          (props.shortcutKey && !isFocused && "pr-16"),
+          'w-full',
+          props.invalid && inputStyles.invalidInput,
+          props.invalid && 'pr-8',
+          props.shortcutKey && !isFocused && 'pr-16'
         )}
+        data-testid={props['data-testid']}
       />
       {props.invalid && (
         <div className="absolute right-2.5 top-2.5">
@@ -151,7 +188,7 @@ const TextareaVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
   const { elementRef, savePosition } = useCursorPosition(props.value, inputRef);
@@ -161,16 +198,16 @@ const TextareaVariant: React.FC<{
     onChange(e);
   };
 
-  const styles:React.CSSProperties = {
+  const styles: React.CSSProperties = {
     ...getWidth(props.width),
-    ...getHeight(props.height)
+    ...getHeight(props.height),
   };
 
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative">
-      <Textarea 
+    <div className="relative w-full select-none">
+      <Textarea
         style={styles}
         ref={elementRef as React.RefObject<HTMLTextAreaElement>}
         id={props.id}
@@ -181,10 +218,12 @@ const TextareaVariant: React.FC<{
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          (props.invalid && inputStyles.invalid),
-          (props.invalid && "pr-8"),
-          (props.shortcutKey && !isFocused && "pr-16"),
+          'w-full',
+          props.invalid && inputStyles.invalidInput,
+          props.invalid && 'pr-8',
+          props.shortcutKey && !isFocused && 'pr-16'
         )}
+        data-testid={props['data-testid']}
       />
       {props.invalid && (
         <div className="absolute right-2.5 top-2.5 h-4 w-4">
@@ -208,14 +247,17 @@ const PasswordVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 }> = ({ props, onChange, onBlur, onFocus, inputRef }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [hasLastPass, setHasLastPass] = useState(false);
-  const { elementRef: elementRefGeneric, savePosition } = useCursorPosition(props.value, inputRef);
+  const { elementRef: elementRefGeneric, savePosition } = useCursorPosition(
+    props.value,
+    inputRef
+  );
   const elementRef = elementRefGeneric as React.RefObject<HTMLInputElement>;
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (containerRef.current?.querySelector('[data-lastpass-icon-root]')) {
@@ -235,57 +277,67 @@ const PasswordVariant: React.FC<{
     onChange(e);
   };
 
-  const styles:React.CSSProperties = {
-    ...getWidth(props.width)
+  const styles: React.CSSProperties = {
+    ...getWidth(props.width),
   };
 
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
 
   return (
-    <div className="relative" style={styles} ref={containerRef}>
-      <Input 
+    <div
+      className="relative w-full select-none"
+      style={styles}
+      ref={containerRef}
+    >
+      <Input
         ref={elementRef}
         id={props.id}
         placeholder={props.placeholder}
         value={props.value}
-        type={showPassword ? "text" : "password"}
+        type={showPassword ? 'text' : 'password'}
         disabled={props.disabled}
         onChange={handleChange}
         onBlur={onBlur}
         onFocus={onFocus}
         className={cn(
-          (props.invalid && inputStyles.invalid),   
-          (props.invalid ? "pr-14" : "pr-8"),
-          (hasLastPass && "pr-3"),
-          (props.shortcutKey && !hasLastPass && "pr-24")
+          'w-full',
+          props.invalid && inputStyles.invalidInput,
+          props.invalid ? 'pr-14' : 'pr-8',
+          hasLastPass && 'pr-3',
+          props.shortcutKey && !hasLastPass && 'pr-24'
         )}
+        data-testid={props['data-testid']}
       />
-    
-      {!hasLastPass && <div className={cn(
-        "absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center"
-        )}>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="hover:bg-transparent p-0 m-0 h-4 w-4"
-          onClick={togglePassword}>
-          {showPassword ? (
-            <EyeOffIcon className="h-4 w-4" />
-          ) : (
-            <EyeIcon className="h-4 w-4" />
+
+      {!hasLastPass && (
+        <div
+          className={cn(
+            'absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center'
           )}
-        </Button>
-        {props.invalid && (
-            <InvalidIcon message={props.invalid} className="ml-2"/>
-        )}
-        {props.shortcutKey && (
-          <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
-            {shortcutDisplay}
-          </kbd>
-        )}
-      </div>}
-          
+        >
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="hover:bg-transparent p-0 m-0 h-4 w-4"
+            onClick={togglePassword}
+          >
+            {showPassword ? (
+              <EyeOffIcon className="h-4 w-4" />
+            ) : (
+              <EyeIcon className="h-4 w-4" />
+            )}
+          </Button>
+          {props.invalid && (
+            <InvalidIcon message={props.invalid} className="ml-2" />
+          )}
+          {props.shortcutKey && (
+            <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+              {shortcutDisplay}
+            </kbd>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -296,12 +348,19 @@ const SearchVariant: React.FC<{
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
   width?: string;
-  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   isFocused: boolean;
 }> = ({ props, onChange, onBlur, onFocus, inputRef, isFocused }) => {
-  const { elementRef, savePosition } = useCursorPosition(props.value, inputRef) as { elementRef: React.RefObject<HTMLInputElement>, savePosition: () => void };
+  const { elementRef, savePosition } = useCursorPosition(
+    props.value,
+    inputRef
+  ) as {
+    elementRef: React.RefObject<HTMLInputElement>;
+    savePosition: () => void;
+  };
   const { ref: focusRef } = useFocusable('sidebar-navigation', 0);
   const shouldFocusMenuRef = useRef(false);
+  const eventHandler = useEventHandler();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     savePosition();
@@ -324,23 +383,32 @@ const SearchVariant: React.FC<{
     onBlur(e);
   };
 
+  const handleClear = () => {
+    if (props.events.includes('OnChange')) {
+      eventHandler('OnChange', props.id, ['']);
+    }
+  };
+
   const styles: React.CSSProperties = {
-    ...getWidth(props.width)
+    ...getWidth(props.width),
   };
 
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
+  const hasValue = props.value && props.value.trim() !== '';
 
   return (
-    <div className="relative" style={styles}>
+    <div className="relative w-full select-none" style={styles}>
       {/* Search Icon */}
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
 
       {/* Search Input */}
       <Input
-        ref={(el) => {
+        ref={el => {
           // Handle both refs
           if (el) {
-            (elementRef as React.MutableRefObject<HTMLInputElement | null>).current = el;
+            (
+              elementRef as React.MutableRefObject<HTMLInputElement | null>
+            ).current = el;
             focusRef(el);
           }
         }}
@@ -353,14 +421,31 @@ const SearchVariant: React.FC<{
         onBlur={handleBlur}
         onFocus={onFocus}
         onKeyDown={handleKeyDown}
+        autoComplete="off"
         className={cn(
-          "pl-8",
-          props.invalid && inputStyles.invalid,
-          props.invalid && "pr-8",
-          props.shortcutKey && !isFocused && "pr-16"
+          'w-full pl-8',
+          props.invalid && inputStyles.invalidInput,
+          props.invalid && 'pr-8',
+          hasValue && 'pr-8',
+          props.shortcutKey && !isFocused && 'pr-16',
+          // Hide browser's default search input X icon
+          '[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden'
         )}
-        data-testid="sidebar-search"
+        data-testid={props['data-testid']}
       />
+
+      {/* Clear Button */}
+      {hasValue && !props.disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear search"
+          onClick={handleClear}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
 
       {/* Error Icon */}
       {props.invalid && (
@@ -391,7 +476,8 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
   width,
   height,
   events,
-  shortcutKey
+  shortcutKey,
+  'data-testid': dataTestId,
 }) => {
   const eventHandler = useEventHandler();
   const [localValue, setLocalValue] = useState(value);
@@ -408,28 +494,31 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
   // Handle keyboard shortcut
   useEffect(() => {
     if (!shortcutKey) return;
-    
+
     const shortcutObj = parseShortcut(shortcutKey);
     if (!shortcutObj) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check if the required modifier keys match exactly what was defined in the shortcut
-      const modifierMatch = 
+      const modifierMatch =
         (shortcutObj.meta && event.metaKey) ||
         (shortcutObj.ctrl && event.ctrlKey) ||
-        (!shortcutObj.meta && !shortcutObj.ctrl && !event.metaKey && !event.ctrlKey);
-      
+        (!shortcutObj.meta &&
+          !shortcutObj.ctrl &&
+          !event.metaKey &&
+          !event.ctrlKey);
+
       const isShortcutPressed =
         modifierMatch &&
-        (event.shiftKey === shortcutObj.shift) &&
-        (event.altKey === shortcutObj.alt) &&
-        (event.key.toLowerCase() === shortcutObj.key.toLowerCase());
+        event.shiftKey === shortcutObj.shift &&
+        event.altKey === shortcutObj.alt &&
+        event.key.toLowerCase() === shortcutObj.key.toLowerCase();
       if (isShortcutPressed) {
         event.preventDefault();
         if (inputRef.current) {
           inputRef.current.focus();
           setIsFocused(true);
-          if(events.includes("OnFocus")) eventHandler("OnFocus", id, []);
+          if (events.includes('OnFocus')) eventHandler('OnFocus', id, []);
         }
       }
     };
@@ -440,53 +529,100 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     };
   }, [shortcutKey, id, events, eventHandler]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setLocalValue(e.target.value);
-    if(events.includes("OnChange")) eventHandler("OnChange", id, [e.target.value]);
-  }, [eventHandler, id, events]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      setLocalValue(e.target.value);
+      if (events.includes('OnChange'))
+        eventHandler('OnChange', id, [e.target.value]);
+    },
+    [eventHandler, id, events]
+  );
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
-    if(events.includes("OnBlur")) eventHandler("OnBlur", id, []);
+    if (events.includes('OnBlur')) eventHandler('OnBlur', id, []);
   }, [eventHandler, id, events]);
 
   const handleFocus = useCallback(() => {
     setIsFocused(true);
-    if(events.includes("OnFocus")) eventHandler("OnFocus", id, []);
+    if (events.includes('OnFocus')) eventHandler('OnFocus', id, []);
   }, [eventHandler, id, events]);
 
-  const commonProps = useMemo(() => ({
-    id,
-    placeholder,
-    value: localValue,
-    disabled,
-    invalid,
-    width,  
-    height,
-    events,
-    shortcutKey
-  }), [id, placeholder, localValue, disabled, invalid, events, width, height, shortcutKey]);
+  const commonProps = useMemo(
+    () => ({
+      id,
+      placeholder,
+      value: localValue,
+      disabled,
+      invalid,
+      width,
+      height,
+      events,
+      shortcutKey,
+      'data-testid': dataTestId,
+    }),
+    [
+      id,
+      placeholder,
+      localValue,
+      disabled,
+      invalid,
+      events,
+      width,
+      height,
+      shortcutKey,
+      dataTestId,
+    ]
+  );
 
   switch (variant) {
-    case "Password":
-      return <PasswordVariant props={commonProps} onChange={handleChange} onBlur={handleBlur} onFocus={handleFocus} inputRef={inputRef}/>;
-    case "Textarea":
-      return <TextareaVariant props={commonProps} onChange={handleChange} onBlur={handleBlur} onFocus={handleFocus} inputRef={inputRef} isFocused={isFocused}/>;
-    case "Search":
-      return <SearchVariant props={commonProps} onChange={handleChange} onBlur={handleBlur} onFocus={handleFocus} inputRef={inputRef} isFocused={isFocused}/>;
+    case 'Password':
+      return (
+        <PasswordVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+        />
+      );
+    case 'Textarea':
+      return (
+        <TextareaVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
+    case 'Search':
+      return (
+        <SearchVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
     default:
-      return <DefaultVariant 
-        type={variant.toLowerCase() as Lowercase<TextInputWidgetProps['variant']>}
-        props={commonProps}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        inputRef={inputRef}
-        isFocused={isFocused}
-      />;
+      return (
+        <DefaultVariant
+          type={
+            variant.toLowerCase() as Lowercase<TextInputWidgetProps['variant']>
+          }
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
   }
 };
 
 export default TextInputWidget;
-
-

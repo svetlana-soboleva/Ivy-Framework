@@ -60,38 +60,96 @@ public class SelectInputApp : SampleBase
     private object CreateVariantsSection()
     {
         var colorState = UseState(Colors.Red);
+        var nullableColorState = UseState((Colors?)null);
+        var colorArrayState = UseState(new Colors[0]);
+        var nullableColorArrayState = UseState<Colors[]?>(() => null);
         var colorOptions = typeof(Colors).ToOptions();
 
-        return Layout.Grid().Columns(5)
+        return Layout.Grid().Columns(7)
                | Text.InlineCode("Variant")
                | Text.InlineCode("Default")
                | Text.InlineCode("Disabled")
                | Text.InlineCode("Invalid")
                | Text.InlineCode("With Placeholder")
+               | Text.InlineCode("Nullable")
+               | Text.InlineCode("Nullable Invalid")
 
                | Text.InlineCode("SelectInputs.Select")
                | colorState.ToSelectInput(colorOptions)
-               | colorState.ToSelectInput(colorOptions).Disabled()
-               | colorState.ToSelectInput(colorOptions).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Placeholder("Select a color")
+               | colorState
+                    .ToSelectInput(colorOptions)
+                    .Disabled()
+               | colorState
+                    .ToSelectInput(colorOptions)
+                    .Invalid("Invalid")
+               | colorState
+                    .ToSelectInput(colorOptions)
+                    .Placeholder("Select a color")
+               | nullableColorState
+                    .ToSelectInput(colorOptions)
+               | nullableColorState
+                    .ToSelectInput(colorOptions)
+                    .Invalid("Invalid")
 
                | Text.InlineCode("SelectInputs.List")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Disabled()
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Placeholder("Select a color")
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Disabled()
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Invalid("Invalid")
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Placeholder("Select colors")
+               | nullableColorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | nullableColorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Invalid("Invalid")
 
                | Text.InlineCode("SelectInputs.Toggle")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Disabled()
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Invalid("Invalid")
-               | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Placeholder("Select a color");
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Disabled()
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Invalid("Invalid")
+               | colorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Placeholder("Select a color")
+               | nullableColorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+               | nullableColorArrayState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Invalid("Invalid");
     }
 
     private object CreateMultiSelectVariantsSection()
     {
-        var colorStateList = UseState(new List<Colors>());
-        var colorStateToggle = UseState(new List<Colors>());
+        var colorStateListDefault = UseState<Colors[]>([]);
+        var colorStateListDisabled = UseState<Colors[]>([]);
+        var colorStateListInvalid = UseState<Colors[]>([]);
+        var colorStateListPlaceholder = UseState<Colors[]>([]);
+        var colorStateToggleDefault = UseState<Colors[]>([]);
+        var colorStateToggleDisabled = UseState<Colors[]>([]);
+        var colorStateToggleInvalid = UseState<Colors[]>([]);
+        var colorStateTogglePlaceholder = UseState<Colors[]>([]);
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(6)
@@ -103,18 +161,40 @@ public class SelectInputApp : SampleBase
                | Text.InlineCode("State")
 
                | Text.InlineCode("SelectInputs.List")
-               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany()
-               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Disabled()
-               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Invalid("Invalid")
-               | colorStateList.ToSelectInput(colorOptions).Variant(SelectInputs.List).SelectMany().Placeholder("Select colors")
-               | Text.InlineCode($"[{string.Join(", ", colorStateList.Value)}]")
+               | colorStateListDefault
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | colorStateListDisabled
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Disabled()
+               | colorStateListInvalid
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Invalid("Invalid")
+               | colorStateListPlaceholder
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Placeholder("Select colors")
+               | Text.InlineCode($"[{string.Join(", ", colorStateListDefault.Value)}]")
 
                | Text.InlineCode("SelectInputs.Toggle")
-               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany()
-               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Disabled()
-               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Invalid("Invalid")
-               | colorStateToggle.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).SelectMany().Placeholder("Select colors")
-               | Text.InlineCode($"[{string.Join(", ", colorStateToggle.Value)}]");
+               | colorStateToggleDefault
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+               | colorStateToggleDisabled
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Disabled()
+               | colorStateToggleInvalid
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Invalid("Invalid")
+               | colorStateTogglePlaceholder
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Placeholder("Select colors")
+               | Text.InlineCode($"[{string.Join(", ", colorStateToggleDefault.Value)}]");
     }
 
     private object CreateDataBindingTests()
@@ -195,11 +275,10 @@ public class SelectInputApp : SampleBase
 
         if (isCollection)
         {
-            // For collection states, show all three variants with SelectMany
             return Layout.Vertical()
-                   | anyState.ToSelectInput(options).SelectMany()
-                   | anyState.ToSelectInput(options).Variant(SelectInputs.List).SelectMany()
-                   | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle).SelectMany();
+                   | anyState.ToSelectInput(options)
+                   | anyState.ToSelectInput(options).Variant(SelectInputs.List)
+                   | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle);
         }
 
         // For non-collection states, show all three variants
@@ -223,13 +302,21 @@ public class SelectInputApp : SampleBase
 
                | Text.InlineCode("Nullable")
                | nullableColorState.ToSelectInput(colorOptions)
-               | nullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
-               | nullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle)
+               | nullableColorState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | nullableColorState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
 
                | Text.InlineCode("Non-Nullable")
                | nonNullableColorState.ToSelectInput(colorOptions)
-               | nonNullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.List)
-               | nonNullableColorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle);
+               | nonNullableColorState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | nonNullableColorState
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle);
     }
 
     private static object FormatStateValue(string typeName, object? value, bool isNullable)

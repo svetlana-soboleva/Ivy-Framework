@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 namespace Ivy.Core;
 
@@ -89,10 +88,10 @@ public static class Utils
         {
             return numVal switch
             {
-                _ when numVal.TryGetValue(out string? str) => Convert.ChangeType(str, t),
-                _ when numVal.TryGetValue(out double dbl) => Convert.ChangeType(dbl, t),
-                _ when numVal.TryGetValue(out long lng) => Convert.ChangeType(lng, t),
-                _ when numVal.TryGetValue(out int intVal) => Convert.ChangeType(intVal, t),
+                _ when numVal.TryGetValue(out string? str) => SafeConvert(str, t),
+                _ when numVal.TryGetValue(out double dbl) => SafeConvert(dbl, t),
+                _ when numVal.TryGetValue(out long lng) => SafeConvert(lng, t),
+                _ when numVal.TryGetValue(out int intVal) => SafeConvert(intVal, t),
                 _ => null
             };
         }
@@ -141,6 +140,58 @@ public static class Utils
         if (t.IsPrimitive && t != typeof(bool) && t != typeof(char) &&
             t != typeof(IntPtr) && t != typeof(UIntPtr)) return true;
         return t == typeof(decimal);
+    }
+
+    private static object? SafeConvert(object value, Type targetType)
+    {
+        try
+        {
+            return Convert.ChangeType(value, targetType);
+        }
+        catch (OverflowException)
+        {
+            // Handle overflow by capping the value to the type's limits
+            return CapValueToTypeLimits(value, targetType);
+        }
+        catch
+        {
+            // For other conversion errors, return null or default value
+            return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+        }
+    }
+
+    private static object? CapValueToTypeLimits(object value, Type targetType)
+    {
+        if (value is IConvertible convertible)
+        {
+            try
+            {
+                // Try to convert to double first to get a numeric value
+                double doubleValue = convertible.ToDouble(null);
+
+                return targetType switch
+                {
+                    var t when t == typeof(byte) => (byte)Math.Min(Math.Max(doubleValue, byte.MinValue), byte.MaxValue),
+                    var t when t == typeof(sbyte) => (sbyte)Math.Min(Math.Max(doubleValue, sbyte.MinValue), sbyte.MaxValue),
+                    var t when t == typeof(short) => (short)Math.Min(Math.Max(doubleValue, short.MinValue), short.MaxValue),
+                    var t when t == typeof(ushort) => (ushort)Math.Min(Math.Max(doubleValue, ushort.MinValue), ushort.MaxValue),
+                    var t when t == typeof(int) => (int)Math.Min(Math.Max(doubleValue, int.MinValue), int.MaxValue),
+                    var t when t == typeof(uint) => (uint)Math.Min(Math.Max(doubleValue, uint.MinValue), uint.MaxValue),
+                    var t when t == typeof(long) => (long)Math.Min(Math.Max(doubleValue, long.MinValue), long.MaxValue),
+                    var t when t == typeof(ulong) => (ulong)Math.Min(Math.Max(doubleValue, ulong.MinValue), ulong.MaxValue),
+                    var t when t == typeof(float) => (float)Math.Min(Math.Max(doubleValue, float.MinValue), float.MaxValue),
+                    var t when t == typeof(double) => doubleValue,
+                    var t when t == typeof(decimal) => Math.Min(Math.Max((decimal)doubleValue, decimal.MinValue), decimal.MaxValue),
+                    _ => Activator.CreateInstance(targetType)
+                };
+            }
+            catch
+            {
+                return Activator.CreateInstance(targetType);
+            }
+        }
+
+        return Activator.CreateInstance(targetType);
     }
 
     private static bool IsValueTupleOfTwo(Type t) =>

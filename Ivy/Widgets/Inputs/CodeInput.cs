@@ -25,6 +25,7 @@ public abstract record CodeInputBase : WidgetBase<CodeInputBase>, IAnyCodeInput
     [Prop] public string? Placeholder { get; set; }
     [Prop] public CodeInputs Variant { get; set; }
     [Prop] public Languages? Language { get; set; } = null;
+    [Prop] public bool ShowCopyButton { get; set; } = false;
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [typeof(string)];
 }
@@ -92,5 +93,10 @@ public static class CodeInputExtensions
     public static CodeInputBase Language(this CodeInputBase widget, Languages language)
     {
         return widget with { Language = language };
+    }
+
+    public static CodeInputBase ShowCopyButton(this CodeInputBase widget, bool showCopyButton = true)
+    {
+        return widget with { ShowCopyButton = showCopyButton };
     }
 }

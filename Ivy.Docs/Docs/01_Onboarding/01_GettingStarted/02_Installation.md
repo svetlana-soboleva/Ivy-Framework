@@ -1,18 +1,26 @@
 ﻿# Installation
 
-Ivy is installed using the dotnet command line tool. 
+Ivy can be installed easily using the .NET command line tool.
+
+---
+
+## 1. Install Ivy Globally
+
+Run the following command in your terminal to install Ivy as a global tool:
 
 ```terminal
-> dotnet tool install -g Ivy.Console
+ dotnet tool install -g Ivy.Console
 ```
 
 This will install Ivy globally on your machine. You can now use the `ivy` command in your terminal.
 
-## Create a new Ivy project
+---
 
-We can now use the Ivy CLI to create a new project.
+## 2. Create a New Ivy Project
+
+Use the Ivy CLI to scaffold a new project:
 
 ```terminal
-> ivy init --namespace Acme.InternalApp
-> dotnet watch
+ ivy init --namespace Acme.InternalApp
+ dotnet watch
 ```

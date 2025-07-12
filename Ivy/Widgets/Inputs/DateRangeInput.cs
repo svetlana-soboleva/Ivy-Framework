@@ -18,8 +18,14 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
     [Prop] public string? Format { get; set; }
     [Prop] public bool Disabled { get; set; }
     [Prop] public string? Invalid { get; set; }
+    [Prop] public bool Nullable { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
-    public Type[] SupportedStateTypes() => [];
+
+    public Type[] SupportedStateTypes() =>
+    [
+        // Only DateOnly tuple types
+        typeof((DateOnly, DateOnly)), typeof((DateOnly?, DateOnly?)),
+    ];
 }
 
 public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange>
@@ -29,12 +35,14 @@ public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange
         var typedState = state.As<TDateRange>();
         Value = typedState.Value;
         OnChange = e => typedState.Set(e.Value);
+        Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
 
     public DateRangeInput(TDateRange value, Action<Event<IInput<TDateRange>, TDateRange>> onChange, string? placeholder = null, bool disabled = false) : this(placeholder, disabled)
     {
         OnChange = onChange;
         Value = value;
+        Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
 
     public DateRangeInput(string? placeholder = null, bool disabled = false)
@@ -53,6 +61,7 @@ public static class DateRangeInputExtensions
     {
         var type = state.GetStateType();
 
+        // Check if it's a tuple type with 2 elements
         if (!type.IsGenericType || type.GetGenericArguments().Length != 2)
         {
             throw new Exception("DateRangeInput can only be used with a tuple of two elements");
@@ -81,5 +90,10 @@ public static class DateRangeInputExtensions
     public static DateRangeInputBase Invalid(this DateRangeInputBase widget, string? invalid)
     {
         return widget with { Invalid = invalid };
+    }
+
+    public static DateRangeInputBase Nullable(this DateRangeInputBase widget, bool nullable = true)
+    {
+        return widget with { Nullable = nullable };
     }
 }

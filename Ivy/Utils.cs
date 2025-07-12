@@ -317,7 +317,22 @@ public static class Utils
 
     public static double SuggestStep(this Type type)
     {
-        return 1.0;
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            type = type.GetGenericArguments()[0];
+        }
+
+        return Type.GetTypeCode(type) switch
+        {
+            TypeCode.Decimal => 0.01, // 2 decimal places for currency/decimal
+            TypeCode.Double => 0.01,  // 2 decimal places for double
+            TypeCode.Single => 0.01f, // 2 decimal places for float
+            TypeCode.Int16 => 1.0,
+            TypeCode.Int32 => 1.0,
+            TypeCode.Int64 => 1.0,
+            TypeCode.Byte => 1.0,
+            _ => 1.0,
+        };
     }
 
     public static double SuggestMin(this Type type)
@@ -329,9 +344,9 @@ public static class Utils
 
         return Type.GetTypeCode(type) switch
         {
-            TypeCode.Decimal => Convert.ToDouble(decimal.MinValue),
-            TypeCode.Double => double.MinValue,
-            TypeCode.Single => float.MinValue,
+            TypeCode.Decimal => -999999999999.99, // Practical limit for currency/decimal values
+            TypeCode.Double => -999999999999.99,  // Practical limit for double values
+            TypeCode.Single => -999999999999.99f, // Practical limit for float values
             TypeCode.Int16 => short.MinValue,
             TypeCode.Int32 => int.MinValue,
             TypeCode.Int64 => long.MinValue,
@@ -349,9 +364,9 @@ public static class Utils
 
         return Type.GetTypeCode(type) switch
         {
-            TypeCode.Decimal => Convert.ToDouble(decimal.MaxValue),
-            TypeCode.Double => double.MaxValue,
-            TypeCode.Single => float.MaxValue,
+            TypeCode.Decimal => 999999999999.99, // Practical limit for currency/decimal values
+            TypeCode.Double => 999999999999.99,  // Practical limit for double values
+            TypeCode.Single => 999999999999.99f, // Practical limit for float values
             TypeCode.Int16 => short.MaxValue,
             TypeCode.Int32 => int.MaxValue,
             TypeCode.Int64 => long.MaxValue,

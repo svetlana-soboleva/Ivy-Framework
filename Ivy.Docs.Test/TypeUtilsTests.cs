@@ -8,8 +8,8 @@ namespace Ivy.Docs.Test;
 public class TypeUtilsTests
 {
     [Theory]
-    [InlineData("Ivy.ColorInput", typeof(Ivy.ColorInput<>))]
-    [InlineData("Ivy.Button", typeof(Ivy.Button))]
+    [InlineData("Ivy.ColorInput", typeof(ColorInput))]
+    [InlineData("Ivy.Button", typeof(Button))]
     public void GetTypeFromName_ReturnsExpectedType(string typeName, Type expectedType)
     {
         Type? result = TypeUtils.GetTypeFromName(typeName);
@@ -18,7 +18,7 @@ public class TypeUtilsTests
 
     public class Foo
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Name2 { get; set; }
     }
 
@@ -75,7 +75,11 @@ public class TypeUtilsTests
     private void GetExtensionMethods_ReturnsExpected(Type baseType, Type extensionTypes, PropertyInfo propertyInfo, string expectedResult)
     {
         string result = TypeUtils.GetExtensionMethods(propertyInfo, baseType, [extensionTypes]);
-        Assert.Equal(expectedResult, result);
+        Assert.Equal(
+            // Normalize line endings for cross-platform testing
+            expectedResult.Replace("\r\n", "\n"),
+            result.Replace("\r\n", "\n")
+        );
     }
 }
 
@@ -85,7 +89,7 @@ public record XYZ : WidgetBase<XYZ>
 
 public record Bar
 {
-    [Prop] public string Name { get; set; }
+    [Prop] public string Name { get; set; } = string.Empty;
 }
 
 public static class BarExtensions
