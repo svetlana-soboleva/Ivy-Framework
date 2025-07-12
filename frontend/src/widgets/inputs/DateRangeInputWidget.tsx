@@ -135,186 +135,184 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
   const showClear = nullable && !disabled && (date?.from || date?.to);
 
   return (
-    <div>
-      <div className="relative w-full">
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              disabled={disabled}
-              data-testid={dataTestId}
-              className={cn(
-                'w-full justify-start text-left font-normal',
-                !date && 'text-muted-foreground',
-                invalid && 'border-destructive focus-visible:ring-destructive',
-                showClear && invalid
-                  ? 'pr-16'
-                  : showClear || invalid
-                    ? 'pr-8'
-                    : ''
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, displayFormat)} -{' '}
-                    {format(date.to, displayFormat)}
-                  </>
-                ) : (
-                  format(date.from, displayFormat)
-                )
+    <div className="relative w-full select-none">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            disabled={disabled}
+            data-testid={dataTestId}
+            className={cn(
+              'w-full justify-start text-left font-normal',
+              !date && 'text-muted-foreground',
+              invalid && 'border-destructive focus-visible:ring-destructive',
+              showClear && invalid
+                ? 'pr-16'
+                : showClear || invalid
+                  ? 'pr-8'
+                  : ''
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, displayFormat)} -{' '}
+                  {format(date.to, displayFormat)}
+                </>
               ) : (
-                <span>{placeholder}</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <div className="rounded-lg border border-border">
-              <div className="flex max-sm:flex-col">
-                <div className="relative border-border py-4 max-sm:order-1 max-sm:border-t sm:w-32">
-                  <div className="h-full border-border sm:border-e">
-                    <div className="flex flex-col px-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange({
-                            from: today,
-                            to: today,
-                          });
-                          setMonth(today);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Today
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(yesterday);
-                          setMonth(yesterday.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Yesterday
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(last7Days);
-                          setMonth(last7Days.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Last 7 Days
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(last30Days);
-                          setMonth(last30Days.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Last 30 Days
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(monthToDate);
-                          setMonth(monthToDate.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Month to Date
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(lastMonth);
-                          setMonth(lastMonth.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Last Month
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(yearToDate);
-                          setMonth(yearToDate.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Year to Date
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          handleChange(lastYear);
-                          setMonth(lastYear.to);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Last Year
-                      </Button>
-                    </div>
+                format(date.from, displayFormat)
+              )
+            ) : (
+              <span>{placeholder}</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <div className="rounded-lg border border-border">
+            <div className="flex max-sm:flex-col">
+              <div className="relative border-border py-4 max-sm:order-1 max-sm:border-t sm:w-32">
+                <div className="h-full border-border sm:border-e">
+                  <div className="flex flex-col px-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange({
+                          from: today,
+                          to: today,
+                        });
+                        setMonth(today);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Today
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(yesterday);
+                        setMonth(yesterday.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Yesterday
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(last7Days);
+                        setMonth(last7Days.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Last 7 Days
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(last30Days);
+                        setMonth(last30Days.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Last 30 Days
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(monthToDate);
+                        setMonth(monthToDate.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Month to Date
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(lastMonth);
+                        setMonth(lastMonth.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Last Month
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(yearToDate);
+                        setMonth(yearToDate.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Year to Date
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        handleChange(lastYear);
+                        setMonth(lastYear.to);
+                        setIsOpen(false);
+                      }}
+                    >
+                      Last Year
+                    </Button>
                   </div>
                 </div>
-                <div className="flex">
-                  <Calendar
-                    mode="range"
-                    selected={date}
-                    onSelect={newDate => {
-                      if (newDate) {
-                        handleChange(newDate);
-                      }
-                    }}
-                    month={month}
-                    onMonthChange={setMonth}
-                    numberOfMonths={2}
-                    className="p-2 bg-background"
-                    disabled={[{ after: today }]}
-                  />
-                </div>
+              </div>
+              <div className="flex">
+                <Calendar
+                  mode="range"
+                  selected={date}
+                  onSelect={newDate => {
+                    if (newDate) {
+                      handleChange(newDate);
+                    }
+                  }}
+                  month={month}
+                  onMonthChange={setMonth}
+                  numberOfMonths={2}
+                  className="p-2 bg-background"
+                  disabled={[{ after: today }]}
+                />
               </div>
             </div>
-          </PopoverContent>
-        </Popover>
-        {/* Icons absolutely positioned */}
-        {(showClear || invalid) && (
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2">
-            {showClear && (
-              <button
-                type="button"
-                tabIndex={-1}
-                aria-label="Clear"
-                onClick={handleClear}
-                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
-              >
-                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
-            )}
-            {invalid && <InvalidIcon message={invalid} />}
           </div>
-        )}
-      </div>
+        </PopoverContent>
+      </Popover>
+      {/* Icons absolutely positioned */}
+      {(showClear || invalid) && (
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2">
+          {showClear && (
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-label="Clear"
+              onClick={handleClear}
+              className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+            >
+              <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          )}
+          {invalid && <InvalidIcon message={invalid} />}
+        </div>
+      )}
     </div>
   );
 };
