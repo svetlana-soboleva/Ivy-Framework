@@ -9,7 +9,7 @@
     <RootNamespace>Todos</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition="Exists('Assets')">
+  <ItemGroup>
     <EmbeddedResource Include="Assets/**/*" />
   </ItemGroup>
 
