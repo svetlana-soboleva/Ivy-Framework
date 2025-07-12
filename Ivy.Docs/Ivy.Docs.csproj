@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets/**/*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Docs/*.md" />
   </ItemGroup>
 
