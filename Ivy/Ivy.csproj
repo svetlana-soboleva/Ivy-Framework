@@ -28,8 +28,11 @@
     <None Update="README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="Exists('..\frontend\dist')">
     <EmbeddedResource Include="..\frontend\dist\**\*" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <EmbeddedResource Update="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
