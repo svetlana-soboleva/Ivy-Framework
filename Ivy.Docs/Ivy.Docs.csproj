@@ -29,7 +29,7 @@
     <ProjectReference Include="../Ivy/Ivy.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('Assets')">
+  <ItemGroup>
     <EmbeddedResource Include="Assets/**/*" />
   </ItemGroup>
 
