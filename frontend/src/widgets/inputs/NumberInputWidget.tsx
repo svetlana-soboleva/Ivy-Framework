@@ -18,6 +18,21 @@ const formatStyleMap = {
 
 type FormatStyle = keyof typeof formatStyleMap;
 
+// Type limits for validation
+const TYPE_LIMITS = {
+  byte: { min: 0, max: 255 },
+  sbyte: { min: -128, max: 127 },
+  short: { min: -32768, max: 32767 },
+  ushort: { min: 0, max: 65535 },
+  int: { min: -2147483648, max: 2147483647 },
+  uint: { min: 0, max: 4294967295 },
+  long: { min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER },
+  ulong: { min: 0, max: Number.MAX_SAFE_INTEGER },
+  float: { min: -999999999999.99, max: 999999999999.99 }, // Practical limits for float
+  double: { min: -999999999999.99, max: 999999999999.99 }, // Practical limits for double
+  decimal: { min: -999999999999.99, max: 999999999999.99 }, // Practical limits for decimal
+} as const;
+
 interface NumberInputBaseProps {
   id: string;
   placeholder?: string;
@@ -34,12 +49,48 @@ interface NumberInputBaseProps {
   currency?: string | undefined;
   showArrows?: boolean;
   'data-testid'?: string;
+  // Add type information for validation
+  targetType?: string;
 }
 
 interface NumberInputWidgetProps
   extends Omit<NumberInputBaseProps, 'onValueChange'> {
   variant?: 'Default' | 'Slider';
+  targetType?: string;
 }
+
+// Function to validate and cap values based on target type
+const validateAndCapValue = (
+  value: number | null,
+  targetType?: string
+): number | null => {
+  if (value === null) return null;
+  if (!targetType) return value;
+
+  const limits = TYPE_LIMITS[targetType as keyof typeof TYPE_LIMITS];
+  if (!limits) return value;
+
+  // Cap the value to the type limits
+  const cappedValue = Math.min(Math.max(value, limits.min), limits.max);
+
+  // For integer types, ensure we don't send fractional values
+  if (
+    [
+      'byte',
+      'sbyte',
+      'short',
+      'ushort',
+      'int',
+      'uint',
+      'long',
+      'ulong',
+    ].includes(targetType)
+  ) {
+    return Math.floor(cappedValue);
+  }
+
+  return cappedValue;
+};
 
 const SliderVariant = memo(
   ({
@@ -206,17 +257,25 @@ export const NumberInputWidget = memo(
       (newValue: number | null) => {
         // Apply bounds only if value is not null
         if (newValue !== null) {
+          // First apply component-level bounds (min/max props)
           const boundedValue = Math.min(
             Math.max(newValue, props.min ?? 0),
             props.max ?? 100
           );
-          eventHandler('OnChange', id, [boundedValue]);
+
+          // Then apply type-level validation to prevent overflow
+          const validatedValue = validateAndCapValue(
+            boundedValue,
+            props.targetType
+          );
+
+          eventHandler('OnChange', id, [validatedValue]);
         } else {
           // Pass null directly for nullable inputs
           eventHandler('OnChange', id, [newValue]);
         }
       },
-      [eventHandler, id, props.min, props.max]
+      [eventHandler, id, props.min, props.max, props.targetType]
     );
 
     return variant === 'Slider' ? (

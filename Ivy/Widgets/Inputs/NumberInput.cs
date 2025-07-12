@@ -30,6 +30,7 @@ public interface IAnyNumberInput : IAnyInput
     public NumberFormatStyle FormatStyle { get; set; }
     public string? Currency { get; set; }
     public bool ShowArrows { get; set; }
+    public string? TargetType { get; set; }
 }
 
 public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumberInput
@@ -45,6 +46,7 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
     [Prop] public NumberFormatStyle FormatStyle { get; set; }
     [Prop] public string? Currency { get; set; }
     [Prop] public bool ShowArrows { get; set; } = false;
+    [Prop] public string? TargetType { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [
         // Signed numeric types
@@ -116,6 +118,9 @@ public static class NumberInputExtensions
         input.Min ??= type.SuggestMin();
         input.Max ??= type.SuggestMax();
 
+        // Set target type for frontend validation
+        input.TargetType = GetTargetTypeName(type);
+
         // Add default currency for Currency style inputs
         if (input.FormatStyle == NumberFormatStyle.Currency && string.IsNullOrEmpty(input.Currency))
         {
@@ -123,6 +128,15 @@ public static class NumberInputExtensions
         }
 
         return input;
+    }
+
+    private static string GetTargetTypeName(Type type)
+    {
+        // Handle nullable types
+        var underlyingType = Nullable.GetUnderlyingType(type);
+        var actualType = underlyingType ?? type;
+
+        return actualType.Name.ToLowerInvariant();
     }
 
     public static NumberInputBase Placeholder(this NumberInputBase widget, string placeholder)
