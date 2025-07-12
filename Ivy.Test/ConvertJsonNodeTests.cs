@@ -40,8 +40,8 @@ public class ConvertJsonNodeTests
 
     public record FooBar
     {
-        public string Name { get; set; }
-        public byte[] Content { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public byte[] Content { get; set; } = [];
     }
 
 
@@ -56,15 +56,15 @@ public class ConvertJsonNodeTests
         };
         var type = typeof(FooBar);
         var jsonNode = JsonNode.Parse(json);
-        var deserializedInput = (FooBar)jsonNode.Deserialize(type, options);
-        Console.WriteLine(BitConverter.ToString(deserializedInput.Content));
+        var deserializedInput = (FooBar)jsonNode.Deserialize(type, options)!;
+        Console.WriteLine(BitConverter.ToString(deserializedInput!.Content));
     }
 
     [Fact]
     public void TestEnumArray()
     {
         var json = """["Value1", "Value2"]""";
-        JsonArray jsonArray = JsonNode.Parse(json) as JsonArray;
+        JsonArray jsonArray = (JsonNode.Parse(json) as JsonArray)!;
         var result = Core.Utils.ConvertJsonNode(jsonArray, typeof(TestEnum[]));
         Assert.NotNull(result);
         //make sure result is of type TestEnum[]
@@ -75,7 +75,7 @@ public class ConvertJsonNodeTests
     public void TestEnumList()
     {
         var json = """["Value1", "Value2"]""";
-        JsonArray jsonArray = JsonNode.Parse(json) as JsonArray;
+        JsonArray jsonArray = (JsonNode.Parse(json) as JsonArray)!;
         var result = Core.Utils.ConvertJsonNode(jsonArray, typeof(List<TestEnum>));
         Assert.NotNull(result);
         //make sure result is of type TestEnum[]
