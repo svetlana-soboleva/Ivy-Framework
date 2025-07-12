@@ -35,7 +35,7 @@
     <EmbeddedResource Include="Assets\**\*" />
   </ItemGroup>
   
-  <ItemGroup Condition="Exists('Apps')">
+  <ItemGroup>
     <EmbeddedResource Include="Apps\**\*" />
   </ItemGroup>
 
