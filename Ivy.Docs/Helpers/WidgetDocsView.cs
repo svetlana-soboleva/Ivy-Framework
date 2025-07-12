@@ -50,13 +50,13 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
                 string? lastGroup = null;
                 foreach (var row in grouped)
                 {
-                    var groupCell = row.Group != lastGroup ? (object)Text.InlineCode(row.Group) : (object)Text.InlineCode("");
-                    tableRows.Add(new object[]
-                    {
-                        groupCell,
+                    var groupCell = row.Group != lastGroup ? (object)Text.InlineCode(row.Group) : null;
+                    tableRows.Add(
+                    [
+                        groupCell!,
                         row.NonNullable ?? Text.InlineCode("-"),
                         row.Nullable ?? Text.InlineCode("-")
-                    });
+                    ]);
                     lastGroup = row.Group;
                 }
                 var headerRow = new TableRow(

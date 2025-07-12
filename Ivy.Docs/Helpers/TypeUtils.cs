@@ -351,7 +351,7 @@ public static class TypeUtils
                 {
                     result.Add((group,
                         hasNonNullable ? GetTypeDescription(nonNullable, false) : null!,
-                        hasNullable ? GetTypeDescription(baseType, true) : null!));
+                        hasNullable ? GetTypeDescription(nullable!, true) : null!));
                     handled.Add(nonNullable);
                     if (nullable != null) handled.Add(nullable);
                 }
