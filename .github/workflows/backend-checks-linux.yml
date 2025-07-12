@@ -2,31 +2,8 @@ name: Backend Checks (Linux)
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'Ivy/**'
-      - 'Ivy.Samples/**'
-      - 'Ivy.Test/**'
-      - 'Ivy.Docs/**'
-      - 'Ivy.Auth.**/**'
-      - 'Ivy.Database.Generator.Toolkit/**'
-      - '*.csproj'
-      - '*.sln'
-      - 'Directory.Build.props'
-      - 'Directory.Build.targets'
   pull_request:
     branches: [ main, master ]
-    paths:
-      - 'Ivy/**'
-      - 'Ivy.Samples/**'
-      - 'Ivy.Test/**'
-      - 'Ivy.Docs/**'
-      - 'Ivy.Auth.**/**'
-      - 'Ivy.Database.Generator.Toolkit/**'
-      - '*.csproj'
-      - '*.sln'
-      - 'Directory.Build.props'
-      - 'Directory.Build.targets'
-
 jobs:
   backend-checks:
     runs-on: ubuntu-latest
