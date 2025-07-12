@@ -8,11 +8,11 @@ public class FileInputApp : ViewBase
 {
     public override object? Build()
     {
-        var file = this.UseState((FileInput?)null);
+        var file = UseState((FileInput?)null);
         return
             Layout.Vertical()
             | file.ToFileInput()
-            | file.ToDetails().Remove(e => e.Content)
+            | file.ToDetails().Remove(e => e != null ? e.Content : null)
             | file.Value?.ToPlainText()
             ;
     }
