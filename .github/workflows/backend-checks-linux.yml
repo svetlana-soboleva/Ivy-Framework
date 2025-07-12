@@ -34,6 +34,6 @@ jobs:
     - name: Build Ivy.Samples
       run: dotnet build Ivy.Samples/Ivy.Samples.csproj --configuration Release
     
-    # Run tests for Ivy.Samples only
+    # Run tests
     - name: Run tests
-      run: dotnet test Ivy.Samples/Ivy.Samples.csproj --configuration Release --no-build --verbosity normal 
+      run: dotnet test --configuration Release --no-build --verbosity normal 
