@@ -42,12 +42,38 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
         object? supportedTypesSection = null;
         if (defaultValueProvider is IAnyInput anyInput)
         {
-            var allowedStates = anyInput.SupportedStateTypes().Select(TypeUtils.GetSupportedTypeRecord).ToList();
-            if (allowedStates.Any())
+            var allowedTypes = anyInput.SupportedStateTypes();
+            var grouped = TypeUtils.GroupAndPairSupportedTypes(allowedTypes);
+            if (grouped.Any())
             {
+                var tableRows = new List<object[]>();
+                string? lastGroup = null;
+                foreach (var row in grouped)
+                {
+                    var groupCell = row.Group != lastGroup ? (object)Text.InlineCode(row.Group) : (object)Text.InlineCode("");
+                    tableRows.Add(new object[]
+                    {
+                        groupCell,
+                        row.NonNullable ?? Text.InlineCode("-"),
+                        row.Nullable ?? Text.InlineCode("-")
+                    });
+                    lastGroup = row.Group;
+                }
+                var headerRow = new TableRow(
+                    new TableCell("Group").IsHeader(),
+                    new TableCell("Type").IsHeader(),
+                    new TableCell("Nullable Variant").IsHeader()
+                );
+                var dataRows = tableRows.Select(row => new TableRow(
+                    new TableCell(row[0]),
+                    new TableCell(row[1]),
+                    new TableCell(row[2])
+                ));
                 supportedTypesSection = Layout.Vertical().Gap(8)
-                               | Text.H3("Supported Types")
-                               | allowedStates.ToTable();
+                    | Text.H3("Supported Types")
+                    | new Table(
+                        new[] { headerRow }.Concat(dataRows).ToArray()
+                    ).Width(Size.Full());
             }
         }
 
