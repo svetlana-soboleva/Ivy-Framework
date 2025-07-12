@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { Input } from '@/components/ui/input';
-import { EyeIcon, EyeOffIcon, Search } from 'lucide-react';
+import { EyeIcon, EyeOffIcon, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -360,6 +360,7 @@ const SearchVariant: React.FC<{
   };
   const { ref: focusRef } = useFocusable('sidebar-navigation', 0);
   const shouldFocusMenuRef = useRef(false);
+  const eventHandler = useEventHandler();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     savePosition();
@@ -382,11 +383,18 @@ const SearchVariant: React.FC<{
     onBlur(e);
   };
 
+  const handleClear = () => {
+    if (props.events.includes('OnChange')) {
+      eventHandler('OnChange', props.id, ['']);
+    }
+  };
+
   const styles: React.CSSProperties = {
     ...getWidth(props.width),
   };
 
   const shortcutDisplay = formatShortcutForDisplay(props.shortcutKey);
+  const hasValue = props.value && props.value.trim() !== '';
 
   return (
     <div className="relative w-full select-none" style={styles}>
@@ -418,10 +426,26 @@ const SearchVariant: React.FC<{
           'w-full pl-8',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
-          props.shortcutKey && !isFocused && 'pr-16'
+          hasValue && 'pr-8',
+          props.shortcutKey && !isFocused && 'pr-16',
+          // Hide browser's default search input X icon
+          '[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden'
         )}
         data-testid={props['data-testid']}
       />
+
+      {/* Clear Button */}
+      {hasValue && !props.disabled && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Clear search"
+          onClick={handleClear}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+        >
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
 
       {/* Error Icon */}
       {props.invalid && (
