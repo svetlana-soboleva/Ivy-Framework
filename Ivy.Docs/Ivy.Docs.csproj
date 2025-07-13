@@ -29,9 +29,9 @@
     <ProjectReference Include="../Ivy/Ivy.csproj" />
   </ItemGroup>
 
-  <!-- <ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Assets/**/*" />
-  </ItemGroup> -->
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="Docs/*.md" />
