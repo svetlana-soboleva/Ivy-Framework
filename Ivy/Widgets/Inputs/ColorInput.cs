@@ -7,7 +7,7 @@ using Ivy.Widgets.Inputs;
 // ReSharper disable once CheckNamespace
 namespace Ivy;
 
-public enum ColorInputVariant
+public enum ColorInputs
 {
     Text,
     Picker,
@@ -17,7 +17,7 @@ public enum ColorInputVariant
 public interface IAnyColorInput : IAnyInput
 {
     public string? Placeholder { get; set; }
-    public ColorInputVariant Variant { get; set; }
+    public ColorInputs Variant { get; set; }
 }
 
 public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInput
@@ -26,7 +26,7 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
     [Prop] public string? Invalid { get; set; }
     [Prop] public string? Placeholder { get; set; }
     [Prop] public bool Nullable { get; set; }
-    [Prop] public ColorInputVariant Variant { get; set; } = ColorInputVariant.TextAndPicker;
+    [Prop] public ColorInputs Variant { get; set; } = ColorInputs.TextAndPicker;
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [
         typeof(string),
@@ -36,7 +36,7 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
 
 public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
 {
-    public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : this(placeholder, disabled, variant)
     {
         var typedState = state.As<TColor>();
@@ -44,14 +44,14 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
         OnChange = e => typedState.Set(e.Value);
     }
 
-    public ColorInput(TColor value, Action<Event<IInput<TColor>, TColor>> onChange, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(TColor value, Action<Event<IInput<TColor>, TColor>> onChange, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : this(placeholder, disabled, variant)
     {
         OnChange = onChange;
         Value = value;
     }
 
-    public ColorInput(string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
     {
         Disabled = disabled;
         Placeholder = placeholder;
@@ -66,17 +66,17 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
 
 public record ColorInput : ColorInput<string>
 {
-    public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : base(state, placeholder, disabled, variant)
     {
     }
 
-    public ColorInput(string value, Action<Event<IInput<string>, string>> onChange, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(string value, Action<Event<IInput<string>, string>> onChange, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : base(value, onChange, placeholder, disabled, variant)
     {
     }
 
-    public ColorInput(string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public ColorInput(string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : base(placeholder, disabled, variant)
     {
     }
@@ -84,7 +84,7 @@ public record ColorInput : ColorInput<string>
 
 public static class ColorInputExtensions
 {
-    public static ColorInputBase ToColorInput(this IAnyState state, string? placeholder = null, bool disabled = false, ColorInputVariant variant = ColorInputVariant.TextAndPicker)
+    public static ColorInputBase ToColorInput(this IAnyState state, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
     {
         var type = state.GetStateType();
         Type genericType = typeof(ColorInput<>).MakeGenericType(type);
@@ -108,7 +108,7 @@ public static class ColorInputExtensions
         return widget with { Invalid = invalid };
     }
 
-    public static ColorInputBase Variant(this ColorInputBase widget, ColorInputVariant variant)
+    public static ColorInputBase Variant(this ColorInputBase widget, ColorInputs variant)
     {
         return widget with { Variant = variant };
     }

@@ -43,25 +43,25 @@ public class ColorInputApp : SampleBase
             | Text.InlineCode("Nullable + Invalid")
 
             | Text.InlineCode("Text Only")
-            | textState.ToColorInput().Variant(ColorInputVariant.Text)
-            | textState.ToColorInput().Variant(ColorInputVariant.Text).Invalid("Invalid color")
-            | textState.ToColorInput().Variant(ColorInputVariant.Text).Disabled()
-            | nullTextState.ToColorInput().Variant(ColorInputVariant.Text)
-            | nullTextState.ToColorInput().Variant(ColorInputVariant.Text).Invalid("Invalid color")
+            | textState.ToColorInput().Variant(ColorInputs.Text)
+            | textState.ToColorInput().Variant(ColorInputs.Text).Invalid("Invalid color")
+            | textState.ToColorInput().Variant(ColorInputs.Text).Disabled()
+            | nullTextState.ToColorInput().Variant(ColorInputs.Text)
+            | nullTextState.ToColorInput().Variant(ColorInputs.Text).Invalid("Invalid color")
 
             | Text.InlineCode("Picker Only")
-            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker)
-            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker).Invalid("Invalid color")
-            | pickerState.ToColorInput().Variant(ColorInputVariant.Picker).Disabled()
-            | nullPickerState.ToColorInput().Variant(ColorInputVariant.Picker)
-            | nullPickerState.ToColorInput().Variant(ColorInputVariant.Picker).Invalid("Invalid color")
+            | pickerState.ToColorInput().Variant(ColorInputs.Picker)
+            | pickerState.ToColorInput().Variant(ColorInputs.Picker).Invalid("Invalid color")
+            | pickerState.ToColorInput().Variant(ColorInputs.Picker).Disabled()
+            | nullPickerState.ToColorInput().Variant(ColorInputs.Picker)
+            | nullPickerState.ToColorInput().Variant(ColorInputs.Picker).Invalid("Invalid color")
 
             | Text.InlineCode("Text and Picker")
-            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
-            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Invalid("Invalid color")
-            | bothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Disabled()
-            | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker)
-            | nullBothState.ToColorInput().Variant(ColorInputVariant.TextAndPicker).Invalid("Invalid color");
+            | bothState.ToColorInput().Variant(ColorInputs.TextAndPicker)
+            | bothState.ToColorInput().Variant(ColorInputs.TextAndPicker).Invalid("Invalid color")
+            | bothState.ToColorInput().Variant(ColorInputs.TextAndPicker).Disabled()
+            | nullBothState.ToColorInput().Variant(ColorInputs.TextAndPicker)
+            | nullBothState.ToColorInput().Variant(ColorInputs.TextAndPicker).Invalid("Invalid color");
     }
 
     private object CreateNonGenericConstructorSection()
@@ -92,18 +92,18 @@ public class ColorInputApp : SampleBase
                | Text.InlineCode("No state")
 
                | Text.InlineCode("Text Only Variant")
-               | new ColorInput(variant: ColorInputVariant.Text)
+               | new ColorInput(variant: ColorInputs.Text)
                | Text.InlineCode("No state")
 
                | Text.InlineCode("Picker Only Variant")
-               | new ColorInput(variant: ColorInputVariant.Picker)
+               | new ColorInput(variant: ColorInputs.Picker)
                | Text.InlineCode("No state")
 
                | Text.InlineCode("Full Constructor")
                | new ColorInput(
                    placeholder: "Choose your color",
                    disabled: false,
-                   variant: ColorInputVariant.TextAndPicker)
+                   variant: ColorInputs.TextAndPicker)
                | Text.InlineCode("No state");
     }
 
