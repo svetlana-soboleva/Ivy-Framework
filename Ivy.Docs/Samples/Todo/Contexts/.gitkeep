@@ -1,3 +1,0 @@
-# This file ensures the Contexts directory is included in Git
-# even though it's empty. This is needed for the MSBuild
-# Folder Include="Contexts" pattern to work. 
