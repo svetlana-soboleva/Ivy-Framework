@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ivy.Auth.Supabase\Ivy.Auth.Supabase.csproj" />
-    <ProjectReference Include="..\Ivy\Ivy.csproj" />
+    <ProjectReference Include="../Ivy.Auth.Supabase/Ivy.Auth.Supabase.csproj" />
+    <ProjectReference Include="../Ivy/Ivy.csproj" />
   </ItemGroup>
 
 </Project>
