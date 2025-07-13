@@ -1,0 +1,6 @@
+<Project>
+  <!-- Minimal Directory.Build.props to fix CI builds -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+</Project> 

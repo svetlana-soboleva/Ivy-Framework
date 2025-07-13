@@ -6,7 +6,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  backend-checks:
+  backend-checks-ubuntu:
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
@@ -30,8 +30,74 @@ jobs:
     - name: Check code formatting
       run: dotnet format --verify-no-changes
     
-    # Build Ivy.Samples only
-    - name: Build Ivy.Samples
+    # Build entire solution
+    - name: Build solution
+      run: dotnet build --configuration Release
+    
+    # Run tests
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+  backend-checks-fedora:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Install .NET on Fedora
+    - name: Install .NET 9
+      run: |
+        dnf update -y
+        dnf install -y wget
+        wget https://packages.microsoft.com/config/fedora/39/packages-microsoft-prod.rpm -O packages-microsoft-prod.rpm
+        dnf install -y packages-microsoft-prod.rpm
+        dnf install -y dotnet-sdk-9.0
+    
+    # Update workloads
+    - name: Update .NET workloads
+      run: dotnet workload update
+    
+    # Check code formatting
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes
+    
+    # Build entire solution
+    - name: Build solution
+      run: dotnet build --configuration Release
+    
+    # Run tests
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+  backend-checks-debian:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Install .NET on Debian
+    - name: Install .NET 9
+      run: |
+        apt-get update
+        apt-get install -y wget gpg
+        wget -O - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-archive-keyring.gpg
+        wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        apt-get update
+        apt-get install -y dotnet-sdk-9.0
+    
+    # Update workloads
+    - name: Update .NET workloads
+      run: dotnet workload update
+    
+    # Check code formatting
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes
+    
+    # Build entire solution
+    - name: Build solution
       run: dotnet build --configuration Release
     
     # Run tests
