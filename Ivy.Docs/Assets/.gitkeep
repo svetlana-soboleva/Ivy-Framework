@@ -1,0 +1,3 @@
+# This file ensures the Assets directory is included in Git
+# even though it's empty. This is needed for the MSBuild
+# EmbeddedResource Include="Assets/**/*" pattern to work. 
