@@ -38,17 +38,17 @@ var colorInputWithPlaceholder = new ColorInput("Choose a color");
 var colorInputFull = new ColorInput(
     placeholder: "Select your favorite color",
     disabled: false,
-    variant: ColorInputVariant.TextAndPicker
+    variant: ColorInputs.TextAndPicker
 );
 ```
 
 ## Variants
 
 
-`ColorInput` has three variants. `ColorInputVariant.Text` variant should be used to let users enter color hex codes
-manually. `ColorInputVariant.TextAndPicker` variant should be used in most cases as it allows users to 
+`ColorInput` has three variants. `ColorInputs.Text` variant should be used to let users enter color hex codes
+manually. `ColorInputs.TextAndPicker` variant should be used in most cases as it allows users to 
 select the color and copy the selected color in the textbox. This is also the default variant. 
-Sometimes, it may be necessary to just use the color picker. In such situations `ColorInputVariant.Picker`
+Sometimes, it may be necessary to just use the color picker. In such situations `ColorInputs.Picker`
 should be used. 
 
 The following code shows all these three variants in action. 
@@ -67,19 +67,19 @@ public class ColorDemo : ViewBase
                           .Width(25)
                     | textColorState
                           .ToColorInput()
-                          .Variant(ColorInputVariant.Text))
+                          .Variant(ColorInputs.Text))
                 | (Layout.Horizontal()
                     | Text.Small("Just Picker")
                           .Width(25)
                     | pickerColorState
                           .ToColorInput()
-                          .Variant(ColorInputVariant.Picker))
+                          .Variant(ColorInputs.Picker))
                 | (Layout.Horizontal()
                     | Text.Small("Text and Picker")
                           .Width(25)
                     | textAndPickerColorState
                           .ToColorInput()
-                          .Variant(ColorInputVariant.TextAndPicker));
+                          .Variant(ColorInputs.TextAndPicker));
     }   
 }
 ```
@@ -109,7 +109,7 @@ public class ColorChangedDemo : ViewBase
                 | H3("Hex Color Picker")
                 | new ColorInput<string>
                        (colorState.Value, onChangeHandler)
-                      .Variant(ColorInputVariant.Picker) 
+                      .Variant(ColorInputs.Picker) 
                 | new Code(colorName.Value)
                      .ShowCopyButton()
                      .ShowBorder();
@@ -188,17 +188,17 @@ public class CSSColorDemo : ViewBase
                    | Text.InlineCode("color")
                          .Width(35)
                    | color.ToColorInput()
-                          .Variant(ColorInputVariant.Picker))
+                          .Variant(ColorInputs.Picker))
                 | (Layout.Horizontal()
                    | Text.InlineCode("background-color")
                          .Width(35)
                    | bgColor.ToColorInput()
-                          .Variant(ColorInputVariant.Picker))
+                          .Variant(ColorInputs.Picker))
                 | (Layout.Horizontal()
                    | Text.InlineCode("border")
                          .Width(35)
                    | border.ToColorInput()
-                          .Variant(ColorInputVariant.Picker))
+                          .Variant(ColorInputs.Picker))
                    | new Code(genCode.Value)
                          .Language(Languages.Css)
                          .ShowCopyButton();
