@@ -27,10 +27,10 @@ const languageMap: Record<string, string> = {
   Typescript: 'typescript',
   Python: 'python',
   Sql: 'sql',
-  Html: 'html',
+  Html: 'markup',
   Css: 'css',
   Json: 'json',
-  Dbml: 'dbml',
+  Dbml: 'sql',
 };
 
 const mapLanguageToPrism = (language: string): string => {

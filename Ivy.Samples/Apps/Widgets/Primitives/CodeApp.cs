@@ -195,18 +195,23 @@ public class CodeApp : SampleBase
             }
             """;
 
-        var variants = Layout.Grid().Columns(4)
-               | Text.InlineCode("Default")
-               | Text.InlineCode("With Line Numbers")
-               | Text.InlineCode("No Copy Button")
-               | Text.InlineCode("No Border")
+        var optionBlocks = new object[]
+        {
+            Layout.Vertical()
+                | Text.InlineCode("Default")
+                | new Code(sampleCode, Languages.Csharp),
+            Layout.Vertical()
+                | Text.InlineCode("With Line Numbers")
+                | new Code(sampleCode, Languages.Csharp).ShowLineNumbers(true),
+            Layout.Vertical()
+                | Text.InlineCode("No Copy Button")
+                | new Code(sampleCode, Languages.Csharp).ShowCopyButton(false),
+            Layout.Vertical()
+                | Text.InlineCode("No Border")
+                | new Code(sampleCode, Languages.Csharp).ShowBorder(false)
+        };
 
-               | new Code(sampleCode, Languages.Csharp)
-               | new Code(sampleCode, Languages.Csharp).ShowLineNumbers(true)
-               | new Code(sampleCode, Languages.Csharp).ShowCopyButton(false)
-               | new Code(sampleCode, Languages.Csharp).ShowBorder(false)
-            ;
-
+        var variants = Layout.Grid().Columns(2) | optionBlocks;
         return variants;
     }
 }
