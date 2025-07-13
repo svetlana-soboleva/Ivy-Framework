@@ -9,6 +9,8 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Ivy.Docs</RootNamespace>
     <NoWarn>CS8618;CS8603;CS8602;CS8604;CS8669;CS9113</NoWarn>
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
+    <GenerateResourceUsePreserializedResources>false</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -48,6 +50,9 @@
       <Compile Include="Generated/*.g.cs" />
     </ItemGroup>
   </Target>
+  
+  <!-- Override default resource processing to prevent **/*.resx error -->
+  <Target Name="GenerateResource" />
   
   <ItemGroup>
     <Watch Remove="Docs/**/*" />
