@@ -49,6 +49,9 @@
     </ItemGroup>
   </Target>
   
+  <!-- Override default resource processing to prevent **/*.resx error -->
+  <Target Name="GenerateResource" />
+  
   <ItemGroup>
     <Watch Remove="Docs/**/*" />
   </ItemGroup>
