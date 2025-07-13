@@ -21,6 +21,19 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y attr
+
+    # Setup Node.js
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Check frontend build
+      working-directory: ./frontend
+      run: npm run build 
     
     # Update workloads
     - name: Update .NET workloads
