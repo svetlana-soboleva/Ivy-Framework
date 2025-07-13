@@ -32,7 +32,7 @@ jobs:
     
     # Build Ivy.Samples only
     - name: Build Ivy.Samples
-      run: dotnet build Ivy.Samples/Ivy.Samples.csproj --configuration Release
+      run: dotnet build --configuration Release
     
     # Run tests
     - name: Run tests
