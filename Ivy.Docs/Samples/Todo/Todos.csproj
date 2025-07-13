@@ -9,9 +9,9 @@
     <RootNamespace>Todos</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <EmbeddedResource Include="Assets/**/*" />
-  </ItemGroup>
+  </ItemGroup> -->
 
   <ItemGroup>
     <PackageReference Include="Ivy" Version="1.0.6.0" />
