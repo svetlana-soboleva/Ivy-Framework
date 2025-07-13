@@ -67,8 +67,6 @@ public class ColorInputApp : SampleBase
     private object CreateNonGenericConstructorSection()
     {
         var state1 = UseState("#ff0000");
-        var state2 = UseState("#00ff00");
-        var state3 = UseState("#0000ff");
 
         return Layout.Grid().Columns(3)
                | Text.InlineCode("Method")
