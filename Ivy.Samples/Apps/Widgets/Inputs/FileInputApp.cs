@@ -37,14 +37,14 @@ public class FileInputApp : SampleBase
                           | Text.InlineCode("FileInput")
                           | (Layout.Vertical()
                              | singleFile.ToFileInput()
-                             | singleFile.ToFileInput().Multiple()
+                             | singleFile.ToFileInput()
                           )
                           | singleFile
 
                           | Text.InlineCode("FileInput?")
                           | (Layout.Vertical()
                              | singleFile.ToFileInput()
-                             | singleFile.ToFileInput().Multiple()
+                             | singleFile.ToFileInput()
                           )
                           | singleFile
 
@@ -74,11 +74,11 @@ public class FileInputApp : SampleBase
                   | placeholderFile.ToFileInput().Placeholder("Click to select a file")
 
                   | Text.InlineCode("Multiple Files")
-                  | multipleFiles.ToFileInput().Multiple()
-                  | multipleFilesWithValue.ToFileInput().Multiple()
-                  | multipleFiles.ToFileInput().Multiple().Disabled()
-                  | multipleFiles.ToFileInput().Multiple().Invalid("Please select valid files")
-                  | multipleFiles.ToFileInput().Multiple().Placeholder("Click to select files")
+                  | multipleFiles.ToFileInput()
+                  | multipleFilesWithValue.ToFileInput()
+                  | multipleFiles.ToFileInput().Disabled()
+                  | multipleFiles.ToFileInput().Invalid("Please select valid files")
+                  | multipleFiles.ToFileInput().Placeholder("Click to select files")
                )
 
                // Data Binding:
@@ -94,15 +94,15 @@ public class FileInputApp : SampleBase
 
                   | Text.Block("Text Files")
                   | Text.InlineCode(".txt,.md,.csv")
-                  | textFiles.ToFileInput().Multiple().Accept(".txt,.md,.csv").Placeholder("Select text files")
+                  | textFiles.ToFileInput().Accept(".txt,.md,.csv").Placeholder("Select text files")
 
                   | Text.Block("PDF Files")
                   | Text.InlineCode(".pdf")
-                  | pdfFiles.ToFileInput().Multiple().Accept(".pdf").Placeholder("Select PDF files")
+                  | pdfFiles.ToFileInput().Accept(".pdf").Placeholder("Select PDF files")
 
                   | Text.Block("Images")
                   | Text.InlineCode(".jpg,.jpeg,.png,.gif,.webp")
-                  | imageFiles.ToFileInput().Multiple().Accept(".jpg,.jpeg,.png,.gif,.webp").Placeholder("Select image files")
+                  | imageFiles.ToFileInput().Accept(".jpg,.jpeg,.png,.gif,.webp").Placeholder("Select image files")
 
                   | Text.Block("All Files")
                   | Text.InlineCode("(default)")
@@ -118,19 +118,19 @@ public class FileInputApp : SampleBase
 
                   | Text.Block("No Limit")
                   | Text.Block("Default behavior - no restriction on number of files")
-                  | multipleFiles.ToFileInput().Multiple().Placeholder("Select unlimited files")
+                  | multipleFiles.ToFileInput().Placeholder("Select unlimited files")
 
                   | Text.Block("1 File")
                   | Text.Block("Single file selection only")
-                  | singleFile.ToFileInput().MaxFiles(1).Placeholder("Select one file")
+                  | singleFile.ToFileInput().Placeholder("Select one file")
 
                   | Text.Block("3 Files")
                   | Text.Block("Maximum of 3 files allowed")
-                  | limitedFiles.ToFileInput().Multiple().MaxFiles(3).Placeholder("Select up to 3 files")
+                  | multipleFiles.ToFileInput().MaxFiles(3).Placeholder("Select up to 3 files")
 
                   | Text.Block("5 Files")
                   | Text.Block("Maximum of 5 files allowed")
-                  | limitedFiles.ToFileInput().Multiple().MaxFiles(5).Placeholder("Select up to 5 files")
+                  | multipleFiles.ToFileInput().MaxFiles(5).Placeholder("Select up to 5 files")
                )
 
                // Events: 
