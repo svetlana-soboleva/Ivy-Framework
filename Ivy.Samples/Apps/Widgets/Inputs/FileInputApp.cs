@@ -8,7 +8,8 @@ public class FileInputApp : SampleBase
     protected override object? BuildSample()
     {
         // Mock file for 'With Value' example
-        var mockFile = new FileInput {
+        var mockFile = new FileInput
+        {
             Name = "example.txt",
             Type = "text/plain",
             Size = 1234,
