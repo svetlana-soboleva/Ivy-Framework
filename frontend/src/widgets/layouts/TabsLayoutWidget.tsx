@@ -29,11 +29,17 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 
+// Constants for width calculations
+const SIDEBAR_EXPANDED_WIDTH = 256; // 16rem
+const SIDEBAR_ICON_MODE_WIDTH = 64; // 3rem (48px) + 1rem (16px) padding
+const TABS_HORIZONTAL_PADDING = 144; // Container padding (48px each side) + dropdown button space (48px)
+const TABS_EXTRA_PADDING = 96; // Space reserved for dropdown button and other UI elements
+
 // Hook to calculate available width considering sidebar state
 function useAvailableWidth() {
   const [availableWidth, setAvailableWidth] = React.useState<number>(0);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const calculateAvailableWidth = () => {
       const viewportWidth = window.innerWidth;
 
@@ -60,13 +66,13 @@ function useAvailableWidth() {
         '[data-collapsible="icon"]'
       );
       if (isIconMode) {
-        // Icon mode: subtract 3rem (48px) + 1rem (16px) padding = 64px
-        setAvailableWidth(viewportWidth - 64);
+        // Icon mode: subtract icon width + padding
+        setAvailableWidth(viewportWidth - SIDEBAR_ICON_MODE_WIDTH);
         return;
       }
 
-      // Expanded mode:
-      setAvailableWidth(viewportWidth - 256);
+      // Expanded mode: subtract full sidebar width
+      setAvailableWidth(viewportWidth - SIDEBAR_EXPANDED_WIDTH);
     };
 
     // Calculate initially
@@ -259,7 +265,6 @@ export const TabsLayoutWidget = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const [tabsOverflowing, setTabsOverflowing] = React.useState(false);
-  const [hoveredTabId, setHoveredTabId] = React.useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const availableWidth = useAvailableWidth();
 
@@ -299,16 +304,16 @@ export const TabsLayoutWidget = ({
   }, [tabIds]);
 
   // Handle overflow detection
-  React.useEffect(() => {
-    if (hoveredTabId === null && tabsListRef.current) {
+  React.useLayoutEffect(() => {
+    if (tabsListRef.current) {
       const effectiveWidth =
         availableWidth > 0
-          ? availableWidth - 144
+          ? availableWidth - TABS_HORIZONTAL_PADDING
           : containerRef.current?.getBoundingClientRect().width || 0;
       const tabsListWidth = tabsListRef.current.getBoundingClientRect().width;
-      setTabsOverflowing(tabsListWidth + 96 > effectiveWidth);
+      setTabsOverflowing(tabsListWidth + TABS_EXTRA_PADDING > effectiveWidth);
     }
-  }, [hoveredTabId, tabOrder, availableWidth]);
+  }, [tabOrder, availableWidth]);
 
   // Recalculate overflow on window resize and sidemenu toggle
   React.useEffect(() => {
@@ -319,11 +324,13 @@ export const TabsLayoutWidget = ({
           if (tabsListRef.current) {
             const effectiveWidth =
               availableWidth > 0
-                ? availableWidth - 144
+                ? availableWidth - TABS_HORIZONTAL_PADDING
                 : containerRef.current?.getBoundingClientRect().width || 0;
             const tabsListWidth =
               tabsListRef.current.getBoundingClientRect().width;
-            setTabsOverflowing(tabsListWidth + 96 > effectiveWidth);
+            setTabsOverflowing(
+              tabsListWidth + TABS_EXTRA_PADDING > effectiveWidth
+            );
           }
         }, 100);
       }
@@ -344,6 +351,28 @@ export const TabsLayoutWidget = ({
       window.removeEventListener('navigation-toggle', recalculateOverflow);
     };
   }, [availableWidth]);
+
+  // Recalculate overflow when component mounts and after DOM updates
+  React.useLayoutEffect(() => {
+    const recalculateOverflow = () => {
+      if (tabsListRef.current) {
+        const effectiveWidth =
+          availableWidth > 0
+            ? availableWidth - TABS_HORIZONTAL_PADDING
+            : containerRef.current?.getBoundingClientRect().width || 0;
+        const tabsListWidth = tabsListRef.current.getBoundingClientRect().width;
+        setTabsOverflowing(tabsListWidth + TABS_EXTRA_PADDING > effectiveWidth);
+      }
+    };
+
+    // Initial calculation
+    recalculateOverflow();
+
+    // Recalculate after a short delay to ensure DOM is fully rendered
+    const timeoutId = setTimeout(recalculateOverflow, 50);
+
+    return () => clearTimeout(timeoutId);
+  }, [availableWidth, tabOrder]);
 
   // Load active tab
   React.useEffect(() => {
@@ -534,10 +563,6 @@ export const TabsLayoutWidget = ({
                         key={key ?? id}
                         id={id}
                         value={id}
-                        onMouseEnter={() => setHoveredTabId(id)}
-                        onMouseLeave={() =>
-                          setHoveredTabId(prev => (prev === id ? null : prev))
-                        }
                         onClick={() => handleTabSelect(id)}
                         onMouseDown={(e: React.MouseEvent) =>
                           handleMouseDown(e, tabOrder.indexOf(id))
