@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Ivy.Shared;
+﻿using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Widgets.Inputs;
 
