@@ -29,6 +29,83 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 
+// Hook to calculate available width considering sidebar state
+function useAvailableWidth() {
+  const [availableWidth, setAvailableWidth] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    const calculateAvailableWidth = () => {
+      const viewportWidth = window.innerWidth;
+
+      // Get the sidebar element to check its state
+      const sidebarWrapper = document
+        .querySelector('[data-sidebar="sidebar"]')
+        ?.closest('.group\\/sidebar-wrapper');
+      if (!sidebarWrapper) {
+        setAvailableWidth(viewportWidth);
+        return;
+      }
+
+      // Check if sidebar is collapsed (offcanvas mode)
+      const isCollapsed = sidebarWrapper.querySelector(
+        '[data-collapsible="offcanvas"]'
+      );
+      if (isCollapsed) {
+        setAvailableWidth(viewportWidth);
+        return;
+      }
+
+      // Check if sidebar is in icon mode
+      const isIconMode = sidebarWrapper.querySelector(
+        '[data-collapsible="icon"]'
+      );
+      if (isIconMode) {
+        // Icon mode: subtract 3rem (48px) + 1rem (16px) padding = 64px
+        setAvailableWidth(viewportWidth - 64);
+        return;
+      }
+
+      // Expanded mode:
+      setAvailableWidth(viewportWidth - 256);
+    };
+
+    // Calculate initially
+    calculateAvailableWidth();
+
+    // Recalculate on window resize and sidebar state changes
+    const handleResize = () => calculateAvailableWidth();
+    const handleSidebarToggle = () => {
+      // Use setTimeout to ensure DOM has updated
+      setTimeout(calculateAvailableWidth, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('sidemenu-toggle', handleSidebarToggle);
+    window.addEventListener('sidebar-toggle', handleSidebarToggle);
+    window.addEventListener('navigation-toggle', handleSidebarToggle);
+
+    // Also listen for CSS transitions to catch sidebar state changes
+    const sidebarElements = document.querySelectorAll(
+      '[data-sidebar="sidebar"]'
+    );
+    sidebarElements.forEach(element => {
+      element.addEventListener('transitionend', handleSidebarToggle);
+    });
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('sidemenu-toggle', handleSidebarToggle);
+      window.removeEventListener('sidebar-toggle', handleSidebarToggle);
+      window.removeEventListener('navigation-toggle', handleSidebarToggle);
+      sidebarElements.forEach(element => {
+        element.removeEventListener('transitionend', handleSidebarToggle);
+      });
+    };
+  }, []);
+
+  return availableWidth;
+}
+
 interface TabWidgetProps {
   children: React.ReactNode[];
   title: string;
@@ -184,6 +261,7 @@ export const TabsLayoutWidget = ({
   const [tabsOverflowing, setTabsOverflowing] = React.useState(false);
   const [hoveredTabId, setHoveredTabId] = React.useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const availableWidth = useAvailableWidth();
 
   // Tab management
   const tabIds = React.useMemo(
@@ -222,25 +300,30 @@ export const TabsLayoutWidget = ({
 
   // Handle overflow detection
   React.useEffect(() => {
-    if (hoveredTabId === null && containerRef.current && tabsListRef.current) {
-      const containerWidth = containerRef.current.getBoundingClientRect().width;
+    if (hoveredTabId === null && tabsListRef.current) {
+      const effectiveWidth =
+        availableWidth > 0
+          ? availableWidth - 144
+          : containerRef.current?.getBoundingClientRect().width || 0;
       const tabsListWidth = tabsListRef.current.getBoundingClientRect().width;
-      setTabsOverflowing(tabsListWidth + 96 > containerWidth);
+      setTabsOverflowing(tabsListWidth + 96 > effectiveWidth);
     }
-  }, [hoveredTabId, tabOrder]);
+  }, [hoveredTabId, tabOrder, availableWidth]);
 
   // Recalculate overflow on window resize and sidemenu toggle
   React.useEffect(() => {
     const recalculateOverflow = () => {
-      if (containerRef.current && tabsListRef.current) {
+      if (tabsListRef.current) {
         // Use setTimeout to ensure DOM has updated after layout changes
         setTimeout(() => {
-          if (containerRef.current && tabsListRef.current) {
-            const containerWidth =
-              containerRef.current.getBoundingClientRect().width;
+          if (tabsListRef.current) {
+            const effectiveWidth =
+              availableWidth > 0
+                ? availableWidth - 144
+                : containerRef.current?.getBoundingClientRect().width || 0;
             const tabsListWidth =
               tabsListRef.current.getBoundingClientRect().width;
-            setTabsOverflowing(tabsListWidth + 96 > containerWidth);
+            setTabsOverflowing(tabsListWidth + 96 > effectiveWidth);
           }
         }, 100);
       }
@@ -260,7 +343,7 @@ export const TabsLayoutWidget = ({
       window.removeEventListener('sidebar-toggle', recalculateOverflow);
       window.removeEventListener('navigation-toggle', recalculateOverflow);
     };
-  }, []);
+  }, [availableWidth]);
 
   // Load active tab
   React.useEffect(() => {
@@ -425,6 +508,7 @@ export const TabsLayoutWidget = ({
         <div
           className="relative pl-12 pr-12 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border before:z-0"
           ref={containerRef}
+          style={{ width: availableWidth > 0 ? `${availableWidth}px` : '100%' }}
         >
           <ScrollArea className="w-full">
             <DndContext
