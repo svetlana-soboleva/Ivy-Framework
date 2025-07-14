@@ -38,6 +38,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
     [Prop] public FileInputs Variant { get; set; }
     [Prop] public string? Accept { get; set; }
     [Prop] public bool Multiple { get; set; }
+    [Prop] public int? MaxFiles { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [];
 }
@@ -142,5 +143,10 @@ public static class FileInputExtensions
     public static FileInputBase Multiple(this FileInputBase widget, bool multiple = true)
     {
         return widget with { Multiple = multiple };
+    }
+
+    public static FileInputBase MaxFiles(this FileInputBase widget, int maxFiles)
+    {
+        return widget with { MaxFiles = maxFiles };
     }
 }
