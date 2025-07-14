@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="..\..\Ivy\Directory.Build.props" Condition="Exists('..\..\Ivy\Directory.Build.props')" />
+  <Import Project="../../Ivy/Directory.Build.props" Condition="Exists('../../Ivy/Directory.Build.props')" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -27,16 +27,16 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Ivy.Auth.Supabase\Ivy.Auth.Supabase.csproj" />
-    <ProjectReference Include="..\Ivy\Ivy.csproj" />
+    <ProjectReference Include="../Ivy.Auth.Supabase/Ivy.Auth.Supabase.csproj" />
+    <ProjectReference Include="../Ivy/Ivy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\**\*" />
+    <EmbeddedResource Include="Assets/**/*" />
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Include="Apps\**\*" />
+    <EmbeddedResource Include="Apps/**/*" />
   </ItemGroup>
 
   <ItemGroup>
