@@ -267,6 +267,12 @@ export const TabsLayoutWidget = ({
   const [tabsOverflowing, setTabsOverflowing] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const availableWidth = useAvailableWidth();
+  const availableWidthRef = React.useRef(availableWidth);
+
+  // Keep ref in sync with availableWidth
+  React.useEffect(() => {
+    availableWidthRef.current = availableWidth;
+  }, [availableWidth]);
 
   // Tab management
   const tabIds = React.useMemo(
@@ -322,9 +328,11 @@ export const TabsLayoutWidget = ({
         // Use setTimeout to ensure DOM has updated after layout changes
         setTimeout(() => {
           if (tabsListRef.current) {
+            // Get the latest available width from the ref
+            const currentAvailableWidth = availableWidthRef.current;
             const effectiveWidth =
-              availableWidth > 0
-                ? availableWidth - TABS_HORIZONTAL_PADDING
+              currentAvailableWidth > 0
+                ? currentAvailableWidth - TABS_HORIZONTAL_PADDING
                 : containerRef.current?.getBoundingClientRect().width || 0;
             const tabsListWidth =
               tabsListRef.current.getBoundingClientRect().width;
@@ -350,7 +358,7 @@ export const TabsLayoutWidget = ({
       window.removeEventListener('sidebar-toggle', recalculateOverflow);
       window.removeEventListener('navigation-toggle', recalculateOverflow);
     };
-  }, [availableWidth]);
+  }, []);
 
   // Recalculate overflow when component mounts and after DOM updates
   React.useLayoutEffect(() => {
