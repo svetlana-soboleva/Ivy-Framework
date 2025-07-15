@@ -113,46 +113,107 @@ return dateState.ToDateTimeInput().OnChange(onChangeHandler);
 
 ## Format
 
-DateTimeInput can be customized with various styling options:
+`DateTimeInput` can be customized with various formats. So the captured value can be 
+expressed in any format as supported by .NET. 
 
-```csharp
-dateState.ToDateTimeInput()
-    .Placeholder("Select a date")
-    .Format("MM/dd/yyyy")
+```csharp demo-below
+public class FormatDemo : ViewBase
+{
+     public override object? Build()
+     {    
+         var monthDateYear = UseState(DateTime.Today.Date);
+         var yearMonthDate = UseState(DateTime.Today.Date);
+         
+         return Layout.Vertical()
+                 | (Layout.Horizontal()
+                     | Text.Small("MM/dd/yyyy")
+                     | monthDateYear.ToDateInput()
+                                    .Format("MM/dd/yyyy"))
+                | (Layout.Horizontal()
+                    | Text.Small("MM/dd/yyyy")
+                    | yearMonthDate.ToDateInput()
+                                   .Format("yyyy/mmm/dd"));
+    }
+}    
 ```
 
-## Examples
+### Invalid 
 
-### Different State Types
+To represent that something might be wrong with a date input the function `Invalid` 
+should be used. The following code shows a demonstration. 
 
-```csharp
-var dateState = this.UseState(DateTime.Now);
-var dateOnlyState = this.UseState(DateOnly.FromDateTime(DateTime.Now));
-var timeOnlyState = this.UseState(TimeOnly.FromDateTime(DateTime.Now));
-var nullableState = this.UseState<DateTime?>(DateTime.Now);
+```csharp demo-below
+public class InvalidDateTimeDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var thisDate = UseState(DateTime.Today.Date.AddDays(8));
+        return Layout.Vertical()
+                | Text.Large("Return date")
+                | thisDate.ToDateInput()
+                          .Invalid("Date is beyond the last approved date!");
+    }
+}
 
-return Layout.Vertical(
-    dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime),
-    dateOnlyState.ToDateTimeInput().Variant(DateTimeInputs.Date),
-    timeOnlyState.ToDateTimeInput().Variant(DateTimeInputs.Time),
-    nullableState.ToDateTimeInput().Variant(DateTimeInputs.DateTime)
-);
 ```
 
-### Disabled DateTimeInput
+### Disabled
 
-```csharp
-dateState.ToDateTimeInput().Disabled()
-```
+To disable a `DateTimeInput` the `Disabled` function should be used. 
 
-### Convenience Methods
-
-```csharp
-// For date-only input
-dateState.ToDateInput()
-
-// For time-only input
-dateState.ToTimeInput()
+```csharp demo-below
+public class DisabledDateTimeDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var disabledDate = UseState(DateTime.Today.Date);
+        return Layout.Vertical()
+                | disabledDate.ToDateInput()
+                              .Disabled();
+    }
+}
 ```
 
 <WidgetDocs Type="Ivy.DateTimeInput" ExtensionTypes="Ivy.DateTimeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateTimeInput.cs"/> 
+
+## Examples
+
+```csharp demo-tabs
+public class LibraryBookReturnDemo : ViewBase
+{
+   
+    public override object? Build()
+    {
+        var issueDate = UseState(DateTime.Today.Date);
+        // Library book returns must be within a week 
+        var returnDate = UseState(DateTime.Today.AddDays(7).Date);
+        var actualReturnDate = UseState(DateTime.Today.Date);
+        var fineDays = actualReturnDate.Value.Subtract(returnDate.Value).Days;
+        var fineAmount = 3.50;
+        var invalidMessage = UseState(String.Empty);
+        if(fineDays > 0)
+        {
+            invalidMessage.Set(
+                $"Book is overdue! Fine amount {fineAmount * fineDays}");
+        }
+        else
+        {
+            invalidMessage.Set(String.Empty);
+        }
+        return Layout.Vertical()
+                | Icons.Book    
+                | H3("Library Book Return")
+                | Text.Small("Library book returns must be within a week")
+                | Text.Large("Issue Date")
+                | issueDate.ToDateInput()
+                           .Disabled()
+                | Text.Large("Return Date")
+                | returnDate.ToDateInput()
+                            .Disabled()
+                | actualReturnDate.ToDateInput()
+                                    .Invalid(invalidMessage.Value);
+    }    
+}
+
+```
+
