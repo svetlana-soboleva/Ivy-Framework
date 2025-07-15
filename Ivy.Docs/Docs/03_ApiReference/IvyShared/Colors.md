@@ -112,7 +112,7 @@ public class ColorsOnBackgroundsView : ViewBase
         Colors[] colors = (Colors[])Enum.GetValues(typeof(Colors));
 
         var lightBackground = Layout.Vertical(
-            new TextBlock("Light Background").FontSize(14).FontWeight(600).Margin(0, 0, 0, 10),
+            Text.Block("Light Background").Color(Colors.Black),
             colors.Select(color =>
                 new Box(color.ToString())
                     .Width(Size.Auto())
@@ -123,7 +123,7 @@ public class ColorsOnBackgroundsView : ViewBase
         ).Padding(10);
 
         var darkBackground = Layout.Vertical(
-            new TextBlock("Dark Background").FontSize(14).FontWeight(600).Margin(0, 0, 0, 10).Color(Colors.White),
+            Text.Block("Dark Background").Color(Colors.White),
             colors.Select(color =>
                 new Box(color.ToString())
                     .Width(Size.Auto())
@@ -167,9 +167,9 @@ public class ButtonColorsView : ViewBase
     public override object? Build()
     {
         return Layout.Vertical(
-            new Button("Primary Action").Color(Colors.Primary),
-            new Button("Secondary Action").Color(Colors.Secondary),
-            new Button("Destructive Action").Color(Colors.Destructive)
+            new Button("Primary Action").Variant(ButtonVariant.Default),
+            new Button("Secondary Action").Variant(ButtonVariant.Secondary),
+            new Button("Destructive Action").Variant(ButtonVariant.Destructive)
         ).Gap(10);
     }
 }
