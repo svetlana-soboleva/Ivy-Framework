@@ -163,15 +163,20 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
     return '00:00:00';
   });
 
-  // Update local time when date changes
+  // Track if user is actively editing the time input
+  const [isEditingTime, setIsEditingTime] = useState(false);
+
+  // Update local time when date changes, but only if user is not actively editing
   React.useEffect(() => {
-    if (date) {
-      const newTimeValue = format(date, formatProp || 'HH:mm:ss');
-      setLocalTimeValue(newTimeValue);
-    } else {
-      setLocalTimeValue('00:00:00');
+    if (!isEditingTime) {
+      if (date) {
+        const newTimeValue = format(date, formatProp || 'HH:mm:ss');
+        setLocalTimeValue(newTimeValue);
+      } else {
+        setLocalTimeValue('00:00:00');
+      }
     }
-  }, [date, formatProp]);
+  }, [date, formatProp, isEditingTime]);
 
   const handleDateSelect = useCallback(
     (selectedDate: Date | undefined) => {
@@ -197,11 +202,13 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newTimeValue = e.target.value;
       setLocalTimeValue(newTimeValue);
+      setIsEditingTime(true);
     },
     []
   );
 
   const handleTimeBlur = useCallback(() => {
+    setIsEditingTime(false);
     // When time input loses focus, update the parent
     if (date && localTimeValue) {
       const [hours, minutes, seconds] = localTimeValue.split(':').map(Number);
@@ -222,6 +229,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       // When user presses Enter, update the parent
       if (e.key === 'Enter') {
+        setIsEditingTime(false);
         if (date && localTimeValue) {
           const [hours, minutes, seconds] = localTimeValue
             .split(':')
@@ -243,6 +251,10 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
     },
     [date, localTimeValue, onDateChange, onTimeChange]
   );
+
+  const handleTimeFocus = useCallback(() => {
+    setIsEditingTime(true);
+  }, []);
 
   return (
     <div className="relative flex items-center gap-2">
@@ -299,6 +311,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
                 step="1"
                 value={localTimeValue}
                 onChange={handleTimeChange}
+                onFocus={handleTimeFocus}
                 onBlur={handleTimeBlur}
                 onKeyDown={handleTimeKeyDown}
                 disabled={disabled}
