@@ -30,6 +30,7 @@ Colors automatically adapt to the current theme:
 ## Available Colors
 
 ### Neutral Colors
+
 ```csharp demo-tabs
 public class NeutralColorsView : ViewBase
 {
@@ -51,6 +52,7 @@ public class NeutralColorsView : ViewBase
 ```
 
 ### Chromatic Colors
+
 ```csharp demo-tabs
 public class ChromaticColorsView : ViewBase
 {
@@ -76,6 +78,7 @@ public class ChromaticColorsView : ViewBase
 ```
 
 ### Semantic Colors
+
 ```csharp demo-tabs
 public class SemanticColorsView : ViewBase
 {
@@ -140,6 +143,7 @@ public class ColorsOnBackgroundsView : ViewBase
 ### Common Usage Patterns
 
 #### Status Indicators
+
 ```csharp demo-tabs
 public class StatusIndicatorsView : ViewBase
 {
@@ -156,6 +160,7 @@ public class StatusIndicatorsView : ViewBase
 ```
 
 #### Button Colors
+
 ```csharp demo-tabs
 public class ButtonColorsView : ViewBase
 {
@@ -190,5 +195,4 @@ Colors[] colors = (Colors[])Enum.GetValues(typeof(Colors));
 new Box("Content")
     .Color(Colors.Primary)
     .Background(Colors.Secondary);
-```
 ```
