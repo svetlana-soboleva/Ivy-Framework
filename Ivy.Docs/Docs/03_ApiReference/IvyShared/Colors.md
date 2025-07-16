@@ -109,7 +109,13 @@ public class ColorsOnBackgroundsView : ViewBase
 {
     public override object? Build()
     {
-        Colors[] colors = Enum.GetValues<Colors>();
+        Colors[] colors = new Colors[] { 
+            Colors.Black, Colors.White, Colors.Slate, Colors.Gray, Colors.Zinc, Colors.Neutral, Colors.Stone,
+            Colors.Red, Colors.Orange, Colors.Amber, Colors.Yellow, Colors.Lime, Colors.Green, 
+            Colors.Emerald, Colors.Teal, Colors.Cyan, Colors.Sky, Colors.Blue, Colors.Indigo, 
+            Colors.Violet, Colors.Purple, Colors.Fuchsia, Colors.Pink, Colors.Rose,
+            Colors.Primary, Colors.Secondary, Colors.Destructive
+        };
 
         var lightBackground = Layout.Vertical(
             Text.Block("Light Background").Color(Colors.Black),
@@ -189,7 +195,13 @@ Colors are defined as an enum in `Ivy.Shared.Colors` and map to CSS custom prope
 
 ```csharp
 // All available colors
-Colors[] colors = (Colors[])Enum.GetValues(typeof(Colors));
+Colors[] colors = new Colors[] { 
+    Colors.Black, Colors.White, Colors.Slate, Colors.Gray, Colors.Zinc, Colors.Neutral, Colors.Stone,
+    Colors.Red, Colors.Orange, Colors.Amber, Colors.Yellow, Colors.Lime, Colors.Green, 
+    Colors.Emerald, Colors.Teal, Colors.Cyan, Colors.Sky, Colors.Blue, Colors.Indigo, 
+    Colors.Violet, Colors.Purple, Colors.Fuchsia, Colors.Pink, Colors.Rose,
+    Colors.Primary, Colors.Secondary, Colors.Destructive
+};
 
 // Using colors with widgets
 new Box("Content")
