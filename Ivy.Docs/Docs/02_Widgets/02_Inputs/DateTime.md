@@ -127,12 +127,15 @@ public class FormatDemo : ViewBase
          return Layout.Vertical()
                  | (Layout.Horizontal()
                      | Text.Small("MM/dd/yyyy")
+                           .Width(25) 
                      | monthDateYear.ToDateInput()
                                     .Format("MM/dd/yyyy"))
                 | (Layout.Horizontal()
-                    | Text.Small("MM/dd/yyyy")
+                    | Text.Small("yyyy/MMM/dd")
+                          .Width(25)
                     | yearMonthDate.ToDateInput()
-                                   .Format("yyyy/mmm/dd"));
+                                   .Placeholder("yyyy/MMM/dd")
+                                   .Format("yyyy/MMM/dd"));
     }
 }    
 ```
@@ -189,12 +192,10 @@ public class LibraryBookReturnDemo : ViewBase
         var returnDate = UseState(DateTime.Today.AddDays(7).Date);
         var actualReturnDate = UseState(DateTime.Today.Date);
         var fineDays = actualReturnDate.Value.Subtract(returnDate.Value).Days;
-        var fineAmount = 3.50;
         var invalidMessage = UseState(String.Empty);
         if(fineDays > 0)
         {
-            invalidMessage.Set(
-                $"Book is overdue! Fine amount {fineAmount * fineDays}");
+            invalidMessage.Set($"Book is <b>{fineDays}<b> days overdue!");
         }
         else
         {
