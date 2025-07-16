@@ -7,6 +7,7 @@ using Ivy.Chrome;
 using Ivy.Connections;
 using Ivy.Core;
 using Ivy.Hooks;
+using Ivy.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http; //do not remove - used in RELEASE

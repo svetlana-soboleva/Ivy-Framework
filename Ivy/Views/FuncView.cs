@@ -1,7 +1,7 @@
 using Ivy.Core;
 using Ivy.Core.Hooks;
 
-namespace Ivy.Apps;
+namespace Ivy.Views;
 
 public delegate object? FuncBuilder(IViewContext context);
 
