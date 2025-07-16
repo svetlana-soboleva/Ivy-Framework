@@ -29,6 +29,28 @@ Colors automatically adapt to the current theme:
 
 ## Available Colors
 
+### All Colors
+
+```csharp demo-tabs
+public class AllColorsView : ViewBase
+{
+    public override object? Build()
+    {
+        Colors[] colors = Enum.GetValues<Colors>();
+        
+        return Layout.Vertical(
+            colors.Select(color =>
+                new Box(color.ToString())
+                    .Width(Size.Auto())
+                    .Height(10)
+                    .Color(color).BorderRadius(BorderRadius.Rounded)
+                    .Padding(3)
+            )
+        );
+    }
+}
+```
+
 ### Neutral Colors
 
 ```csharp demo-tabs
@@ -109,34 +131,29 @@ public class ColorsOnBackgroundsView : ViewBase
 {
     public override object? Build()
     {
-        Colors[] colors = new Colors[] { 
-            Colors.Black, Colors.White, Colors.Slate, Colors.Gray, Colors.Zinc, Colors.Neutral, Colors.Stone,
-            Colors.Red, Colors.Orange, Colors.Amber, Colors.Yellow, Colors.Lime, Colors.Green, 
-            Colors.Emerald, Colors.Teal, Colors.Cyan, Colors.Sky, Colors.Blue, Colors.Indigo, 
-            Colors.Violet, Colors.Purple, Colors.Fuchsia, Colors.Pink, Colors.Rose,
-            Colors.Primary, Colors.Secondary, Colors.Destructive
-        };
+        Colors[] colors = Enum.GetValues<Colors>();
+
+        object GenerateColors()
+        {
+            return Layout.Vertical(
+                colors.Select(color =>
+                    new Box(color.ToString())
+                        .Width(Size.Auto())
+                        .Height(10)
+                        .Color(color).BorderRadius(BorderRadius.Rounded)
+                        .Padding(3)
+                )
+            );
+        }
 
         var lightBackground = Layout.Vertical(
             Text.Block("Light Background").Color(Colors.Black),
-            colors.Select(color =>
-                new Box(color.ToString())
-                    .Width(Size.Auto())
-                    .Height(10)
-                    .Color(color).BorderRadius(BorderRadius.Rounded)
-                    .Padding(3)
-            )
+            GenerateColors()
         ).Padding(10);
 
         var darkBackground = Layout.Vertical(
             Text.Block("Dark Background").Color(Colors.White),
-            colors.Select(color =>
-                new Box(color.ToString())
-                    .Width(Size.Auto())
-                    .Height(10)
-                    .Color(color).BorderRadius(BorderRadius.Rounded)
-                    .Padding(3)
-            )
+            GenerateColors()
         ).Padding(10).Background(Colors.Black);
 
         return Layout.Grid().Columns(2)
@@ -194,14 +211,8 @@ public class ButtonColorsView : ViewBase
 Colors are defined as an enum in `Ivy.Shared.Colors` and map to CSS custom properties that automatically adapt to the current theme. Each color includes variants for different states and theme modes.
 
 ```csharp
-// All available colors
-Colors[] colors = new Colors[] { 
-    Colors.Black, Colors.White, Colors.Slate, Colors.Gray, Colors.Zinc, Colors.Neutral, Colors.Stone,
-    Colors.Red, Colors.Orange, Colors.Amber, Colors.Yellow, Colors.Lime, Colors.Green, 
-    Colors.Emerald, Colors.Teal, Colors.Cyan, Colors.Sky, Colors.Blue, Colors.Indigo, 
-    Colors.Violet, Colors.Purple, Colors.Fuchsia, Colors.Pink, Colors.Rose,
-    Colors.Primary, Colors.Secondary, Colors.Destructive
-};
+// Get all available colors dynamically
+Colors[] colors = Enum.GetValues<Colors>();
 
 // Using colors with widgets
 new Box("Content")
