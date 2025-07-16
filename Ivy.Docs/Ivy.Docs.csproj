@@ -30,9 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="GlobalUsings.cs" />
-    <Compile Include="Helpers/**/*.cs" />
+    <EmbeddedResource Include="Assets/**/*" />
   </ItemGroup>
 
 
