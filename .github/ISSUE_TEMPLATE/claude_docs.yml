@@ -1,0 +1,82 @@
+name: Claude Documentation Request
+description: Request Claude bot to generate documentation for a .cs file
+title: "[DEV-AI]: Generate documentation for "
+labels: ["documentation", "claude"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue will ping Claude bot to generate documentation for a .cs file.
+
+  - type: textarea
+    id: claude-instruction
+    attributes:
+      label: Claude Instruction
+      description: The instruction to send to Claude bot
+      value: |
+        Hey @claude! Write a documentation for ... .cs file in md format. See how it is done for others in Ivy.Docs folder. 
+
+        I want you to cover base use cases, while including both code and rendered examples.
+      render: markdown
+
+  - type: input
+    id: cs-file-path
+    attributes:
+      label: .cs File Path
+      description: The path to the .cs file that needs documentation
+      placeholder: e.g., Ivy/Widgets/Button.cs
+      required: true
+
+  - type: textarea
+    id: file-description
+    attributes:
+      label: File Description
+      description: Brief description of what this .cs file does
+      placeholder: |
+        Describe what this .cs file contains:
+        - What widget/component/class does it define?
+        - What is its main purpose?
+        - What are its key features?
+
+  - type: textarea
+    id: target-docs-location
+    attributes:
+      label: Target Documentation Location
+      description: Where should the generated documentation be placed in Ivy.Docs
+      placeholder: e.g., Ivy.Docs/Docs/02_Widgets/01_Common/
+      value: Ivy.Docs/Docs/02_Widgets/
+
+  - type: textarea
+    id: existing-examples
+    attributes:
+      label: Existing Documentation Examples
+      description: Links to similar documentation files for reference
+      placeholder: |
+        List any existing documentation files that could serve as examples:
+        - Similar widget documentation
+        - Documentation with good structure
+        - Examples of code and rendered output
+
+  - type: textarea
+    id: specific-requirements
+    attributes:
+      label: Specific Requirements
+      description: Any specific requirements for the documentation
+      placeholder: |
+        Any specific requirements or preferences:
+        - Particular sections that must be included
+        - Code examples that should be featured
+        - Special formatting or structure requirements
+        - Integration with existing documentation
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any additional context that might help Claude generate better documentation
+      placeholder: |
+        Additional context that might be helpful:
+        - Related widgets or components
+        - Common use cases
+        - Known limitations or gotchas
+        - Integration patterns 
