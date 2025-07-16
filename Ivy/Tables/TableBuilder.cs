@@ -46,11 +46,26 @@ public class TableBuilder<TModel> : ViewBase, IStateless
 
         public object? GetValue(TModel obj)
         {
-            if (FieldInfo != null)
+            if (obj == null) return null;
+            
+            try
             {
-                return FieldInfo.GetValue(obj);
+                if (FieldInfo != null)
+                {
+                    return FieldInfo.GetValue(obj);
+                }
+                
+                if (PropertyInfo != null)
+                {
+                    return PropertyInfo.GetValue(obj);
+                }
+                
+                return null;
             }
-            return PropertyInfo!.GetValue(obj);
+            catch
+            {
+                return null;
+            }
         }
     }
 
@@ -366,12 +381,23 @@ public static class TableBuilderFactory
             Type itemType = enumerableType.GetGenericArguments()[0];
             if (Utils.IsSimpleType(itemType))
             {
-                return enumerable.Cast<object>().Select(e => new { Value = e }).ToTable();
+                var items = enumerable.Cast<object>().ToArray();
+                var rows = items.Select(item => new TableRow(new TableCell(item))).ToArray();
+                return new SimpleTypeTableView(new Table(rows));
             }
+            
             Type tableBuilderType = typeof(TableBuilder<>).MakeGenericType(itemType);
             object tableBuilderInstance = Activator.CreateInstance(tableBuilderType, [enumerable])!;
             return (ViewBase)tableBuilderInstance;
         }
         throw new NotImplementedException("Non-generic IEnumerable is not implemented.");
+    }
+}
+
+public class SimpleTypeTableView(Table table) : ViewBase
+{
+    public override object? Build()
+    {
+        return table;
     }
 }
