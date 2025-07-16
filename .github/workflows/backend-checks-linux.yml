@@ -10,6 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    # Install required packages
+    - name: Install required packages
+      run: sudo apt-get update && sudo apt-get install -y attr
+    
     # Setup .NET
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
