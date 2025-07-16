@@ -5,6 +5,7 @@ using Ivy.Builders;
 using Ivy.Core;
 using Ivy.Core.Hooks;
 using Ivy.Shared;
+using Ivy.Views;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Ivy.Tables;
@@ -383,7 +384,7 @@ public static class TableBuilderFactory
             {
                 var items = enumerable.Cast<object>().ToArray();
                 var rows = items.Select(item => new TableRow(new TableCell(item))).ToArray();
-                return new SimpleTypeTableView(new Table(rows));
+                return new WrapperView(new Table(rows));
             }
 
             Type tableBuilderType = typeof(TableBuilder<>).MakeGenericType(itemType);
@@ -394,10 +395,3 @@ public static class TableBuilderFactory
     }
 }
 
-public class SimpleTypeTableView(Table table) : ViewBase
-{
-    public override object? Build()
-    {
-        return table;
-    }
-}
