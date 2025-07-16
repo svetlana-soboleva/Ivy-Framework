@@ -9,6 +9,8 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Ivy.Docs</RootNamespace>
     <NoWarn>CS8618;CS8603;CS8602;CS8604;CS8669;CS9113</NoWarn>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="GlobalUsings.cs" />
+    <Compile Include="Helpers/**/*.cs" />
     <EmbeddedResource Include="Assets/**/*" />
   </ItemGroup>
 
