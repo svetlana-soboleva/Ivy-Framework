@@ -109,7 +109,7 @@ public class ColorsOnBackgroundsView : ViewBase
 {
     public override object? Build()
     {
-        Colors[] colors = (Colors[])Enum.GetValues(typeof(Colors));
+        Colors[] colors = Enum.GetValues<Colors>();
 
         var lightBackground = Layout.Vertical(
             Text.Block("Light Background").Color(Colors.Black),
