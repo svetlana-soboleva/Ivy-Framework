@@ -19,44 +19,6 @@ body:
         I want you to cover base use cases, while including both code and rendered examples.
       render: markdown
 
-  - type: input
-    id: cs-file-path
-    attributes:
-      label: .cs File Path
-      description: The path to the .cs file that needs documentation
-      placeholder: e.g., Ivy/Widgets/Button.cs
-      required: true
-
-  - type: textarea
-    id: file-description
-    attributes:
-      label: File Description
-      description: Brief description of what this .cs file does
-      placeholder: |
-        Describe what this .cs file contains:
-        - What widget/component/class does it define?
-        - What is its main purpose?
-        - What are its key features?
-
-  - type: textarea
-    id: target-docs-location
-    attributes:
-      label: Target Documentation Location
-      description: Where should the generated documentation be placed in Ivy.Docs
-      placeholder: e.g., Ivy.Docs/Docs/02_Widgets/01_Common/
-      value: Ivy.Docs/Docs/02_Widgets/
-
-  - type: textarea
-    id: existing-examples
-    attributes:
-      label: Existing Documentation Examples
-      description: Links to similar documentation files for reference
-      placeholder: |
-        List any existing documentation files that could serve as examples:
-        - Similar widget documentation
-        - Documentation with good structure
-        - Examples of code and rendered output
-
   - type: textarea
     id: specific-requirements
     attributes:
