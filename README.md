@@ -70,8 +70,6 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
 
 1. **Install dependencies**:
    - [Node 22.12+ & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-   - [Vite 7](https://vitejs.dev/)
-   - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 2. **Fork and clone this repository**.
 3. **Pre-generate documentation files** (first time only):
 
