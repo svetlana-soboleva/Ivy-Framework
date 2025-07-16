@@ -47,19 +47,19 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         public object? GetValue(TModel obj)
         {
             if (obj == null) return null;
-            
+
             try
             {
                 if (FieldInfo != null)
                 {
                     return FieldInfo.GetValue(obj);
                 }
-                
+
                 if (PropertyInfo != null)
                 {
                     return PropertyInfo.GetValue(obj);
                 }
-                
+
                 return null;
             }
             catch
@@ -385,7 +385,7 @@ public static class TableBuilderFactory
                 var rows = items.Select(item => new TableRow(new TableCell(item))).ToArray();
                 return new SimpleTypeTableView(new Table(rows));
             }
-            
+
             Type tableBuilderType = typeof(TableBuilder<>).MakeGenericType(itemType);
             object tableBuilderInstance = Activator.CreateInstance(tableBuilderType, [enumerable])!;
             return (ViewBase)tableBuilderInstance;
