@@ -38,6 +38,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
     [Prop] public FileInputs Variant { get; set; }
     [Prop] public string? Accept { get; set; }
     [Prop] public bool Multiple { get; set; }
+    [Prop] public int? MaxFiles { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [];
 }
@@ -93,10 +94,10 @@ public static class FileInputExtensions
         var type = state.GetStateType();
 
         //Check that type is FileInput, FileInput? or IEnumerable<FileInput>
-        var isValid = type == typeof(FileInput)
-                      || (type.IsGenericType &&
+        var isCollection = type.IsGenericType &&
                           type.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
-                          type.GetGenericArguments()[0] == typeof(FileInput));
+                          type.GetGenericArguments()[0] == typeof(FileInput);
+        var isValid = type == typeof(FileInput) || isCollection;
 
         if (!isValid)
         {
@@ -106,10 +107,8 @@ public static class FileInputExtensions
         Type genericType = typeof(FileInput<>).MakeGenericType(type);
         FileInputBase input = (FileInputBase)Activator.CreateInstance(genericType, state, placeholder, disabled, variant)!;
 
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-        {
-            input = input.Multiple();
-        }
+        // Set Multiple based on type
+        input = input with { Multiple = isCollection };
 
         return input;
     }
@@ -139,8 +138,12 @@ public static class FileInputExtensions
         return widget with { Accept = accept };
     }
 
-    public static FileInputBase Multiple(this FileInputBase widget, bool multiple = true)
+    public static FileInputBase MaxFiles(this FileInputBase widget, int maxFiles)
     {
-        return widget with { Multiple = multiple };
+        if (widget.Multiple != true)
+        {
+            throw new InvalidOperationException("MaxFiles can only be set on a multi-file input (IEnumerable<FileInput>). Use a collection state type for multiple files.");
+        }
+        return widget with { MaxFiles = maxFiles };
     }
 }
