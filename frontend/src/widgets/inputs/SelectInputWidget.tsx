@@ -564,12 +564,12 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                 <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
               </span>
             )}
-            {invalid && (
-              <div className="absolute top-1/2 -translate-y-1/2 right-8 z-10">
-                <InvalidIcon message={invalid} />
-              </div>
-            )}
           </SelectTrigger>
+          {invalid && (
+            <div className="absolute top-1/2 -translate-y-1/2 right-8 z-10">
+              <InvalidIcon message={invalid} />
+            </div>
+          )}
           <SelectContent>
             {Object.entries(groupedOptions).map(([group, options]) => (
               <SelectGroup key={group}>
