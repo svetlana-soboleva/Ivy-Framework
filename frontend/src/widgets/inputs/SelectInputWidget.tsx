@@ -542,8 +542,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
           >
             <SelectValue placeholder={placeholder} />
             {nullable && hasValue && !disabled && (
-              <button
-                type="button"
+              <span
+                role="button"
                 tabIndex={-1}
                 aria-label="Clear"
                 onClick={e => {
@@ -551,11 +551,18 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                   e.stopPropagation();
                   eventHandler('OnChange', id, [null]);
                 }}
-                className="absolute top-1/2 -translate-y-1/2 right-8 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none"
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    eventHandler('OnChange', id, [null]);
+                  }
+                }}
+                className="absolute top-1/2 -translate-y-1/2 right-8 z-10 p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
                 style={{ pointerEvents: 'auto' }}
               >
                 <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </button>
+              </span>
             )}
             {invalid && (
               <div className="absolute top-1/2 -translate-y-1/2 right-8 z-10">

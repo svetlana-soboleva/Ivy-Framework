@@ -67,9 +67,9 @@ const DateVariant: React.FC<DateVariantProps> = ({
   const date = value ? new Date(value) : undefined;
   const showClear = nullable && !disabled && value != null && value !== '';
 
-  const handleClear = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleClear = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     onDateChange(undefined);
   };
 
@@ -105,16 +105,22 @@ const DateVariant: React.FC<DateVariantProps> = ({
             {(showClear || invalid) && (
               <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-auto">
                 {showClear && (
-                  <button
-                    type="button"
+                  <span
+                    role="button"
                     tabIndex={-1}
                     aria-label="Clear"
-                    onClick={handleClear}
-                    className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                    onClick={e => handleClear(e)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleClear();
+                      }
+                    }}
+                    className="p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
                     style={{ pointerEvents: 'auto' }}
                   >
                     <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                  </button>
+                  </span>
                 )}
                 {invalid && <InvalidIcon message={invalid} />}
               </span>
@@ -149,9 +155,9 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   const date = value ? new Date(value) : undefined;
   const showClear = nullable && !disabled && value != null && value !== '';
 
-  const handleClear = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleClear = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     onDateChange(undefined);
   };
 
