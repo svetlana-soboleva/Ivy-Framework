@@ -25,6 +25,9 @@ const CopyToClipboardButton = ({ textToCopy = '', label = '' }) => {
         py-2 
         rounded-lg
         transition-all duration-200 ease-in-out
+        cursor-pointer
+        hover:bg-gray-100
+        hover:shadow-sm
         ${
           copied
             ? 'bg-green-100 text-green-700'
