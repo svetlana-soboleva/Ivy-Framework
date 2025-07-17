@@ -11,7 +11,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
         var type = TypeUtils.GetTypeFromName(typeName);
         Type[] extensionTypes =
         [
-            ..extensionsTypeName.Split(';').Select(TypeUtils.GetTypeFromName).ToArray()!,
+            ..extensionsTypeName?.Split(';').Select(TypeUtils.GetTypeFromName).Where(t => t != null).ToArray() ?? [],
             typeof(WidgetBaseExtensions)
         ];
 

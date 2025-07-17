@@ -19,7 +19,9 @@ public class BasicHtmlView : ViewBase
 **Rendered Result:**
 > Hello, **World**!
 
-## Text Formatting
+## Content Examples
+
+### Text Formatting
 
 ```csharp demo-tabs
 public class TextFormattingView : ViewBase
@@ -48,7 +50,7 @@ public class TextFormattingView : ViewBase
 > 
 > You can also use <span style="color: blue;">colored text</span> and <span style="text-decoration: underline;">underlined text</span>.
 
-## Lists and Structure
+### Lists and Structure
 
 ```csharp demo-tabs
 public class ListsView : ViewBase
@@ -105,7 +107,7 @@ public class ListsView : ViewBase
 >   - Child item 2
 > - Another parent item
 
-## Links and Navigation
+### Links and Navigation
 
 ```csharp demo-tabs
 public class LinksView : ViewBase
@@ -127,9 +129,9 @@ public class LinksView : ViewBase
 **Rendered Result:**
 > Visit [Ivy Framework](https://github.com/Ivy-Interactive/Ivy-Framework) on GitHub.
 > 
-> You can also link to [internal sections](#section1) or [email addresses](mailto:example@example.com).
+> You can also link to internal sections or email addresses.
 
-## Tables
+### Tables
 
 ```csharp demo-tabs
 public class TablesView : ViewBase
@@ -278,11 +280,13 @@ public class SecurityDemoView : ViewBase
 > 
 > Click me
 > 
-> [Blocked link](#)
+> Blocked link
 
-## Best Practices
+## Best Practices & Use Cases
 
-### 1. Keep It Simple
+### Best Practices
+
+#### Keep It Simple
 ```csharp
 // Good: Simple, clear HTML
 var goodHtml = "<p>Welcome to our <strong>application</strong>!</p>";
@@ -291,7 +295,7 @@ var goodHtml = "<p>Welcome to our <strong>application</strong>!</p>";
 var complexHtml = "<div><div><div><p>Deep nesting</p></div></div></div>";
 ```
 
-### 2. Use Inline Styles Sparingly
+#### Use Inline Styles Sparingly
 ```csharp
 // Good: Minimal inline styling
 var styledHtml = "<p style='color: blue;'>Blue text</p>";
@@ -300,7 +304,7 @@ var styledHtml = "<p style='color: blue;'>Blue text</p>";
 var classBasedHtml = "<p class='text-blue'>Blue text</p>";
 ```
 
-### 3. Validate External Content
+#### Validate External Content
 ```csharp
 public class ExternalContentView : ViewBase
 {
@@ -325,7 +329,7 @@ public class ExternalContentView : ViewBase
 }
 ```
 
-### 4. Handle Long Content
+#### Handle Long Content
 ```csharp
 public class LongContentView : ViewBase
 {
@@ -340,9 +344,9 @@ public class LongContentView : ViewBase
 }
 ```
 
-## Common Use Cases
+### Common Use Cases
 
-### 1. Rich Text from CMS
+#### Rich Text from CMS
 ```csharp
 public class CMSContentView : ViewBase
 {
@@ -360,7 +364,7 @@ public class CMSContentView : ViewBase
 }
 ```
 
-### 2. Documentation and Help Text
+#### Documentation and Help Text
 ```csharp
 public class HelpContentView : ViewBase
 {
@@ -382,7 +386,7 @@ public class HelpContentView : ViewBase
 }
 ```
 
-### 3. Formatted User Content
+#### Formatted User Content
 ```csharp
 public class UserContentView : ViewBase
 {
@@ -424,4 +428,4 @@ public class UserContentView : ViewBase
 - You need JavaScript functionality
 - Simple text formatting would suffice (use Text widget)
 
-<WidgetDocs Type="Ivy.Html" ExtensionTypes="Ivy.HtmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Html.cs"/> 
+<WidgetDocs Type="Ivy.Html" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Html.cs"/> 
