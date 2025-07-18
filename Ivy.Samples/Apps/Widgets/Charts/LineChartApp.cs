@@ -101,16 +101,11 @@ public class LineChart3View : ViewBase
         };
 
         return new Card().Title("Product Sales Trends (Rainbow Colors)")
-            | new LineChart(data)
-                .ColorScheme(ColorScheme.Rainbow)
-                .Line("ProductA")
-                .Line("ProductB")
-                .Line("ProductC")
-                .CartesianGrid()
-                .Tooltip()
-                .XAxis("Quarter")
-                .YAxis()
-                .Legend()
+            | data.ToLineChart(style: LineChartStyles.Default)
+                .Dimension("Quarter", e => e.Quarter)
+                .Measure("ProductA", e => e.Sum(f => f.ProductA))
+                .Measure("ProductB", e => e.Sum(f => f.ProductB))
+                .Measure("ProductC", e => e.Sum(f => f.ProductC))
         ;
     }
 }
@@ -121,24 +116,20 @@ public class LineChart4View : ViewBase
     {
         var data = new[]
         {
-            new { Month = "Jan", Users = 1200, Sessions = 3500, Conversions = 180 },
-            new { Month = "Feb", Users = 1400, Sessions = 4200, Conversions = 220 },
-            new { Month = "Mar", Users = 1600, Sessions = 4800, Conversions = 260 },
-            new { Month = "Apr", Users = 1800, Sessions = 5400, Conversions = 300 },
-            new { Month = "May", Users = 2000, Sessions = 6000, Conversions = 340 },
-            new { Month = "Jun", Users = 2200, Sessions = 6600, Conversions = 380 },
+            new { Month = "Jan", Users = 1200, Sessions = 1400, Conversions = 1100 },
+            new { Month = "Feb", Users = 1400, Sessions = 1600, Conversions = 1300 },
+            new { Month = "Mar", Users = 1600, Sessions = 1800, Conversions = 1500 },
+            new { Month = "Apr", Users = 1800, Sessions = 2000, Conversions = 1700 },
+            new { Month = "May", Users = 2000, Sessions = 2200, Conversions = 1900 },
+            new { Month = "Jun", Users = 2200, Sessions = 2400, Conversions = 2100 },
         };
 
         return new Card().Title("Website Analytics (Step Lines)")
-            | new LineChart(data)
-                .Line(new Line("Users").CurveType(CurveTypes.Step).StrokeWidth(3))
-                .Line(new Line("Sessions").CurveType(CurveTypes.Step).StrokeWidth(3))
-                .Line(new Line("Conversions").CurveType(CurveTypes.Step).StrokeWidth(3))
-                .CartesianGrid(new CartesianGrid().Horizontal().Vertical())
-                .Tooltip()
-                .XAxis("Month")
-                .YAxis("Users")
-                .Legend()
+            | data.ToLineChart(style: LineChartStyles.Default)
+                .Dimension("Month", e => e.Month)
+                .Measure("Users", e => e.Sum(f => f.Users))
+                .Measure("Sessions", e => e.Sum(f => f.Sessions))
+                .Measure("Conversions", e => e.Sum(f => f.Conversions))
         ;
     }
 }
@@ -149,24 +140,20 @@ public class LineChart5View : ViewBase
     {
         var data = new[]
         {
-            new { Week = "Week 1", Temperature = 22, Humidity = 65, Pressure = 1013 },
-            new { Week = "Week 2", Temperature = 24, Humidity = 60, Pressure = 1015 },
-            new { Week = "Week 3", Temperature = 26, Humidity = 55, Pressure = 1012 },
-            new { Week = "Week 4", Temperature = 28, Humidity = 50, Pressure = 1010 },
-            new { Week = "Week 5", Temperature = 30, Humidity = 45, Pressure = 1008 },
-            new { Week = "Week 6", Temperature = 32, Humidity = 40, Pressure = 1005 },
+            new { Week = "Week 1", Temperature = 22, Humidity = 65, Pressure = 25 },
+            new { Week = "Week 2", Temperature = 24, Humidity = 60, Pressure = 28 },
+            new { Week = "Week 3", Temperature = 26, Humidity = 55, Pressure = 30 },
+            new { Week = "Week 4", Temperature = 28, Humidity = 50, Pressure = 32 },
+            new { Week = "Week 5", Temperature = 30, Humidity = 45, Pressure = 35 },
+            new { Week = "Week 6", Temperature = 32, Humidity = 40, Pressure = 38 },
         };
 
         return new Card().Title("Weather Monitoring (Mixed Styles)")
-            | new LineChart(data)
-                .Line(new Line("Temperature").CurveType(CurveTypes.Monotone).StrokeWidth(4).Stroke(Colors.Blue))
-                .Line(new Line("Humidity").CurveType(CurveTypes.Linear).StrokeWidth(2).Stroke(Colors.Green).StrokeDashArray("5,5"))
-                .Line(new Line("Pressure").CurveType(CurveTypes.Basis).StrokeWidth(3).Stroke(Colors.Red))
-                .CartesianGrid(new CartesianGrid().Horizontal())
-                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
-                .XAxis("Week")
-                .YAxis("Temperature")
-                .Legend()
+            | data.ToLineChart(style: LineChartStyles.Default)
+                .Dimension("Week", e => e.Week)
+                .Measure("Temperature", e => e.Sum(f => f.Temperature))
+                .Measure("Humidity", e => e.Sum(f => f.Humidity))
+                .Measure("Pressure", e => e.Sum(f => f.Pressure))
         ;
     }
 }
