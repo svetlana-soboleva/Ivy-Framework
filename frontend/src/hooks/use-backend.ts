@@ -9,6 +9,7 @@ import {
   getMachineId,
   getParentId,
 } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
 
@@ -123,9 +124,13 @@ export const useBackend = () => {
 
   const handleHotReloadMessage = useCallback(() => {
     console.log('HotReload');
+    logger.debug('Sending HotReload message');
     connection
       ?.invoke('HotReload')
-      .catch(err => console.error('SignalR Error:', err));
+      .catch(err => {
+        logger.error('SignalR Error when sending HotReload:', err);
+        console.error('SignalR Error:', err);
+      });
   }, [connection]);
 
   const handleSetJwt = useCallback(async (jwt: AuthToken | null) => {
@@ -164,39 +169,72 @@ export const useBackend = () => {
       connection
         .start()
         .then(() => {
+          logger.info('SignalR connection established');
           console.log('Connected!');
-          connection.on('Refresh', handleRefreshMessage);
-          connection.on('Update', handleUpdateMessage);
+          
+          connection.on('Refresh', (message) => {
+            logger.debug('Received Refresh message', message);
+            handleRefreshMessage(message);
+          });
+          
+          connection.on('Update', (message) => {
+            logger.debug('Received Update message', message);
+            handleUpdateMessage(message);
+          });
+          
           connection.on('Toast', message => {
+            logger.debug('Received Toast message', message);
             console.log('Toast', message);
             toast(message);
           });
           connection.on('$SetChatPanelUrl', (chatPanelUrl: string | null) => {
+            logger.debug('Received $SetChatPanelUrl message', { chatPanelUrl });
             window.parent.postMessage(
               { type: '$SetChatPanelUrl', url: chatPanelUrl },
               '*'
             );
           });
-          connection.on('SetJwt', handleSetJwt);
-          connection.on('SetTheme', handleSetTheme);
+          connection.on('SetJwt', (jwt) => {
+            logger.debug('Received SetJwt message');
+            handleSetJwt(jwt);
+          });
+          
+          connection.on('SetTheme', (theme) => {
+            logger.debug('Received SetTheme message', { theme });
+            handleSetTheme(theme);
+          });
+          
           connection.on('CopyToClipboard', (text: string) => {
+            logger.debug('Received CopyToClipboard message');
             navigator.clipboard.writeText(text);
           });
+          
           connection.on('OpenUrl', (url: string) => {
+            logger.debug('Received OpenUrl message', { url });
             window.open(url, '_blank');
           });
-          connection.on('HotReload', handleHotReloadMessage);
+          
+          connection.on('HotReload', () => {
+            logger.debug('Received HotReload message');
+            handleHotReloadMessage();
+          });
           connection.onreconnecting(() => {
+            logger.warn('SignalR connection reconnecting');
             setDisconnected(true);
           });
           connection.onreconnected(() => {
+            logger.info('SignalR connection reconnected');
             setDisconnected(false);
           });
           connection.onclose(() => {
+            logger.warn('SignalR connection closed');
             setDisconnected(true);
           });
         })
-        .catch(e => console.log('Connection failed: ', e));
+        .catch(e => {
+          logger.error('SignalR connection failed:', e);
+          console.log('Connection failed: ', e);
+        });
 
       return () => {
         connection.off('Refresh');
@@ -224,9 +262,13 @@ export const useBackend = () => {
   const eventHandler: WidgetEventHandlerType = useCallback(
     (eventName, widgetId, args) => {
       console.log('Event', eventName, widgetId, args);
+      logger.debug(`Sending event: ${eventName}`, { widgetId, args });
       connection
         ?.invoke('Event', eventName, widgetId, args)
-        .catch(err => console.error('SignalR Error:', err));
+        .catch(err => {
+          logger.error('SignalR Error when sending event:', err);
+          console.error('SignalR Error:', err);
+        });
     },
     [connection]
   );
