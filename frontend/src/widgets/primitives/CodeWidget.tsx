@@ -9,7 +9,6 @@ import React, {
 } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
-import { useTheme } from '@/components/ThemeProvider';
 
 interface CodeWidgetProps {
   id: string;
@@ -61,7 +60,6 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
     height,
   }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const { theme } = useTheme();
 
     const handleMouseEnter = useCallback(() => setIsHovered(true), []);
     const handleMouseLeave = useCallback(() => setIsHovered(false), []);
@@ -89,8 +87,8 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
       [id, language, showLineNumbers, showBorder]
     );
 
-    // Create theme object only when theme changes
-    const prismTheme = useMemo(() => createPrismTheme(), [theme]);
+    // Create dynamic theme that adapts to current CSS variables
+    const dynamicTheme = useMemo(() => createPrismTheme(), []);
 
     return (
       <div
@@ -102,7 +100,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
         <SyntaxHighlighter
           language={mapLanguageToPrism(language)}
           customStyle={styles}
-          style={prismTheme}
+          style={dynamicTheme}
           showLineNumbers={showLineNumbers}
           wrapLines={true}
           key={highlighterKey}

@@ -16,7 +16,6 @@ import 'katex/dist/katex.min.css';
 import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
-import { useTheme } from '@/components/ThemeProvider';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -138,10 +137,9 @@ const CodeBlock = memo(
   }) => {
     const match = /language-(\w+)/.exec(className || '');
     const content = String(children).replace(/\n$/, '');
-    const { theme } = useTheme();
 
-    // Create theme object only when theme changes
-    const prismTheme = useMemo(() => createPrismTheme(), [theme]);
+    // Create dynamic theme that adapts to current CSS variables
+    const dynamicTheme = useMemo(() => createPrismTheme(), []);
 
     if (match && hasCodeBlocks) {
       return (
@@ -158,7 +156,7 @@ const CodeBlock = memo(
             </div>
             <SyntaxHighlighter
               language={match[1]}
-              style={prismTheme}
+              style={dynamicTheme}
               customStyle={{ margin: 0 }}
             >
               {content}
