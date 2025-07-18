@@ -15,7 +15,7 @@ import rehypeRaw from 'rehype-raw';
 import 'katex/dist/katex.min.css';
 import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
-import ivyPrismTheme from '@/lib/ivy-prism-theme';
+import { createPrismTheme } from '@/lib/ivy-prism-theme';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -138,6 +138,9 @@ const CodeBlock = memo(
     const match = /language-(\w+)/.exec(className || '');
     const content = String(children).replace(/\n$/, '');
 
+    // Create dynamic theme that adapts to current CSS variables
+    const dynamicTheme = useMemo(() => createPrismTheme(), []);
+
     if (match && hasCodeBlocks) {
       return (
         <Suspense
@@ -153,7 +156,7 @@ const CodeBlock = memo(
             </div>
             <SyntaxHighlighter
               language={match[1]}
-              style={ivyPrismTheme}
+              style={dynamicTheme}
               customStyle={{ margin: 0 }}
             >
               {content}
