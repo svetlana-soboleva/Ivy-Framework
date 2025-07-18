@@ -33,8 +33,8 @@ public class LineChart0View : ViewBase
             new { Month = "June", Desktop = 214, Mobile = 45 },
         };
 
-        return new Card().Title("Basic Line Chart")
-            | data.ToLineChart()
+        return new Card().Title("Basic Line Chart (Default Style)")
+            | data.ToLineChart(style: LineChartStyles.Default)
                 .Dimension("Month", e => e.Month)
                 .Measure("Desktop", e => e.Sum(f => f.Desktop))
                 .Measure("Mobile", e => e.Sum(f => f.Mobile))
@@ -56,8 +56,8 @@ public class LineChart1View : ViewBase
             new { Month = "Jun", Sales = 2700, Marketing = 1550, Development = 1350 },
         };
 
-        return new Card().Title("Department Performance")
-            | data.ToLineChart()
+        return new Card().Title("Department Performance (Dashboard Style)")
+            | data.ToLineChart(style: LineChartStyles.Dashboard)
                 .Dimension("Month", e => e.Month)
                 .Measure("Sales", e => e.Sum(f => f.Sales))
                 .Measure("Marketing", e => e.Sum(f => f.Marketing))
@@ -79,8 +79,8 @@ public class LineChart2View : ViewBase
             new { Year = "2024", Revenue = 110000, Profit = 35000 },
         };
 
-        return new Card().Title("Financial Growth")
-            | data.ToLineChart()
+        return new Card().Title("Financial Growth (Custom Style)")
+            | data.ToLineChart(style: LineChartStyles.Custom)
                 .Dimension("Year", e => e.Year)
                 .Measure("Revenue", e => e.Sum(f => f.Revenue))
                 .Measure("Profit", e => e.Sum(f => f.Profit))
@@ -100,12 +100,17 @@ public class LineChart3View : ViewBase
             new { Quarter = "Q4", ProductA = 2100, ProductB = 1250, ProductC = 1050 },
         };
 
-        return new Card().Title("Product Sales Trends")
-            | data.ToLineChart()
-                .Dimension("Quarter", e => e.Quarter)
-                .Measure("ProductA", e => e.Sum(f => f.ProductA))
-                .Measure("ProductB", e => e.Sum(f => f.ProductB))
-                .Measure("ProductC", e => e.Sum(f => f.ProductC))
+        return new Card().Title("Product Sales Trends (Rainbow Colors)")
+            | new LineChart(data)
+                .ColorScheme(ColorScheme.Rainbow)
+                .Line("ProductA")
+                .Line("ProductB")
+                .Line("ProductC")
+                .CartesianGrid()
+                .Tooltip()
+                .XAxis("Quarter")
+                .YAxis("ProductA")
+                .Legend()
         ;
     }
 }
@@ -124,12 +129,16 @@ public class LineChart4View : ViewBase
             new { Month = "Jun", Users = 2200, Sessions = 6600, Conversions = 380 },
         };
 
-        return new Card().Title("Website Analytics")
-            | data.ToLineChart()
-                .Dimension("Month", e => e.Month)
-                .Measure("Users", e => e.Sum(f => f.Users))
-                .Measure("Sessions", e => e.Sum(f => f.Sessions))
-                .Measure("Conversions", e => e.Sum(f => f.Conversions))
+        return new Card().Title("Website Analytics (Step Lines)")
+            | new LineChart(data)
+                .Line(new Line("Users").CurveType(CurveTypes.Step).StrokeWidth(3))
+                .Line(new Line("Sessions").CurveType(CurveTypes.Step).StrokeWidth(3))
+                .Line(new Line("Conversions").CurveType(CurveTypes.Step).StrokeWidth(3))
+                .CartesianGrid(new CartesianGrid().Horizontal().Vertical())
+                .Tooltip()
+                .XAxis("Month")
+                .YAxis("Users")
+                .Legend()
         ;
     }
 }
@@ -148,12 +157,16 @@ public class LineChart5View : ViewBase
             new { Week = "Week 6", Temperature = 32, Humidity = 40, Pressure = 1005 },
         };
 
-        return new Card().Title("Weather Monitoring")
-            | data.ToLineChart()
-                .Dimension("Week", e => e.Week)
-                .Measure("Temperature", e => e.Sum(f => f.Temperature))
-                .Measure("Humidity", e => e.Sum(f => f.Humidity))
-                .Measure("Pressure", e => e.Sum(f => f.Pressure))
+        return new Card().Title("Weather Monitoring (Mixed Styles)")
+            | new LineChart(data)
+                .Line(new Line("Temperature").CurveType(CurveTypes.Monotone).StrokeWidth(4).Stroke(Colors.Blue))
+                .Line(new Line("Humidity").CurveType(CurveTypes.Linear).StrokeWidth(2).Stroke(Colors.Green).StrokeDashArray("5,5"))
+                .Line(new Line("Pressure").CurveType(CurveTypes.Basis).StrokeWidth(3).Stroke(Colors.Red))
+                .CartesianGrid(new CartesianGrid().Horizontal())
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
+                .XAxis("Week")
+                .YAxis("Temperature")
+                .Legend()
         ;
     }
 }
