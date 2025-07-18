@@ -41,6 +41,43 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
     [Prop] public int? MaxFiles { get; set; }
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
     public Type[] SupportedStateTypes() => [];
+
+    /// <summary>
+    /// Validates the current value and returns a validation result
+    /// </summary>
+    /// <param name="value">The current value to validate</param>
+    /// <returns>Validation result</returns>
+    public ValidationResult ValidateValue(object? value)
+    {
+        if (value == null) return ValidationResult.Success();
+
+        if (value is FileInput file)
+        {
+            return FileInputValidation.ValidateFileType(file, Accept);
+        }
+        else if (value is IEnumerable<FileInput> files)
+        {
+            var filesList = files.ToList();
+            
+            // Validate file count first if MaxFiles is set
+            if (MaxFiles.HasValue)
+            {
+                var countValidation = FileInputValidation.ValidateFileCount(filesList, MaxFiles);
+                if (!countValidation.IsValid)
+                {
+                    return countValidation;
+                }
+            }
+            
+            // Then validate file types if Accept is set
+            if (!string.IsNullOrWhiteSpace(Accept))
+            {
+                return FileInputValidation.ValidateFileTypes(filesList, Accept);
+            }
+        }
+
+        return ValidationResult.Success();
+    }
 }
 
 public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
@@ -50,7 +87,21 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     {
         var typedState = state.As<TValue>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => 
+        {
+            typedState.Set(e.Value);
+            
+            // Auto-validate if Accept or MaxFiles is set
+            if (!string.IsNullOrWhiteSpace(Accept) || MaxFiles.HasValue)
+            {
+                var validation = ValidateValue(e.Value);
+                if (!validation.IsValid)
+                {
+                    // Update the widget's Invalid property
+                    var updatedWidget = this with { Invalid = validation.ErrorMessage };
+                }
+            }
+        };
     }
 
     public FileInput(TValue value, Action<Event<IInput<TValue>, TValue>>? onChange, string? placeholder = null, bool disabled = false, FileInputs variant = FileInputs.Drop)
@@ -179,16 +230,5 @@ public static class FileInputExtensions
         return FileInputValidation.ValidateFileTypes(filesList, widget.Accept);
     }
 
-    /// <summary>
-    /// Creates a file input with validation that automatically sets the invalid state on validation failure
-    /// </summary>
-    /// <param name="widget">The file input widget</param>
-    /// <param name="state">The state to track validation errors</param>
-    /// <returns>The file input with validation</returns>
-    public static FileInputBase WithValidation(this FileInputBase widget, IAnyState validationState)
-    {
-        // This is a placeholder for now - the actual validation would need to be handled
-        // in the OnChange event by the developer using the ValidateFile/ValidateFiles methods
-        return widget;
-    }
+
 }

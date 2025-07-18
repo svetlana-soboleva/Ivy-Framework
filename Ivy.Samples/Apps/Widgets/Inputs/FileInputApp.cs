@@ -171,19 +171,36 @@ public class FileInputApp : SampleBase
 
                // Backend Validation:
                | Text.H2("Backend Validation")
-               | Text.P("The backend now validates file types and counts. Use the ValidateFile and ValidateFiles extension methods:")
+               | Text.P("The backend provides validation methods that can be used to validate files against Accept patterns and MaxFiles limits:")
                | (Layout.Grid().Columns(2)
                   | Text.InlineCode("Validation Method")
                   | Text.InlineCode("Usage Example")
 
-                  | Text.Block("Single File Validation")
+                  | Text.Block("Validate Single File")
                   | Text.Code("var validation = fileInput.ValidateFile(file);\nif (!validation.IsValid) {\n    // Handle error\n}")
 
-                  | Text.Block("Multiple Files Validation")
+                  | Text.Block("Validate Multiple Files")
                   | Text.Code("var validation = fileInput.ValidateFiles(files);\nif (!validation.IsValid) {\n    // Handle error\n}")
+
+                  | Text.Block("Validate Any Value")
+                  | Text.Code("var validation = fileInput.ValidateValue(value);\nif (!validation.IsValid) {\n    // Handle error\n}")
 
                   | Text.Block("Supported Patterns")
                   | Text.Code(".txt,.pdf          // File extensions\nimage/*           // MIME type wildcards\ntext/plain        // Exact MIME types")
+               )
+
+               // Automatic Validation Examples:
+               | Text.H2("Automatic Validation Examples")
+               | Text.P("FileInput automatically validates files when Accept or MaxFiles is set:")
+               | (Layout.Grid().Columns(2)
+                  | Text.InlineCode("Description")
+                  | Text.InlineCode("File Input")
+
+                  | Text.Block("Single file with type validation")
+                  | singleFileWithValidation.ToFileInput().Accept(".txt,.pdf").Placeholder("Select .txt or .pdf file")
+
+                  | Text.Block("Multiple files with count and type validation")
+                  | validatedFiles.ToFileInput().MaxFiles(3).Accept("image/*").Placeholder("Select up to 3 image files")
                )
             ;
     }
