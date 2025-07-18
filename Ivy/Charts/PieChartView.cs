@@ -12,7 +12,8 @@ public record PieChartData(string? Dimension, double Measure);
 public enum PieChartStyles
 {
     Default,
-    Dashboard
+    Dashboard,
+    Donut
 }
 
 public interface IPieChartStyle<TSource>
@@ -28,6 +29,7 @@ public static class PieChartStyleHelpers
         {
             PieChartStyles.Default => new DefaultPieChartStyle<TSource>(),
             PieChartStyles.Dashboard => new DashboardPieChartStyle<TSource>(),
+            PieChartStyles.Donut => new DonutPieChartStyle<TSource>(),
             _ => throw new InvalidOperationException($"Style {style} not found.")
         };
     }
@@ -57,6 +59,22 @@ public class DashboardPieChartStyle<TSource> : IPieChartStyle<TSource>
                 .Legend(new Legend().IconType(Legend.IconTypes.Rect))
                 .Tooltip(new Tooltip().Animated(true))
             ;
+    }
+}
+
+public class DonutPieChartStyle<TSource> : IPieChartStyle<TSource>
+{
+    public PieChart Design(PieChartData[] data, PieChartTotal? total)
+    {
+        return new PieChart(data)
+                .Pie(new Pie(nameof(PieChartData.Measure), nameof(PieChartData.Dimension))
+                    .InnerRadius("50%")
+                    .OuterRadius("80%")
+                    .Animated(true)
+                )
+                .ColorScheme(ColorScheme.Rainbow)
+                .Tooltip(new Tooltip().Animated(true))
+                .Legend();
     }
 }
 
