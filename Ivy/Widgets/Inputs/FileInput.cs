@@ -97,8 +97,9 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
                 var validation = ValidateValue(e.Value);
                 if (!validation.IsValid)
                 {
-                    // Update the widget's Invalid property
-                    var updatedWidget = this with { Invalid = validation.ErrorMessage };
+                    Invalid = validation.ErrorMessage;
+                } else {
+                    Invalid = null;
                 }
             }
         };
