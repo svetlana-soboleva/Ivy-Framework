@@ -1,4 +1,5 @@
 using Ivy.Widgets.Inputs;
+using Ivy.Core.Hooks;
 
 namespace Ivy.Test;
 
@@ -319,5 +320,145 @@ public class FileInputValidationTests
             LastModified = DateTime.Now,
             Content = null
         };
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithNullValue_ReturnsSuccess()
+    {
+        // Arrange
+        var fileInput = new FileInput<FileInput?>(null, null, "Test");
+
+        // Act
+        var result = fileInput.ValidateValue(null);
+
+        // Assert
+        Assert.True(result.IsValid);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithValidSingleFile_ReturnsSuccess()
+    {
+        // Arrange
+        var file = CreateTestFile("test.txt", "text/plain");
+        var fileInput = new FileInput<FileInput?>(null, null, "Test") with { Accept = ".txt" };
+
+        // Act
+        var result = fileInput.ValidateValue(file);
+
+        // Assert
+        Assert.True(result.IsValid);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithInvalidSingleFile_ReturnsError()
+    {
+        // Arrange
+        var file = CreateTestFile("test.pdf", "application/pdf");
+        var fileInput = new FileInput<FileInput?>(null, null, "Test") with { Accept = ".txt" };
+
+        // Act
+        var result = fileInput.ValidateValue(file);
+
+        // Assert
+        Assert.False(result.IsValid);
+        Assert.Equal("Invalid file type: test.pdf. Allowed types: .txt", result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithValidMultipleFiles_ReturnsSuccess()
+    {
+        // Arrange
+        var files = new List<FileInput>
+        {
+            CreateTestFile("test1.txt", "text/plain"),
+            CreateTestFile("test2.txt", "text/plain")
+        };
+        var fileInput = new FileInput<IEnumerable<FileInput>?>(null, null, "Test") with { Accept = ".txt", MaxFiles = 3 };
+
+        // Act
+        var result = fileInput.ValidateValue(files);
+
+        // Assert
+        Assert.True(result.IsValid);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithTooManyFiles_ReturnsError()
+    {
+        // Arrange
+        var files = new List<FileInput>
+        {
+            CreateTestFile("test1.txt", "text/plain"),
+            CreateTestFile("test2.txt", "text/plain"),
+            CreateTestFile("test3.txt", "text/plain")
+        };
+        var fileInput = new FileInput<IEnumerable<FileInput>?>(null, null, "Test") with { Accept = ".txt", MaxFiles = 2 };
+
+        // Act
+        var result = fileInput.ValidateValue(files);
+
+        // Assert
+        Assert.False(result.IsValid);
+        Assert.Equal("Maximum 2 files allowed. 3 files selected.", result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithInvalidFileTypes_ReturnsError()
+    {
+        // Arrange
+        var files = new List<FileInput>
+        {
+            CreateTestFile("test1.txt", "text/plain"),
+            CreateTestFile("test2.pdf", "application/pdf")
+        };
+        var fileInput = new FileInput<IEnumerable<FileInput>?>(null, null, "Test") with { Accept = ".txt", MaxFiles = 3 };
+
+        // Act
+        var result = fileInput.ValidateValue(files);
+
+        // Assert
+        Assert.False(result.IsValid);
+        Assert.Equal("Invalid file type(s): test2.pdf. Allowed types: .txt", result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithMimeTypeWildcard_ReturnsSuccess()
+    {
+        // Arrange
+        var files = new List<FileInput>
+        {
+            CreateTestFile("test1.jpg", "image/jpeg"),
+            CreateTestFile("test2.png", "image/png")
+        };
+        var fileInput = new FileInput<IEnumerable<FileInput>?>(null, null, "Test") with { Accept = "image/*" };
+
+        // Act
+        var result = fileInput.ValidateValue(files);
+
+        // Assert
+        Assert.True(result.IsValid);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public void FileInput_ValidateValue_WithNoAcceptOrMaxFiles_ReturnsSuccess()
+    {
+        // Arrange
+        var files = new List<FileInput>
+        {
+            CreateTestFile("test1.txt", "text/plain"),
+            CreateTestFile("test2.pdf", "application/pdf")
+        };
+        var fileInput = new FileInput<IEnumerable<FileInput>?>(null, null, "Test");
+
+        // Act
+        var result = fileInput.ValidateValue(files);
+
+        // Assert
+        Assert.True(result.IsValid);
+        Assert.Null(result.ErrorMessage);
     }
 }
