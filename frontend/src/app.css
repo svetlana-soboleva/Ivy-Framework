@@ -174,7 +174,7 @@
     --card-foreground: oklch(0.98 0 0);
     --popover: oklch(0.14 0 285.82);
     --popover-foreground: oklch(0.98 0 0);
-    --primary: oklch(0.98 0 0);
+    --primary: #74c997;
     --primary-foreground: oklch(0.21 0.01 285.88);
     --secondary: oklch(0.27 0.01 286.03);
     --secondary-foreground: oklch(0.98 0 0);
@@ -308,6 +308,15 @@
   }
   body {
     letter-spacing: var(--tracking-normal);
+  }
+
+  /* Ensure sidebar icons and logo use primary brand color */
+  [data-sidebar='sidebar'] .text-primary {
+    color: var(--primary) !important;
+  }
+
+  [data-sidebar='sidebar'] svg[fill='currentColor'] {
+    color: var(--primary);
   }
 }
 
