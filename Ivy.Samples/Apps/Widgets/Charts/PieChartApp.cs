@@ -15,6 +15,7 @@ public class PieChartApp : ViewBase
             | new PieChart3View()
             | new PieChart4View()
             | new PieChart5View()
+            | new PieChart6View()
         ;
     }
 }
@@ -158,6 +159,36 @@ public class PieChart5View : ViewBase
                     e => e.Sum(f => f.Customers),
                     PieChartStyles.Dashboard
                 )
+        ;
+    }
+}
+
+public class PieChart6View : ViewBase
+{
+    public override object? Build()
+    {
+        var data = new[]
+        {
+            new { Platform = "Windows", Users = 186, Percentage = 32.6 },
+            new { Platform = "iOS", Users = 100, Percentage = 17.5 },
+            new { Platform = "Android", Users = 85, Percentage = 14.9 },
+            new { Platform = "Mac", Users = 95, Percentage = 16.7 },
+            new { Platform = "iPad", Users = 75, Percentage = 13.2 },
+            new { Platform = "Linux", Users = 45, Percentage = 7.9 },
+            new { Platform = "Android Tablet", Users = 60, Percentage = 10.5 },
+            new { Platform = "Smart TV", Users = 25, Percentage = 4.4 }
+        };
+
+        return new Card().Title("Animated donut chart")
+            | new PieChart(data)
+                .Pie(new Pie("Users", "Platform")
+                    .InnerRadius("50%")
+                    .OuterRadius("80%")
+                    .Animated()
+                )
+                .ColorScheme(ColorScheme.Rainbow)
+                .Tooltip()
+                .Legend()
         ;
     }
 }
