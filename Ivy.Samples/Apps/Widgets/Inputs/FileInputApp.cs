@@ -34,6 +34,11 @@ public class FileInputApp : SampleBase
         var onBlurState = UseState<FileInput?>(() => null);
         var onBlurLabel = UseState("");
 
+        // Validation examples
+        var validationError = UseState<string?>(() => null);
+        var validatedFiles = UseState<IEnumerable<FileInput>?>(() => null);
+        var singleFileWithValidation = UseState<FileInput?>(() => null);
+
         var dataBinding = Layout.Grid().Columns(3)
                           | Text.InlineCode("FileInput")
                           | (Layout.Vertical()
@@ -162,6 +167,23 @@ public class FileInputApp : SampleBase
 
                   | singleFile.ToFileInput().Placeholder("Select a file to view as plain text")
                   | singleFile.Value?.ToPlainText()
+               )
+
+               // Backend Validation:
+               | Text.H2("Backend Validation")
+               | Text.P("The backend now validates file types and counts. Use the ValidateFile and ValidateFiles extension methods:")
+               | (Layout.Grid().Columns(2)
+                  | Text.InlineCode("Validation Method")
+                  | Text.InlineCode("Usage Example")
+
+                  | Text.Block("Single File Validation")
+                  | Text.Code("var validation = fileInput.ValidateFile(file);\nif (!validation.IsValid) {\n    // Handle error\n}")
+
+                  | Text.Block("Multiple Files Validation")
+                  | Text.Code("var validation = fileInput.ValidateFiles(files);\nif (!validation.IsValid) {\n    // Handle error\n}")
+
+                  | Text.Block("Supported Patterns")
+                  | Text.Code(".txt,.pdf          // File extensions\nimage/*           // MIME type wildcards\ntext/plain        // Exact MIME types")
                )
             ;
     }

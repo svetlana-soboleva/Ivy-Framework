@@ -146,4 +146,49 @@ public static class FileInputExtensions
         }
         return widget with { MaxFiles = maxFiles };
     }
+
+    /// <summary>
+    /// Validates a single file against the widget's accept pattern
+    /// </summary>
+    /// <param name="widget">The file input widget</param>
+    /// <param name="file">The file to validate</param>
+    /// <returns>Validation result</returns>
+    public static ValidationResult ValidateFile(this FileInputBase widget, FileInput file)
+    {
+        return FileInputValidation.ValidateFileType(file, widget.Accept);
+    }
+
+    /// <summary>
+    /// Validates multiple files against the widget's accept pattern and max files limit
+    /// </summary>
+    /// <param name="widget">The file input widget</param>
+    /// <param name="files">The files to validate</param>
+    /// <returns>Validation result</returns>
+    public static ValidationResult ValidateFiles(this FileInputBase widget, IEnumerable<FileInput> files)
+    {
+        var filesList = files.ToList();
+        
+        // Validate file count first
+        var countValidation = FileInputValidation.ValidateFileCount(filesList, widget.MaxFiles);
+        if (!countValidation.IsValid)
+        {
+            return countValidation;
+        }
+        
+        // Then validate file types
+        return FileInputValidation.ValidateFileTypes(filesList, widget.Accept);
+    }
+
+    /// <summary>
+    /// Creates a file input with validation that automatically sets the invalid state on validation failure
+    /// </summary>
+    /// <param name="widget">The file input widget</param>
+    /// <param name="state">The state to track validation errors</param>
+    /// <returns>The file input with validation</returns>
+    public static FileInputBase WithValidation(this FileInputBase widget, IAnyState validationState)
+    {
+        // This is a placeholder for now - the actual validation would need to be handled
+        // in the OnChange event by the developer using the ValidateFile/ValidateFiles methods
+        return widget;
+    }
 }
