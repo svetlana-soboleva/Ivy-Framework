@@ -34,6 +34,7 @@ public class AreaChart1View : ViewBase
                    .Area(new Area("Desktop", 1).FillOpacity(0.5))
                    .CartesianGrid(new CartesianGrid().Horizontal())
                    .Tooltip()
+                   .Legend()
                    .XAxis(new XAxis("Month").TickLine(false).AxisLine(false))
                ;
     }
