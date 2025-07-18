@@ -101,7 +101,7 @@ public static class FileInputValidation
             if (pattern.EndsWith("/*"))
             {
                 // Wildcard MIME type (e.g., "image/*")
-                var baseType = pattern[..^1];
+                var baseType = pattern[..^2];
                 return file.Type.StartsWith(baseType, StringComparison.OrdinalIgnoreCase);
             }
             else
