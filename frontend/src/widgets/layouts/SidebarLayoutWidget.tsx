@@ -131,9 +131,9 @@ const CollapsibleMenuItem: React.FC<{
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={20} className="text-primary" />
               <span>{item.label}</span>
-              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 text-primary" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
@@ -157,7 +157,7 @@ const CollapsibleMenuItem: React.FC<{
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
-          <Icon name={item.icon} size={20} />
+          <Icon name={item.icon} size={20} className="text-primary" />
           <span>{item.label}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -219,7 +219,7 @@ const renderMenuItems = (
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={20} className="text-primary" />
               <span>{item.label}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -231,7 +231,7 @@ const renderMenuItems = (
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={20} className="text-primary" />
               <span>{item.label}</span>
             </SidebarMenuSubButton>
           </SidebarMenuSubItem>
@@ -328,7 +328,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
                   : {}
               }
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={20} className="text-primary" />
               <span>{item.label}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
