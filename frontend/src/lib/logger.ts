@@ -3,19 +3,73 @@
  * Provides formatted timestamp logs with different log levels
  */
 
-// Global developer options state
+// Local storage key for developer options
+const DEVELOPER_OPTIONS_KEY = 'ivy-developer-options';
+
+// Global developer options state (cached from localStorage)
 let developerOptions = {
   showDetailedLogging: false,
 };
 
-// Function to update developer options
+// Function to get developer options from localStorage
+const getDeveloperOptionsFromStorage = () => {
+  try {
+    const stored = localStorage.getItem(DEVELOPER_OPTIONS_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.warn('Failed to parse developer options from localStorage:', error);
+  }
+  return { showDetailedLogging: false };
+};
+
+// Initialize developer options from localStorage
+const initializeDeveloperOptions = () => {
+  developerOptions = getDeveloperOptionsFromStorage();
+};
+
+// Function to update developer options in localStorage and update cached state
 export const setDeveloperOptions = (options: {
   showDetailedLogging: boolean;
 }) => {
-  console.log('Setting developer options:', options);
-  developerOptions = { ...developerOptions, ...options };
-  console.log('Updated developer options:', developerOptions);
+  try {
+    const currentOptions = getDeveloperOptionsFromStorage();
+    const newOptions = { ...currentOptions, ...options };
+    localStorage.setItem(DEVELOPER_OPTIONS_KEY, JSON.stringify(newOptions));
+
+    // Update cached state
+    developerOptions = newOptions;
+
+    console.log('Developer options updated:', newOptions);
+  } catch (error) {
+    console.warn('Failed to save developer options to localStorage:', error);
+  }
 };
+
+// Function to get current developer options (from cache)
+export const getCurrentDeveloperOptions = () => {
+  return developerOptions;
+};
+
+// Global function to toggle developer options (accessible from console)
+export const toggleDeveloperLogging = () => {
+  const newValue = !developerOptions.showDetailedLogging;
+  setDeveloperOptions({ showDetailedLogging: newValue });
+  console.log(`Developer logging ${newValue ? 'enabled' : 'disabled'}`);
+  return newValue;
+};
+
+// Make it available globally for console access
+if (typeof window !== 'undefined') {
+  // Initialize on first load
+  initializeDeveloperOptions();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).toggleDeveloperLogging = toggleDeveloperLogging;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).getDeveloperOptions = getCurrentDeveloperOptions;
+}
 
 class Logger {
   /**
@@ -35,9 +89,8 @@ class Logger {
    * Log message with timestamp at debug level
    */
   debug(...args: unknown[]): void {
-    console.log('developerOptions', developerOptions);
     if (developerOptions.showDetailedLogging) {
-      console.debug(`[${this.formatTime()}]`, ...args);
+      console.log(`[${this.formatTime()}]`, ...args);
     }
   }
 

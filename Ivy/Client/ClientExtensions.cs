@@ -35,11 +35,6 @@ public static class ClientExtensions
         client.Sender.Send("SetTheme", theme.ToString());
     }
 
-    public static void SetDeveloperOptions(this IClientProvider client, bool showDetailedLogging)
-    {
-        client.Sender.Send("SetDeveloperOptions", new { showDetailedLogging });
-    }
-
     internal static void SetChatPanelUrl(this IClientProvider client, string url)
     {
         client.Sender.Send("$SetChatPanelUrl", url);

@@ -9,7 +9,7 @@ import {
   getMachineId,
   getParentId,
 } from '@/lib/utils';
-import { logger, setDeveloperOptions } from '@/lib/logger';
+import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
 
@@ -231,14 +231,6 @@ export const useBackend = () => {
             handleSetTheme(theme);
           });
 
-          connection.on(
-            'SetDeveloperOptions',
-            (options: { showDetailedLogging: boolean }) => {
-              logger.debug('Received SetDeveloperOptions message', { options });
-              setDeveloperOptions(options);
-            }
-          );
-
           connection.on('CopyToClipboard', (text: string) => {
             logger.debug('Received CopyToClipboard message');
             navigator.clipboard.writeText(text);
@@ -282,7 +274,6 @@ export const useBackend = () => {
         connection.off('$SetChatPanelUrl');
         connection.off('SetJwt');
         connection.off('SetTheme');
-        connection.off('SetDeveloperOptions');
         connection.off('OpenUrl');
       };
     }
