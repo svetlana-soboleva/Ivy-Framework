@@ -73,19 +73,26 @@ export const useBackend = () => {
 
   useEffect(() => {
     if (widgetTree) {
+      logger.debug('Converting widget tree to XML', {
+        widgetTreeId: widgetTree.id,
+      });
       const parser = new DOMParser();
       let xml;
       try {
         const xmlString = widgetTreeToXml(widgetTree);
         if (!xmlString) {
+          logger.warn('Empty XML string generated from widget tree');
           return;
         }
         xml = parser.parseFromString(xmlString, 'application/xml');
         const parserError = xml.querySelector('parsererror');
         if (parserError) {
+          logger.error('XML parsing error', { error: parserError.textContent });
           return;
         }
+        logger.debug('Widget tree successfully converted to XML');
       } catch (error) {
+        logger.error('Error converting widget tree to XML', { error });
         console.error(error);
         return;
       }
@@ -94,23 +101,42 @@ export const useBackend = () => {
   }, [widgetTree]);
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
+    logger.debug('Processing Refresh message', { message });
     console.log('Refresh', message);
     setRemoveIvyBranding(message.removeIvyBranding);
     setWidgetTree(message.widgets);
   }, []);
 
   const handleUpdateMessage = useCallback((message: UpdateMessage) => {
+    logger.debug('Processing Update message', { message });
     console.log('Update', message);
     setWidgetTree(currentTree => {
-      if (!currentTree) return null;
+      if (!currentTree) {
+        logger.warn('No current widget tree available for update');
+        return null;
+      }
+      logger.debug('Applying update to widget tree', {
+        updateCount: message.length,
+        currentTreeId: currentTree.id,
+      });
       const newWidgetTree = { ...currentTree };
-      message.forEach(update => {
+      message.forEach((update, index) => {
+        logger.debug(`Processing update ${index + 1}/${message.length}`, {
+          viewId: update.viewId,
+          indices: update.indices,
+          patchOperations: update.patch.length,
+        });
         let parent = newWidgetTree;
         if (update.indices.length === 0) {
+          logger.debug('Applying patch to root widget tree');
           applyPatch(newWidgetTree, update.patch);
         } else {
           update.indices.forEach((index, i) => {
             if (i === update.indices.length - 1) {
+              logger.debug('Applying patch to child widget', {
+                childIndex: index,
+                parentId: parent.id,
+              });
               applyPatch(parent.children![index], update.patch);
             } else {
               parent = parent.children![index];
@@ -118,6 +144,7 @@ export const useBackend = () => {
           });
         }
       });
+      logger.debug('Widget tree update completed');
       return newWidgetTree;
     });
   }, []);
@@ -132,6 +159,7 @@ export const useBackend = () => {
   }, [connection]);
 
   const handleSetJwt = useCallback(async (jwt: AuthToken | null) => {
+    logger.debug('Processing SetJwt request', { hasJwt: !!jwt });
     const response = await fetch(`${getIvyHost()}/auth/set-jwt`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -139,15 +167,24 @@ export const useBackend = () => {
       credentials: 'include',
     });
     if (response.ok) {
+      logger.info('JWT set successfully, reloading page');
       window.location.reload();
+    } else {
+      logger.error('Failed to set JWT', {
+        status: response.status,
+        statusText: response.statusText,
+      });
     }
   }, []);
 
   const handleSetTheme = useCallback((theme: string) => {
+    logger.debug('Processing SetTheme request', { theme });
     const normalizedTheme = theme.toLowerCase();
     if (['dark', 'light', 'system'].includes(normalizedTheme)) {
+      logger.info('Setting theme globally', { theme: normalizedTheme });
       setThemeGlobal(normalizedTheme as 'dark' | 'light' | 'system');
     } else {
+      logger.error('Invalid theme value received', { theme });
       console.error(`Invalid theme value received: ${theme}`);
     }
   }, []);
@@ -261,9 +298,17 @@ export const useBackend = () => {
 
   const eventHandler: WidgetEventHandlerType = useCallback(
     (eventName, widgetId, args) => {
+      logger.debug(`Processing event: ${eventName}`, { widgetId, args });
       console.log('Event', eventName, widgetId, args);
-      logger.debug(`Sending event: ${eventName}`, { widgetId, args });
-      connection?.invoke('Event', eventName, widgetId, args).catch(err => {
+      if (!connection) {
+        logger.warn('No SignalR connection available for event', {
+          eventName,
+          widgetId,
+        });
+        return;
+      }
+      logger.debug(`Invoking SignalR event: ${eventName}`, { widgetId, args });
+      connection.invoke('Event', eventName, widgetId, args).catch(err => {
         logger.error('SignalR Error when sending event:', err);
         console.error('SignalR Error:', err);
       });
