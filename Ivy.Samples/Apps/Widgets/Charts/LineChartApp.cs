@@ -109,7 +109,7 @@ public class LineChart3View : ViewBase
                 .CartesianGrid()
                 .Tooltip()
                 .XAxis("Quarter")
-                .YAxis("ProductA")
+                .YAxis()
                 .Legend()
         ;
     }
