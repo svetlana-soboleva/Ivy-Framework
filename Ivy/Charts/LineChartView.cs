@@ -11,7 +11,8 @@ namespace Ivy.Charts;
 public enum LineChartStyles
 {
     Default,
-    Dashboard
+    Dashboard,
+    Custom
 }
 
 public interface ILineChartStyle<TSource>
@@ -27,6 +28,7 @@ public static class LineChartStyleHelpers
         {
             LineChartStyles.Default => new DefaultLineChartStyle<TSource>(),
             LineChartStyles.Dashboard => new DashboardLineChartStyle<TSource>(),
+            LineChartStyles.Custom => new CustomLineChartStyle<TSource>(),
             _ => throw new InvalidOperationException($"Style {style} not found.")
         };
     }
@@ -58,6 +60,23 @@ public class DashboardLineChartStyle<TSource> : ILineChartStyle<TSource>
                 .Line(calculations.Select(c => new Line(c.Name).CurveType(CurveTypes.Natural)).ToArray())
                 .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
                 .Tooltip(new Tooltip().Animated(true))
+            ;
+    }
+}
+
+public class CustomLineChartStyle<TSource> : ILineChartStyle<TSource>
+{
+    public LineChart Design(ExpandoObject[] data, Dimension<TSource> dimension, Measure<TSource>[] measures, TableCalculation[] calculations)
+    {
+        return new LineChart(data)
+                .ColorScheme(ColorScheme.Rainbow)
+                .CartesianGrid(new CartesianGrid().Horizontal().Vertical())
+                .Line(measures.Select(m => new Line(m.Name).CurveType(CurveTypes.Step).StrokeWidth(3)).ToArray())
+                .Line(calculations.Select(c => new Line(c.Name).CurveType(CurveTypes.Step)).ToArray())
+                .XAxis(new XAxis(dimension.Name).TickLine(true).AxisLine(true).MinTickGap(10))
+                .YAxis(new YAxis().TickLine(true).AxisLine(true))
+                .Tooltip(new Tooltip().Animated(true))
+                .Legend()
             ;
     }
 }
