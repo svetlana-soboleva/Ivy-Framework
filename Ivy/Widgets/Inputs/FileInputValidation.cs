@@ -13,13 +13,13 @@ public static class FileInputValidation
     public static ValidationResult ValidateFileCount(IEnumerable<FileInput> files, int? maxFiles)
     {
         if (maxFiles == null) return ValidationResult.Success();
-        
+
         var fileCount = files.Count();
         if (fileCount > maxFiles.Value)
         {
             return ValidationResult.Error($"Maximum {maxFiles.Value} file{(maxFiles.Value == 1 ? "" : "s")} allowed. {fileCount} file{(fileCount == 1 ? "" : "s")} selected.");
         }
-        
+
         return ValidationResult.Success();
     }
 
@@ -32,10 +32,10 @@ public static class FileInputValidation
     public static ValidationResult ValidateFileTypes(IEnumerable<FileInput> files, string? accept)
     {
         if (string.IsNullOrWhiteSpace(accept)) return ValidationResult.Success();
-        
+
         var allowedPatterns = ParseAcceptPattern(accept);
         var invalidFiles = new List<string>();
-        
+
         foreach (var file in files)
         {
             if (!IsFileTypeAllowed(file, allowedPatterns))
@@ -43,13 +43,13 @@ public static class FileInputValidation
                 invalidFiles.Add(file.Name);
             }
         }
-        
+
         if (invalidFiles.Any())
         {
             var fileList = string.Join(", ", invalidFiles);
             return ValidationResult.Error($"Invalid file type(s): {fileList}. Allowed types: {accept}");
         }
-        
+
         return ValidationResult.Success();
     }
 
@@ -62,14 +62,14 @@ public static class FileInputValidation
     public static ValidationResult ValidateFileType(FileInput file, string? accept)
     {
         if (string.IsNullOrWhiteSpace(accept)) return ValidationResult.Success();
-        
+
         var allowedPatterns = ParseAcceptPattern(accept);
-        
+
         if (!IsFileTypeAllowed(file, allowedPatterns))
         {
             return ValidationResult.Error($"Invalid file type: {file.Name}. Allowed types: {accept}");
         }
-        
+
         return ValidationResult.Success();
     }
 
@@ -110,14 +110,14 @@ public static class FileInputValidation
                 return string.Equals(file.Type, pattern, StringComparison.OrdinalIgnoreCase);
             }
         }
-        
+
         // Handle file extension patterns (e.g., ".txt", ".pdf")
         if (pattern.StartsWith("."))
         {
             var fileExtension = Path.GetExtension(file.Name);
             return string.Equals(fileExtension, pattern, StringComparison.OrdinalIgnoreCase);
         }
-        
+
         // Handle extension without dot (e.g., "txt", "pdf")
         var extension = Path.GetExtension(file.Name);
         if (!string.IsNullOrEmpty(extension))
@@ -125,7 +125,7 @@ public static class FileInputValidation
             extension = extension[1..]; // Remove the dot
             return string.Equals(extension, pattern, StringComparison.OrdinalIgnoreCase);
         }
-        
+
         return false;
     }
 }
@@ -134,13 +134,13 @@ public record ValidationResult
 {
     public bool IsValid { get; }
     public string? ErrorMessage { get; }
-    
+
     private ValidationResult(bool isValid, string? errorMessage = null)
     {
         IsValid = isValid;
         ErrorMessage = errorMessage;
     }
-    
+
     public static ValidationResult Success() => new(true);
     public static ValidationResult Error(string message) => new(false, message);
-} 
+}

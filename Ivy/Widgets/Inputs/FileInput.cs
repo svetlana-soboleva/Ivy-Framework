@@ -167,14 +167,14 @@ public static class FileInputExtensions
     public static ValidationResult ValidateFiles(this FileInputBase widget, IEnumerable<FileInput> files)
     {
         var filesList = files.ToList();
-        
+
         // Validate file count first
         var countValidation = FileInputValidation.ValidateFileCount(filesList, widget.MaxFiles);
         if (!countValidation.IsValid)
         {
             return countValidation;
         }
-        
+
         // Then validate file types
         return FileInputValidation.ValidateFileTypes(filesList, widget.Accept);
     }
