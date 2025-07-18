@@ -9,7 +9,7 @@ import {
   getMachineId,
   getParentId,
 } from '@/lib/utils';
-import { logger } from '@/lib/logger';
+import { logger, setDeveloperOptions } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
 
@@ -93,23 +93,20 @@ export const useBackend = () => {
         logger.debug('Widget tree successfully converted to XML');
       } catch (error) {
         logger.error('Error converting widget tree to XML', { error });
-        console.error(error);
         return;
       }
-      console.log(xml);
+      logger.debug(xml);
     }
   }, [widgetTree]);
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     logger.debug('Processing Refresh message', { message });
-    console.log('Refresh', message);
     setRemoveIvyBranding(message.removeIvyBranding);
     setWidgetTree(message.widgets);
   }, []);
 
   const handleUpdateMessage = useCallback((message: UpdateMessage) => {
     logger.debug('Processing Update message', { message });
-    console.log('Update', message);
     setWidgetTree(currentTree => {
       if (!currentTree) {
         logger.warn('No current widget tree available for update');
@@ -150,11 +147,9 @@ export const useBackend = () => {
   }, []);
 
   const handleHotReloadMessage = useCallback(() => {
-    console.log('HotReload');
     logger.debug('Sending HotReload message');
     connection?.invoke('HotReload').catch(err => {
       logger.error('SignalR Error when sending HotReload:', err);
-      console.error('SignalR Error:', err);
     });
   }, [connection]);
 
@@ -185,7 +180,6 @@ export const useBackend = () => {
       setThemeGlobal(normalizedTheme as 'dark' | 'light' | 'system');
     } else {
       logger.error('Invalid theme value received', { theme });
-      console.error(`Invalid theme value received: ${theme}`);
     }
   }, []);
 
@@ -197,7 +191,7 @@ export const useBackend = () => {
       .withAutomaticReconnect()
       .build();
     setConnection(newConnection);
-  }, [appId]);
+  }, [appArgs, appId, machineId, parentId]);
 
   useEffect(() => {
     if (connection) {
@@ -205,7 +199,6 @@ export const useBackend = () => {
         .start()
         .then(() => {
           logger.info('SignalR connection established');
-          console.log('Connected!');
 
           connection.on('Refresh', message => {
             logger.debug('Received Refresh message', message);
@@ -219,7 +212,6 @@ export const useBackend = () => {
 
           connection.on('Toast', message => {
             logger.debug('Received Toast message', message);
-            console.log('Toast', message);
             toast(message);
           });
           connection.on('$SetChatPanelUrl', (chatPanelUrl: string | null) => {
@@ -238,6 +230,14 @@ export const useBackend = () => {
             logger.debug('Received SetTheme message', { theme });
             handleSetTheme(theme);
           });
+
+          connection.on(
+            'SetDeveloperOptions',
+            (options: { showDetailedLogging: boolean }) => {
+              logger.debug('Received SetDeveloperOptions message', { options });
+              setDeveloperOptions(options);
+            }
+          );
 
           connection.on('CopyToClipboard', (text: string) => {
             logger.debug('Received CopyToClipboard message');
@@ -268,7 +268,6 @@ export const useBackend = () => {
         })
         .catch(e => {
           logger.error('SignalR connection failed:', e);
-          console.log('Connection failed: ', e);
         });
 
       return () => {
@@ -283,6 +282,7 @@ export const useBackend = () => {
         connection.off('$SetChatPanelUrl');
         connection.off('SetJwt');
         connection.off('SetTheme');
+        connection.off('SetDeveloperOptions');
         connection.off('OpenUrl');
       };
     }
@@ -299,7 +299,6 @@ export const useBackend = () => {
   const eventHandler: WidgetEventHandlerType = useCallback(
     (eventName, widgetId, args) => {
       logger.debug(`Processing event: ${eventName}`, { widgetId, args });
-      console.log('Event', eventName, widgetId, args);
       if (!connection) {
         logger.warn('No SignalR connection available for event', {
           eventName,
@@ -310,7 +309,6 @@ export const useBackend = () => {
       logger.debug(`Invoking SignalR event: ${eventName}`, { widgetId, args });
       connection.invoke('Event', eventName, widgetId, args).catch(err => {
         logger.error('SignalR Error when sending event:', err);
-        console.error('SignalR Error:', err);
       });
     },
     [connection]

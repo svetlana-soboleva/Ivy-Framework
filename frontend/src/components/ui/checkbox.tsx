@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { Check, Minus } from 'lucide-react';
@@ -40,7 +41,7 @@ const Checkbox = React.forwardRef<
 
     // Cycle: null -> true -> false -> null (if nullable)
     const handleCheckedChange = (next: boolean) => {
-      console.log(
+      logger.debug(
         'Checkbox clicked, next:',
         next,
         'current checked:',

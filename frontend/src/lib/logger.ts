@@ -3,6 +3,20 @@
  * Provides formatted timestamp logs with different log levels
  */
 
+// Global developer options state
+let developerOptions = {
+  showDetailedLogging: false,
+};
+
+// Function to update developer options
+export const setDeveloperOptions = (options: {
+  showDetailedLogging: boolean;
+}) => {
+  console.log('Setting developer options:', options);
+  developerOptions = { ...developerOptions, ...options };
+  console.log('Updated developer options:', developerOptions);
+};
+
 class Logger {
   /**
    * Format current time as HH:mm:ss:milliseconds
@@ -21,7 +35,10 @@ class Logger {
    * Log message with timestamp at debug level
    */
   debug(...args: unknown[]): void {
-    console.debug(`[${this.formatTime()}]`, ...args);
+    console.log('developerOptions', developerOptions);
+    if (developerOptions.showDetailedLogging) {
+      console.debug(`[${this.formatTime()}]`, ...args);
+    }
   }
 
   /**

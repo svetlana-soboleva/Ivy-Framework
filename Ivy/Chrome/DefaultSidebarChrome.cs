@@ -194,6 +194,8 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             SearchActive = !string.IsNullOrWhiteSpace(search.Value)
         };
 
+        var showDetailedLogging = UseState(false);
+        
         var commonMenuItems = new[]
         {
             MenuItem.Default("Star on Github").Icon(Icons.Github)
@@ -204,6 +206,17 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     MenuItem.Checkbox("Light").Icon(Icons.Sun).HandleSelect(() => client.SetTheme(Theme.Light)),
                     MenuItem.Checkbox("Dark").Icon(Icons.Moon).HandleSelect(() => client.SetTheme(Theme.Dark)),
                     MenuItem.Checkbox("System").Icon(Icons.SunMoon).HandleSelect(() => client.SetTheme(Theme.System))
+                ),
+            MenuItem.Default("Developer Options")
+                .Icon(Icons.Settings)
+                .Children(
+                    MenuItem.Checkbox("Show Detailed Logging").Icon(Icons.Bug)
+                        .Checked(showDetailedLogging.Value)
+                        .HandleSelect(() => {
+                            var newValue = !showDetailedLogging.Value;
+                            showDetailedLogging.Set(newValue);
+                            client.SetDeveloperOptions(newValue);
+                        })
                 )
         };
 

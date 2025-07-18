@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/tooltip';
 import { X } from 'lucide-react';
 import { useCallback } from 'react';
+import { logger } from '@/lib/logger';
 
 export type NullableSelectValue =
   | string
@@ -109,12 +110,27 @@ const useSelectValueHandler = (
 ) => {
   return useCallback(
     (newValue: string | string[]) => {
+      logger.debug('Select input value change', {
+        id,
+        currentValue: value,
+        newValue,
+        optionsCount: options.length,
+      });
+
       const stringArray = Array.isArray(newValue) ? newValue : [newValue];
       const convertedValue = convertValuesToOriginalType(
         stringArray,
         value,
         options
       );
+
+      logger.debug('Select input converted value', {
+        id,
+        originalValue: value,
+        stringArray,
+        convertedValue,
+      });
+
       eventHandler('OnChange', id, [convertedValue]);
     },
     [id, value, options, eventHandler]
@@ -266,7 +282,14 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
           type="button"
           tabIndex={-1}
           aria-label={selectMany ? 'Clear All' : 'Clear'}
-          onClick={() => eventHandler('OnChange', id, [selectMany ? [] : null])}
+          onClick={() => {
+            logger.debug('Select input clear button clicked (ToggleVariant)', {
+              id,
+              selectMany,
+              clearValue: selectMany ? [] : null,
+            });
+            eventHandler('OnChange', id, [selectMany ? [] : null]);
+          }}
           className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
         >
           <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
@@ -345,7 +368,10 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
           type="button"
           tabIndex={-1}
           aria-label="Clear"
-          onClick={() => eventHandler('OnChange', id, [null])}
+          onClick={() => {
+            logger.debug('Select input clear button clicked', { id });
+            eventHandler('OnChange', id, [null]);
+          }}
           className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
         >
           <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
@@ -393,6 +419,13 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   }
   const handleCheckboxChange = useCallback(
     (optionValue: string | number, checked: boolean) => {
+      logger.debug('Select input checkbox change', {
+        id,
+        optionValue,
+        checked,
+        currentSelectedValues: selectedValues,
+      });
+
       let newValues: (string | number)[];
       if (checked) {
         newValues = [...selectedValues, optionValue];
@@ -404,6 +437,13 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
         value,
         validOptions
       );
+
+      logger.debug('Select input checkbox converted value', {
+        id,
+        newValues,
+        convertedValue,
+      });
+
       eventHandler('OnChange', id, [convertedValue]);
     },
     [selectedValues, value, validOptions, eventHandler, id]
@@ -475,7 +515,13 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
           type="button"
           tabIndex={-1}
           aria-label="Clear All"
-          onClick={() => eventHandler('OnChange', id, [[]])}
+          onClick={() => {
+            logger.debug(
+              'Select input clear button clicked (CheckboxVariant)',
+              { id }
+            );
+            eventHandler('OnChange', id, [[]]);
+          }}
           className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
         >
           <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
@@ -557,6 +603,10 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
+                    logger.debug(
+                      'Select input clear button clicked (SelectVariant)',
+                      { id }
+                    );
                     eventHandler('OnChange', id, [null]);
                   }}
                   onKeyDown={e => {
