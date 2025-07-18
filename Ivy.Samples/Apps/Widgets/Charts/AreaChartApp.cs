@@ -30,7 +30,6 @@ public class AreaChart1View : ViewBase
 
         return new Card().Title("Area Chart")
                | new AreaChart(data)
-                   .ColorScheme(ColorScheme.Default)
                    .Area(new Area("Mobile", 1).FillOpacity(0.5))
                    .Area(new Area("Desktop", 1).FillOpacity(0.5))
                    .CartesianGrid(new CartesianGrid().Horizontal())
