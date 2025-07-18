@@ -58,7 +58,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
         else if (value is IEnumerable<FileInput> files)
         {
             var filesList = files.ToList();
-            
+
             // Validate file count first if MaxFiles is set
             if (MaxFiles.HasValue)
             {
@@ -68,7 +68,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
                     return countValidation;
                 }
             }
-            
+
             // Then validate file types if Accept is set
             if (!string.IsNullOrWhiteSpace(Accept))
             {
@@ -87,10 +87,10 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     {
         var typedState = state.As<TValue>();
         Value = typedState.Value;
-        OnChange = e => 
+        OnChange = e =>
         {
             typedState.Set(e.Value);
-            
+
             // Auto-validate if Accept or MaxFiles is set
             if (!string.IsNullOrWhiteSpace(Accept) || MaxFiles.HasValue)
             {
@@ -98,7 +98,9 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
                 if (!validation.IsValid)
                 {
                     Invalid = validation.ErrorMessage;
-                } else {
+                }
+                else
+                {
                     Invalid = null;
                 }
             }
