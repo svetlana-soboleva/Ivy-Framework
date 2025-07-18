@@ -9,6 +9,63 @@ npm run dev
 npm run build
 ```
 
+## Developer Logging
+
+The frontend includes a comprehensive logging system for debugging and development purposes. Detailed logging can be controlled via browser console commands.
+
+### Console Commands
+
+Open the browser console (F12 → Console tab) and use these commands:
+
+```javascript
+// Check current developer options
+getDeveloperOptions();
+// Returns: { showDetailedLogging: false }
+
+// Toggle detailed logging on/off
+toggleDeveloperLogging();
+// Returns: true (if enabled) or false (if disabled)
+// Also logs: "Developer logging enabled" or "Developer logging disabled"
+```
+
+### What Gets Logged
+
+When detailed logging is enabled, you'll see debug messages for:
+
+- **Select Input Interactions**: Value changes, conversions, clear operations
+- **SignalR Communication**: Message processing, updates, events
+- **Widget Tree Operations**: XML conversion, patches, updates
+- **Authentication**: JWT operations, theme changes
+- **Error Handling**: Connection issues, parsing errors
+
+### Log Levels
+
+- **Debug**: Detailed information (controlled by `showDetailedLogging`)
+- **Info**: General information (always visible)
+- **Warn**: Warning messages (always visible)
+- **Error**: Error messages (always visible)
+
+### Persistence
+
+Developer options are stored in localStorage and persist across:
+
+- Page refreshes
+- Browser sessions
+- Browser restarts
+
+### Example Usage
+
+```javascript
+// Enable detailed logging
+toggleDeveloperLogging();
+// Interact with select inputs, forms, etc.
+// See detailed debug messages in console
+
+// Disable detailed logging
+toggleDeveloperLogging();
+// Only info, warn, and error messages will appear
+```
+
 ## Code Quality
 
 This project uses ESLint and Prettier for code quality and formatting, with automatic pre-commit hooks.
