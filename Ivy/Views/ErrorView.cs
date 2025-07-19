@@ -1,8 +1,7 @@
-using Ivy.Client;
 using Ivy.Core;
 using Ivy.Core.Hooks;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public class ErrorView(System.Exception e) : ViewBase, IStateless
 {

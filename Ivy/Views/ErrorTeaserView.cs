@@ -1,7 +1,8 @@
 ﻿using Ivy.Core;
+using Ivy.Helpers;
 using Ivy.Shared;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public class ErrorTeaserView(Exception ex) : ViewBase
 {

@@ -1,6 +1,7 @@
 ﻿using Ivy.Core;
 using Ivy.Helpers;
 using Ivy.Shared;
+using Ivy.Views;
 
 namespace Ivy.Dashboards;
 

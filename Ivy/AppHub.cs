@@ -7,6 +7,7 @@ using Ivy.Core;
 using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Services;
+using Ivy.Views;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;

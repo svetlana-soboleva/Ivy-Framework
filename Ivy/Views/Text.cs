@@ -3,7 +3,7 @@ using Ivy.Core.Hooks;
 using Ivy.Shared;
 using Size = Ivy.Shared.Size;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public static class Text
 {

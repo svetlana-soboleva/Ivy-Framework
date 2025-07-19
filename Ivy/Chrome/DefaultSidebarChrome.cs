@@ -6,6 +6,7 @@ using Ivy.Core;
 using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Shared;
+using Ivy.Views;
 using Ivy.Widgets.Internal;
 
 namespace Ivy.Chrome;

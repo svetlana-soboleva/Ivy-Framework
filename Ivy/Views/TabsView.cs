@@ -1,8 +1,7 @@
 ﻿using Ivy.Core;
-using Ivy.Core.Hooks;
 using Ivy.Shared;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public class TabView : ViewBase
 {

@@ -1,9 +1,7 @@
-﻿using System.Runtime.CompilerServices;
-using Ivy.Client;
+﻿using Ivy.Client;
 using Ivy.Core;
-using Ivy.Widgets.Inputs;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public static class ViewHelpers
 {

@@ -1,6 +1,7 @@
+using Ivy.Helpers;
 using Ivy.Shared;
 
-namespace Ivy.Helpers;
+namespace Ivy.Views;
 
 public static class Layout
 {

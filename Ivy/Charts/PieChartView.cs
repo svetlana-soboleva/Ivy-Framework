@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Ivy.Core;
 using Ivy.Core.Hooks;
 using Ivy.Helpers;
+using Ivy.Views;
 
 namespace Ivy.Charts;
 
