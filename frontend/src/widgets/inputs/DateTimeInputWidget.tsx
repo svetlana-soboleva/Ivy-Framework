@@ -89,9 +89,10 @@ const DateVariant: React.FC<DateVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-20', // pr-20 for clear+icon
+              'w-full justify-start text-left font-normal pr-20 cursor-pointer', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
-              invalid && inputStyles.invalidInput
+              invalid && inputStyles.invalidInput,
+              disabled && 'cursor-not-allowed'
             )}
             data-testid={dataTestId}
           >
@@ -271,9 +272,10 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-20', // pr-20 for clear+icon
+              'w-full justify-start text-left font-normal pr-20 cursor-pointer', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
-              invalid && inputStyles.invalidInput
+              invalid && inputStyles.invalidInput,
+              disabled && 'cursor-not-allowed'
             )}
             data-testid={dataTestId}
           >
@@ -292,7 +294,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
                     tabIndex={-1}
                     aria-label="Clear"
                     onClick={handleClear}
-                    className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                    className="p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
                     style={{ pointerEvents: 'auto' }}
                   >
                     <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
@@ -436,8 +438,9 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
           disabled={disabled}
           placeholder={placeholder || 'Select time'}
           className={cn(
-            'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden pr-20', // pr-20 for clear+icon
-            invalid && inputStyles.invalidInput
+            'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden pr-20 cursor-pointer', // pr-20 for clear+icon
+            invalid && inputStyles.invalidInput,
+            disabled && 'cursor-not-allowed'
           )}
         />
         {(showClear || invalid) && (
@@ -448,7 +451,7 @@ const TimeVariant: React.FC<TimeVariantProps> = ({
                 tabIndex={-1}
                 aria-label="Clear"
                 onClick={handleClear}
-                className="p-1 rounded hover:bg-gray-100 focus:outline-none"
+                className="p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
                 style={{ pointerEvents: 'auto' }}
               >
                 <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
