@@ -1,5 +1,6 @@
-using System.CommandLine;
+using Ivy.Helpers;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Ivy.Apps;
@@ -414,26 +415,18 @@ public static class IvyServerUtils
 {
     public static ServerArgs GetArgs()
     {
-        var portOption = new Option<int>("--port", () => ServerArgs.DefaultPort);
-        var verboseOption = new Option<bool>("--verbose", () => false);
-        var silentOption = new Option<bool>("--silent", () => false);
-        var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
-        var browseOption = new Option<bool>("--browse", () => false);
-        var argsOption = new Option<string?>("--args", () => null!);
-        var defaultAppIdOption = new Option<string?>("--app", () => null!);
-
-        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption, silentOption };
-
-        var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
+        var parser = new ArgsParser();
+        var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        var parsedArgs = parser.Parse(args);
         return new ServerArgs()
         {
-            Port = result.GetValueForOption(portOption),
-            Verbose = result.GetValueForOption(verboseOption),
-            IKillForThisPort = result.GetValueForOption(iKillForThisPortOption),
-            Browse = result.GetValueForOption(browseOption),
-            Args = result.GetValueForOption(argsOption),
-            DefaultAppId = result.GetValueForOption(defaultAppIdOption),
-            Silent = result.GetValueForOption(silentOption)
+            Port = parser.GetValue(parsedArgs, "port", ServerArgs.DefaultPort),
+            Verbose = parser.GetValue(parsedArgs, "verbose", false),
+            IKillForThisPort = parser.GetValue(parsedArgs, "i-kill-for-this-port", false),
+            Browse = parser.GetValue(parsedArgs, "browse", false),
+            Args = parser.GetValue<string?>(parsedArgs, "args", null),
+            DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
+            Silent = parser.GetValue(parsedArgs, "silent", false)
         };
     }
 }
