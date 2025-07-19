@@ -423,7 +423,7 @@ const SearchVariant: React.FC<{
         onKeyDown={handleKeyDown}
         autoComplete="off"
         className={cn(
-          'w-full pl-8',
+          'w-full pl-8 cursor-pointer',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           hasValue && 'pr-8',
