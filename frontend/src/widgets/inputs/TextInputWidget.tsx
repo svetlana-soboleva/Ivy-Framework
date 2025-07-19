@@ -460,7 +460,7 @@ const SearchVariant: React.FC<{
 
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
-        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center z-5">
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center z-10">
           <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
             {shortcutDisplay}
           </kbd>
