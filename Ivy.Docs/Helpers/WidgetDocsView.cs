@@ -48,22 +48,22 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
             {
                 var tableRows = new List<object[]>();
                 var groupedByGroup = grouped.GroupBy(g => g.Group).ToList();
-                
+
                 foreach (var group in groupedByGroup)
                 {
                     var typesInGroup = group.ToList();
                     var nonNullableTypes = typesInGroup.Where(t => t.NonNullable != null).Select(t => t.NonNullable).ToList();
                     var nullableTypes = typesInGroup.Where(t => t.Nullable != null).Select(t => t.Nullable).ToList();
-                    
+
                     // Create a vertical layout for the types in each column
                     var nonNullableLayout = nonNullableTypes.Count != 0
                         ? Layout.Vertical().Gap(2) | nonNullableTypes.ToArray()
                         : (object)"-";
-                    
+
                     var nullableLayout = nullableTypes.Count != 0
                         ? Layout.Vertical().Gap(2) | nullableTypes.ToArray()
                         : (object)"-";
-                    
+
                     tableRows.Add(
                     [
                         group.Key,
@@ -71,7 +71,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
                         nullableLayout
                     ]);
                 }
-                
+
                 var headerRow = new TableRow(
                     new TableCell("Group").IsHeader(),
                     new TableCell("Type").IsHeader(),
