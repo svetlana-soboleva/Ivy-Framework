@@ -28,68 +28,6 @@ import { useEventHandler } from '@/components/EventHandlerContext';
 import { Badge } from '@/components/ui/badge';
 import { RotateCw } from 'lucide-react';
 
-// Custom hook to handle tabs overflow calculation
-function useTabsOverflow(
-  tabsListRef: React.RefObject<HTMLDivElement | null>,
-  containerRef: React.RefObject<HTMLDivElement | null>,
-  tabOrder: string[]
-) {
-  const [tabsOverflowing, setTabsOverflowing] = React.useState(false);
-
-  // Calculate overflow function
-  const calculateOverflow = React.useCallback(() => {
-    if (tabsListRef.current && containerRef.current) {
-      const containerWidth = containerRef.current.getBoundingClientRect().width;
-      const tabsListWidth = tabsListRef.current.getBoundingClientRect().width;
-      setTabsOverflowing(tabsListWidth > containerWidth);
-    }
-  }, [tabsListRef, containerRef]);
-
-  // Calculate overflow with delay for DOM updates
-  const calculateOverflowWithDelay = React.useCallback(
-    (delay: number = 0) => {
-      if (delay > 0) {
-        setTimeout(calculateOverflow, delay);
-      } else {
-        calculateOverflow();
-      }
-    },
-    [calculateOverflow]
-  );
-
-  // Handle overflow detection on tab order changes
-  React.useLayoutEffect(() => {
-    calculateOverflow();
-  }, [tabOrder, calculateOverflow]);
-
-  // Recalculate overflow on window resize
-  React.useEffect(() => {
-    const recalculateOverflow = () => {
-      calculateOverflowWithDelay(100);
-    };
-
-    // Listen for window resize
-    window.addEventListener('resize', recalculateOverflow);
-
-    return () => {
-      window.removeEventListener('resize', recalculateOverflow);
-    };
-  }, [calculateOverflowWithDelay]);
-
-  // Recalculate overflow when component mounts and after DOM updates
-  React.useLayoutEffect(() => {
-    // Initial calculation
-    calculateOverflow();
-
-    // Recalculate after a short delay to ensure DOM is fully rendered
-    const timeoutId = setTimeout(calculateOverflow, 50);
-
-    return () => clearTimeout(timeoutId);
-  }, [calculateOverflow]);
-
-  return { tabsOverflowing };
-}
-
 interface TabWidgetProps {
   children: React.ReactNode[];
   title: string;
@@ -275,12 +213,6 @@ export const TabsLayoutWidget = ({
     }
   }, [tabWidgets]);
 
-  const { tabsOverflowing } = useTabsOverflow(
-    tabsListRef,
-    containerRef,
-    tabOrder
-  );
-
   // Load active tab
   React.useEffect(() => {
     if (activeTabId) setLoadedTabs(prev => new Set(prev).add(activeTabId));
@@ -455,7 +387,7 @@ export const TabsLayoutWidget = ({
             <SortableContext items={tabOrder}>
               <TabsList
                 ref={tabsListRef}
-                className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap"
+                className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap overflow-x-auto scrollbar-hide"
               >
                 {orderedTabWidgets.map(tabWidget => {
                   if (!React.isValidElement(tabWidget)) return null;
@@ -490,52 +422,50 @@ export const TabsLayoutWidget = ({
             </SortableContext>
           </DndContext>
 
-          {tabsOverflowing && (
-            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent z-10 mr-3"
-                  aria-label="Show more tabs"
-                >
-                  <ChevronDown className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DndContext
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                  sensors={sensors}
-                >
-                  <SortableContext items={tabOrder}>
-                    <div className="flex flex-col w-48">
-                      {orderedTabWidgets.map(tabWidget => {
-                        if (!React.isValidElement(tabWidget)) return null;
-                        const props =
-                          tabWidget.props as Partial<TabWidgetProps> & {
-                            key?: string;
-                          };
-                        if (!props.id) return null;
-                        const { title, id, key } = props;
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent z-10 mr-3"
+                aria-label="Show more tabs"
+              >
+                <ChevronDown className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DndContext
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                sensors={sensors}
+              >
+                <SortableContext items={tabOrder}>
+                  <div className="flex flex-col w-48">
+                    {orderedTabWidgets.map(tabWidget => {
+                      if (!React.isValidElement(tabWidget)) return null;
+                      const props =
+                        tabWidget.props as Partial<TabWidgetProps> & {
+                          key?: string;
+                        };
+                      if (!props.id) return null;
+                      const { title, id, key } = props;
 
-                        return (
-                          <SortableDropdownMenuItem
-                            key={key ?? id}
-                            id={id}
-                            onClick={() => handleTabSelect(id)}
-                            isActive={activeTabId === id}
-                          >
-                            {title}
-                          </SortableDropdownMenuItem>
-                        );
-                      })}
-                    </div>
-                  </SortableContext>
-                </DndContext>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                      return (
+                        <SortableDropdownMenuItem
+                          key={key ?? id}
+                          id={id}
+                          onClick={() => handleTabSelect(id)}
+                          isActive={activeTabId === id}
+                        >
+                          {title}
+                        </SortableDropdownMenuItem>
+                      );
+                    })}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

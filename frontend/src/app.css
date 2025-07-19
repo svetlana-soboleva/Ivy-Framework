@@ -360,6 +360,15 @@
   padding: 0px !important;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 :has(DIV.remove-ancestor-padding) {
   padding: 0 !important;
 }
