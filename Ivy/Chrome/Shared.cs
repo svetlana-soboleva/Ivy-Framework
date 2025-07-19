@@ -51,7 +51,7 @@ public record NavigateArgs(string AppId, object? AppArgs = null)
 {
     public string GetUrl(string? parentId = null)
     {
-        var url = $"app.html?appId={this.AppId}";
+        var url = $"index.html?appId={this.AppId}";
         if (parentId != null)
         {
             url += $"&parentId={parentId}";

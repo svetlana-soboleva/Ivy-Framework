@@ -56,19 +56,6 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             }
         }, [search]);
 
-        //////////////////////////////////////////////////////////
-        // var isIvyAgentStarting = UseState(false);
-        // var isIvyAgentRunning = UseState(false);
-        // //todo: remove the ivy agent server -> replace with something else
-        // UseEffect(async () =>
-        // {
-        //     var cleanup = await IvyAgentServer.StartAsync(); 
-        //     client?.SetChatPanelUrl("http://localhost:5001");
-        //     isIvyAgentRunning.Set(true);
-        //     return cleanup;
-        // }, [ isIvyAgentStarting ]);
-        //////////////////////////////////////////////////////////
-
         void OpenApp(NavigateArgs navigateArgs)
         {
             var app = appRepository!.GetAppOrDefault(navigateArgs.AppId);
