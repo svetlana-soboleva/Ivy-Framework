@@ -173,7 +173,7 @@ const DefaultVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>
@@ -332,7 +332,7 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2" />
           )}
           {props.shortcutKey && (
-            <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
               {shortcutDisplay}
             </kbd>
           )}
@@ -441,9 +441,9 @@ const SearchVariant: React.FC<{
           tabIndex={-1}
           aria-label="Clear search"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-accent focus:outline-none"
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
       )}
 
@@ -457,7 +457,7 @@ const SearchVariant: React.FC<{
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>

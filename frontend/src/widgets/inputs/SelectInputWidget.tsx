@@ -618,7 +618,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                   }}
                   className="p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
                 >
-                  <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                 </span>
               )}
               {/* Invalid icon */}
