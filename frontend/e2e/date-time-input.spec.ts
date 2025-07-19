@@ -29,24 +29,32 @@ async function setupDateTimeInputPage(page: Page): Promise<Frame | null> {
 
   // More robust iframe detection with retry logic
   let appFrameElement: ElementHandle<SVGElement | HTMLElement> | null = null;
+  let contentFrame: Frame | null = null;
   let retries = 0;
-  const maxRetries = 10;
+  const maxRetries = 15;
 
-  while (!appFrameElement && retries < maxRetries) {
+  while (!contentFrame && retries < maxRetries) {
     try {
-      // Try to find the iframe with a more specific selector
       appFrameElement = await page.waitForSelector(
         'iframe[src*="date-time-input"]',
         { timeout: 2000 }
       );
+
+      await page.waitForTimeout(1000);
+
+      contentFrame = await appFrameElement.contentFrame();
+
+      if (!contentFrame) {
+        await page.waitForTimeout(500);
+        contentFrame = await appFrameElement.contentFrame();
+      }
     } catch (error) {
       retries++;
       if (retries >= maxRetries) {
         throw new Error(
-          `Failed to find iframe after ${maxRetries} retries. Last error: ${error}`
+          `Failed to find iframe or content frame after ${maxRetries} retries. Last error: ${error}`
         );
       }
-      // Wait a bit before retrying
       await page.waitForTimeout(500);
     }
   }
@@ -55,13 +63,10 @@ async function setupDateTimeInputPage(page: Page): Promise<Frame | null> {
     throw new Error('Iframe element not found');
   }
 
-  // Wait for the iframe to be fully loaded
-  const contentFrame = await appFrameElement.contentFrame();
   if (!contentFrame) {
-    throw new Error('Iframe content frame is null');
+    throw new Error('Iframe content frame is null after all retries');
   }
 
-  // Wait for the iframe content to be ready
   await contentFrame.waitForLoadState('domcontentloaded');
 
   return contentFrame;
