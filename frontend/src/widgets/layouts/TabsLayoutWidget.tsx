@@ -309,7 +309,7 @@ function SortableDropdownMenuItem({
       <span className="truncate text-left">{children}</span>
       <button
         type="button"
-        className="ml-auto opacity-60 p-1 hover:opacity-100 invisible group-hover:visible"
+        className="ml-auto opacity-60 p-1 hover:opacity-100 invisible group-hover:visible cursor-pointer"
         onClick={e => {
           e.stopPropagation();
           window.dispatchEvent(
@@ -524,7 +524,7 @@ export const TabsLayoutWidget = ({
                 e.stopPropagation();
                 eventHandler('OnRefresh', id, [tabOrder.indexOf(tabId)]);
               }}
-              className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
+              className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
             >
               <RotateCw className="w-3 h-3" />
             </a>
@@ -535,7 +535,7 @@ export const TabsLayoutWidget = ({
                 e.stopPropagation();
                 eventHandler('OnClose', id, [tabOrder.indexOf(tabId)]);
               }}
-              className="opacity-60 p-1 rounded-full hover:bg-gray-200 hover:opacity-100 transition-colors"
+              className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
             >
               <X className="w-3 h-3" />
             </a>
