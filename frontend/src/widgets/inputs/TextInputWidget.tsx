@@ -319,7 +319,7 @@ const PasswordVariant: React.FC<{
             type="button"
             variant="ghost"
             size="sm"
-            className="hover:bg-transparent p-0 m-0 h-4 w-4"
+            className="hover:bg-transparent p-0 m-0 h-4 w-4 cursor-pointer"
             onClick={togglePassword}
           >
             {showPassword ? (
@@ -399,7 +399,7 @@ const SearchVariant: React.FC<{
   return (
     <div className="relative w-full select-none" style={styles}>
       {/* Search Icon */}
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-primary" />
 
       {/* Search Input */}
       <Input
@@ -441,7 +441,7 @@ const SearchVariant: React.FC<{
           tabIndex={-1}
           aria-label="Clear search"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-accent focus:outline-none"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
         >
           <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
