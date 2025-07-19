@@ -200,8 +200,8 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
             value={getDisplayColor()}
             onChange={handleColorChange}
             disabled={disabled}
-            className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
-              disabled ? 'opacity-50 cursor-not-allowed' : ''
+            className={`w-10 h-10 p-1 rounded-lg border ${
+              disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
             } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
           />
         </div>
@@ -218,8 +218,8 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
           value={getDisplayColor()}
           onChange={handleColorChange}
           disabled={disabled}
-          className={`w-10 h-10 p-1 rounded-lg border cursor-pointer ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
+          className={`w-10 h-10 p-1 rounded-lg border ${
+            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           } ${invalid ? inputStyles.invalidInput : 'border-gray-300'}`}
         />
       </div>
