@@ -400,3 +400,24 @@
     scrollbar-color: var(--border) transparent;
   }
 }
+
+/* Command prompt styling - shows > visually but excludes from copying */
+.command-prompt {
+  position: relative;
+  padding-left: 1.5em;
+}
+
+.command-prompt::before {
+  content: '> ';
+  position: absolute;
+  left: 0;
+  color: var(--muted-foreground);
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  pointer-events: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  z-index: 1;
+}
