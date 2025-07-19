@@ -1,4 +1,10 @@
-import { test, expect, type Frame, type Page } from '@playwright/test';
+import {
+  test,
+  expect,
+  type Frame,
+  type Page,
+  type ElementHandle,
+} from '@playwright/test';
 
 // Shared setup function
 async function setupBoolInputPage(page: Page): Promise<Frame | null> {
@@ -22,12 +28,47 @@ async function setupBoolInputPage(page: Page): Promise<Frame | null> {
     .first();
   await firstResult.click();
 
-  // Wait for the page to load
+  // Wait for navigation and iframe to be created
   await page.waitForLoadState('networkidle');
-  const appFrameElement = await page.waitForSelector(
-    'iframe[src*="bool-input"]'
-  );
-  return await appFrameElement.contentFrame();
+
+  // More robust iframe detection with retry logic
+  let appFrameElement: ElementHandle<SVGElement | HTMLElement> | null = null;
+  let retries = 0;
+  const maxRetries = 10;
+
+  while (!appFrameElement && retries < maxRetries) {
+    try {
+      // Try to find the iframe with a more specific selector
+      appFrameElement = await page.waitForSelector(
+        'iframe[src*="bool-input"]',
+        { timeout: 2000 }
+      );
+    } catch (error) {
+      retries++;
+      if (retries >= maxRetries) {
+        throw new Error(
+          `Failed to find iframe after ${maxRetries} retries. Last error: ${error}`
+        );
+      }
+      // Wait a bit before retrying
+      await page.waitForTimeout(500);
+    }
+  }
+
+  if (!appFrameElement) {
+    throw new Error('Iframe element not found');
+  }
+
+  // Wait for the iframe to be fully loaded
+  const contentFrame = await appFrameElement.contentFrame();
+  if (!contentFrame) {
+    throw new Error('Iframe content frame is null');
+  }
+
+  // Wait for the iframe content to be ready
+  await contentFrame.waitForLoadState('domcontentloaded');
+
+  return contentFrame;
 }
 
 // Shared verification function for all elements

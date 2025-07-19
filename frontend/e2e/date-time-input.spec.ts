@@ -1,34 +1,80 @@
-import { test, expect } from '@playwright/test';
+import {
+  test,
+  expect,
+  type Frame,
+  type Page,
+  type ElementHandle,
+} from '@playwright/test';
+
+// Shared setup function for date-time input tests
+async function setupDateTimeInputPage(page: Page): Promise<Frame | null> {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+
+  // Navigate to DateTimeInput app
+  const searchInput = page.getByTestId('sidebar-search');
+  await expect(searchInput).toBeVisible();
+  await searchInput.click();
+  await searchInput.fill('date time input');
+  await searchInput.press('Enter');
+
+  const firstResult = page
+    .locator('[data-sidebar="menu-item"], [data-sidebar="menu-sub-item"]')
+    .filter({ hasText: /date\s*time\s*input/i })
+    .first();
+
+  await expect(firstResult).toBeVisible();
+  await firstResult.click();
+  await page.waitForLoadState('networkidle');
+
+  // More robust iframe detection with retry logic
+  let appFrameElement: ElementHandle<SVGElement | HTMLElement> | null = null;
+  let retries = 0;
+  const maxRetries = 10;
+
+  while (!appFrameElement && retries < maxRetries) {
+    try {
+      // Try to find the iframe with a more specific selector
+      appFrameElement = await page.waitForSelector(
+        'iframe[src*="date-time-input"]',
+        { timeout: 2000 }
+      );
+    } catch (error) {
+      retries++;
+      if (retries >= maxRetries) {
+        throw new Error(
+          `Failed to find iframe after ${maxRetries} retries. Last error: ${error}`
+        );
+      }
+      // Wait a bit before retrying
+      await page.waitForTimeout(500);
+    }
+  }
+
+  if (!appFrameElement) {
+    throw new Error('Iframe element not found');
+  }
+
+  // Wait for the iframe to be fully loaded
+  const contentFrame = await appFrameElement.contentFrame();
+  if (!contentFrame) {
+    throw new Error('Iframe content frame is null');
+  }
+
+  // Wait for the iframe content to be ready
+  await contentFrame.waitForLoadState('domcontentloaded');
+
+  return contentFrame;
+}
 
 test.describe('DateTimeInput - Variants and Data Binding', () => {
+  let appFrame: Frame | null;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Navigate to DateTimeInput app
-    const searchInput = page.getByTestId('sidebar-search');
-    await expect(searchInput).toBeVisible();
-    await searchInput.click();
-    await searchInput.fill('date time input');
-    await searchInput.press('Enter');
-
-    const firstResult = page
-      .locator('[data-sidebar="menu-item"], [data-sidebar="menu-sub-item"]')
-      .filter({ hasText: /date\s*time\s*input/i })
-      .first();
-
-    await expect(firstResult).toBeVisible();
-    await firstResult.click();
-    await page.waitForLoadState('networkidle');
+    appFrame = await setupDateTimeInputPage(page);
   });
 
-  test('should display all variants and data binding inputs', async ({
-    page,
-  }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should display all variants and data binding inputs', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -66,11 +112,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     }
   });
 
-  test('should update value for Date variant', async ({ page }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should update value for Date variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -87,11 +129,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(dateInput).toContainText('-15');
   });
 
-  test('should update value for DateTime variant', async ({ page }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should update value for DateTime variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -111,11 +149,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(dtInput).toContainText('-10');
   });
 
-  test('should update value for Time variant', async ({ page }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should update value for Time variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -128,11 +162,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(input).toHaveValue('08:00:00');
   });
 
-  test('should update value for nullable DateTime', async ({ page }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should update value for nullable DateTime', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -151,11 +181,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(nullableInput).toContainText('-20');
   });
 
-  test('should reflect data binding for DateTime', async ({ page }) => {
-    const appFrameElement = await page.waitForSelector(
-      'iframe[src*="date-time-input"]'
-    );
-    const appFrame = await appFrameElement.contentFrame();
+  test('should reflect data binding for DateTime', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
