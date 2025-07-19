@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { getPadding } from '@/lib/styles';
 import {
   DndContext,
   closestCenter,
@@ -49,6 +50,7 @@ interface TabsLayoutWidgetProps {
   selectedIndex: number;
   children: React.ReactElement<TabWidgetProps>[];
   events: string[];
+  padding?: string;
 }
 
 function SortableTabTrigger({
@@ -163,6 +165,7 @@ export const TabsLayoutWidget = ({
   selectedIndex,
   removeParentPadding,
   variant,
+  padding,
 }: TabsLayoutWidgetProps) => {
   const tabWidgets = React.Children.toArray(children).filter(
     child =>
@@ -484,6 +487,8 @@ export const TabsLayoutWidget = ({
 
           if (!loadedTabs.has(id)) return null;
 
+          const paddingStyle = getPadding(padding);
+
           return (
             <div
               key={key ?? id}
@@ -491,6 +496,7 @@ export const TabsLayoutWidget = ({
                 'h-full overflow-auto',
                 activeTabId === id ? 'block' : 'hidden'
               )}
+              style={paddingStyle}
             >
               {tabWidget}
             </div>
