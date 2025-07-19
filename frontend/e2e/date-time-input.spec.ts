@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('DateTimeInput - Variants and Data Binding', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/app');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Navigate to DateTimeInput app

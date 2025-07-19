@@ -2,7 +2,7 @@ import { test, expect, type Frame, type Page } from '@playwright/test';
 
 // Shared setup function
 async function setupBoolInputPage(page: Page): Promise<Frame | null> {
-  await page.goto('/app');
+  await page.goto('/');
   await page.waitForLoadState('networkidle');
 
   // Find the sidebar search input
