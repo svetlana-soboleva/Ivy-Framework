@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Ivy.Apps;
@@ -343,8 +344,21 @@ public static class WebApplicationExtensions
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
             {
+                using var reader = new StreamReader(stream);
+                var html = await reader.ReadToEndAsync();
+                
+                //Inject IVY_LICENSE:
+                var configuration = app.Services.GetRequiredService<IConfiguration>();
+                var ivyLicense = configuration["IVY_LICENSE"] ?? "";
+                if(!string.IsNullOrEmpty(ivyLicense))
+                {
+                    var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
+                    html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
+                }
+                
                 context.Response.ContentType = "text/html";
-                await stream.CopyToAsync(context.Response.Body);
+                var bytes = Encoding.UTF8.GetBytes(html);
+                await context.Response.Body.WriteAsync(bytes);
             }
         });
 
