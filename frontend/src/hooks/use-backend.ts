@@ -214,13 +214,7 @@ export const useBackend = () => {
             logger.debug('Received Toast message', message);
             toast(message);
           });
-          connection.on('$SetChatPanelUrl', (chatPanelUrl: string | null) => {
-            logger.debug('Received $SetChatPanelUrl message', { chatPanelUrl });
-            window.parent.postMessage(
-              { type: '$SetChatPanelUrl', url: chatPanelUrl },
-              '*'
-            );
-          });
+
           connection.on('SetJwt', jwt => {
             logger.debug('Received SetJwt message');
             handleSetJwt(jwt);
@@ -268,13 +262,12 @@ export const useBackend = () => {
         connection.off('Toast');
         connection.off('CopyToClipboard');
         connection.off('HotReload');
-        connection.off('reconnecting');
-        connection.off('reconnected');
-        connection.off('close');
-        connection.off('$SetChatPanelUrl');
         connection.off('SetJwt');
         connection.off('SetTheme');
         connection.off('OpenUrl');
+        connection.off('reconnecting');
+        connection.off('reconnected');
+        connection.off('close');
       };
     }
   }, [
