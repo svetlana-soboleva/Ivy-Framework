@@ -197,7 +197,7 @@ export const FileInputWidget: React.FC<FileInputWidgetProps> = ({
           className="hidden"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-          <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
+          <Upload className="h-6 w-6 mb-2 text-primary" />
           <p className="text-sm text-muted-foreground">
             {displayValue ||
               placeholder ||

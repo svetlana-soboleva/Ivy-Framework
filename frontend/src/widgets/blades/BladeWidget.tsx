@@ -40,10 +40,12 @@ export function BladeWidget({
   return (
     <div
       style={styles}
-      className={cn('flex flex-col h-screen bg-white border-l border-gray-200')}
+      className={cn(
+        'flex flex-col h-screen bg-background border-l border-border'
+      )}
     >
       <div
-        className="flex items-center justify-between px-4 bg-white text-black h-[70px] border-b"
+        className="flex items-center justify-between px-4 bg-background text-foreground h-[70px] border-b border-border"
         onMouseDown={e => handleMouseDown(e)}
       >
         {!slots?.BladeHeader && (
@@ -53,21 +55,21 @@ export function BladeWidget({
         <div className="flex items-center gap-1">
           <button
             onClick={() => eventHandler('OnRefresh', id, [])}
-            className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center"
+            className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
           >
             <RotateCw className="h-4 w-4" />
           </button>
           {index > 0 && (
             <button
               onClick={() => eventHandler('OnClose', id, [])}
-              className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center"
+              className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
           )}
         </div>
       </div>
-      <div className="bg-gray-50">
+      <div className="bg-muted">
         <ScrollArea
           type="hover"
           className="blade-container h-[calc(100vh-70px)]"

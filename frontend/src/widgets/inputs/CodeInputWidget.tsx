@@ -133,7 +133,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
   return (
     <div style={styles} className="relative w-full h-full overflow-hidden">
       {showCopyButton && (
-        <div className="absolute top-2 right-2 z-10 p-1 rounded-md hover:bg-accent transition-colors duration-200">
+        <div className="absolute top-2 right-2 z-10 rounded-md hover:bg-accent transition-colors duration-200">
           <CopyToClipboardButton
             textToCopy={localValue}
             aria-label="Copy to clipboard"
@@ -166,7 +166,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
         <div
           className={cn(
             'absolute top-2.5',
-            showCopyButton ? 'right-12' : 'right-4'
+            showCopyButton ? 'right-14' : 'right-4'
           )}
         >
           <InvalidIcon message={invalid} />

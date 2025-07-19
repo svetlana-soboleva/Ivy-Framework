@@ -185,27 +185,27 @@ public class ComplexLayoutView : ViewBase
     {
         var complexHtml = 
             """
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
-                <h2 style="color: #007bff; margin-top: 0;">Product Features</h2>
-                <p style="font-size: 16px; color: #666;">Discover what makes our product special:</p>
+            <div style="background-color: var(--muted); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary);">
+                <h2 style="color: var(--primary); margin-top: 0;">Product Features</h2>
+                <p style="font-size: 16px; color: var(--muted-foreground);">Discover what makes our product special:</p>
                 
                 <div style="display: flex; gap: 20px; margin: 20px 0;">
-                    <div style="flex: 1; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <h3 style="color: #28a745; margin-top: 0;">Performance</h3>
+                    <div style="flex: 1; background: var(--background); padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--primary); margin-top: 0;">Performance</h3>
                         <p>Lightning-fast rendering with optimized algorithms.</p>
                     </div>
-                    <div style="flex: 1; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <h3 style="color: #dc3545; margin-top: 0;">Security</h3>
+                    <div style="flex: 1; background: var(--background); padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--destructive); margin-top: 0;">Security</h3>
                         <p>Built-in HTML sanitization protects against XSS attacks.</p>
                     </div>
                 </div>
                 
-                <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <div style="background: var(--accent); padding: 15px; border-radius: 5px; margin-top: 20px;">
                     <h4 style="margin-top: 0;">Quick Stats</h4>
                     <ul style="margin: 0;">
-                        <li><strong>Rendering Speed:</strong> <span style="color: #28a745;">99.9% faster</span></li>
-                        <li><strong>Memory Usage:</strong> <span style="color: #ffc107;">50% less</span></li>
-                        <li><strong>Security Score:</strong> <span style="color: #007bff;">A+</span></li>
+                        <li><strong>Rendering Speed:</strong> <span style="color: var(--primary);">99.9% faster</span></li>
+                        <li><strong>Memory Usage:</strong> <span style="color: var(--accent-foreground);">50% less</span></li>
+                        <li><strong>Security Score:</strong> <span style="color: var(--primary);">A+</span></li>
                     </ul>
                 </div>
             </div>
@@ -221,9 +221,9 @@ public class ComplexLayoutView : ViewBase
 **Rendered Result:**
 > # HTML Widget Demo
 > 
-> <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
->   <h2 style="color: #007bff; margin-top: 0;">Product Features</h2>
->   <p style="font-size: 16px; color: #666;">Discover what makes our product special:</p>
+> <div style="background-color: var(--muted); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary);">
+>   <h2 style="color: var(--primary); margin-top: 0;">Product Features</h2>
+>   <p style="font-size: 16px; color: var(--muted-foreground);">Discover what makes our product special:</p>
 >   
 >   **Performance**: Lightning-fast rendering with optimized algorithms.
 >   **Security**: Built-in HTML sanitization protects against XSS attacks.
