@@ -100,7 +100,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
     if (!isFocused && value !== localValue) {
       setLocalValue(value || '');
     }
-  }, [value, isFocused, localValue]);
+  }, [value, isFocused]);
 
   const handleChange = useCallback(
     (value: string) => {
