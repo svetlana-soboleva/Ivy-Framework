@@ -207,9 +207,9 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
                       : isSelected
-                        ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
+                        ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
                         : undefined
                   )}
                 >
@@ -251,9 +251,9 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                   className={cn(
                     'px-3 py-2',
                     isInvalid
-                      ? `${inputStyles.invalidInput} !bg-red-50 !border-red-500 !text-red-900`
+                      ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
                       : isSelected
-                        ? 'data-[state=on]:bg-emerald-100 data-[state=on]:border-emerald-500 data-[state=on]:text-emerald-900'
+                        ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
                         : undefined
                   )}
                 >
@@ -290,9 +290,9 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
             });
             eventHandler('OnChange', id, [selectMany ? [] : null]);
           }}
-          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+          className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
       )}
     </div>
@@ -616,7 +616,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                       eventHandler('OnChange', id, [null]);
                     }
                   }}
-                  className="p-1 rounded hover:bg-gray-100 focus:outline-none cursor-pointer"
+                  className="p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
                 >
                   <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                 </span>
