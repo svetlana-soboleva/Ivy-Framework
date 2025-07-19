@@ -1,6 +1,5 @@
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 
 export enum ThumbsEnum {
@@ -55,9 +54,10 @@ const ThumbsRating = ({
             'focus-visible:outline-none focus-visible:ring-2',
             'focus-visible:ring-ring focus-visible:ring-offset-2',
             value === ThumbsEnum.Down &&
-              'bg-destructive text-destructive-foreground',
-            disabled && 'cursor-not-allowed hover:bg-transparent',
-            invalid && inputStyles.invalid
+              (invalid
+                ? 'bg-destructive/20 border-destructive text-destructive'
+                : 'bg-destructive text-destructive-foreground'),
+            disabled && 'cursor-not-allowed hover:bg-transparent'
           )}
         >
           <ThumbsDown
@@ -65,7 +65,9 @@ const ThumbsRating = ({
             className={cn(
               'transition-colors',
               value === ThumbsEnum.Down
-                ? 'text-destructive-foreground'
+                ? invalid
+                  ? 'text-destructive'
+                  : 'text-destructive-foreground'
                 : 'text-muted-foreground'
             )}
           />
@@ -79,9 +81,11 @@ const ThumbsRating = ({
             'hover:bg-primary/20',
             'focus-visible:outline-none focus-visible:ring-2',
             'focus-visible:ring-ring focus-visible:ring-offset-2',
-            value === ThumbsEnum.Up && 'bg-primary text-primary-foreground',
-            disabled && 'cursor-not-allowed hover:bg-transparent',
-            invalid && inputStyles.invalid
+            value === ThumbsEnum.Up &&
+              (invalid
+                ? 'bg-primary/20 border-primary text-primary'
+                : 'bg-primary text-primary-foreground'),
+            disabled && 'cursor-not-allowed hover:bg-transparent'
           )}
         >
           <ThumbsUp
@@ -89,7 +93,9 @@ const ThumbsRating = ({
             className={cn(
               'transition-colors',
               value === ThumbsEnum.Up
-                ? 'text-primary-foreground'
+                ? invalid
+                  ? 'text-primary'
+                  : 'text-primary-foreground'
                 : 'text-muted-foreground'
             )}
           />
