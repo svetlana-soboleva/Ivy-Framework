@@ -388,6 +388,10 @@ export const TabsLayoutWidget = ({
               <TabsList
                 ref={tabsListRef}
                 className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap overflow-x-auto scrollbar-hide"
+                style={{
+                  msOverflowStyle: 'none',
+                  scrollbarWidth: 'none',
+                }}
               >
                 {orderedTabWidgets.map(tabWidget => {
                   if (!React.isValidElement(tabWidget)) return null;
