@@ -1,8 +1,14 @@
-import { test, expect, type Frame, type Page } from '@playwright/test';
+import {
+  test,
+  expect,
+  type Frame,
+  type Page,
+  type ElementHandle,
+} from '@playwright/test';
 
 // Shared setup function
 async function setupBoolInputPage(page: Page): Promise<Frame | null> {
-  await page.goto('/app');
+  await page.goto('/');
   await page.waitForLoadState('networkidle');
 
   // Find the sidebar search input
@@ -22,12 +28,52 @@ async function setupBoolInputPage(page: Page): Promise<Frame | null> {
     .first();
   await firstResult.click();
 
-  // Wait for the page to load
+  // Wait for navigation and iframe to be created
   await page.waitForLoadState('networkidle');
-  const appFrameElement = await page.waitForSelector(
-    'iframe[src*="bool-input"]'
-  );
-  return await appFrameElement.contentFrame();
+
+  // More robust iframe detection with retry logic
+  let appFrameElement: ElementHandle<SVGElement | HTMLElement> | null = null;
+  let contentFrame: Frame | null = null;
+  let retries = 0;
+  const maxRetries = 10;
+
+  while (!contentFrame && retries < maxRetries) {
+    try {
+      appFrameElement = await page.waitForSelector(
+        'iframe[src*="bool-input"]',
+        { timeout: 2000 }
+      );
+
+      await page.waitForTimeout(1000);
+
+      contentFrame = await appFrameElement.contentFrame();
+
+      if (!contentFrame) {
+        await page.waitForTimeout(500);
+        contentFrame = await appFrameElement.contentFrame();
+      }
+    } catch (error) {
+      retries++;
+      if (retries >= maxRetries) {
+        throw new Error(
+          `Failed to find iframe or content frame after ${maxRetries} retries. Last error: ${error}`
+        );
+      }
+      await page.waitForTimeout(500);
+    }
+  }
+
+  if (!appFrameElement) {
+    throw new Error('Iframe element not found');
+  }
+
+  if (!contentFrame) {
+    throw new Error('Iframe content frame is null after all retries');
+  }
+
+  await contentFrame.waitForLoadState('domcontentloaded');
+
+  return contentFrame;
 }
 
 // Shared verification function for all elements
