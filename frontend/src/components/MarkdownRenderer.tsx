@@ -287,7 +287,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               <img
                 {...props}
                 src={imageSrc}
-                className={textBlockClassMap.img + ' cursor-zoom-in'}
+                className={cn(textBlockClassMap.img, 'cursor-zoom-in')}
                 loading="lazy"
                 onClick={() => setShowOverlay(true)}
               />
