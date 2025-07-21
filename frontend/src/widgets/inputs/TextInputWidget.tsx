@@ -399,7 +399,7 @@ const SearchVariant: React.FC<{
   return (
     <div className="relative w-full select-none" style={styles}>
       {/* Search Icon */}
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-primary" />
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 
       {/* Search Input */}
       <Input
