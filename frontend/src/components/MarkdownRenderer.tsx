@@ -1,11 +1,4 @@
-import React, {
-  lazy,
-  Suspense,
-  memo,
-  useMemo,
-  useCallback,
-  useState,
-} from 'react';
+import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -64,38 +57,6 @@ const ImageOverlay = ({
     </div>
   );
 };
-
-const MemoizedImage = memo(
-  ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
-    const [showOverlay, setShowOverlay] = useState(false);
-    const imageSrc =
-      src && !src.match(/^(https?:\/\/|data:|blob:|app:)/i)
-        ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
-        : src;
-
-    return (
-      <>
-        <img
-          src={imageSrc}
-          alt={alt}
-          className="max-w-full h-auto cursor-zoom-in"
-          loading="lazy"
-          onClick={() => setShowOverlay(true)}
-          {...props}
-        />
-        {showOverlay && (
-          <ImageOverlay
-            src={imageSrc}
-            alt={alt}
-            onClose={() => setShowOverlay(false)}
-          />
-        )}
-      </>
-    );
-  },
-  (prevProps, nextProps) =>
-    prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
-);
 
 const hasContentFeature = (content: string, feature: RegExp): boolean => {
   return feature.test(content);
@@ -242,17 +203,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       li: ({ children }: { children: React.ReactNode }) => (
         <li className={textBlockClassMap.li}>{children}</li>
       ),
-      blockquote: ({ children }: { children: React.ReactNode }) => (
-        <blockquote className={textBlockClassMap.blockquote}>
-          {children}
-        </blockquote>
-      ),
-      table: ({ children }: { children: React.ReactNode }) => (
-        <table className={textBlockClassMap.table}>{children}</table>
-      ),
-      img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
-        <img {...props} className={textBlockClassMap.img} />
-      ),
       strong: ({ children }: { children: React.ReactNode }) => (
         <strong className={textBlockClassMap.strong}>{children}</strong>
       ),
@@ -300,15 +250,15 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       // Blockquotes
       blockquote: memo(
         ({ children }: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) => (
-          <blockquote className="border-l-2 pl-6 italic">{children}</blockquote>
+          <blockquote className={textBlockClassMap.blockquote}>
+            {children}
+          </blockquote>
         )
       ),
 
       // Tables
       table: memo(({ children }: { children: React.ReactNode }) => (
-        <table className="w-full border-collapse border border-border">
-          {children}
-        </table>
+        <table className={textBlockClassMap.table}>{children}</table>
       )),
       thead: memo(({ children }: { children: React.ReactNode }) => (
         <thead className="bg-muted">{children}</thead>
@@ -317,15 +267,39 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         <tr className="border border-border">{children}</tr>
       )),
       th: memo(({ children }: { children: React.ReactNode }) => (
-        <th className="border border-border px-4 py-2 text-left font-bold">
-          {children}
-        </th>
+        <th className={textBlockClassMap.th}>{children}</th>
       )),
       td: memo(({ children }: { children: React.ReactNode }) => (
-        <td className="border border-border px-4 py-2">{children}</td>
+        <td className={textBlockClassMap.td}>{children}</td>
       )),
 
-      img: MemoizedImage,
+      img: memo((props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+        const [showOverlay, setShowOverlay] = React.useState(false);
+        const src = props.src;
+        const imageSrc =
+          src && !src?.match(/^(https?:\/\/|data:|blob:|app:)/i)
+            ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
+            : src;
+
+        return (
+          <>
+            <img
+              {...props}
+              src={imageSrc}
+              className={textBlockClassMap.img + ' cursor-zoom-in'}
+              loading="lazy"
+              onClick={() => setShowOverlay(true)}
+            />
+            {showOverlay && (
+              <ImageOverlay
+                src={imageSrc}
+                alt={props.alt}
+                onClose={() => setShowOverlay(false)}
+              />
+            )}
+          </>
+        );
+      }),
     }),
     [contentFeatures.hasCodeBlocks, handleLinkClick]
   );
