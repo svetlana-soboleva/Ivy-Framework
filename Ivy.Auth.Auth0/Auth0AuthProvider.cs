@@ -1,10 +1,6 @@
 ﻿using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
-using Auth0.ManagementApi;
-using Auth0.ManagementApi.Models;
 using Ivy.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +17,6 @@ public class Auth0OAuthException(string? error, string? errorDescription)
 public class Auth0AuthProvider : IAuthProvider
 {
     private readonly AuthenticationApiClient _authClient;
-    private readonly ManagementApiClient _managementClient;
     private readonly string _domain;
     private readonly string _clientId;
     private readonly string _clientSecret;
@@ -42,33 +37,23 @@ public class Auth0AuthProvider : IAuthProvider
         _audience = configuration.GetValue<string>("AUTH0_AUDIENCE") ?? "";
 
         _authClient = new AuthenticationApiClient(_domain);
-
-        // Get management API token and create management client
-        var managementToken = GetManagementApiToken().Result;
-        _managementClient = new ManagementApiClient(managementToken, _domain);
     }
 
     public async Task<AuthToken?> LoginAsync(string email, string password)
     {
-        try
+        var request = new ResourceOwnerTokenRequest
         {
-            var request = new ResourceOwnerTokenRequest
-            {
-                ClientId = _clientId,
-                ClientSecret = _clientSecret,
-                Username = email,
-                Password = password,
-                Scope = "openid profile email",
-                Audience = _audience
-            };
+            ClientId = _clientId,
+            ClientSecret = _clientSecret,
+            Username = email,
+            Password = password,
+            Scope = "openid profile email",
+            Audience = _audience,
+            Realm = "Username-Password-Authentication",
+        };
 
-            var response = await _authClient.GetTokenAsync(request);
-            return new AuthToken(response.AccessToken, response.RefreshToken, DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn));
-        }
-        catch (Exception)
-        {
-            return null;
-        }
+        var response = await _authClient.GetTokenAsync(request);
+        return new AuthToken(response.AccessToken, response.RefreshToken, DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn));
     }
 
     public Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
@@ -77,11 +62,9 @@ public class Auth0AuthProvider : IAuthProvider
         {
             "google-oauth2" => "google-oauth2",
             "github" => "github",
-            "linkedin" => "linkedin",
             "twitter" => "twitter",
-            "facebook" => "facebook",
             "microsoft" => "windowslive",
-            "auth0" => "Username-Password-Authentication",
+            "apple" => "apple",
             _ => throw new ArgumentException($"Unknown OAuth provider: {option.Id}"),
         };
 
@@ -106,17 +89,17 @@ public class Auth0AuthProvider : IAuthProvider
 
     public async Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
     {
-        var code = request.Query["code"];
+        var code = request.Query["code"].ToString();
         var state = request.Query["state"].ToString();
-        var error = request.Query["error"];
-        var errorDescription = request.Query["error_description"];
+        var error = request.Query["error"].ToString();
+        var errorDescription = request.Query["error_description"].ToString();
 
-        if (error.Count > 0 || errorDescription.Count > 0)
+        if (error.Length > 0 || errorDescription.Length > 0)
         {
             throw new Auth0OAuthException(error, errorDescription);
         }
 
-        if (code.Count == 0)
+        if (code.Length == 0)
         {
             throw new Exception("Received no authorization code from Auth0.");
         }
@@ -248,21 +231,15 @@ public class Auth0AuthProvider : IAuthProvider
         return this;
     }
 
-    public Auth0AuthProvider UseLinkedIn()
-    {
-        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "LinkedIn", "linkedin", Icons.Linkedin));
-        return this;
-    }
-
     public Auth0AuthProvider UseTwitter()
     {
         _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Twitter", "twitter", Icons.Twitter));
         return this;
     }
 
-    public Auth0AuthProvider UseFacebook()
+    public Auth0AuthProvider UseApple()
     {
-        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Facebook", "facebook", Icons.Facebook));
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Apple", "apple", Icons.Apple));
         return this;
     }
 
@@ -270,18 +247,5 @@ public class Auth0AuthProvider : IAuthProvider
     {
         _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Microsoft", "microsoft", Icons.Microsoft));
         return this;
-    }
-
-    private async Task<string> GetManagementApiToken()
-    {
-        var request = new ClientCredentialsTokenRequest
-        {
-            ClientId = _clientId,
-            ClientSecret = _clientSecret,
-            Audience = $"https://{_domain}/api/v2/"
-        };
-
-        var response = await _authClient.GetTokenAsync(request);
-        return response.AccessToken;
     }
 }
