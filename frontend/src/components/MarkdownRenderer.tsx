@@ -1,4 +1,11 @@
-import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
+import React, {
+  lazy,
+  Suspense,
+  memo,
+  useMemo,
+  useCallback,
+  useState,
+} from 'react';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -275,7 +282,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       img: memo(
         (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
-          const [showOverlay, setShowOverlay] = React.useState(false);
+          const [showOverlay, setShowOverlay] = useState(false);
           const src = props.src;
           const imageSrc =
             src && !src?.match(/^(https?:\/\/|data:|blob:|app:)/i)
