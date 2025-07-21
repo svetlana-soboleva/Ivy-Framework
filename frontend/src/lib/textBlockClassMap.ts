@@ -1,0 +1,31 @@
+// Shared Ivy text block and HTML tag class map for all text/heading variants
+export const textBlockClassMap: Record<string, string> = {
+  H1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
+  H2: 'scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0',
+  H3: 'scroll-m-20 text-2xl font-semibold tracking-tight',
+  H4: 'scroll-m-20 text-xl font-semibold tracking-tight',
+  P: 'scroll-m-20 text-md leading-8',
+  Blockquote: 'border-l-2 pl-6 italic',
+  InlineCode:
+    'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
+  // HTML tag equivalents
+  h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
+  h2: 'scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0',
+  h3: 'scroll-m-20 text-2xl font-semibold tracking-tight',
+  h4: 'scroll-m-20 text-xl font-semibold tracking-tight',
+  p: 'scroll-m-20 text-md leading-8',
+  strong: 'font-semibold',
+  em: 'italic',
+  ul: 'ml-6 list-disc [&>li:first-child]:mt-0',
+  ol: 'ml-6 list-decimal [&>li:first-child]:mt-0',
+  li: 'mt-3',
+  a: 'text-primary underline brightness-90 hover:brightness-100',
+  blockquote: 'border-l-2 pl-6 italic',
+  table: 'w-full border-collapse border border-border',
+  thead: 'bg-muted',
+  tr: 'border border-border',
+  th: 'border border-border px-4 py-2 text-left font-bold',
+  td: 'border border-border px-4 py-2',
+  code: 'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
+  img: 'max-w-full h-auto cursor-zoom-in',
+};
