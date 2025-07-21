@@ -312,7 +312,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <ReactMarkdown
         components={
           components as React.ComponentProps<typeof ReactMarkdown>['components']

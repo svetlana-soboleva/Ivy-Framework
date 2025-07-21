@@ -1,19 +1,19 @@
 // Shared Ivy text block and HTML tag class map for all text/heading variants
 export const textBlockClassMap: Record<string, string> = {
-  H1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-2 mb-3',
-  H2: 'scroll-m-20 text-3xl font-semibold tracking-tight mt-2 mb-3',
-  H3: 'scroll-m-20 text-2xl font-semibold tracking-tight mt-2 mb-2',
-  H4: 'scroll-m-20 text-xl font-semibold tracking-tight mt-2 mb-2',
+  H1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-8 mb-4',
+  H2: 'scroll-m-20 text-3xl font-semibold tracking-tight mt-8 mb-4',
+  H3: 'scroll-m-20 text-2xl font-semibold tracking-tight mt-4 mb-4',
+  H4: 'scroll-m-20 text-xl font-semibold tracking-tight mt-4 mb-4',
   P: 'scroll-m-20 text-md leading-6',
   Lead: 'text-xl text-muted-foreground',
   Blockquote: 'border-l-2 pl-6 italic mb-2',
   InlineCode:
     'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
   // HTML tag equivalents
-  h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-2 mb-3',
-  h2: 'scroll-m-20 text-3xl font-semibold tracking-tight mt-2 mb-3',
-  h3: 'scroll-m-20 text-2xl font-semibold tracking-tight mt-2 mb-2',
-  h4: 'scroll-m-20 text-xl font-semibold tracking-tight mt-2 mb-2',
+  h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-8 mb-4',
+  h2: 'scroll-m-20 text-3xl font-semibold tracking-tight mt-8 mb-4',
+  h3: 'scroll-m-20 text-2xl font-semibold tracking-tight mt-4 mb-4',
+  h4: 'scroll-m-20 text-xl font-semibold tracking-tight mt-4 mb-4',
   p: 'scroll-m-20 text-md leading-6',
   strong: 'font-semibold',
   em: 'italic',

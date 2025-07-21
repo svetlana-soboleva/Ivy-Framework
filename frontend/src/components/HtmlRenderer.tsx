@@ -127,7 +127,7 @@ export const HtmlRenderer: React.FC<Omit<HtmlRendererProps, 'onLinkClick'>> = ({
   return (
     <div
       className={
-        className ? `${className} flex flex-col gap-8` : 'flex flex-col gap-8'
+        className ? `${className} flex flex-col gap-2` : 'flex flex-col gap-2'
       }
     >
       {nodes.map((node, i) => (
