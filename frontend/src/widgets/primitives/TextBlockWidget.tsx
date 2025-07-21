@@ -1,7 +1,7 @@
 import { getColor, getOverflow, getWidth, Overflow } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { textBlockClassMap } from '@/lib/textBlockClassMap';
+import { textBlockClassMap } from '../../lib/textBlockClassMap';
 
 type TextBlockVariant =
   | 'Literal'
