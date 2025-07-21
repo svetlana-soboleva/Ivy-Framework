@@ -273,33 +273,37 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         <td className={textBlockClassMap.td}>{children}</td>
       )),
 
-      img: memo((props: React.ImgHTMLAttributes<HTMLImageElement>) => {
-        const [showOverlay, setShowOverlay] = React.useState(false);
-        const src = props.src;
-        const imageSrc =
-          src && !src?.match(/^(https?:\/\/|data:|blob:|app:)/i)
-            ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
-            : src;
+      img: memo(
+        (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+          const [showOverlay, setShowOverlay] = React.useState(false);
+          const src = props.src;
+          const imageSrc =
+            src && !src?.match(/^(https?:\/\/|data:|blob:|app:)/i)
+              ? `${getIvyHost()}${src?.startsWith('/') ? '' : '/'}${src}`
+              : src;
 
-        return (
-          <>
-            <img
-              {...props}
-              src={imageSrc}
-              className={textBlockClassMap.img + ' cursor-zoom-in'}
-              loading="lazy"
-              onClick={() => setShowOverlay(true)}
-            />
-            {showOverlay && (
-              <ImageOverlay
+          return (
+            <>
+              <img
+                {...props}
                 src={imageSrc}
-                alt={props.alt}
-                onClose={() => setShowOverlay(false)}
+                className={textBlockClassMap.img + ' cursor-zoom-in'}
+                loading="lazy"
+                onClick={() => setShowOverlay(true)}
               />
-            )}
-          </>
-        );
-      }),
+              {showOverlay && (
+                <ImageOverlay
+                  src={imageSrc}
+                  alt={props.alt}
+                  onClose={() => setShowOverlay(false)}
+                />
+              )}
+            </>
+          );
+        },
+        (prevProps, nextProps) =>
+          prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
+      ),
     }),
     [contentFeatures.hasCodeBlocks, handleLinkClick]
   );
