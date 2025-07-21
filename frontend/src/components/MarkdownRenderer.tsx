@@ -16,6 +16,7 @@ import 'katex/dist/katex.min.css';
 import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
+import { textBlockClassMap } from '@/lib/textBlockClassMap';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -95,30 +96,6 @@ const MemoizedImage = memo(
   (prevProps, nextProps) =>
     prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
 );
-
-const MemoizedH1 = memo(({ children }: { children: React.ReactNode }) => (
-  <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-    {children}
-  </h1>
-));
-
-const MemoizedH2 = memo(({ children }: { children: React.ReactNode }) => (
-  <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-    {children}
-  </h2>
-));
-
-const MemoizedH3 = memo(({ children }: { children: React.ReactNode }) => (
-  <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-    {children}
-  </h3>
-));
-
-const MemoizedH4 = memo(({ children }: { children: React.ReactNode }) => (
-  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-    {children}
-  </h4>
-));
 
 const hasContentFeature = (content: string, feature: RegExp): boolean => {
   return feature.test(content);
@@ -241,36 +218,47 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   const components = useMemo(
     () => ({
-      // Headings
-      h1: MemoizedH1,
-      h2: MemoizedH2,
-      h3: MemoizedH3,
-      h4: MemoizedH4,
-
-      // Paragraphs and text
-      p: memo(({ children }: { children: React.ReactNode }) => (
-        <p className="scroll-m-20 text-md leading-8">{children}</p>
-      )),
-      strong: memo(({ children }: { children: React.ReactNode }) => (
-        <strong className="font-semibold">{children}</strong>
-      )),
-      em: memo(({ children }: { children: React.ReactNode }) => (
-        <em className="italic">{children}</em>
-      )),
-
-      // Lists
-      ul: memo(({ children }: { children: React.ReactNode }) => (
-        <ul className="ml-6 list-disc [&>li:first-child]:mt-0">{children}</ul>
-      )),
-      ol: memo(({ children }: { children: React.ReactNode }) => (
-        <ol className="ml-6 list-decimal [&>li:first-child]:mt-0">
+      h1: ({ children }: { children: React.ReactNode }) => (
+        <h1 className={textBlockClassMap.h1}>{children}</h1>
+      ),
+      h2: ({ children }: { children: React.ReactNode }) => (
+        <h2 className={textBlockClassMap.h2}>{children}</h2>
+      ),
+      h3: ({ children }: { children: React.ReactNode }) => (
+        <h3 className={textBlockClassMap.h3}>{children}</h3>
+      ),
+      h4: ({ children }: { children: React.ReactNode }) => (
+        <h4 className={textBlockClassMap.h4}>{children}</h4>
+      ),
+      p: ({ children }: { children: React.ReactNode }) => (
+        <p className={textBlockClassMap.p}>{children}</p>
+      ),
+      ul: ({ children }: { children: React.ReactNode }) => (
+        <ul className={textBlockClassMap.ul}>{children}</ul>
+      ),
+      ol: ({ children }: { children: React.ReactNode }) => (
+        <ol className={textBlockClassMap.ol}>{children}</ol>
+      ),
+      li: ({ children }: { children: React.ReactNode }) => (
+        <li className={textBlockClassMap.li}>{children}</li>
+      ),
+      blockquote: ({ children }: { children: React.ReactNode }) => (
+        <blockquote className={textBlockClassMap.blockquote}>
           {children}
-        </ol>
-      )),
-      li: memo(({ children }: { children: React.ReactNode }) => (
-        <li className="mt-3">{children}</li>
-      )),
-
+        </blockquote>
+      ),
+      table: ({ children }: { children: React.ReactNode }) => (
+        <table className={textBlockClassMap.table}>{children}</table>
+      ),
+      img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+        <img {...props} className={textBlockClassMap.img} />
+      ),
+      strong: ({ children }: { children: React.ReactNode }) => (
+        <strong className={textBlockClassMap.strong}>{children}</strong>
+      ),
+      em: ({ children }: { children: React.ReactNode }) => (
+        <em className={textBlockClassMap.em}>{children}</em>
+      ),
       // Code blocks - with memoization and optimized rendering
       code: (props: React.ComponentProps<'code'>) => (
         <CodeBlock
@@ -350,7 +338,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col">
       <ReactMarkdown
         components={
           components as React.ComponentProps<typeof ReactMarkdown>['components']
