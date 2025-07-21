@@ -38,6 +38,21 @@ Console.WriteLine("Hello, World!");
 |----------|----------|
 | Row 1    | Data 1   |
 | Row 2    | Data 2   |
+
+---
+
+**Headings with paragraphs between**
+
+# H1 Heading
+This is a paragraph between H1 and H2.
+
+## H2 Heading
+This is a paragraph between H2 and H3.
+
+### H3 Heading
+This is a paragraph between H3 and H4.
+
+#### H4 Heading
 """;
 
         var html = @"<h1>H1 Heading</h1>
@@ -67,7 +82,17 @@ Console.WriteLine(&quot;Hello, World!&quot;);
   <tr><th>Column 1</th><th>Column 2</th></tr>
   <tr><td>Row 1</td><td>Data 1</td></tr>
   <tr><td>Row 2</td><td>Data 2</td></tr>
-</table>";
+</table>
+<hr />
+<p><strong>Headings with paragraphs between</strong></p>
+<h1>H1 Heading</h1>
+<p>This is a paragraph between H1 and H2.</p>
+<h2>H2 Heading</h2>
+<p>This is a paragraph between H2 and H3.</p>
+<h3>H3 Heading</h3>
+<p>This is a paragraph between H3 and H4.</p>
+<h4>H4 Heading</h4>
+";
 
         return Layout.Grid().Columns(2)
             | new Card(new Markdown(markdown)).Title("Markdown")
