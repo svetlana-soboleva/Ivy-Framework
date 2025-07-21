@@ -44,13 +44,13 @@ Console.WriteLine("Hello, World!");
 **Headings with paragraphs between**
 
 # H1 Heading
-This is a paragraph between H1 and H2.
+This is a paragraph between H1 and H2. It contains about forty words to demonstrate spacing and formatting. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum.
 
 ## H2 Heading
-This is a paragraph between H2 and H3.
+This is a paragraph between H2 and H3. It also contains approximately forty words for testing. Quisque euismod, urna eu tincidunt consectetur, nisi nisl aliquam enim, nec facilisis massa enim nec dui. Etiam euismod, sapien.
 
 ### H3 Heading
-This is a paragraph between H3 and H4.
+This is a paragraph between H3 and H4. The purpose is to ensure that longer paragraphs are rendered correctly between headings. Sed cursus, enim at dictum feugiat, sapien erat cursus enim, nec facilisis massa enim nec dui.
 
 #### H4 Heading
 """;
@@ -86,11 +86,11 @@ Console.WriteLine(&quot;Hello, World!&quot;);
 <hr />
 <p><strong>Headings with paragraphs between</strong></p>
 <h1>H1 Heading</h1>
-<p>This is a paragraph between H1 and H2.</p>
+<p>This is a paragraph between H1 and H2. It contains about forty words to demonstrate spacing and formatting. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum.</p>
 <h2>H2 Heading</h2>
-<p>This is a paragraph between H2 and H3.</p>
+<p>This is a paragraph between H2 and H3. It also contains approximately forty words for testing. Quisque euismod, urna eu tincidunt consectetur, nisi nisl aliquam enim, nec facilisis massa enim nec dui. Etiam euismod, sapien.</p>
 <h3>H3 Heading</h3>
-<p>This is a paragraph between H3 and H4.</p>
+<p>This is a paragraph between H3 and H4. The purpose is to ensure that longer paragraphs are rendered correctly between headings. Sed cursus, enim at dictum feugiat, sapien erat cursus enim, nec facilisis massa enim nec dui.</p>
 <h4>H4 Heading</h4>
 ";
 
