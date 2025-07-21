@@ -110,7 +110,7 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
    dotnet watch
    ```
 
-6. **Open** [http://localhost:5173/app](http://localhost:5173/app) in your browser.
+6. **Open** [http://localhost:5173/app](http://localhost:5173/) in your browser.
 
 Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy.
 
