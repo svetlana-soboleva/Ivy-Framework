@@ -201,15 +201,15 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       p: ({ children }: { children: React.ReactNode }) => (
         <p className={textBlockClassMap.p}>{children}</p>
       ),
-      ul: ({ children }: { children: React.ReactNode }) => (
+      ul: memo(({ children }: { children: React.ReactNode }) => (
         <ul className={textBlockClassMap.ul}>{children}</ul>
-      ),
-      ol: ({ children }: { children: React.ReactNode }) => (
+      )),
+      ol: memo(({ children }: { children: React.ReactNode }) => (
         <ol className={textBlockClassMap.ol}>{children}</ol>
-      ),
-      li: ({ children }: { children: React.ReactNode }) => (
+      )),
+      li: memo(({ children }: { children: React.ReactNode }) => (
         <li className={textBlockClassMap.li}>{children}</li>
-      ),
+      )),
       strong: ({ children }: { children: React.ReactNode }) => (
         <strong className={textBlockClassMap.strong}>{children}</strong>
       ),
