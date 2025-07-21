@@ -125,7 +125,11 @@ export const HtmlRenderer: React.FC<Omit<HtmlRendererProps, 'onLinkClick'>> = ({
 
   // Render as React elements with Ivy classes
   return (
-    <div className={className}>
+    <div
+      className={
+        className ? `${className} flex flex-col gap-8` : 'flex flex-col gap-8'
+      }
+    >
       {nodes.map((node, i) => (
         <React.Fragment key={i}>{domToReact(node)}</React.Fragment>
       ))}
