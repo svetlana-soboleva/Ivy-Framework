@@ -4,7 +4,7 @@ export function useDebounce<T extends (...args: unknown[]) => void>(
   fn: T,
   delay: number
 ) {
-  const timeoutRef = useRef<number | undefined>();
+  const timeoutRef = useRef<number | undefined>(undefined);
 
   const debouncedFn = useCallback(
     (...args: Parameters<T>) => {
