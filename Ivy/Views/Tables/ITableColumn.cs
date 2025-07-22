@@ -1,4 +1,4 @@
-namespace Ivy.Tables;
+namespace Ivy.Views.Tables;
 
 public interface ITableColumn<in TModel>
 {

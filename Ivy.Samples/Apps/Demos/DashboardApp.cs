@@ -1,5 +1,6 @@
 ﻿using Ivy.Charts;
 using Ivy.Shared;
+using Ivy.Views.Charts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ivy.Samples.Apps.Demos;

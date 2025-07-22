@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Ivy.Forms;
+namespace Ivy.Views.Forms;
 
 public static class FormHelpers
 {

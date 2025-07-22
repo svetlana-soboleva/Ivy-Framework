@@ -40,9 +40,7 @@ export function BladeWidget({
   return (
     <div
       style={styles}
-      className={cn(
-        'flex flex-col h-screen bg-background border-l border-border'
-      )}
+      className={cn('flex flex-col bg-background border-l border-border')}
     >
       <div
         className="flex items-center justify-between px-4 bg-background text-foreground h-[70px] border-b border-border"
@@ -72,7 +70,7 @@ export function BladeWidget({
       <div className="bg-muted">
         <ScrollArea
           type="hover"
-          className="blade-container h-[calc(100vh-70px)]"
+          className="blade-container h-[calc(100vh-90px)]"
         >
           <div className="p-4">{children}</div>
         </ScrollArea>

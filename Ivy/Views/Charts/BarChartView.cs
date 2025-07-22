@@ -2,12 +2,13 @@
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Ivy.Charts;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
 using Ivy.Shared;
 
-namespace Ivy.Charts;
+namespace Ivy.Views.Charts;
 
 public enum BarChartStyles
 {
@@ -42,7 +43,7 @@ public class DefaultBarChartStyle<TSource> : IBarChartStyle<TSource>
             .YAxis(new YAxis())
             .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
             .CartesianGrid(new CartesianGrid().Horizontal())
-            .Tooltip(new Tooltip().Animated(true))
+            .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             .Legend()
         ;
     }
@@ -63,7 +64,7 @@ public class DashboardBarChartStyle<TSource> : IBarChartStyle<TSource>
                 .XAxis(new XAxis().Type(AxisTypes.Number).Hide())
                 .YAxis(new YAxis(dimension.Name).Type(AxisTypes.Category).Hide())
                 .CartesianGrid(new CartesianGrid().Vertical())
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
         ;
     }
 }

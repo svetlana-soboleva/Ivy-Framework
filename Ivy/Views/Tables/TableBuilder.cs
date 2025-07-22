@@ -5,10 +5,8 @@ using Ivy.Builders;
 using Ivy.Core;
 using Ivy.Core.Hooks;
 using Ivy.Shared;
-using Ivy.Views;
-using Microsoft.AspNetCore.Hosting;
 
-namespace Ivy.Tables;
+namespace Ivy.Views.Tables;
 
 public class TableBuilder<TModel> : ViewBase, IStateless
 {

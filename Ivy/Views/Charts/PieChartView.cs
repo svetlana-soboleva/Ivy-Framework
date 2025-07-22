@@ -1,12 +1,11 @@
 ﻿using System.Collections.Immutable;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Ivy.Charts;
 using Ivy.Core;
 using Ivy.Core.Hooks;
-using Ivy.Helpers;
-using Ivy.Views;
 
-namespace Ivy.Charts;
+namespace Ivy.Views.Charts;
 
 public record PieChartData(string? Dimension, double Measure);
 
@@ -42,7 +41,7 @@ public class DefaultPieChartStyle<TSource> : IPieChartStyle<TSource>
     {
         return new PieChart(data)
             .Pie(nameof(PieChartData.Measure), nameof(PieChartData.Dimension))
-            .Tooltip(new Tooltip().Animated(true))
+            .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             .Legend();
     }
 }
@@ -58,7 +57,7 @@ public class DashboardPieChartStyle<TSource> : IPieChartStyle<TSource>
                 .Total(total)
                 .ColorScheme(ColorScheme.Default)
                 .Legend(new Legend().IconType(Legend.IconTypes.Rect))
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             ;
     }
 }
@@ -74,7 +73,7 @@ public class DonutPieChartStyle<TSource> : IPieChartStyle<TSource>
                     .Animated(true)
                 )
                 .ColorScheme(ColorScheme.Rainbow)
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
                 .Legend();
     }
 }
