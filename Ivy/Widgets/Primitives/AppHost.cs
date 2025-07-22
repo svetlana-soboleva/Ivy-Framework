@@ -5,7 +5,7 @@ namespace Ivy;
 
 public record AppHost : WidgetBase<AppHost>
 {
-    public AppHost(string appId, string? appArgs, string? parentId) 
+    public AppHost(string appId, string? appArgs, string? parentId)
     {
         ParentId = parentId ?? string.Empty;
         AppId = appId;

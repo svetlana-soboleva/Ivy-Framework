@@ -17,7 +17,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
     {
         public Tab ToTab() => new Tab(Title, AppHost).Icon(Icon).Key(Utils.GetShortHash(Id + RefreshToken));
     }
-    
+
     public override object? Build()
     {
         var tabs = UseState(ImmutableArray.Create<TabState>);
@@ -67,7 +67,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             {
                 var tabId = Guid.NewGuid().ToString();
                 var appHost = navigateArgs.ToAppHost(args.ConnectionId);
-                
+
                 if (settings.PreventTabDuplicates)
                 {
                     var appId = navigateArgs.AppId;
@@ -80,7 +80,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                             break;
                         }
                     }
-                
+
                     if (existingTabIndex >= 0)
                     {
                         selectedIndex.Set(existingTabIndex);

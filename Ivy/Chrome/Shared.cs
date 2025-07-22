@@ -53,7 +53,7 @@ public record NavigateArgs(string AppId, object? AppArgs = null)
     {
         return new AppHost(this.AppId, this.AppArgs != null ? JsonSerializer.Serialize(this.AppArgs) : null, parentId);
     }
-    
+
     public string GetUrl(string? parentId = null)
     {
         var url = $"index.html?appId={this.AppId}";
