@@ -204,3 +204,20 @@ Tests are automatically run in GitHub Actions on push to main/master branches an
 | `npm run lint:fix`     | Fix linting issues automatically      |
 | `npm run format`       | Format all files with Prettier        |
 | `npm run format:check` | Check if files are properly formatted |
+
+
+## Husky
+
+If you're having issues with husky on pre commits on Windows you can temporary disable:
+
+```bash
+git config core.hooksPath NUL
+```
+
+Reset:
+
+```bash
+git config --unset core.hooksPath
+```
+
+
