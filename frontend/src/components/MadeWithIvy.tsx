@@ -13,7 +13,7 @@ export default function MadeWithIvy() {
 
     checkWindowSize();
     window.addEventListener('resize', checkWindowSize);
-    
+
     return () => window.removeEventListener('resize', checkWindowSize);
   }, []);
 

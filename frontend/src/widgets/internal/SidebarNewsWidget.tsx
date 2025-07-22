@@ -11,7 +11,6 @@ export interface SidebarNewsWidgetProps {
 const BASE_URL = 'https://ivy.app/news/';
 
 const SidebarNewsWidget = ({ feedUrl }: SidebarNewsWidgetProps) => {
-
   const [articles, setArticles] = useState<NewsArticle[] | null>(null);
 
   useEffect(() => {
@@ -55,7 +54,9 @@ const OPACITY_FACTOR = 0.1;
 const STORAGE_KEY = 'dismissed-news';
 
 function News({ articles }: { articles: NewsArticle[] }) {
-  const [dismissedNews, setDismissedNews] = React.useState<string[] | null>(null);
+  const [dismissedNews, setDismissedNews] = React.useState<string[] | null>(
+    null
+  );
   const cleanupDoneRef = React.useRef(false);
 
   useEffect(() => {
@@ -86,7 +87,10 @@ function News({ articles }: { articles: NewsArticle[] }) {
   const [hasDismissedNews, setHasDismissedNews] = React.useState(false);
   const [showCompleted, setShowCompleted] = React.useState(false);
 
-  const cards = dismissedNews === null ? [] : articles.filter(({ id }) => !dismissedNews.includes(id));
+  const cards =
+    dismissedNews === null
+      ? []
+      : articles.filter(({ id }) => !dismissedNews.includes(id));
   const cardCount = cards.length;
 
   React.useEffect(() => {
