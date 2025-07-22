@@ -1,0 +1,11 @@
+const path = require('path');
+
+module.exports = {
+  '*.{js,jsx,ts,tsx}': [
+    'eslint --fix',
+    'prettier --write'
+  ],
+  '*.{json,css,md,html}': [
+    'prettier --write'
+  ]
+};
