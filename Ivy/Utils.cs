@@ -675,7 +675,7 @@ public static class Utils
 
         return false;
     }
-    
+
     public static string GetShortHash(string input, int length = 8)
     {
         using var sha256 = SHA256.Create();

@@ -37,7 +37,7 @@ public class DefaultAuthApp : ViewBase
         return
             Layout.Horizontal().Align(Align.Center).Height(Size.Screen())
             | (new Card().Width(100).Title("Login")
-               | (Layout.Vertical() 
+               | (Layout.Vertical()
                   | new Spacer().Height(2)
                   | (errorMessage.Value.NullIfEmpty() != null ? new Callout(errorMessage.Value).Variant(CalloutVariant.Error) : null)
                   | renderedOptions.SelectMany(x => new[] { x, new Separator("OR") }).Take(renderedOptions.Count * 2 - 1)
@@ -63,9 +63,9 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
             {
                 loading.Set(true);
                 var token = await auth.LoginAsync(user.Value, password.Value);
-                
+
                 Console.WriteLine(token);
-                
+
                 if (token != null)
                 {
                     client.SetJwt(token);
