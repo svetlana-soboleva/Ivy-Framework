@@ -7,7 +7,7 @@ export default function MadeWithIvy() {
 
   return (
     <div
-      className="bg-primary fixed bottom-0 right-0 z-50 overflow-hidden rounded-tl-full "
+      className="bg-primary fixed bottom-0 right-0 z-100 overflow-hidden rounded-tl-full "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

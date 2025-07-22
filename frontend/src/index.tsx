@@ -9,6 +9,7 @@ import { EventHandlerProvider } from './components/EventHandlerContext';
 import { TextShimmer } from './components/TextShimmer';
 import MadeWithIvy from './components/MadeWithIvy';
 import { ThemeProvider } from './components/ThemeProvider';
+import { getAppArgs, getAppId, getParentId } from './lib/utils';
 
 function ConnectionModal() {
   return (
@@ -41,15 +42,21 @@ function ConnectionModal() {
 }
 
 function App() {
-  const { widgetTree, eventHandler, disconnected, removeIvyBranding } =
-    useBackend();
+  const appId = getAppId();
+  const appArgs = getAppArgs();
+  const parentId = getParentId();
+  const { widgetTree, eventHandler, disconnected } = useBackend(
+    appId,
+    appArgs,
+    parentId
+  );
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="ivy-ui-theme">
       <ErrorBoundary>
         <EventHandlerProvider eventHandler={eventHandler}>
           <>
-            {!removeIvyBranding && <MadeWithIvy />}
+            {<MadeWithIvy />}
             {renderWidgetTree(widgetTree || loadingState())}
             <Toaster />
             {disconnected && <ConnectionModal />}

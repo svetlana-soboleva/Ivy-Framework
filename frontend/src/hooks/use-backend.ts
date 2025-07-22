@@ -2,13 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast';
-import {
-  getAppArgs,
-  getAppId,
-  getIvyHost,
-  getMachineId,
-  getParentId,
-} from '@/lib/utils';
+import { getIvyHost, getMachineId } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
@@ -21,7 +15,6 @@ type UpdateMessage = Array<{
 
 type RefreshMessage = {
   widgets: WidgetNode;
-  removeIvyBranding: boolean;
 };
 
 type AuthToken = {
@@ -35,7 +28,6 @@ const widgetTreeToXml = (node: WidgetNode) => {
   const attributes: string[] = [`Id="${escapeXml(node.id)}"`];
   if (node.props) {
     for (const [key, value] of Object.entries(node.props)) {
-      // Convert key to PascalCase
       const pascalCaseKey = key.charAt(0).toUpperCase() + key.slice(1);
       attributes.push(`${pascalCaseKey}="${escapeXml(String(value))}"`);
     }
@@ -58,17 +50,17 @@ const escapeXml = (str: string) => {
     .replace(/'/g, '&apos;');
 };
 
-export const useBackend = () => {
+export const useBackend = (
+  appId: string | null,
+  appArgs: string | null,
+  parentId: string | null
+) => {
   const [connection, setConnection] = useState<signalR.HubConnection | null>(
     null
   );
   const [widgetTree, setWidgetTree] = useState<WidgetNode | null>(null);
   const [disconnected, setDisconnected] = useState(false);
-  const [removeIvyBranding, setRemoveIvyBranding] = useState(false);
   const { toast } = useToast();
-  const appId = getAppId();
-  const appArgs = getAppArgs();
-  const parentId = getParentId();
   const machineId = getMachineId();
 
   useEffect(() => {
@@ -101,7 +93,6 @@ export const useBackend = () => {
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     logger.debug('Processing Refresh message', { message });
-    setRemoveIvyBranding(message.removeIvyBranding);
     setWidgetTree(message.widgets);
   }, []);
 
@@ -303,6 +294,5 @@ export const useBackend = () => {
     widgetTree,
     eventHandler,
     disconnected,
-    removeIvyBranding,
   };
 };
