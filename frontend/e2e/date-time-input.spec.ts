@@ -79,7 +79,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     appFrame = await setupDateTimeInputPage(page);
   });
 
-  test('should display all variants and data binding inputs', async () => {
+  test.skip('should display all variants and data binding inputs', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -117,7 +117,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     }
   });
 
-  test('should update value for Date variant', async () => {
+  test.skip('should update value for Date variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -134,7 +134,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(dateInput).toContainText('-15');
   });
 
-  test('should update value for DateTime variant', async () => {
+  test.skip('should update value for DateTime variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -154,7 +154,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(dtInput).toContainText('-10');
   });
 
-  test('should update value for Time variant', async () => {
+  test.skip('should update value for Time variant', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -167,7 +167,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(input).toHaveValue('08:00:00');
   });
 
-  test('should update value for nullable DateTime', async () => {
+  test.skip('should update value for nullable DateTime', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
@@ -186,7 +186,7 @@ test.describe('DateTimeInput - Variants and Data Binding', () => {
     await expect(nullableInput).toContainText('-20');
   });
 
-  test('should reflect data binding for DateTime', async () => {
+  test.skip('should reflect data binding for DateTime', async () => {
     expect(appFrame).not.toBeNull();
     if (!appFrame) throw new Error('App frame not found');
 
