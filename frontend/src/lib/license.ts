@@ -1,6 +1,6 @@
 import { jwtVerify, JWTPayload } from 'jose';
 
-const publicKeyPem = '%PUBLIC_KEY%';
+const publicKeyPem = '%LICENSE_PUBLIC_KEY%';
 
 function pemToUint8Array(pem: string) {
   const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s+/g, '');
@@ -31,12 +31,12 @@ async function getPublicKey(): Promise<CryptoKey> {
   return keyPromise;
 }
 
-export async function hasFeature(hasFeature: string): Promise<boolean> {
+export async function hasLicensedFeature(hasFeature: string): Promise<boolean> {
   try {
+    if (publicKeyPem === '%LICENSE_PUBLIC_KEY%') return false;
     if (!licensePayload) {
       const token = getIvyLicense();
       if (!token) return false;
-
       const key = await getPublicKey();
       const { payload } = await jwtVerify(token, key);
       licensePayload = payload;

@@ -10,6 +10,7 @@ import { TextShimmer } from './components/TextShimmer';
 import MadeWithIvy from './components/MadeWithIvy';
 import { ThemeProvider } from './components/ThemeProvider';
 import { getAppArgs, getAppId, getParentId } from './lib/utils';
+import { hasLicensedFeature } from './lib/license';
 
 function ConnectionModal() {
   return (
@@ -50,13 +51,14 @@ function App() {
     appArgs,
     parentId
   );
+  const removeBranding = hasLicensedFeature('RemoveBranding');
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="ivy-ui-theme">
       <ErrorBoundary>
         <EventHandlerProvider eventHandler={eventHandler}>
           <>
-            {<MadeWithIvy />}
+            {!removeBranding && <MadeWithIvy />}
             {renderWidgetTree(widgetTree || loadingState())}
             <Toaster />
             {disconnected && <ConnectionModal />}
