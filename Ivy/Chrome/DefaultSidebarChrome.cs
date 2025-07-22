@@ -118,7 +118,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             if (@event.Value is string appId)
             {
-                client?.OpenUrl(new NavigateArgs(appId).GetUrl());
+                client.OpenUrl(new NavigateArgs(appId).GetUrl());
             }
         }
 
@@ -159,7 +159,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             selectedIndex.Set(@event.Value);
         }
 
-        object? body = null;
+        object? body;
 
         if (settings.Navigation == ChromeNavigation.Pages)
         {
@@ -255,7 +255,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         }
 
         return new SidebarLayout(
-            body,
+            body ?? null!,
             sidebarMenu,
             Layout.Vertical()
                 | settings.Header

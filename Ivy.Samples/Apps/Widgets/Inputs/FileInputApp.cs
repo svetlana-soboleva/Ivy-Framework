@@ -163,10 +163,10 @@ public class FileInputApp : SampleBase
                   | Text.InlineCode("File Details")
 
                   | singleFile.ToFileInput().Placeholder("Select a text file to view content")
-                  | singleFile.ToDetails().Remove(e => e.Content)
+                  | (singleFile.Value != null ? (object)singleFile.ToDetails().Remove(e => e!.Content) : Text.Block("No file selected"))
 
                   | singleFile.ToFileInput().Placeholder("Select a file to view as plain text")
-                  | singleFile.Value?.ToPlainText()
+                  | (singleFile.Value?.ToPlainText() ?? (object)Text.Block("No file selected"))
                )
 
                // Backend Validation:
