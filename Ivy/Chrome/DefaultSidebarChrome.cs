@@ -14,11 +14,11 @@ namespace Ivy.Chrome;
 [App(isVisible: false, removeIvyBranding: true)]
 public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 {
-    private record TabState(string Id, string Title, AppHost AppHost, Icons? Icon, long RefreshToken)
+    private record TabState(string Id, string AppId, string Title, AppHost AppHost, Icons? Icon, string RefreshToken)
     {
-        public Tab ToTab() => new Tab(Title, AppHost with {RefreshToken = RefreshToken}).Icon(Icon).Key(Id);
+        public Tab ToTab() => new Tab(Title, AppHost).Icon(Icon).Key(Utils.GetShortHash(Id + RefreshToken));
     }
-
+    
     public override object? Build()
     {
         var tabs = UseState(ImmutableArray.Create<TabState>);
@@ -89,7 +89,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 //     }
                 // }
 
-                var newTabs = tabs.Value.Add(new TabState(tabId, app.Title, appHost, app.Icon, DateTime.UtcNow.Ticks));
+                var newTabs = tabs.Value.Add(new TabState(tabId, app.Id, app.Title, appHost, app.Icon, Guid.NewGuid().ToString()));
                 tabs.Set(newTabs);
                 selectedIndex.Set(newTabs.Length - 1);
             }
@@ -156,7 +156,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         void OnTabRefresh(Event<TabsLayout, int> @event)
         {
             var tab = tabs.Value[@event.Value];
-            tabs.Set(tabs.Value.RemoveAt(@event.Value).Insert(@event.Value, tab with { RefreshToken = DateTime.UtcNow.Ticks }));
+            tabs.Set(tabs.Value.RemoveAt(@event.Value).Insert(@event.Value, tab with { RefreshToken = Guid.NewGuid().ToString() }));
             selectedIndex.Set(@event.Value);
         }
 
