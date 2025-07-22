@@ -1,4 +1,5 @@
 import React from 'react';
+import { ivyTagClassMap } from '@/lib/utils';
 
 interface HtmlRendererProps {
   content: string;
@@ -69,32 +70,69 @@ const sanitizeHtml = (
   return temp.innerHTML;
 };
 
-export const HtmlRenderer: React.FC<HtmlRendererProps> = ({
+function domToReact(node: ChildNode): React.ReactNode {
+  if (node.nodeType === Node.TEXT_NODE) {
+    return node.textContent;
+  }
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return null;
+  }
+  const el = node as HTMLElement;
+  const tag = el.tagName.toLowerCase();
+  const className = ivyTagClassMap[tag] || undefined;
+  const children = Array.from(el.childNodes).map(domToReact);
+  const props: Record<string, unknown> = { className };
+
+  // Special handling for <a>, <img>, <code>, etc.
+  if (tag === 'a') {
+    props.href = el.getAttribute('href');
+    props.target = el.getAttribute('target') || undefined;
+    props.rel = el.getAttribute('rel') || undefined;
+    props.onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (
+        props.href &&
+        typeof props.href === 'string' &&
+        props.href.startsWith('javascript:')
+      ) {
+        e.preventDefault();
+        return;
+      }
+    };
+  } else if (tag === 'img') {
+    props.src = el.getAttribute('src');
+    props.alt = el.getAttribute('alt') || '';
+    props.loading = 'lazy';
+  } else if (tag === 'code') {
+    props.children = el.textContent;
+    return React.createElement('code', props);
+  }
+
+  return React.createElement(tag, props, ...children);
+}
+
+export const HtmlRenderer: React.FC<Omit<HtmlRendererProps, 'onLinkClick'>> = ({
   content,
   className = '',
   allowedTags,
-  onLinkClick,
 }) => {
   // Sanitize the HTML content
   const sanitizedContent = sanitizeHtml(content, allowedTags);
 
-  // Handle link clicks
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'A' && onLinkClick) {
-      e.preventDefault();
-      const href = target.getAttribute('href') || '';
-      onLinkClick(e as unknown as React.MouseEvent<HTMLAnchorElement>, href);
-    }
-  };
+  // Parse the sanitized HTML into a DOM tree
+  const temp = document.createElement('div');
+  temp.innerHTML = sanitizedContent;
+  const nodes = Array.from(temp.childNodes);
 
+  // Render as React elements with Ivy classes
   return (
-    <div className={`${className}`}>
-      <div
-        className="prose max-w-none"
-        onClick={handleClick}
-        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-      />
+    <div
+      className={
+        className ? `${className} flex flex-col gap-2` : 'flex flex-col gap-2'
+      }
+    >
+      {nodes.map((node, i) => (
+        <React.Fragment key={i}>{domToReact(node)}</React.Fragment>
+      ))}
     </div>
   );
 };
