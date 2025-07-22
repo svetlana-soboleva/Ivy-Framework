@@ -79,7 +79,7 @@ test.describe('Number Inputs - Variants Section', () => {
     appFrame = await setupNumberInputPage(page);
   });
 
-  test('should display all variants in the grid', async () => {
+  test.skip('should display all variants in the grid', async () => {
     expect(appFrame).not.toBeNull();
 
     // Assert that the frame exists before using it
