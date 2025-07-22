@@ -681,6 +681,7 @@ public static class Utils
         using var sha256 = SHA256.Create();
         byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
         string base64 = System.Convert.ToBase64String(hash);
-        return new string(base64.Replace("+", "-").Replace("/", "_").ToLower().Where(char.IsLetterOrDigit).ToArray())[..length];
+        string filtered = new string(base64.ToLower().Where(char.IsLetterOrDigit).ToArray());
+        return filtered.Length >= length ? filtered[..length] : filtered.PadRight(length, '0');
     }
 }
