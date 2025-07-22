@@ -66,28 +66,28 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             }
             else
             {
-                var tabId = Guid.NewGuid().ToString("N");
+                var tabId = Guid.NewGuid().ToString();
                 var appHost = navigateArgs.ToAppHost(args.ConnectionId);
                 
-                // if (settings.PreventTabDuplicates)
-                // {
-                //     var url = navigateArgs.GetUrl(args.ConnectionId);
-                //     int existingTabIndex = -1;
-                //     for (int i = 0; i < tabs.Value.Length; i++)
-                //     {
-                //         if (tabs.Value[i].Url == url)
-                //         {
-                //             existingTabIndex = i;
-                //             break;
-                //         }
-                //     }
-                //
-                //     if (existingTabIndex >= 0)
-                //     {
-                //         selectedIndex.Set(existingTabIndex);
-                //         return;
-                //     }
-                // }
+                if (settings.PreventTabDuplicates)
+                {
+                    var appId = navigateArgs.AppId;
+                    int existingTabIndex = -1;
+                    for (int i = 0; i < tabs.Value.Length; i++)
+                    {
+                        if (tabs.Value[i].AppId == appId)
+                        {
+                            existingTabIndex = i;
+                            break;
+                        }
+                    }
+                
+                    if (existingTabIndex >= 0)
+                    {
+                        selectedIndex.Set(existingTabIndex);
+                        return;
+                    }
+                }
 
                 var newTabs = tabs.Value.Add(new TabState(tabId, app.Id, app.Title, appHost, app.Icon, Guid.NewGuid().ToString()));
                 tabs.Set(newTabs);
