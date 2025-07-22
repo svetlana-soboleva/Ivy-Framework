@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { renderWidgetTree, loadingState } from '@/widgets/WidgetRenderer';
@@ -51,7 +51,11 @@ function App() {
     appArgs,
     parentId
   );
-  const removeBranding = hasLicensedFeature('RemoveBranding');
+  const [removeBranding, setRemoveBranding] = useState(false);
+
+  useEffect(() => {
+    hasLicensedFeature('RemoveBranding').then(setRemoveBranding);
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="ivy-ui-theme">

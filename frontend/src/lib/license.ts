@@ -33,7 +33,7 @@ async function getPublicKey(): Promise<CryptoKey> {
 
 export async function hasLicensedFeature(hasFeature: string): Promise<boolean> {
   try {
-    if (publicKeyPem === '%LICENSE_PUBLIC_KEY%') return false;
+    if (publicKeyPem === '%IVY_LICENSE_PUBLIC_KEY%') return false;
     if (!licensePayload) {
       const token = getIvyLicense();
       if (!token) return false;
