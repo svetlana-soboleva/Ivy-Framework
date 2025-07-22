@@ -6,6 +6,7 @@ import { getIvyHost, getMachineId } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
 import { setThemeGlobal } from '@/components/ThemeProvider';
+import { cloneDeep } from 'lodash';
 
 type UpdateMessage = Array<{
   viewId: string;
@@ -50,8 +51,32 @@ const escapeXml = (str: string) => {
     .replace(/'/g, '&apos;');
 };
 
+function applyUpdateMessage(
+  tree: WidgetNode,
+  message: UpdateMessage
+): WidgetNode {
+  const newTree = cloneDeep(tree);
+
+  message.forEach(update => {
+    let parent = newTree;
+    if (update.indices.length === 0) {
+      applyPatch(parent, update.patch);
+    } else {
+      update.indices.forEach((index, i) => {
+        if (i === update.indices.length - 1) {
+          applyPatch(parent.children![index], update.patch);
+        } else {
+          parent = parent.children![index];
+        }
+      });
+    }
+  });
+
+  return newTree;
+}
+
 export const useBackend = (
-  appId: string,
+  appId: string | null,
   appArgs: string | null,
   parentId: string | null
 ) => {
@@ -95,32 +120,11 @@ export const useBackend = (
 
   const handleUpdateMessage = useCallback((message: UpdateMessage) => {
     setWidgetTree(currentTree => {
-      logger.debug(`[${connectionId}] Tree Before`, currentTree);
-
       if (!currentTree) {
         logger.warn('No current widget tree available for update');
         return null;
       }
-
-      const newWidgetTree = { ...currentTree };
-
-      message.forEach(update => {
-        let parent = newWidgetTree;
-        if (update.indices.length === 0) {
-          applyPatch(newWidgetTree, update.patch);
-        } else {
-          update.indices.forEach((index, i) => {
-            if (i === update.indices.length - 1) {
-              applyPatch(parent.children![index], update.patch);
-            } else {
-              parent = parent.children![index];
-            }
-          });
-        }
-      });
-
-      logger.debug(`[${connectionId}] Tree After`, newWidgetTree);
-      return newWidgetTree;
+      return applyUpdateMessage(currentTree, message);
     });
   }, []);
 
