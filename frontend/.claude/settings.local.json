@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(git commit:*)",
+      "Bash(been passed to createRoot\" error during development.\nEOF\n)\")"
+    ],
+    "deny": []
+  }
+}

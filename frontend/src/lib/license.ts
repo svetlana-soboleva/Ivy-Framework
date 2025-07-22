@@ -1,6 +1,6 @@
 import { jwtVerify, JWTPayload } from 'jose';
 
-const publicKeyPem = '%LICENSE_PUBLIC_KEY%';
+const publicKeyPem = '%IVY_LICENSE_PUBLIC_KEY%';
 
 function pemToUint8Array(pem: string) {
   const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s+/g, '');
