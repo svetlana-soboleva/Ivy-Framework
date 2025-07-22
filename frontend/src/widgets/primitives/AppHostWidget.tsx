@@ -8,7 +8,7 @@ interface AppHostWidgetProps {
   id: string;
   appId: string;
   appArgs: string | null;
-  parentId: string;
+  parentId: string | null;
 }
 
 export const AppHostWidget: React.FC<AppHostWidgetProps> = ({
