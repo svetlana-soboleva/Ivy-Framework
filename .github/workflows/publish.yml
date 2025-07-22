@@ -26,6 +26,20 @@ jobs:
           token: ${{ secrets.IVY_FRAMEWORK_TOKEN }}
           path: Ivy
 
+      - name: Replace %IVY_LICENSE_PUBLIC_KEY% with Secret
+        run: |
+          $filePath = "Ivy-Framework/frontend/src/lib/license.ts"
+          if (Test-Path $filePath) {
+            $content = Get-Content $filePath -Raw
+            $content = $content -replace '%IVY_LICENSE_PUBLIC_KEY%', '${{ secrets.IVY_LICENSE_PUBLIC_KEY }}'
+            Set-Content $filePath $content
+            Write-Host "Successfully replaced IVY_LICENSE_PUBLIC_KEY in license.ts"
+          } else {
+            Write-Error "Could not find license.ts at $filePath"
+            exit 1
+          }
+        shell: pwsh
+
       - name: Ensure Directory.Build.props is available
         run: |
           if (Test-Path "Ivy/Directory.Build.props") {
