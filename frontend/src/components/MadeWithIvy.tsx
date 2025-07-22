@@ -1,9 +1,23 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import IvyLogo from './IvyLogo';
 
 export default function MadeWithIvy() {
   const [isHovered, setIsHovered] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setShouldShow(window.innerWidth >= 600 && window.innerHeight >= 600);
+    };
+
+    checkWindowSize();
+    window.addEventListener('resize', checkWindowSize);
+    
+    return () => window.removeEventListener('resize', checkWindowSize);
+  }, []);
+
+  if (!shouldShow) return null;
 
   return (
     <div
