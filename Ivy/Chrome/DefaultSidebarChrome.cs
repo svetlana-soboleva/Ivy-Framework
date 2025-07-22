@@ -3,7 +3,6 @@ using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Client;
 using Ivy.Core;
-using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Shared;
 using Ivy.Views;
@@ -11,7 +10,7 @@ using Ivy.Widgets.Internal;
 
 namespace Ivy.Chrome;
 
-[App(isVisible: false, removeIvyBranding: true)]
+[App(isVisible: false)]
 public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 {
     private record TabState(string Id, string AppId, string Title, AppHost AppHost, Icons? Icon, string RefreshToken)
