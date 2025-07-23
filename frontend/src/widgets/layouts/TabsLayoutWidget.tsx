@@ -471,7 +471,6 @@ export const TabsLayoutWidget = ({
                       ? 'text-[#0e0e10] dark:text-white'
                       : 'text-[#0e0f1199] dark:text-[#ffffff99]'
                   )}
-                  onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => {
                     setActiveIndex(index);
                     setActiveTabId(tabOrder[index]);
