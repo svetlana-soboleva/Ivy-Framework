@@ -6,6 +6,7 @@ import {
   getBorderRadius,
   getBorderStyle,
   getBorderThickness,
+  getColor,
   getHeight,
   getMargin,
   getPadding,
@@ -49,13 +50,9 @@ export const BoxWidget: React.FC<BoxWidgetProps> = ({
     ...getAlign('Vertical', contentAlign),
     ...getWidth(width),
     ...getHeight(height),
-    ...(color
-      ? {
-          backgroundColor: `var(--${color}-light)`,
-          borderColor: `var(--${color}-dark)`,
-          color: `var(--${color}-foreground)`,
-        }
-      : {}),
+    ...getColor(color, 'backgroundColor', 'background'),
+    ...getColor(color, 'borderColor', 'foreground'),
+    ...getColor(color, 'color', 'foreground'),
   };
 
   return (

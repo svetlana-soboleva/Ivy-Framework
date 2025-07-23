@@ -1,5 +1,5 @@
 import Icon from '@/components/Icon';
-import { getHeight, getWidth } from '@/lib/styles';
+import { getColor, getHeight, getWidth } from '@/lib/styles';
 import React from 'react';
 
 interface IconWidgetProps {
@@ -20,7 +20,7 @@ export const IconWidget: React.FC<IconWidgetProps> = ({
   const styles = {
     ...getWidth(width),
     ...getHeight(height),
-    ...(color ? { color: `var(--${color})` } : {}),
+    ...getColor(color, 'color', 'background'),
   };
 
   return <Icon style={styles} name={name} key={id} />;

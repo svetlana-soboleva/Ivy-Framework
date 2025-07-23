@@ -1,4 +1,4 @@
-import { getOverflow, getWidth, Overflow } from '@/lib/styles';
+import { getColor, getOverflow, getWidth, Overflow } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { textBlockClassMap } from '../../lib/textBlockClassMap';
@@ -162,7 +162,7 @@ export const TextBlockWidget: React.FC<TextBlockWidgetProps> = ({
 }) => {
   const styles: React.CSSProperties = {
     ...getWidth(width),
-    ...(color ? { color: `var(--${color})` } : {}),
+    ...getColor(color, 'color', 'background'),
     ...getOverflow(overflow),
   };
 
