@@ -226,6 +226,11 @@ public class GridLineDemo : ViewBase
         var width  = UseState(100);
         
         return Layout.Vertical()
+                 | new LineChart(data, "Desktop", "Month")
+                        .Line("Mobile")
+                        .Height(height.Value)
+                        .Width(width.Value)
+                       .Legend()
                  | (Layout.Horizontal()
                      | Text.Large("Height")
                      | new NumberInput<int>(
@@ -244,12 +249,7 @@ public class GridLineDemo : ViewBase
                             })
                        .Step(1)
                      .Max(400)
-                     .Variant(NumberInputs.Slider))
-                 | new LineChart(data, "Desktop", "Month")
-                        .Line("Mobile")
-                        .Height(height.Value)
-                        .Width(width.Value)
-                       .Legend();
+                     .Variant(NumberInputs.Slider));
     }
 }
 ```
