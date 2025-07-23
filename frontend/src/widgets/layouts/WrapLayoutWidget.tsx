@@ -1,7 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import {
-  getColor,
   getGap,
   getHeight,
   getPadding,
@@ -34,7 +33,7 @@ export const WrapLayoutWidget: React.FC<WrapLayoutWidgetProps> = ({
     ...getPadding(padding),
     ...getMargin(margin),
     ...getGap(gap),
-    ...getColor(background, 'backgroundColor', 'background'),
+    ...(background ? { backgroundColor: `var(--${background})` } : {}),
   };
 
   return (

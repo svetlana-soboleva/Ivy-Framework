@@ -470,22 +470,3 @@ export const getAlign = (
 
   return styles;
 };
-
-export const getColor = (
-  color?: string,
-  cssProperty: 'color' | 'backgroundColor' | 'borderColor' = 'color',
-  role: 'background' | 'foreground' = 'background',
-  percentage: number | undefined = undefined
-) => {
-  if (!color) return {};
-  const varName =
-    color.toLowerCase() + (role === 'background' ? '' : '-foreground');
-  if (percentage && percentage > -100 && percentage < 100) {
-    return {
-      [cssProperty]: `color-mix(in srgb, var(--${varName}),${percentage > 0 ? 'white' : 'black'} ${Math.abs(percentage)}%)`,
-    };
-  }
-  return {
-    [cssProperty]: 'var(--' + varName + ')',
-  };
-};

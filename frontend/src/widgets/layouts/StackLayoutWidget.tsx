@@ -7,7 +7,6 @@ import {
   getPadding,
   getWidth,
   Orientation,
-  getColor,
   getMargin,
 } from '@/lib/styles';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -48,7 +47,7 @@ export const StackLayoutWidget: React.FC<StackLayoutWidgetProps> = ({
     ...getWidth(width),
     ...getHeight(height),
     ...getAlign(orientation, align),
-    ...getColor(background, 'backgroundColor', 'background'),
+    ...(background ? { backgroundColor: `var(--${background})` } : {}),
   };
 
   if (!visible) {

@@ -5,12 +5,7 @@ import { cn, getIvyHost, camelCase } from '@/lib/utils';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import withTooltip from '@/hoc/withTooltip';
 import { Loader2 } from 'lucide-react';
-import {
-  BorderRadius,
-  getBorderRadius,
-  getColor,
-  getWidth,
-} from '@/lib/styles';
+import { BorderRadius, getBorderRadius, getWidth } from '@/lib/styles';
 
 interface ButtonWidgetProps {
   id: string;
@@ -64,7 +59,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
 
   const styles: React.CSSProperties = {
     ...getWidth(width),
-    ...getColor(foreground),
+    ...(foreground ? { color: `var(--${foreground})` } : {}),
     ...getBorderRadius(borderRadius),
   };
 
