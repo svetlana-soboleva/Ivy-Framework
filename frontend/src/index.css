@@ -12,7 +12,7 @@
     --card-foreground: #737373;
     --popover: #ffffff;
     --popover-foreground: #737373;
-    --primary: #74c997;
+    --primary: #00c994;
     --primary-foreground: #000000;
     --secondary: #c2cbc7;
     --secondary-foreground: #000000;
@@ -25,7 +25,7 @@
     --border: #e5e5e5;
     --input: #e5e5e5;
     --ring: #74c997;
-    --chart-1: #74c997;
+    --chart-1: #00c994;
     --chart-2: #dd5860;
     --chart-3: #4b28e2;
     --chart-4: #e5e04c;
@@ -135,7 +135,7 @@
     --rose-foreground: #000000;
     --rose-light: #f4d8da;
     --rose-dark: #614647;
-    --primary: #74c997;
+    --primary: #00c994;
     --primary-foreground: #000000;
     --primary-light: #c2eeda;
     --primary-dark: #355a47;
@@ -174,7 +174,7 @@
     --card-foreground: #ffffff;
     --popover: #212221;
     --popover-foreground: #ffffff;
-    --primary: #00ce91;
+    --primary: #00c994;
     --primary-foreground: #000000;
     --secondary: #565b58;
     --secondary-foreground: #ffffff;
@@ -187,8 +187,8 @@
     --border: #3c3d3c;
     --input: #3c3d3c;
     --ring: #74c997;
-    --chart-1: #4b28e2;
-    --chart-2: #74c997;
+    --chart-1: #00c994;
+    --chart-2: #00c994;
     --chart-3: #e5e04c;
     --chart-4: #844cc0;
     --chart-5: #dd5860;
