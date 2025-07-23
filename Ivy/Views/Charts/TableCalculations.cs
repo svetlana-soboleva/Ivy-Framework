@@ -1,4 +1,4 @@
-﻿namespace Ivy.Charts;
+﻿namespace Ivy.Views.Charts;
 
 public static class TableCalculations
 {

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Ivy.Tables;
+using Ivy.Views.Tables;
 using Newtonsoft.Json;
 
 namespace Ivy.Docs.Helpers;

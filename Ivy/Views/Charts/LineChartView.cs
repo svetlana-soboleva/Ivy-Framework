@@ -2,11 +2,12 @@
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Ivy.Charts;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
 
-namespace Ivy.Charts;
+namespace Ivy.Views.Charts;
 
 public enum LineChartStyles
 {
@@ -43,7 +44,7 @@ public class DefaultLineChartStyle<TSource> : ILineChartStyle<TSource>
                 .Line(calculations.Select(c => new Line(c.Name)).ToArray())
                 .YAxis(new YAxis())
                 .XAxis(dimension.Name)
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
                 .Legend()
             ;
     }
@@ -59,7 +60,7 @@ public class DashboardLineChartStyle<TSource> : ILineChartStyle<TSource>
                 .Line(measures.Select(m => new Line(m.Name).CurveType(CurveTypes.Natural).StrokeWidth(2)).ToArray())
                 .Line(calculations.Select(c => new Line(c.Name).CurveType(CurveTypes.Natural)).ToArray())
                 .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             ;
     }
 }
@@ -75,7 +76,7 @@ public class CustomLineChartStyle<TSource> : ILineChartStyle<TSource>
                 .Line(calculations.Select(c => new Line(c.Name).CurveType(CurveTypes.Step)).ToArray())
                 .XAxis(new XAxis(dimension.Name).TickLine(true).AxisLine(true).MinTickGap(10))
                 .YAxis(new YAxis().TickLine(true).AxisLine(true))
-                .Tooltip(new Tooltip().Animated(true))
+                .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
                 .Legend()
             ;
     }

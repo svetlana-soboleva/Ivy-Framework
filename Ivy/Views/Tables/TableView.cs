@@ -1,7 +1,7 @@
 using Ivy.Core;
 using Ivy.Core.Hooks;
 
-namespace Ivy.Tables;
+namespace Ivy.Views.Tables;
 
 public class TableView<TModel>(IEnumerable<TModel> model, params ITableColumn<TModel>[] columns) : ViewBase, IStateless
 {

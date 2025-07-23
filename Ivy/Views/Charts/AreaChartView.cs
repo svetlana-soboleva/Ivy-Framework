@@ -2,11 +2,12 @@
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Ivy.Charts;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
 
-namespace Ivy.Charts;
+namespace Ivy.Views.Charts;
 
 public enum AreaChartStyles
 {
@@ -41,7 +42,7 @@ public class DefaultAreaChartStyle<TSource> : IAreaChartStyle<TSource>
             .YAxis(new YAxis())
             .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
             .CartesianGrid(new CartesianGrid().Horizontal())
-            .Tooltip(new Tooltip().Animated(true))
+            .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             .Legend()
         ;
     }
@@ -56,7 +57,7 @@ public class DashboardAreaChartStyle<TSource> : IAreaChartStyle<TSource>
             .Area(measures.Select(m => new Area(m.Name, 1)).ToArray())
             .XAxis(new XAxis(dimension.Name).TickLine(false).AxisLine(false).MinTickGap(10))
             .CartesianGrid(new CartesianGrid().Horizontal())
-            .Tooltip(new Tooltip().Animated(true))
+            .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
         ;
     }
 }

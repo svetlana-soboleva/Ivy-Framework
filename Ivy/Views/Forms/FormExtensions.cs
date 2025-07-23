@@ -1,6 +1,6 @@
 using Ivy.Core.Hooks;
 
-namespace Ivy.Forms;
+namespace Ivy.Views.Forms;
 
 public static class FormExtensions
 {

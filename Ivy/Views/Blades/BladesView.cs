@@ -1,8 +1,7 @@
 using Ivy.Core;
-using Ivy.Core.Hooks;
 using Ivy.Shared;
 
-namespace Ivy.Blades;
+namespace Ivy.Views.Blades;
 
 public class BladesView : ViewBase
 {

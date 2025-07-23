@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { renderWidgetTree, loadingState } from '@/widgets/WidgetRenderer';
@@ -9,6 +9,8 @@ import { EventHandlerProvider } from './components/EventHandlerContext';
 import { TextShimmer } from './components/TextShimmer';
 import MadeWithIvy from './components/MadeWithIvy';
 import { ThemeProvider } from './components/ThemeProvider';
+import { getAppArgs, getAppId, getParentId } from './lib/utils';
+import { hasLicensedFeature } from './lib/license';
 
 function ConnectionModal() {
   return (
@@ -41,15 +43,26 @@ function ConnectionModal() {
 }
 
 function App() {
-  const { widgetTree, eventHandler, disconnected, removeIvyBranding } =
-    useBackend();
+  const appId = getAppId();
+  const appArgs = getAppArgs();
+  const parentId = getParentId();
+  const { widgetTree, eventHandler, disconnected } = useBackend(
+    appId,
+    appArgs,
+    parentId
+  );
+  const [removeBranding, setRemoveBranding] = useState(false);
+
+  useEffect(() => {
+    hasLicensedFeature('RemoveBranding').then(setRemoveBranding);
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="ivy-ui-theme">
       <ErrorBoundary>
         <EventHandlerProvider eventHandler={eventHandler}>
           <>
-            {!removeIvyBranding && <MadeWithIvy />}
+            {!removeBranding && <MadeWithIvy />}
             {renderWidgetTree(widgetTree || loadingState())}
             <Toaster />
             {disconnected && <ConnectionModal />}
@@ -60,7 +73,20 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root');
+if (!container) throw new Error('Failed to find root element');
+
+interface WindowWithReactRoot extends Window {
+  __reactRoot?: ReturnType<typeof createRoot>;
+}
+
+let root = (window as WindowWithReactRoot).__reactRoot;
+if (!root) {
+  root = createRoot(container);
+  (window as WindowWithReactRoot).__reactRoot = root;
+}
+
+root.render(
   <StrictMode>
     <App />
   </StrictMode>

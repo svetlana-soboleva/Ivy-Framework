@@ -1,6 +1,7 @@
 ﻿using Ivy.Charts;
 using Ivy.Shared;
 using System.Linq.Expressions;
+using Ivy.Views.Charts;
 
 namespace Ivy.Samples.Apps.Widgets.Charts;
 

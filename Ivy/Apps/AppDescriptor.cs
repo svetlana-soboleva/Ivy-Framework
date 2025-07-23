@@ -40,8 +40,6 @@ public class AppDescriptor : IAppRepositoryNode
 
     public bool IsChrome => Id == AppIds.Chrome;
 
-    public required bool RemoveIvyBranding { get; init; }
-
     public bool GroupExpanded { get; set; }
 
     public InternalLink? Next { get; set; }

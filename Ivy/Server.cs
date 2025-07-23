@@ -67,8 +67,7 @@ public class Server
             Title = "Default",
             ViewFunc = viewFactory,
             Path = ["Apps"],
-            IsVisible = true,
-            RemoveIvyBranding = false
+            IsVisible = true
         });
         DefaultAppId = AppIds.Default;
     }
@@ -126,8 +125,7 @@ public class Server
             Title = "Chrome",
             ViewFactory = viewFactory ?? (() => new DefaultSidebarChrome(ChromeSettings.Default())),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = true
+            IsVisible = false
         });
         DefaultAppId = AppIds.Chrome;
         return this;
@@ -149,8 +147,7 @@ public class Server
             Title = "Auth",
             ViewFactory = viewFactory ?? (() => new DefaultAuthApp()),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = false
+            IsVisible = false
         });
         AuthProviderType = typeof(T);
         return this;

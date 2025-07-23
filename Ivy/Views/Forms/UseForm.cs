@@ -1,11 +1,8 @@
-﻿using Ivy.Apps;
-using Ivy.Core;
+﻿using Ivy.Core;
 using Ivy.Core.Hooks;
-using Ivy.Helpers;
 using Ivy.Shared;
-using Ivy.Views;
 
-namespace Ivy.Forms;
+namespace Ivy.Views.Forms;
 
 public static class UseFormExtensions
 {

@@ -421,15 +421,13 @@ export const TabsLayoutWidget = ({
               >
                 {orderedTabWidgets.map(tabWidget => {
                   if (!React.isValidElement(tabWidget)) return null;
-                  const props = tabWidget.props as Partial<TabWidgetProps> & {
-                    key?: string;
-                  };
+                  const props = tabWidget.props as Partial<TabWidgetProps>;
                   if (!props.id) return null;
-                  const { id, key } = props;
+                  const { id } = props;
 
                   return (
                     <SortableTabTrigger
-                      key={key ?? id}
+                      key={id}
                       id={id}
                       value={id}
                       onClick={() => handleTabSelect(id)}
@@ -505,11 +503,9 @@ export const TabsLayoutWidget = ({
       <div className="flex-1 overflow-hidden">
         {orderedTabWidgets.map(tabWidget => {
           if (!React.isValidElement(tabWidget)) return null;
-          const props = tabWidget.props as Partial<TabWidgetProps> & {
-            key?: string;
-          };
+          const props = tabWidget.props as Partial<TabWidgetProps>;
           if (!props.id) return null;
-          const { id, key } = props;
+          const { id } = props;
 
           if (!loadedTabs.has(id)) return null;
 
@@ -517,7 +513,7 @@ export const TabsLayoutWidget = ({
 
           return (
             <div
-              key={key ?? id}
+              key={id}
               className={cn(
                 'h-full overflow-auto',
                 activeTabId === id ? 'block' : 'hidden'

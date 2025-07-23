@@ -1,4 +1,4 @@
-﻿namespace Ivy.Blades;
+﻿namespace Ivy.Views.Blades;
 
 public static class BladeHelper
 {

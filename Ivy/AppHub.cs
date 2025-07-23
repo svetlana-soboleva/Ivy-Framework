@@ -179,8 +179,7 @@ public class AppHub(
             logger.LogInformation($"Refresh: {Context.ConnectionId} [{appId}]");
             await Clients.Caller.SendAsync("Refresh", new
             {
-                Widgets = widgetTree.GetWidgets().Serialize(),
-                appDescriptor.RemoveIvyBranding
+                Widgets = widgetTree.GetWidgets().Serialize()
             });
         }
         catch (Exception e)
@@ -189,8 +188,7 @@ public class AppHub(
             await tree.BuildAsync();
             await Clients.Caller.SendAsync("Refresh", new
             {
-                Widgets = tree.GetWidgets().Serialize(),
-                appDescriptor.RemoveIvyBranding
+                Widgets = tree.GetWidgets().Serialize()
             });
         }
     }

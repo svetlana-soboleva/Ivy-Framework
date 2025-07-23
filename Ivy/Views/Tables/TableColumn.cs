@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Ivy.Builders;
 
-namespace Ivy.Tables;
+namespace Ivy.Views.Tables;
 
 public class TableColumn<TModel, TValue>(Expression<Func<TModel, TValue>> selector, string headerText, IBuilder<TModel>? builder = null) : ITableColumn<TModel>
 {

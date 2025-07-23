@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace Ivy.Charts;
+namespace Ivy.Views.Charts;
 
 public record Dimension<T>(string Name, Expression<Func<T, object>> Selector);
 public record Measure<T>(string Name, Expression<Func<IQueryable<T>, object>> Aggregator);
