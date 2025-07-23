@@ -28,6 +28,7 @@ import { ChevronDown, X } from 'lucide-react';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import { Badge } from '@/components/ui/badge';
 import { RotateCw } from 'lucide-react';
+import { useDebounce } from '@/hooks/use-debounce';
 
 interface TabWidgetProps {
   children: React.ReactNode[];
@@ -178,6 +179,7 @@ export const TabsLayoutWidget = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [isOverflowing, setIsOverflowing] = React.useState(false);
   const [tabOrder, setTabOrder] = React.useState<string[]>(() =>
     tabWidgets.map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
   );
@@ -188,6 +190,27 @@ export const TabsLayoutWidget = ({
     () => new Set()
   );
   const activeTabIdRef = React.useRef<string | null>(activeTabId);
+
+  const checkOverflow = React.useCallback(() => {
+    const tabsList = tabsListRef.current;
+    if (tabsList) {
+      setIsOverflowing(tabsList.scrollWidth > tabsList.clientWidth + 1); // +1 for rounding
+    }
+  }, []);
+
+  const debouncedCheckOverflow = useDebounce(checkOverflow, 100);
+
+  React.useEffect(() => {
+    checkOverflow();
+    window.addEventListener('resize', debouncedCheckOverflow);
+    return () => {
+      window.removeEventListener('resize', debouncedCheckOverflow);
+    };
+  }, [checkOverflow, debouncedCheckOverflow]);
+
+  React.useEffect(() => {
+    checkOverflow();
+  }, [tabOrder.length, checkOverflow]);
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -427,47 +450,53 @@ export const TabsLayoutWidget = ({
             </SortableContext>
           </DndContext>
 
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent z-10 mr-3"
-                aria-label="Show more tabs"
-              >
-                <ChevronDown className="w-5 h-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DndContext
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-                sensors={sensors}
-              >
-                <SortableContext items={tabOrder}>
-                  <div className="flex flex-col w-48">
-                    {orderedTabWidgets.map(tabWidget => {
-                      if (!React.isValidElement(tabWidget)) return null;
-                      const props = tabWidget.props as Partial<TabWidgetProps>;
-                      if (!props.id) return null;
-                      const { title, id } = props;
+          {/* Only render dropdown if overflowing */}
+          {isOverflowing && (
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent z-10 mr-3"
+                  aria-label="Show more tabs"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DndContext
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                  sensors={sensors}
+                >
+                  <SortableContext items={tabOrder}>
+                    <div className="flex flex-col w-48">
+                      {orderedTabWidgets.map(tabWidget => {
+                        if (!React.isValidElement(tabWidget)) return null;
+                        const props =
+                          tabWidget.props as Partial<TabWidgetProps> & {
+                            key?: string;
+                          };
+                        if (!props.id) return null;
+                        const { title, id, key } = props;
 
-                      return (
-                        <SortableDropdownMenuItem
-                          key={id}
-                          id={id}
-                          onClick={() => handleTabSelect(id)}
-                          isActive={activeTabId === id}
-                        >
-                          {title}
-                        </SortableDropdownMenuItem>
-                      );
-                    })}
-                  </div>
-                </SortableContext>
-              </DndContext>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                        return (
+                          <SortableDropdownMenuItem
+                            key={key ?? id}
+                            id={id}
+                            onClick={() => handleTabSelect(id)}
+                            isActive={activeTabId === id}
+                          >
+                            {title}
+                          </SortableDropdownMenuItem>
+                        );
+                      })}
+                    </div>
+                  </SortableContext>
+                </DndContext>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
 
