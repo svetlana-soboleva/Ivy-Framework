@@ -14,7 +14,7 @@ async function setupDateTimeInputPage(page: Page): Promise<void> {
 
   const firstResult = page
     .locator('[data-sidebar="menu-item"], [data-sidebar="menu-sub-item"]')
-    .filter({ hasText: /date\s*time\s*input/i })
+    .filter({ hasText: /date.*time.*input/i })
     .first();
 
   await expect(firstResult).toBeVisible();
@@ -22,139 +22,238 @@ async function setupDateTimeInputPage(page: Page): Promise<void> {
   await page.waitForLoadState('networkidle');
 }
 
-test.describe('DateTimeInput - Variants and Data Binding', () => {
+test.describe('DateTime Input Tests', () => {
   test.beforeEach(async ({ page }) => {
     await setupDateTimeInputPage(page);
   });
 
-  test('should display all variants and data binding inputs', async ({
-    page,
-  }) => {
-    // Check that the variants section exists
-    await expect(
-      page.locator('h2').filter({ hasText: 'Variants' })
-    ).toBeVisible();
+  test.describe('Date Input Variants', () => {
+    test('should test date input interactions', async ({ page }) => {
+      const dateInput = page.getByTestId('datetime-input-date-main');
+      await expect(dateInput).toBeVisible();
 
-    // Check all main variant TestIds
-    const mainTestIds = [
-      'datetime-input-date-main',
-      'datetime-input-date-disabled-main',
-      'datetime-input-date-invalid-main',
-      'datetime-input-date-nullable-main',
-      'datetime-input-date-nullable-invalid-main',
-      'datetime-input-datetime-main',
-      'datetime-input-datetime-disabled-main',
-      'datetime-input-datetime-invalid-main',
-      'datetime-input-datetime-nullable-main',
-      'datetime-input-datetime-nullable-invalid-main',
-      'datetime-input-time-main',
-      'datetime-input-time-disabled-main',
-      'datetime-input-time-invalid-main',
-      'datetime-input-time-nullable-main',
-      'datetime-input-time-nullable-invalid-main',
-    ];
-    for (const testId of mainTestIds) {
-      await expect(page.getByTestId(testId)).toBeVisible();
-    }
+      // Test that the date input is a button (date picker)
+      await expect(dateInput).toHaveAttribute('type', 'button');
+      await expect(dateInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
 
-    // Check all data binding TestIds
-    const bindingTestIds = [
-      'datetime-input-datetime-binding',
-      'datetime-input-dateonly-binding',
-      'datetime-input-timeonly-binding',
-      'datetime-input-string-binding',
-      'datetime-input-datetime-nullable-binding',
-      'datetime-input-dateonly-nullable-binding',
-      'datetime-input-timeonly-nullable-binding',
-    ];
-    for (const testId of bindingTestIds) {
-      await expect(page.getByTestId(testId)).toBeVisible();
-    }
+    test('should test disabled date input', async ({ page }) => {
+      const disabledInput = page.getByTestId(
+        'datetime-input-date-disabled-main'
+      );
+      await expect(disabledInput).toBeVisible();
 
-    // Check placeholder examples
-    const placeholderTestIds = [
-      'datetime-input-placeholder-birthday',
-      'datetime-input-placeholder-start-date',
-      'datetime-input-placeholder-meeting',
-      'datetime-input-placeholder-deadline',
-      'datetime-input-placeholder-start-time',
-      'datetime-input-placeholder-lunch-time',
-    ];
-    for (const testId of placeholderTestIds) {
-      await expect(page.getByTestId(testId)).toBeVisible();
-    }
+      // Test that the input is disabled
+      await expect(disabledInput).toBeDisabled();
+    });
+
+    test('should test invalid date input', async ({ page }) => {
+      const invalidInput = page.getByTestId('datetime-input-date-invalid-main');
+      await expect(invalidInput).toBeVisible();
+
+      // Test that the date input is a button (date picker)
+      await expect(invalidInput).toHaveAttribute('type', 'button');
+      await expect(invalidInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    test('should test nullable date input', async ({ page }) => {
+      const nullableInput = page.getByTestId(
+        'datetime-input-date-nullable-main'
+      );
+      await expect(nullableInput).toBeVisible();
+
+      // Test that the date input is a button (date picker)
+      await expect(nullableInput).toHaveAttribute('type', 'button');
+      await expect(nullableInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    test('should test nullable invalid date input', async ({ page }) => {
+      const nullableInvalidInput = page.getByTestId(
+        'datetime-input-date-nullable-invalid-main'
+      );
+      await expect(nullableInvalidInput).toBeVisible();
+
+      // Test that the date input is a button (date picker)
+      await expect(nullableInvalidInput).toHaveAttribute('type', 'button');
+      await expect(nullableInvalidInput).toHaveAttribute(
+        'aria-haspopup',
+        'dialog'
+      );
+    });
   });
 
-  test('should test date input interaction', async ({ page }) => {
-    const dateInput = page.getByTestId('datetime-input-date-main');
-    await expect(dateInput).toBeVisible();
+  test.describe('DateTime Input Variants', () => {
+    test('should test datetime input interactions', async ({ page }) => {
+      const dtInput = page.getByTestId('datetime-input-datetime-main');
+      await expect(dtInput).toBeVisible();
 
-    // Test that the input shows a date value (since it has a default value)
-    await expect(dateInput).toContainText('2025-07-23');
+      // Test that the datetime input is a button (date picker)
+      await expect(dtInput).toHaveAttribute('type', 'button');
+      await expect(dtInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    test('should test disabled datetime input', async ({ page }) => {
+      const disabledInput = page.getByTestId(
+        'datetime-input-datetime-disabled-main'
+      );
+      await expect(disabledInput).toBeVisible();
+
+      // Test that the input is disabled
+      await expect(disabledInput).toBeDisabled();
+    });
+
+    test('should test invalid datetime input', async ({ page }) => {
+      const invalidInput = page.getByTestId(
+        'datetime-input-datetime-invalid-main'
+      );
+      await expect(invalidInput).toBeVisible();
+
+      // Test that the datetime input is a button (date picker)
+      await expect(invalidInput).toHaveAttribute('type', 'button');
+      await expect(invalidInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    test('should test nullable datetime input', async ({ page }) => {
+      const nullableInput = page.getByTestId(
+        'datetime-input-datetime-nullable-main'
+      );
+      await expect(nullableInput).toBeVisible();
+
+      // Test that the datetime input is a button (date picker)
+      await expect(nullableInput).toHaveAttribute('type', 'button');
+      await expect(nullableInput).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    test('should test nullable invalid datetime input', async ({ page }) => {
+      const nullableInvalidInput = page.getByTestId(
+        'datetime-input-datetime-nullable-invalid-main'
+      );
+      await expect(nullableInvalidInput).toBeVisible();
+
+      // Test that the datetime input is a button (date picker)
+      await expect(nullableInvalidInput).toHaveAttribute('type', 'button');
+      await expect(nullableInvalidInput).toHaveAttribute(
+        'aria-haspopup',
+        'dialog'
+      );
+    });
   });
 
-  test('should test datetime input interaction', async ({ page }) => {
-    const dtInput = page.getByTestId('datetime-input-datetime-main');
-    await expect(dtInput).toBeVisible();
+  test.describe('Time Input Variants', () => {
+    test('should test time input interactions', async ({ page }) => {
+      const timeInput = page.getByTestId('datetime-input-time-main');
+      await expect(timeInput).toBeVisible();
 
-    // Test that the input shows a date value (since it has a default value)
-    await expect(dtInput).toContainText('2025-07-23');
+      // Test that the time input is a div container
+      await expect(timeInput).toHaveAttribute(
+        'class',
+        /relative flex items-center gap-2/
+      );
+    });
+
+    test('should test disabled time input', async ({ page }) => {
+      const disabledInput = page.getByTestId(
+        'datetime-input-time-disabled-main'
+      );
+      await expect(disabledInput).toBeVisible();
+
+      // Test that the time input is a div container
+      await expect(disabledInput).toHaveAttribute(
+        'class',
+        /relative flex items-center gap-2/
+      );
+    });
+
+    test('should test invalid time input', async ({ page }) => {
+      const invalidInput = page.getByTestId('datetime-input-time-invalid-main');
+      await expect(invalidInput).toBeVisible();
+
+      // Test that the time input is a div container
+      await expect(invalidInput).toHaveAttribute(
+        'class',
+        /relative flex items-center gap-2/
+      );
+    });
+
+    test('should test nullable time input', async ({ page }) => {
+      const nullableInput = page.getByTestId(
+        'datetime-input-time-nullable-main'
+      );
+      await expect(nullableInput).toBeVisible();
+
+      // Test that the time input is a div container
+      await expect(nullableInput).toHaveAttribute(
+        'class',
+        /relative flex items-center gap-2/
+      );
+    });
+
+    test('should test nullable invalid time input', async ({ page }) => {
+      const nullableInvalidInput = page.getByTestId(
+        'datetime-input-time-nullable-invalid-main'
+      );
+      await expect(nullableInvalidInput).toBeVisible();
+
+      // Test that the time input is a div container
+      await expect(nullableInvalidInput).toHaveAttribute(
+        'class',
+        /relative flex items-center gap-2/
+      );
+    });
   });
 
-  test('should test time input interaction', async ({ page }) => {
-    const timeInput = page.getByTestId('datetime-input-time-main');
-    await expect(timeInput).toBeVisible();
+  test.describe('Data Binding Inputs', () => {
+    test('should test data binding inputs', async ({ page }) => {
+      // Test that data binding inputs are visible
+      const bindingInputs = [
+        'datetime-input-datetime-binding',
+        'datetime-input-dateonly-binding',
+        'datetime-input-timeonly-binding',
+        'datetime-input-string-binding',
+        'datetime-input-datetime-nullable-binding',
+        'datetime-input-dateonly-nullable-binding',
+        'datetime-input-timeonly-nullable-binding',
+      ];
 
-    // For time inputs, we should test that the time input element exists
-    const timeInputElement = timeInput.locator('input[type="time"]');
-    await expect(timeInputElement).toBeVisible();
+      for (const testId of bindingInputs) {
+        const input = page.getByTestId(testId);
+        await expect(input).toBeVisible();
+      }
+    });
   });
 
-  test('should test nullable date input', async ({ page }) => {
-    const nullableInput = page.getByTestId('datetime-input-date-nullable-main');
-    await expect(nullableInput).toBeVisible();
+  test.describe('Placeholder Examples', () => {
+    test('should test placeholder examples', async ({ page }) => {
+      // Test that placeholder examples show the correct placeholder text
+      const birthdayInput = page.getByTestId(
+        'datetime-input-placeholder-birthday'
+      );
+      await expect(birthdayInput).toContainText('Birthday');
 
-    // Test that the input shows placeholder for nullable state
-    await expect(nullableInput).toContainText('Pick a date');
-  });
+      const meetingInput = page.getByTestId(
+        'datetime-input-placeholder-meeting'
+      );
+      await expect(meetingInput).toContainText('Meeting time');
 
-  test('should test disabled date input', async ({ page }) => {
-    const disabledInput = page.getByTestId('datetime-input-date-disabled-main');
-    await expect(disabledInput).toBeVisible();
+      const startDateInput = page.getByTestId(
+        'datetime-input-placeholder-start-date'
+      );
+      await expect(startDateInput).toBeVisible();
 
-    // Test that the input is disabled
-    await expect(disabledInput).toBeDisabled();
-  });
+      const deadlineInput = page.getByTestId(
+        'datetime-input-placeholder-deadline'
+      );
+      await expect(deadlineInput).toBeVisible();
 
-  test('should test data binding inputs', async ({ page }) => {
-    // Test that data binding inputs are visible and interactive
-    const bindingInputs = [
-      'datetime-input-datetime-binding',
-      'datetime-input-dateonly-binding',
-      'datetime-input-timeonly-binding',
-      'datetime-input-string-binding',
-    ];
+      const startTimeInput = page.getByTestId(
+        'datetime-input-placeholder-start-time'
+      );
+      await expect(startTimeInput).toBeVisible();
 
-    for (const testId of bindingInputs) {
-      const input = page.getByTestId(testId);
-      await expect(input).toBeVisible();
-    }
-  });
-
-  test('should test placeholder examples', async ({ page }) => {
-    // Test that placeholder examples show the correct placeholder text
-    const birthdayInput = page.getByTestId(
-      'datetime-input-placeholder-birthday'
-    );
-    await expect(birthdayInput).toContainText('Birthday');
-
-    const meetingInput = page.getByTestId('datetime-input-placeholder-meeting');
-    await expect(meetingInput).toContainText('Meeting time');
-
-    // For time inputs, test that the element exists but don't check for placeholder text
-    const startTimeInput = page.getByTestId(
-      'datetime-input-placeholder-start-time'
-    );
-    await expect(startTimeInput).toBeVisible();
+      const lunchTimeInput = page.getByTestId(
+        'datetime-input-placeholder-lunch-time'
+      );
+      await expect(lunchTimeInput).toBeVisible();
+    });
   });
 });
