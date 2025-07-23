@@ -1,4 +1,6 @@
-using System.CommandLine;
+using Ivy.Helpers;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Ivy.Apps;
@@ -23,7 +25,6 @@ namespace Ivy;
 public class ServerArgs
 {
     public const int DefaultPort = 5010;
-
     public int Port { get; set; } = DefaultPort;
     public bool Verbose { get; set; } = false;
     public bool IKillForThisPort { get; set; } = false;
@@ -66,8 +67,7 @@ public class Server
             Title = "Default",
             ViewFunc = viewFactory,
             Path = ["Apps"],
-            IsVisible = true,
-            RemoveIvyBranding = false
+            IsVisible = true
         });
         DefaultAppId = AppIds.Default;
     }
@@ -125,8 +125,7 @@ public class Server
             Title = "Chrome",
             ViewFactory = viewFactory ?? (() => new DefaultSidebarChrome(ChromeSettings.Default())),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = true
+            IsVisible = false
         });
         DefaultAppId = AppIds.Chrome;
         return this;
@@ -148,8 +147,7 @@ public class Server
             Title = "Auth",
             ViewFactory = viewFactory ?? (() => new DefaultAuthApp()),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = false
+            IsVisible = false
         });
         AuthProviderType = typeof(T);
         return this;
@@ -343,8 +341,21 @@ public static class WebApplicationExtensions
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
             {
+                using var reader = new StreamReader(stream);
+                var html = await reader.ReadToEndAsync();
+
+                //Inject IVY_LICENSE:
+                var configuration = app.Services.GetRequiredService<IConfiguration>();
+                var ivyLicense = configuration["IVY_LICENSE"] ?? "";
+                if (!string.IsNullOrEmpty(ivyLicense))
+                {
+                    var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
+                    html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
+                }
+
                 context.Response.ContentType = "text/html";
-                await stream.CopyToAsync(context.Response.Body);
+                var bytes = Encoding.UTF8.GetBytes(html);
+                await context.Response.Body.WriteAsync(bytes);
             }
         });
 
@@ -401,26 +412,18 @@ public static class IvyServerUtils
 {
     public static ServerArgs GetArgs()
     {
-        var portOption = new Option<int>("--port", () => ServerArgs.DefaultPort);
-        var verboseOption = new Option<bool>("--verbose", () => false);
-        var silentOption = new Option<bool>("--silent", () => false);
-        var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
-        var browseOption = new Option<bool>("--browse", () => false);
-        var argsOption = new Option<string?>("--args", () => null!);
-        var defaultAppIdOption = new Option<string?>("--app", () => null!);
-
-        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption, silentOption };
-
-        var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
+        var parser = new ArgsParser();
+        var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        var parsedArgs = parser.Parse(args);
         return new ServerArgs()
         {
-            Port = result.GetValueForOption(portOption),
-            Verbose = result.GetValueForOption(verboseOption),
-            IKillForThisPort = result.GetValueForOption(iKillForThisPortOption),
-            Browse = result.GetValueForOption(browseOption),
-            Args = result.GetValueForOption(argsOption),
-            DefaultAppId = result.GetValueForOption(defaultAppIdOption),
-            Silent = result.GetValueForOption(silentOption)
+            Port = parser.GetValue(parsedArgs, "port", ServerArgs.DefaultPort),
+            Verbose = parser.GetValue(parsedArgs, "verbose", false),
+            IKillForThisPort = parser.GetValue(parsedArgs, "i-kill-for-this-port", false),
+            Browse = parser.GetValue(parsedArgs, "browse", false),
+            Args = parser.GetValue<string?>(parsedArgs, "args", null),
+            DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
+            Silent = parser.GetValue(parsedArgs, "silent", false)
         };
     }
 }

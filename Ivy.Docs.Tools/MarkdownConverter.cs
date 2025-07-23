@@ -88,8 +88,8 @@ public static class MarkdownConverter
         codeBuilder.AppendLine("using Ivy.Apps;");
         codeBuilder.AppendLine("using Ivy.Shared;");
         codeBuilder.AppendLine("using Ivy.Core;");
-        codeBuilder.AppendLine("using static Ivy.Helpers.Layout;");
-        codeBuilder.AppendLine("using static Ivy.Helpers.Text;");
+        codeBuilder.AppendLine("using static Ivy.Views.Layout;");
+        codeBuilder.AppendLine("using static Ivy.Views.Text;");
         codeBuilder.AppendLine();
         codeBuilder.AppendLine($"namespace {@namespace};");
         codeBuilder.AppendLine();

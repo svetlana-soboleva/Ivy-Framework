@@ -173,7 +173,7 @@ const DefaultVariant: React.FC<{
       )}
       {props.shortcutKey && !isFocused && (
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>
@@ -319,7 +319,7 @@ const PasswordVariant: React.FC<{
             type="button"
             variant="ghost"
             size="sm"
-            className="hover:bg-transparent p-0 m-0 h-4 w-4"
+            className="hover:bg-transparent p-0 m-0 h-4 w-4 cursor-pointer"
             onClick={togglePassword}
           >
             {showPassword ? (
@@ -332,7 +332,7 @@ const PasswordVariant: React.FC<{
             <InvalidIcon message={props.invalid} className="ml-2" />
           )}
           {props.shortcutKey && (
-            <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            <kbd className="ml-2 px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
               {shortcutDisplay}
             </kbd>
           )}
@@ -399,7 +399,7 @@ const SearchVariant: React.FC<{
   return (
     <div className="relative w-full select-none" style={styles}>
       {/* Search Icon */}
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 
       {/* Search Input */}
       <Input
@@ -423,7 +423,7 @@ const SearchVariant: React.FC<{
         onKeyDown={handleKeyDown}
         autoComplete="off"
         className={cn(
-          'w-full pl-8',
+          'w-full pl-8 cursor-pointer',
           props.invalid && inputStyles.invalidInput,
           props.invalid && 'pr-8',
           hasValue && 'pr-8',
@@ -441,9 +441,13 @@ const SearchVariant: React.FC<{
           tabIndex={-1}
           aria-label="Clear search"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 focus:outline-none"
+          className={cn(
+            'absolute top-1/2 -translate-y-1/2 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer z-10',
+            props.shortcutKey && !isFocused ? 'right-14' : 'right-2.5'
+          )}
+          style={{ pointerEvents: 'auto' }}
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
       )}
 
@@ -456,8 +460,8 @@ const SearchVariant: React.FC<{
 
       {/* Shortcut Display */}
       {props.shortcutKey && !isFocused && (
-        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center">
-          <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center z-10">
+          <kbd className="px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
             {shortcutDisplay}
           </kbd>
         </div>

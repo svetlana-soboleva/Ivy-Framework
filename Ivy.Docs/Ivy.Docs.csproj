@@ -27,8 +27,12 @@
     <RuntimeIdentifiers>win-x64;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(UseNuGetPackage)' != 'true'">
     <ProjectReference Include="../Ivy/Ivy.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseNuGetPackage)' == 'true'">
+    <PackageReference Include="Ivy" Version="$(IvyPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>

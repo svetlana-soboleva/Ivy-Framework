@@ -96,7 +96,6 @@ const flattenMenuItems = (
   return flat;
 };
 
-// Separate component for collapsible menu items to properly manage state
 const CollapsibleMenuItem: React.FC<{
   item: MenuItem;
   eventHandler: WidgetEventHandlerType;

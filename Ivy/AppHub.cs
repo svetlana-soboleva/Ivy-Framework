@@ -7,6 +7,7 @@ using Ivy.Core;
 using Ivy.Helpers;
 using Ivy.Hooks;
 using Ivy.Services;
+using Ivy.Views;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -178,8 +179,7 @@ public class AppHub(
             logger.LogInformation($"Refresh: {Context.ConnectionId} [{appId}]");
             await Clients.Caller.SendAsync("Refresh", new
             {
-                Widgets = widgetTree.GetWidgets().Serialize(),
-                appDescriptor.RemoveIvyBranding
+                Widgets = widgetTree.GetWidgets().Serialize()
             });
         }
         catch (Exception e)
@@ -188,8 +188,7 @@ public class AppHub(
             await tree.BuildAsync();
             await Clients.Caller.SendAsync("Refresh", new
             {
-                Widgets = tree.GetWidgets().Serialize(),
-                appDescriptor.RemoveIvyBranding
+                Widgets = tree.GetWidgets().Serialize()
             });
         }
     }

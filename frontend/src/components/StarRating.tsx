@@ -55,6 +55,7 @@ export function StarRating({
               className={cn(
                 'relative focus-visible:outline-none focus-visible:ring-2',
                 'focus-visible:ring-ring focus-visible:ring-offset-2',
+                'cursor-pointer',
                 disabled && 'cursor-not-allowed'
               )}
               onClick={() => handleRating(star)}

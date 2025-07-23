@@ -33,7 +33,7 @@ public class CompositeViewsApp : ViewBase
 
         return Layout.Vertical(
             new LoginForm(loginData),
-            (loginData.Value.DidLogin ? Ivy.Helpers.Text.Literal($"Logged in as {loginData.Value.Username}") : "")
+            (loginData.Value.DidLogin ? Text.Literal($"Logged in as {loginData.Value.Username}") : "")
         );
     }
 }
