@@ -226,14 +226,25 @@ public class GridLineDemo : ViewBase
         var width  = UseState(100);
         
         return Layout.Vertical()
-                 | Text.Large("Height")
-                 | height.ToNumberInput()
-                         .Min(30) 
-                         .ShowArrows()
-                 | Text.Large("Width")
-                 | width.ToNumberInput()
-                        .Min(100)
-                        .ShowArrows()
+                 | (Layout.Horizontal()
+                     | Text.Large("Height")
+                     | new NumberInput<int>(
+                           height.Value,
+                            e => {
+                                 height.Set(e); 
+                            })
+                     .Min(20)
+                     .Variant(NumberInputs.Slider)) 
+                 | (Layout.Horizontal()
+                     | Text.Large("Width")
+                     | new NumberInput<int>(
+                           width.Value,
+                            e => {
+                                 width.Set(e); 
+                            })
+                       .Step(1)
+                     .Max(400)
+                     .Variant(NumberInputs.Slider))
                  | new LineChart(data, "Desktop", "Month")
                         .Line("Mobile")
                         .Height(height.Value)

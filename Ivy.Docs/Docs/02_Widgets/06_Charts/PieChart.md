@@ -48,6 +48,7 @@ public class PieChartDemo : ViewBase
 ```
 
 
+
 ### Browser Market Share
 
 The following example shows how to use `PieChart` type to create a more fine controlled pie chart. 
@@ -109,7 +110,8 @@ when users hover on that specific part of the pie chart.
 
 ## Drill down chart 
 
-The following example shows how these combinations of charts can be used in a realistic example 
+The following example shows how these combinations of charts can be used in a realistic example
+for showing how populated some countries are. 
 
 ```csharp demo-tabs
 
@@ -221,28 +223,27 @@ public class DrillDownDemo : ViewBase
         var selectedCountryStates = populationData
             .Where(t => t.Country.Equals(country.Value))
             .ToArray();
-
-        return Layout.Vertical()
-            | H3("Population Drill Down")
-            | Text.Html("<i>Select the country to see statewise population.</i>")
-            | Text.Large("Select Country")
-            | countryInput
-            | Layout.Horizontal()
-                | Layout.Vertical()
-                    | H4("Countries Population")
-                    | Text.Html("<i> Nearest millions </i>")
-                    | new PieChart(countryData)
+        
+        return Layout.Horizontal()
+                 
+                | (Layout.Vertical()
+                   | Text.Small("Countries Population")
+                   | new PieChart(countryData)
                         .Pie(new Pie("Population", "Country")
-                            .InnerRadius(150)
-                            .OuterRadius(180)).Tooltip()
-                | Layout.Vertical()
-                    | H4($"{country.Value} - States Population")
-                    | Text.Html("<i> Nearest millions </i>")
+                            .InnerRadius(60)
+                            .OuterRadius(80)).Tooltip())
+                | (Layout.Vertical()
+                    | Text.Small($"{country.Value} - States Population")
+                        
                     | new PieChart(selectedCountryStates)
-                        .Pie(new Pie("Population", "State")).Tooltip();
+                            .Pie(new Pie("Population", "State")
+                                     .OuterRadius(80)).Tooltip()
+                    | countryInput);
+
+    
     }
 }
 ```
 
 
-|
+
