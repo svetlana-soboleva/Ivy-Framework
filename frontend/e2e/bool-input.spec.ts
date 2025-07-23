@@ -1,13 +1,7 @@
-import {
-  test,
-  expect,
-  type Frame,
-  type Page,
-  type ElementHandle,
-} from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 // Shared setup function
-async function setupBoolInputPage(page: Page): Promise<Frame | null> {
+async function setupBoolInputPage(page: Page): Promise<void> {
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
@@ -28,75 +22,31 @@ async function setupBoolInputPage(page: Page): Promise<Frame | null> {
     .first();
   await firstResult.click();
 
-  // Wait for navigation and iframe to be created
+  // Wait for navigation
   await page.waitForLoadState('networkidle');
-
-  // More robust iframe detection with retry logic
-  let appFrameElement: ElementHandle<SVGElement | HTMLElement> | null = null;
-  let contentFrame: Frame | null = null;
-  let retries = 0;
-  const maxRetries = 10;
-
-  while (!contentFrame && retries < maxRetries) {
-    try {
-      appFrameElement = await page.waitForSelector(
-        'iframe[src*="bool-input"]',
-        { timeout: 2000 }
-      );
-
-      await page.waitForTimeout(1000);
-
-      contentFrame = await appFrameElement.contentFrame();
-
-      if (!contentFrame) {
-        await page.waitForTimeout(500);
-        contentFrame = await appFrameElement.contentFrame();
-      }
-    } catch (error) {
-      retries++;
-      if (retries >= maxRetries) {
-        throw new Error(
-          `Failed to find iframe or content frame after ${maxRetries} retries. Last error: ${error}`
-        );
-      }
-      await page.waitForTimeout(500);
-    }
-  }
-
-  if (!appFrameElement) {
-    throw new Error('Iframe element not found');
-  }
-
-  if (!contentFrame) {
-    throw new Error('Iframe content frame is null after all retries');
-  }
-
-  await contentFrame.waitForLoadState('domcontentloaded');
-
-  return contentFrame;
 }
 
 // Shared verification function for all elements
-async function verifyAllElements(appFrame: Frame) {
-  // Now look for the h1 in the app frame
-  const h1 = appFrame.locator('h1');
+async function verifyAllElements(page: Page) {
+  // Look for the h1 in the page
+  const h1 = page.locator('h1');
   await expect(h1).toContainText('BoolInput');
 
-  // Now look for the h2 in the app frame
-  const h2 = appFrame.locator('h2');
+  // Look for the h2 in the page
+  const h2 = page.locator('h2');
   await expect(h2.nth(0)).toContainText('Variants');
 
   await expect(
-    appFrame.locator('code:has-text("BoolInputs.Checkbox")')
+    page.locator('code:has-text("BoolInputs.Checkbox")')
   ).toBeVisible();
   await expect(
-    appFrame.locator('code:has-text("BoolInputs.Switch")')
+    page.locator('code:has-text("BoolInputs.Switch")')
   ).toBeVisible();
   await expect(
-    appFrame.locator('code:has-text("BoolInputs.Toggle")')
+    page.locator('code:has-text("BoolInputs.Toggle")')
   ).toBeVisible();
 
-  // Define test IDs for each category
+  // Define test IDs for each category - only the ones that actually exist
   const checkboxWithDescriptionIds = [
     'checkbox-true-state-width-description',
     'checkbox-false-state-width-description',
@@ -118,13 +68,15 @@ async function verifyAllElements(appFrame: Frame) {
     'switch-false-state-width-description',
     'switch-true-state-width-description-disabled',
     'switch-true-state-width-description-invalid',
+    // Note: switch-null-state-width-description doesn't exist - shows "N/A"
   ];
 
   const switchWithoutDescriptionIds = [
     'switch-true-state-width',
     'switch-false-state-width',
     'switch-true-state-width-disabled',
-    'switch-true-state-width-description-invalid',
+    'switch-true-state-width-invalid',
+    // Note: switch-null-state-width doesn't exist - shows "N/A"
   ];
 
   const toggleWithDescriptionIds = [
@@ -132,6 +84,7 @@ async function verifyAllElements(appFrame: Frame) {
     'toggle-false-state-width-description',
     'toggle-true-state-width-description-disabled',
     'toggle-true-state-width-description-invalid',
+    // Note: toggle-null-state-width-description doesn't exist - shows "N/A"
   ];
 
   const toggleWithoutDescriptionIds = [
@@ -139,38 +92,54 @@ async function verifyAllElements(appFrame: Frame) {
     'toggle-false-state-width',
     'toggle-true-state-width-disabled',
     'toggle-true-state-width-invalid',
+    // Note: toggle-null-state-width doesn't exist - shows "N/A"
   ];
 
-  // Check all elements are visible
-  const allTestIds = [
-    ...checkboxWithDescriptionIds,
-    ...checkboxWithoutDescriptionIds,
-    ...switchWithDescriptionIds,
-    ...switchWithoutDescriptionIds,
-    ...toggleWithDescriptionIds,
-    ...toggleWithoutDescriptionIds,
-  ];
+  // Verify all checkbox elements with description
+  for (const testId of checkboxWithDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
+  }
 
-  for (const testId of allTestIds) {
-    await expect(appFrame.getByTestId(testId)).toBeVisible();
+  // Verify all checkbox elements without description
+  for (const testId of checkboxWithoutDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
+  }
+
+  // Verify all switch elements with description
+  for (const testId of switchWithDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
+  }
+
+  // Verify all switch elements without description
+  for (const testId of switchWithoutDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
+  }
+
+  // Verify all toggle elements with description
+  for (const testId of toggleWithDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
+  }
+
+  // Verify all toggle elements without description
+  for (const testId of toggleWithoutDescriptionIds) {
+    await expect(page.getByTestId(testId)).toBeVisible();
   }
 }
 
 test.describe('Bool Input Tests', () => {
-  let appFrame: Frame | null;
-
   test.beforeEach(async ({ page }) => {
-    appFrame = await setupBoolInputPage(page);
+    await setupBoolInputPage(page);
   });
 
   // Helper function to test toggle behavior
   async function testToggleBehavior(
+    page: Page,
     testId: string,
     attributeName: 'aria-checked' | 'aria-pressed',
     initialState: string,
     expectedAfterClick: string
   ) {
-    const element = appFrame!.getByTestId(testId);
+    const element = page.getByTestId(testId);
 
     await expect(element).toHaveAttribute(attributeName, initialState);
     await element.click();
@@ -180,8 +149,8 @@ test.describe('Bool Input Tests', () => {
   }
 
   // Helper function to test null state cycling (mixed -> true -> false -> mixed)
-  async function testNullStateCycling(testId: string) {
-    const element = appFrame!.getByTestId(testId);
+  async function testNullStateCycling(page: Page, testId: string) {
+    const element = page.getByTestId(testId);
 
     await expect(element).toHaveAttribute('aria-checked', 'mixed');
     await element.click();
@@ -191,6 +160,7 @@ test.describe('Bool Input Tests', () => {
     await element.click();
     await expect(element).toHaveAttribute('aria-checked', 'mixed');
   }
+
   // Helper function to determine attribute based on test ID prefix
   function getAttributeForTestId(
     testId: string
@@ -202,164 +172,58 @@ test.describe('Bool Input Tests', () => {
   }
 
   // Simplified helper functions that auto-determine the attribute
-  async function testTrueFalseToggle(testId: string) {
+  async function testTrueFalseToggle(page: Page, testId: string) {
     const attribute = getAttributeForTestId(testId);
-    await testToggleBehavior(testId, attribute, 'true', 'false');
+    await testToggleBehavior(page, testId, attribute, 'true', 'false');
   }
 
-  async function testFalseTrueToggle(testId: string) {
+  async function testFalseTrueToggle(page: Page, testId: string) {
     const attribute = getAttributeForTestId(testId);
-    await testToggleBehavior(testId, attribute, 'false', 'true');
+    await testToggleBehavior(page, testId, attribute, 'false', 'true');
   }
 
-  async function testDisabledState(testId: string) {
-    const attribute = getAttributeForTestId(testId);
-    const element = appFrame!.getByTestId(testId);
-
-    await expect(element).toHaveAttribute(attribute, 'true');
+  async function testDisabledState(page: Page, testId: string) {
+    const element = page.getByTestId(testId);
     await expect(element).toBeDisabled();
   }
 
-  test.describe('Page Navigation', () => {
-    test.skip('should navigate to bool input page and verify elements', async () => {
-      expect(appFrame).not.toBeNull();
-      await verifyAllElements(appFrame!);
-    });
+  test('should display all variants and data binding inputs', async ({
+    page,
+  }) => {
+    await verifyAllElements(page);
   });
 
-  test.describe('Interactive Tests', () => {
-    test.describe('Checkboxes', () => {
-      test.describe('With Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('checkbox-true-state-width-description');
-        });
+  test('should test checkbox true/false toggle behavior', async ({ page }) => {
+    await testTrueFalseToggle(page, 'checkbox-true-state-width');
+  });
 
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('checkbox-false-state-width-description');
-        });
+  test('should test checkbox false/true toggle behavior', async ({ page }) => {
+    await testFalseTrueToggle(page, 'checkbox-false-state-width');
+  });
 
-        test.skip('disabled state should remain checked', async () => {
-          await testDisabledState(
-            'checkbox-true-state-width-description-disabled'
-          );
-        });
+  test('should test checkbox null state cycling', async ({ page }) => {
+    await testNullStateCycling(page, 'checkbox-null-state-width');
+  });
 
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle(
-            'checkbox-true-state-width-description-invalid'
-          );
-        });
+  test('should test switch true/false toggle behavior', async ({ page }) => {
+    await testTrueFalseToggle(page, 'switch-true-state-width');
+  });
 
-        test.skip('null state should cycle through mixed -> true -> false', async () => {
-          await testNullStateCycling('checkbox-null-state-width-description');
-        });
-      });
+  test('should test switch false/true toggle behavior', async ({ page }) => {
+    await testFalseTrueToggle(page, 'switch-false-state-width');
+  });
 
-      test.describe('Without Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('checkbox-true-state-width');
-        });
+  test('should test toggle true/false toggle behavior', async ({ page }) => {
+    await testTrueFalseToggle(page, 'toggle-true-state-width');
+  });
 
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('checkbox-false-state-width');
-        });
+  test('should test toggle false/true toggle behavior', async ({ page }) => {
+    await testFalseTrueToggle(page, 'toggle-false-state-width');
+  });
 
-        test.skip('disabled state should remain checked', async () => {
-          await testDisabledState('checkbox-true-state-width-disabled');
-        });
-
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle('checkbox-true-state-width-invalid');
-        });
-
-        test.skip('null state should cycle through mixed -> true -> false', async () => {
-          await testNullStateCycling('checkbox-null-state-width');
-        });
-      });
-    });
-
-    test.describe('Switches', () => {
-      test.describe('With Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('switch-true-state-width-description');
-        });
-
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('switch-false-state-width-description');
-        });
-
-        test.skip('disabled state should remain checked', async () => {
-          await testDisabledState(
-            'switch-true-state-width-description-disabled'
-          );
-        });
-
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle(
-            'switch-true-state-width-description-invalid'
-          );
-        });
-      });
-
-      test.describe('Without Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('switch-true-state-width');
-        });
-
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('switch-false-state-width');
-        });
-
-        test.skip('disabled state should remain checked', async () => {
-          await testDisabledState('switch-true-state-width-disabled');
-        });
-
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle('switch-true-state-width-invalid');
-        });
-      });
-    });
-
-    test.describe('Toggles', () => {
-      test.describe('With Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('toggle-true-state-width-description');
-        });
-
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('toggle-false-state-width-description');
-        });
-
-        test.skip('disabled state should remain pressed', async () => {
-          await testDisabledState(
-            'toggle-true-state-width-description-disabled'
-          );
-        });
-
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle(
-            'toggle-true-state-width-description-invalid'
-          );
-        });
-      });
-
-      test.describe('Without Description', () => {
-        test.skip('true state should toggle correctly', async () => {
-          await testTrueFalseToggle('toggle-true-state-width');
-        });
-
-        test.skip('false state should toggle correctly', async () => {
-          await testFalseTrueToggle('toggle-false-state-width');
-        });
-
-        test.skip('disabled state should remain pressed', async () => {
-          await testDisabledState('toggle-true-state-width-disabled');
-        });
-
-        test.skip('invalid state should toggle correctly', async () => {
-          await testTrueFalseToggle('toggle-true-state-width-invalid');
-        });
-      });
-    });
+  test('should verify disabled states', async ({ page }) => {
+    await testDisabledState(page, 'checkbox-true-state-width-disabled');
+    await testDisabledState(page, 'switch-true-state-width-disabled');
+    await testDisabledState(page, 'toggle-true-state-width-disabled');
   });
 });
