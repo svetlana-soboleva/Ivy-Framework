@@ -18,7 +18,7 @@ export const AppHostWidget: React.FC<AppHostWidgetProps> = ({
 }) => {
   const { widgetTree, eventHandler } = useBackend(appId, appArgs, parentId);
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-full p-4 overflow-y-auto">
       <ErrorBoundary>
         <EventHandlerProvider eventHandler={eventHandler}>
           <>{renderWidgetTree(widgetTree || loadingState())}</>
