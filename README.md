@@ -8,10 +8,10 @@ Ivy - The ultimate framework for building internal tools with LLM code generatio
 
 ## Features
 
-- 🛠️ **CLI**: Init new projects, add data providers, generate apps using AI and deployments.
-- 💡 **Authentication**: Integrations with Supabase, Microsoft Entra, and more.
-- 🗄️ **Databases**: Easy integration with SqlServer, Postgres, Supabase, MariaDB, Mysql, Airtable, Oracle, Google Spanner, Clickhouse, Snowflake and Big Query.
-- 🤖 **LLM Code Agent**: Generate entire backoffice based on your database schema.
+- 🛠️ **CLI**: Init new projects, add data providers, generate apps using AI and manage deployments.
+- 💡 **Authentication**: Integrations with Supabase, Auth0, Clerk, Microsoft Entra, and more.
+- 🗄️ **Databases**: Easy integration with SQL Server, Postgres, Supabase, MariaDB, MySQL, Airtable, Oracle, Google Spanner, Clickhouse, Snowflake and BigQuery.
+- 🤖 **LLM Code Agent**: Generate an entire back office application based on your database schema.
 - 🕵️ **Secrets Management**
 - 🚀 **Container Deployment**: Easily deploy to Azure, AWS, or Google Cloud.
 - 🔥 **Hot Reload**: With maintained state!
@@ -21,22 +21,13 @@ Ivy - The ultimate framework for building internal tools with LLM code generatio
 - 🧱 **External Widget Framework**: Integrate any React, Angular, or Vue component (coming soon)
 - 🔢 **Data Tables**: Sort, filter, and paginate data. (coming soon)
 
-## Current State
-
-Ivy is still early in development and we are working on more robust documentation. We release new versions almost daily.  
-
-## Inspirations
-
-- React
-- FuncUI
-- Streamlit
-- LINQPad ("Dump" method)
-
 ## Usage
 
 ### Quick Start
 
-Make sure you have the .Net 9 SDK installed.
+> ⚠️ **Note:** Ivy.Console is still in beta, and the agentic features require an account. [Sign up for our waitlist](https://ivy.app/join-waitlist) to be among the first to get access.
+
+Make sure you have the [.Net 9 SDK installed](https://dotnet.microsoft.com/en-us/download/dotnet/9.0).
 
 1. **Install Ivy CLI**:
 
@@ -47,22 +38,16 @@ Make sure you have the .Net 9 SDK installed.
 2. **Create a new project**:
 
    ```bash
-    ivy init
+    ivy init --helloworld
     ```
-
-3. **Add a data provider**:
-
-   ```bash
-   ivy connect db
-   ```
-
-4. **Run**:
+   
+3. **Run**:
 
    ```bash
    dotnet watch
    ```
 
-5. **Open** [http://localhost:5010](http://localhost:5010) in your browser.
+4. **Open** [http://localhost:5010](http://localhost:5010) in your browser.
 
 You can also run `ivy samples` to see all the components that Ivy offers and `ivy docs` for documentation.  
 
@@ -113,13 +98,5 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
 6. **Open** [http://localhost:5173/](http://localhost:5173/) in your browser.
 
 Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy.
-
-## Contributing
-
-1. **Fork** the repository.
-2. **Create** a new feature branch.
-3. **Submit** a pull request.
-
-Feel free to file issues and feature requests.
 
 For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
