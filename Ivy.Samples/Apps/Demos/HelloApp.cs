@@ -5,7 +5,6 @@ namespace Ivy.Samples.Apps.Demos;
 [App(icon: Icons.PartyPopper, title: "Hello")]
 public class HelloApp : ViewBase
 {
-    
     public override object? Build()
     {
         var nameState = this.UseState<string>();

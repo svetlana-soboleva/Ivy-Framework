@@ -130,7 +130,7 @@
       "prettier --write"
     ],
     "*.cs": [
-      "dotnet format --include"
+      "dotnet format"
     ]
   }
 }
