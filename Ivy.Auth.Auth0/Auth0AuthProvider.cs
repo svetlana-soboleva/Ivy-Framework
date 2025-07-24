@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
+using Ivy.Hooks;
 using Ivy.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +23,6 @@ public class Auth0AuthProvider : IAuthProvider
     private readonly string _clientSecret;
     private readonly string _audience;
     private readonly List<AuthOption> _authOptions = new();
-    private readonly Dictionary<string, string> _stateStorage = new();
 
     public Auth0AuthProvider()
     {
@@ -56,7 +56,7 @@ public class Auth0AuthProvider : IAuthProvider
         return new AuthToken(response.AccessToken, response.RefreshToken, DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn));
     }
 
-    public Task<Uri> GetOAuthUriAsync(AuthOption option, Uri callbackUri)
+    public Task<Uri> GetOAuthUriAsync(AuthOption option, WebhookEndpoint callback)
     {
         var connection = option.Id switch
         {
@@ -68,16 +68,14 @@ public class Auth0AuthProvider : IAuthProvider
             _ => throw new ArgumentException($"Unknown OAuth provider: {option.Id}"),
         };
 
-        var state = Guid.NewGuid().ToString();
-        _stateStorage[state] = option.Id;
-
+        var callbackUri = callback.GetUri(includeIdInPath: false);
         var authorizationUrl = _authClient.BuildAuthorizationUrl()
             .WithResponseType(AuthorizationResponseType.Code)
             .WithClient(_clientId)
             .WithConnection(connection)
             .WithRedirectUrl(callbackUri.ToString())
             .WithScope("openid profile email")
-            .WithState(state);
+            .WithState(callback.Id);
 
         if (!string.IsNullOrEmpty(_audience))
         {
@@ -90,7 +88,6 @@ public class Auth0AuthProvider : IAuthProvider
     public async Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
     {
         var code = request.Query["code"].ToString();
-        var state = request.Query["state"].ToString();
         var error = request.Query["error"].ToString();
         var errorDescription = request.Query["error_description"].ToString();
 
@@ -104,11 +101,6 @@ public class Auth0AuthProvider : IAuthProvider
             throw new Exception("Received no authorization code from Auth0.");
         }
 
-        if (state.Length == 0 || !_stateStorage.ContainsKey(state))
-        {
-            throw new Exception("Invalid or missing state parameter.");
-        }
-
         try
         {
             var request_ = new AuthorizationCodeTokenRequest
@@ -120,9 +112,6 @@ public class Auth0AuthProvider : IAuthProvider
             };
 
             var response = await _authClient.GetTokenAsync(request_);
-
-            // Clean up state storage
-            _stateStorage.Remove(state);
 
             return new AuthToken(response.AccessToken, response.RefreshToken, DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn));
         }
