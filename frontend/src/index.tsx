@@ -14,28 +14,8 @@ import { hasLicensedFeature } from './lib/license';
 
 function ConnectionModal() {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-    >
-      <div
-        style={{
-          padding: '1rem 2rem',
-          backgroundColor: 'white',
-          borderRadius: '4px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-        }}
-      >
+    <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-[1000]">
+      <div className="px-8 py-4 bg-card border border-border rounded-lg shadow-lg">
         <TextShimmer>Connection lost. Trying to reconnect...</TextShimmer>
       </div>
     </div>
