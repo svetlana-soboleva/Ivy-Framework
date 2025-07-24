@@ -4,6 +4,8 @@
 
 Ivy - The ultimate framework for building internal tools with LLM code generation by unifying front-end and back-end into a single C# codebase. With Ivy, you can build robust internal tools and dashboards using C# and AI assistance based on your existing database.
 
+**[Sign up for our waitlist](https://ivy.app/join-waitlist) to be among the first to get access.**
+
 <https://github.com/user-attachments/assets/ba2bf5a5-8dc7-4501-9072-6af7483be4f7>
 
 ## Features
@@ -53,7 +55,7 @@ You can also run `ivy samples` to see all the components that Ivy offers and `iv
 
 ## Developer Build
 
-If you want to work on the framework itself you need to setup the following:
+If you want to work on the framework itself, you need to set up the following:
 
 1. **Install dependencies**:
    - [Node 22.12+ & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
