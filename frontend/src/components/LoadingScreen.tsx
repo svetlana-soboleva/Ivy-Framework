@@ -13,7 +13,7 @@ export const LoadingScreen = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-screen">
       {showAnimation && <Loading />}
     </div>
   );
