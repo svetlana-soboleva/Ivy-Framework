@@ -4,7 +4,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
-  id-token: write 
+  id-token: write
 
 on:
   issue_comment:
@@ -62,5 +62,29 @@ jobs:
           timeout_minutes: "60"
           github_token: ${{ steps.app-token.outputs.token }}
           use_bedrock: "true"
-          model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
-          allowed_tools: "Bash(dotnet format:*)"
+          settings: '{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Edit",
+      "Glob",
+      "Grep",
+      "LS",
+      "MultiEdit",
+      "NotebookEdit",
+      "NotebookRead",
+      "Read",
+      "Task",
+      "TodoWrite",
+      "WebFetch",
+      "WebSearch",
+      "Write"
+    ],
+    "deny": []
+  }
+}'
+          model: "arn:aws:bedrock:us-east-1:037053480985:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
+          fallback_model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+          
+          
+          
