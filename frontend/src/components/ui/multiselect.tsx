@@ -99,14 +99,13 @@ const MultipleSelector = React.forwardRef<
                 variant="secondary"
                 className={cn(
                   'hover:bg-secondary',
-                  invalid
-                    ? 'bg-destructive/10 border-destructive text-destructive'
-                    : 'bg-primary text-primary-foreground border-primary'
+                  invalid &&
+                    'bg-destructive/10 border-destructive text-destructive'
                 )}
               >
                 {option.label}
                 <button
-                  className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer hover:bg-accent hover:text-accent-foreground"
                   onKeyDown={e => {
                     if (e.key === 'Enter') {
                       handleUnselect(option);
