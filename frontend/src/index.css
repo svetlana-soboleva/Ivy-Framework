@@ -456,6 +456,22 @@
   animation: slideOutToRight 300ms ease-in;
 }
 
+/* Alert animation */
+@keyframes alertGrowIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.alert-animate-enter {
+  animation: alertGrowIn 200ms ease-out;
+}
+
 @theme inline {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
