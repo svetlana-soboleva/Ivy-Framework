@@ -348,6 +348,10 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 value={option.value.toString()}
                 id={`${id}-${option.value}`}
                 className={cn(
+                  'border-input text-input',
+                  stringValue === option.value.toString() && !invalid
+                    ? 'border-primary text-primary'
+                    : undefined,
                   stringValue === option.value.toString() && invalid
                     ? inputStyles.invalidInput
                     : undefined
@@ -376,9 +380,9 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
             logger.debug('Select input clear button clicked', { id });
             eventHandler('OnChange', id, [null]);
           }}
-          className="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-none"
+          className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
       )}
     </div>
