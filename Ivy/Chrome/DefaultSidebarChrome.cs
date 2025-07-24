@@ -52,7 +52,14 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 var result = appRepository.GetMenuItems().Flatten().Where(e =>
                     (e.Label ?? "").StartsWith(search.Value, StringComparison.OrdinalIgnoreCase)).ToArray();
 
-                menuItems.Set([MenuItem.Default("Search Results").Children(result)]);
+                if (result.Length > 0)
+                {
+                    menuItems.Set([MenuItem.Default("Search Results").Children(result)]);
+                }
+                else
+                {
+                    menuItems.Set([]);
+                }
             }
         }, [search]);
 
