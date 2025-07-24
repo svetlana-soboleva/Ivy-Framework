@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
 import { Command as CommandPrimitive } from 'cmdk';
+import { cn } from '@/lib/utils';
 
 export interface Option {
   label: string;
@@ -23,6 +24,7 @@ interface MultipleSelectorProps {
   hideClearAllButton?: boolean;
   hidePlaceholderWhenSelected?: boolean;
   emptyIndicator?: React.ReactNode;
+  invalid?: boolean;
 }
 
 const MultipleSelector = React.forwardRef<
@@ -41,6 +43,7 @@ const MultipleSelector = React.forwardRef<
       hideClearAllButton = false,
       hidePlaceholderWhenSelected = false,
       emptyIndicator,
+      invalid = false,
     },
     ref
   ) => {
@@ -81,13 +84,25 @@ const MultipleSelector = React.forwardRef<
         className={`overflow-visible bg-transparent ${className}`}
         {...commandProps}
       >
-        <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+        <div
+          className={cn(
+            'group border px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+            invalid
+              ? 'border-destructive text-destructive-foreground focus-within:ring-destructive focus-within:border-destructive'
+              : 'border-input'
+          )}
+        >
           <div className="flex gap-1 flex-wrap">
             {value.map(option => (
               <Badge
                 key={option.value}
                 variant="secondary"
-                className="hover:bg-secondary"
+                className={cn(
+                  'hover:bg-secondary',
+                  invalid
+                    ? 'bg-destructive/10 border-destructive text-destructive'
+                    : 'bg-primary text-primary-foreground border-primary'
+                )}
               >
                 {option.label}
                 <button

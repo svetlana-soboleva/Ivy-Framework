@@ -142,6 +142,10 @@ public class SelectInputApp : SampleBase
 
     private object CreateMultiSelectVariantsSection()
     {
+        var colorStateSelectDefault = UseState<Colors[]>([]);
+        var colorStateSelectDisabled = UseState<Colors[]>([]);
+        var colorStateSelectInvalid = UseState<Colors[]>([]);
+        var colorStateSelectPlaceholder = UseState<Colors[]>([]);
         var colorStateListDefault = UseState<Colors[]>([]);
         var colorStateListDisabled = UseState<Colors[]>([]);
         var colorStateListInvalid = UseState<Colors[]>([]);
@@ -159,6 +163,24 @@ public class SelectInputApp : SampleBase
                | Text.InlineCode("Invalid")
                | Text.InlineCode("With Placeholder")
                | Text.InlineCode("State")
+
+               | Text.InlineCode("SelectInputs.Select")
+               | colorStateSelectDefault
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
+               | colorStateSelectDisabled
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
+                    .Disabled()
+               | colorStateSelectInvalid
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
+                    .Invalid("Invalid")
+               | colorStateSelectPlaceholder
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
+                    .Placeholder("Select colors")
+               | Text.InlineCode($"[{string.Join(", ", colorStateSelectDefault.Value)}]")
 
                | Text.InlineCode("SelectInputs.List")
                | colorStateListDefault

@@ -496,8 +496,8 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                     disabled={disabled}
                     className={cn(
                       isSelected
-                        ? 'data-[state=checked]:bg-emerald-100 data-[state=checked]:border-emerald-500 data-[state=checked]:text-emerald-900'
-                        : undefined
+                        ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
+                        : 'data-[state=unchecked]:bg-accent data-[state=unchecked]:border-accent'
                     )}
                   />
                 )}
@@ -616,7 +616,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
             onValueChange={handleMultiSelectChange}
             placeholder={placeholder}
             disabled={disabled}
-            className={cn('w-full', invalid && inputStyles.invalidInput)}
+            className="w-full"
+            invalid={!!invalid}
             hideClearAllButton={!nullable}
             hidePlaceholderWhenSelected
             emptyIndicator={
