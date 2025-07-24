@@ -40,7 +40,7 @@ Make sure you have the [.Net 9 SDK installed](https://dotnet.microsoft.com/en-us
 2. **Create a new project**:
 
    ```bash
-    ivy init --helloworld
+    ivy init --hello
     ```
    
 3. **Run**:
