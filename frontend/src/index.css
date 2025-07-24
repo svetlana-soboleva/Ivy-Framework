@@ -472,6 +472,27 @@
   animation: alertGrowIn 200ms ease-out;
 }
 
+/* Toast animation */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-animate-enter {
+  animation: toastSlideIn 300ms ease-out;
+}
+
+/* Radix UI toast animations using data attributes */
+[data-radix-toast-root][data-state='open'] {
+  animation: toastSlideIn 300ms ease-out;
+}
+
 @theme inline {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
