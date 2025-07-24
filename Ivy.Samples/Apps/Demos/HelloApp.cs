@@ -2,9 +2,10 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Demos;
 
-[App(icon:Icons.PartyPopper, title:"Hello")]
+[App(icon: Icons.PartyPopper, title: "Hello")]
 public class HelloApp : ViewBase
 {
+    
     public override object? Build()
     {
         var nameState = this.UseState<string>();
@@ -17,6 +18,6 @@ public class HelloApp : ViewBase
                   | nameState.ToInput(placeholder: "What is your name?")
                   | new Separator()
                   | Text.Markdown("You'd be a hero to us if you could ⭐ us on [Github](https://github.com/Ivy-Interactive/Ivy-Framework)"))
-            ; 
+            ;
     }
 }
