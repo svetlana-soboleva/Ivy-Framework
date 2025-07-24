@@ -51,7 +51,9 @@ Make sure you have the [.Net 9 SDK installed](https://dotnet.microsoft.com/en-us
 
 You can also run `ivy samples` to see all the components that Ivy offers and `ivy docs` for documentation.  
 
-### Developer Build
+## Developer Build
+
+If you want to work on the framework itself you need to setup the following:
 
 1. **Install dependencies**:
    - [Node 22.12+ & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
