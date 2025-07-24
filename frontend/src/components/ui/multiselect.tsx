@@ -81,7 +81,7 @@ const MultipleSelector = React.forwardRef<
       <Command
         ref={ref}
         onKeyDown={handleKeyDown}
-        className={`overflow-visible bg-transparent ${className}`}
+        className={cn('overflow-visible bg-transparent', className)}
         {...commandProps}
       >
         <div
