@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-test.skip('has title', async ({ page }) => {
+test('has title', async ({ page }) => {
   await page.goto('/');
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/Ivy/);
 });
 
-test.skip('loads the main page', async ({ page }) => {
+test('loads the main page', async ({ page }) => {
   await page.goto('/');
 
   // Wait for the page to load
