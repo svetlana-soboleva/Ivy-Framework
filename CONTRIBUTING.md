@@ -130,7 +130,7 @@ Before submitting your code, ensure it follows the project's linting and formatt
 
 The project uses pre-commit hooks that will automatically run linting and formatting on staged files. Make sure your code passes these checks before committing. More details how pre-commit hooks are being set up can be found in `./frontend/README.md`
 
-LSS, if you have ran `npm install` in the `./frontend`, most likely all pre-commit hooks will be working for you, that cover linting and formatting for Ivy-Framework.
+TL;DR, if you have run `npm install` in the `./frontend`, most likely all pre-commit hooks will be working for you, that cover linting and formatting for Ivy-Framework.
 
 ### C# Guidelines
 
