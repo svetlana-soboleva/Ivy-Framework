@@ -42,7 +42,7 @@ Make sure you have the [.Net 9 SDK installed](https://dotnet.microsoft.com/en-us
    ```bash
     ivy init --hello
     ```
-   
+
 3. **Run**:
 
    ```bash
@@ -70,7 +70,7 @@ If you want to work on the framework itself, you need to set up the following:
    ```
 
    **Mac/Linux (Bash):**
-   
+
    ```bash
    cd Ivy.Docs
    sh ./Regenerate.sh
@@ -88,12 +88,14 @@ If you want to work on the framework itself, you need to set up the following:
 5. **Run the backend** (choose one):
 
    **For Ivy.Samples (testing components):**
+
    ```bash
    cd Ivy.Samples
    dotnet watch
    ```
 
    **For Ivy.Docs (documentation):**
+
    ```bash
    cd Ivy.Docs
    dotnet watch
