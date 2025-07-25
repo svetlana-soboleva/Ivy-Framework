@@ -78,7 +78,7 @@ To get the auto-linting for staged files, you need to have run `npm run install`
 
 If you have Prettier and ESLint, you can configure your IDE to respect the repositories styling guidelines and easily format your code.
 
-If there are issues that auto-linting and formatting can't resolved, your commit will be blocked from being pushed. If you really need to push, you can specify checks behavior per commit (not recommended):
+If there are issues that auto-linting and formatting can't be resolved, your commit will be blocked from being pushed. If you really need to push, you can specify checks behavior per commit (not recommended):
 
 ```bash
 git commit --no-verify -m "Commit message"
