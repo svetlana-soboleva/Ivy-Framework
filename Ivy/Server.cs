@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Chrome;
@@ -32,6 +33,8 @@ public class ServerArgs
     public string? Args { get; set; } = null;
     public string? DefaultAppId { get; set; } = null;
     public bool Silent { get; set; } = false;
+    public string? MetaTitle { get; set; } = null;
+    public string? MetaDescription { get; set; } = null;
 }
 
 public class Server
@@ -164,6 +167,18 @@ public class Server
         _builderMods.Add(modify);
         return this;
     }
+    
+    public Server SetMetaTitle(string title)
+    {
+        _args.MetaTitle = title;
+        return this;
+    }
+    
+    public Server SetMetaDescription(string description)
+    {
+        _args.MetaDescription = description;
+        return this;
+    }
 
     public async Task RunAsync(CancellationTokenSource? cts = null)
     {
@@ -282,7 +297,7 @@ public class Server
             };
         }
 
-        app.UseFrontend();
+        app.UseFrontend(_args);
         app.UseAssets("Assets");
 
         app.Lifetime.ApplicationStarted.Register(() =>
@@ -328,7 +343,7 @@ public class Server
 
 public static class WebApplicationExtensions
 {
-    public static WebApplication UseFrontend(this WebApplication app)
+    public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
     {
         var assembly = Assembly.GetExecutingAssembly()!;
         var embeddedProvider = new EmbeddedFileProvider(
@@ -353,6 +368,18 @@ public static class WebApplicationExtensions
                     html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
                 }
 
+                //Inject Meta Title and Description
+                if(!string.IsNullOrEmpty(serverArgs.MetaDescription))
+                {
+                    var metaDescriptionTag = $"<meta name=\"description\" content=\"{serverArgs.MetaDescription}\" />";
+                    html = html.Replace("</head>", $"  {metaDescriptionTag}\n</head>");
+                }
+                if (!string.IsNullOrEmpty(serverArgs.MetaTitle))
+                {
+                    var metaTitleTag = $"<title>{serverArgs.MetaTitle}</title>";
+                    html = Regex.Replace(html, "<title>.*?</title>", metaTitleTag, RegexOptions.Singleline);
+                }
+                
                 context.Response.ContentType = "text/html";
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);
