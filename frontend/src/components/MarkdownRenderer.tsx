@@ -186,18 +186,18 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   const components = useMemo(
     () => ({
-      h1: ({ children }: { children: React.ReactNode }) => (
+      h1: memo(({ children }: { children: React.ReactNode }) => (
         <h1 className={textBlockClassMap.h1}>{children}</h1>
-      ),
-      h2: ({ children }: { children: React.ReactNode }) => (
+      )),
+      h2: memo(({ children }: { children: React.ReactNode }) => (
         <h2 className={textBlockClassMap.h2}>{children}</h2>
-      ),
-      h3: ({ children }: { children: React.ReactNode }) => (
+      )),
+      h3: memo(({ children }: { children: React.ReactNode }) => (
         <h3 className={textBlockClassMap.h3}>{children}</h3>
-      ),
-      h4: ({ children }: { children: React.ReactNode }) => (
+      )),
+      h4: memo(({ children }: { children: React.ReactNode }) => (
         <h4 className={textBlockClassMap.h4}>{children}</h4>
-      ),
+      )),
       p: memo(({ children }: { children: React.ReactNode }) => (
         <p className={textBlockClassMap.p}>{children}</p>
       )),
