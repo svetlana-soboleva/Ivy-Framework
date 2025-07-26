@@ -66,19 +66,23 @@ interface SelectInputWidgetProps {
 const convertValuesToOriginalType = (
   stringValues: string[],
   originalValue: NullableSelectValue,
-  options: Option[]
+  options: Option[],
+  selectMany: boolean = false
 ): NullableSelectValue => {
   if (stringValues.length === 0) {
     // For nullable types, we need to determine the expected array type from options
     if (originalValue === null || originalValue === undefined) {
-      // Check if options contain numbers or strings to determine the expected type
-      if (options.length > 0) {
-        const firstOption = options[0];
-        if (typeof firstOption.value === 'number') {
-          return [];
-        } else if (typeof firstOption.value === 'string') {
-          return [];
+      if (selectMany) {
+        // For nullable collection types, determine the expected array type from options
+        if (options.length > 0) {
+          const firstOption = options[0];
+          if (typeof firstOption.value === 'number') {
+            return [];
+          } else if (typeof firstOption.value === 'string') {
+            return [];
+          }
         }
+        return [];
       }
       return null;
     }
@@ -111,7 +115,7 @@ const convertValuesToOriginalType = (
   }
 
   // For nullable collection types where originalValue is null, determine type from options
-  if (originalValue === null || originalValue === undefined) {
+  if ((originalValue === null || originalValue === undefined) && selectMany) {
     if (options.length > 0) {
       const firstOption = options[0];
       if (typeof firstOption.value === 'number') {
@@ -143,7 +147,8 @@ const useSelectValueHandler = (
   id: string,
   value: NullableSelectValue,
   options: Option[],
-  eventHandler: EventHandler
+  eventHandler: EventHandler,
+  selectMany: boolean = false
 ) => {
   return useCallback(
     (newValue: string | string[]) => {
@@ -158,7 +163,8 @@ const useSelectValueHandler = (
       const convertedValue = convertValuesToOriginalType(
         stringArray,
         value,
-        options
+        options,
+        selectMany
       );
 
       logger.debug('Select input converted value', {
@@ -170,7 +176,7 @@ const useSelectValueHandler = (
 
       eventHandler('OnChange', id, [convertedValue]);
     },
-    [id, value, options, eventHandler]
+    [id, value, options, eventHandler, selectMany]
   );
 };
 
@@ -217,7 +223,8 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
     id,
     value,
     validOptions,
-    eventHandler
+    eventHandler,
+    selectMany
   );
 
   // Outer container
@@ -362,7 +369,8 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
     id,
     value,
     validOptions,
-    eventHandler
+    eventHandler,
+    false // Always single select for RadioVariant
   );
 
   const container = (
@@ -476,7 +484,8 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
       const convertedValue = convertValuesToOriginalType(
         newValues.map(v => v.toString()),
         value,
-        validOptions
+        validOptions,
+        true // Always multi-select for CheckboxVariant
       );
 
       logger.debug('Select input checkbox converted value', {
@@ -593,7 +602,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     id,
     value,
     validOptions,
-    eventHandler
+    eventHandler,
+    selectMany
   );
 
   // Handle multiselect case
@@ -639,7 +649,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
       const convertedValue = convertValuesToOriginalType(
         newValues,
         value,
-        validOptions
+        validOptions,
+        selectMany
       );
       eventHandler('OnChange', id, [convertedValue]);
     };
