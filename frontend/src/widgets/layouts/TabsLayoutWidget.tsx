@@ -168,7 +168,6 @@ export const TabsLayoutWidget = ({
   variant = 'Tabs',
   padding,
 }: TabsLayoutWidgetProps) => {
-  console.log('[TabsLayoutWidget] variant:', variant);
   const tabWidgets = React.Children.toArray(children).filter(
     child =>
       React.isValidElement(child) &&
