@@ -20,7 +20,7 @@ public enum Fruits
 }
 
 public record UserModel(
-    string Name, string Password, bool IsAwesome, DateTime BirthDate, int Height, int UserId = 123, Gender Gender = Gender.Male, string Json = "{}", List<Fruits> FavoriteFruits = null!);
+    string Name, string Password, bool IsAwesome, DateTime BirthDate, int Height, int UserId = 123, Gender Gender = Gender.Male, string Json = "{}", List<Fruits> FavoriteFruits = new());
 
 [App(icon: Icons.Clipboard)]
 public class FormApp : SampleBase
