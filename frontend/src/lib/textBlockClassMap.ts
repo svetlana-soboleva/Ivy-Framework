@@ -30,3 +30,6 @@ export const textBlockClassMap: Record<string, string> = {
   code: 'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
   img: 'max-w-full h-auto cursor-zoom-in mb-2',
 };
+
+// Container class for text content with consistent spacing
+export const textContainerClass = 'flex flex-col gap-2';

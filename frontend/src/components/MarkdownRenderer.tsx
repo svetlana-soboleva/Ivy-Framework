@@ -322,18 +322,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2">
-      <ReactMarkdown
-        components={
-          components as React.ComponentProps<typeof ReactMarkdown>['components']
-        }
-        remarkPlugins={plugins.remarkPlugins}
-        rehypePlugins={plugins.rehypePlugins}
-        urlTransform={urlTransform}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
+    <ReactMarkdown
+      components={
+        components as React.ComponentProps<typeof ReactMarkdown>['components']
+      }
+      remarkPlugins={plugins.remarkPlugins}
+      rehypePlugins={plugins.rehypePlugins}
+      urlTransform={urlTransform}
+    >
+      {content}
+    </ReactMarkdown>
   );
 };
 
