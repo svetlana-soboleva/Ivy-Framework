@@ -69,6 +69,19 @@ const convertValuesToOriginalType = (
   options: Option[]
 ): NullableSelectValue => {
   if (stringValues.length === 0) {
+    // For nullable types, we need to determine the expected array type from options
+    if (originalValue === null || originalValue === undefined) {
+      // Check if options contain numbers or strings to determine the expected type
+      if (options.length > 0) {
+        const firstOption = options[0];
+        if (typeof firstOption.value === 'number') {
+          return [];
+        } else if (typeof firstOption.value === 'string') {
+          return [];
+        }
+      }
+      return null;
+    }
     return originalValue instanceof Array ? [] : null;
   }
 
@@ -94,6 +107,26 @@ const convertValuesToOriginalType = (
       });
     }
     // Default to string array
+    return stringValues;
+  }
+
+  // For nullable collection types where originalValue is null, determine type from options
+  if (originalValue === null || originalValue === undefined) {
+    if (options.length > 0) {
+      const firstOption = options[0];
+      if (typeof firstOption.value === 'number') {
+        return stringValues.map(v => {
+          const option = optionsMap.get(v);
+          return option ? Number(option.value) : Number(v);
+        });
+      } else if (typeof firstOption.value === 'string') {
+        return stringValues.map(v => {
+          const option = optionsMap.get(v);
+          return option ? String(option.value) : v;
+        });
+      }
+    }
+    // Default to string array if we can't determine the type
     return stringValues;
   }
 
