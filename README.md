@@ -55,7 +55,7 @@ Make sure you have the [.Net 9 SDK installed](https://dotnet.microsoft.com/en-us
 
 You can also run `ivy samples` to see all the components that Ivy offers and `ivy docs` for documentation.  
 
-## Developer Build
+## Framework Developer Instructions
 
 If you want to work on the framework itself, you need to set up the following:
 
