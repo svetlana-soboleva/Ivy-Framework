@@ -198,9 +198,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       h4: ({ children }: { children: React.ReactNode }) => (
         <h4 className={textBlockClassMap.h4}>{children}</h4>
       ),
-      p: ({ children }: { children: React.ReactNode }) => (
+      p: memo(({ children }: { children: React.ReactNode }) => (
         <p className={textBlockClassMap.p}>{children}</p>
-      ),
+      )),
       ul: memo(({ children }: { children: React.ReactNode }) => (
         <ul className={textBlockClassMap.ul}>{children}</ul>
       )),
@@ -210,20 +210,19 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       li: memo(({ children }: { children: React.ReactNode }) => (
         <li className={textBlockClassMap.li}>{children}</li>
       )),
-      strong: ({ children }: { children: React.ReactNode }) => (
+      strong: memo(({ children }: { children: React.ReactNode }) => (
         <strong className={textBlockClassMap.strong}>{children}</strong>
-      ),
-      em: ({ children }: { children: React.ReactNode }) => (
+      )),
+      em: memo(({ children }: { children: React.ReactNode }) => (
         <em className={textBlockClassMap.em}>{children}</em>
-      ),
-      // Code blocks - with memoization and optimized rendering
-      code: (props: React.ComponentProps<'code'>) => (
+      )),
+      code: memo((props: React.ComponentProps<'code'>) => (
         <CodeBlock
           className={props.className}
           children={props.children || ''}
           hasCodeBlocks={contentFeatures.hasCodeBlocks}
         />
-      ),
+      )),
 
       // Pre tag (for code blocks)
       pre: memo(({ children }: { children: React.ReactNode }) => (
