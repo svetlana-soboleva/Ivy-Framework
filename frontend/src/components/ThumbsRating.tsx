@@ -94,7 +94,7 @@ const ThumbsRating = ({
               'transition-colors',
               value === ThumbsEnum.Up
                 ? invalid
-                  ? 'text-primary'
+                  ? 'text-muted-foreground'
                   : 'text-primary-foreground'
                 : 'text-muted-foreground'
             )}
