@@ -167,13 +167,13 @@ public class Server
         _builderMods.Add(modify);
         return this;
     }
-    
+
     public Server SetMetaTitle(string title)
     {
         _args.MetaTitle = title;
         return this;
     }
-    
+
     public Server SetMetaDescription(string description)
     {
         _args.MetaDescription = description;
@@ -369,7 +369,7 @@ public static class WebApplicationExtensions
                 }
 
                 //Inject Meta Title and Description
-                if(!string.IsNullOrEmpty(serverArgs.MetaDescription))
+                if (!string.IsNullOrEmpty(serverArgs.MetaDescription))
                 {
                     var metaDescriptionTag = $"<meta name=\"description\" content=\"{serverArgs.MetaDescription}\" />";
                     html = html.Replace("</head>", $"  {metaDescriptionTag}\n</head>");
@@ -379,7 +379,7 @@ public static class WebApplicationExtensions
                     var metaTitleTag = $"<title>{serverArgs.MetaTitle}</title>";
                     html = Regex.Replace(html, "<title>.*?</title>", metaTitleTag, RegexOptions.Singleline);
                 }
-                
+
                 context.Response.ContentType = "text/html";
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);

@@ -8,7 +8,7 @@ server.SetMetaTitle($"Ivy Samples {version}");
 
 var chromeSettings = new ChromeSettings()
     .Header(
-        Layout.Vertical().Padding(2) 
+        Layout.Vertical().Padding(2)
             | new IvyLogo()
             | Text.Muted($"Version {version}")
     )

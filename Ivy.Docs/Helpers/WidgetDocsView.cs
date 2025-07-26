@@ -94,7 +94,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
         var properties = type.GetProperties()
             .Where(p => p.GetCustomAttribute<PropAttribute>() != null)
             .Select(e => TypeUtils.GetPropRecord(e, defaultValueProvider, type, extensionTypes))
-            .Where(e => e.Name != "TestId") 
+            .Where(e => e.Name != "TestId")
             .OrderBy(e => e.Name);
 
         var propertySection = Layout.Vertical().Gap(8)
