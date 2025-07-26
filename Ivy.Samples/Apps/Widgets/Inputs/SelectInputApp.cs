@@ -85,9 +85,9 @@ public class SelectInputApp : SampleBase
                | colorState
                     .ToSelectInput(colorOptions)
                     .Placeholder("Select a color")
-               | nullableColorState
+               | nullableColorArrayState
                     .ToSelectInput(colorOptions)
-               | nullableColorState
+               | nullableColorArrayState
                     .ToSelectInput(colorOptions)
                     .Invalid("Invalid")
 

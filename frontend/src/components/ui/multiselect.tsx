@@ -86,10 +86,10 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            'group border px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+            'group border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring',
             invalid
               ? 'border-destructive text-destructive-foreground focus-within:ring-destructive focus-within:border-destructive'
-              : 'border-input'
+              : undefined
           )}
         >
           <div className="flex gap-1 flex-wrap">
