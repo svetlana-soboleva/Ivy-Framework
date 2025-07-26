@@ -103,9 +103,24 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
             </footer>
           )}
         </article>
-        {showToc && contentLoaded && (
-          <div className="hidden lg:block">
-            <TableOfContents className="sticky top-8" articleRef={articleRef} />
+        {showToc && (
+          <div className="hidden lg:block w-64">
+            {contentLoaded ? (
+              <TableOfContents
+                className="sticky top-8"
+                articleRef={articleRef}
+              />
+            ) : (
+              <div className="sticky top-8">
+                <div className="font-medium mb-4">Table of Contents</div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-muted rounded animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded animate-pulse w-3/4"></div>
+                  <div className="h-4 bg-muted rounded animate-pulse w-1/2"></div>
+                  <div className="h-4 bg-muted rounded animate-pulse w-5/6"></div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
