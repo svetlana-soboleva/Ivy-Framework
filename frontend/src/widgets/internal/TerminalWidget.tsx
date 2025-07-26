@@ -42,12 +42,13 @@ const TerminalWidget = ({ lines, title, showHeader }: TerminalWidgetProps) => {
             key={index}
             className={cn('whitespace-pre-wrap', index > 0 ? 'mt-1' : '')}
           >
-            <div className="flex">
+            <div className="flex pl-2">
               {line.isCommand && (
                 <span className="text-primary select-none pointer-events-none mr-2">
                   {'> '}
                 </span>
               )}
+              {!line.isCommand && <div style={{ paddingLeft: '25px' }}></div>}
               <span className={line.isCommand ? commandColor : outputColor}>
                 {line.content}
               </span>
