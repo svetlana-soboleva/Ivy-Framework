@@ -8,6 +8,8 @@ Ivy - The ultimate framework for building internal tools with LLM code generatio
 
 [Documentation](https://docs.ivy.app) | [Samples](https://samples.ivy.app)
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=Ivy-Interactive%2FIvy-Devcontainer&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=EuropeWest)
+
 <https://github.com/user-attachments/assets/ba2bf5a5-8dc7-4501-9072-6af7483be4f7>
 
 ## Features
