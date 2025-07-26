@@ -8,6 +8,8 @@ Ivy - The ultimate framework for building internal tools with LLM code generatio
 
 <https://github.com/user-attachments/assets/ba2bf5a5-8dc7-4501-9072-6af7483be4f7>
 
+[Documentation]([url](https://docs.ivy.app)) | [Samples](https://samples.ivy.app/)
+
 ## Features
 
 - 🛠️ **CLI**: Init new projects, add data providers, generate apps using AI and manage deployments.
