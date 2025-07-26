@@ -6,9 +6,9 @@ Ivy - The ultimate framework for building internal tools with LLM code generatio
 
 **[Sign up for our waitlist](https://ivy.app/join-waitlist) to be among the first to get access.**
 
-<https://github.com/user-attachments/assets/ba2bf5a5-8dc7-4501-9072-6af7483be4f7>
+[Documentation](https://docs.ivy.app) | [Samples](https://samples.ivy.app)
 
-[Documentation]([url](https://docs.ivy.app)) | [Samples](https://samples.ivy.app/)
+<https://github.com/user-attachments/assets/ba2bf5a5-8dc7-4501-9072-6af7483be4f7>
 
 ## Features
 
