@@ -68,7 +68,21 @@ toggleDeveloperLogging();
 
 ## Code Quality
 
-This project uses ESLint and Prettier for code quality and formatting, with automatic pre-commit hooks.
+The frontend project uses ESLint and Prettier for code quality and formatting, with automatic pre-commit hooks. It is also responsible for handling `dotnet format` precommit hook for the BE.
+
+### Pre-commit Hooks
+
+We use a Husky npm package to setup precommit hooks for both the FE and the BE.
+
+To get the auto-linting for staged files, you need to have run `npm run install` in `./frontend` at least once. Ideally, you would not then need to run any formatting or lint commands as it will be done for you. In case you want to manually run them, you still can.
+
+If you have Prettier and ESLint, you can configure your IDE to respect the repositories styling guidelines and easily format your code.
+
+If there are issues that auto-linting and formatting can't be resolved, your commit will be blocked from being pushed. If you really need to push, you can specify checks behavior per commit (not recommended):
+
+```bash
+git commit --no-verify -m "Commit message"
+```
 
 ### Code Formatting
 
@@ -97,16 +111,6 @@ Automatically fix linting issues:
 ```bash
 npm run lint:fix
 ```
-
-### Pre-commit Hooks
-
-The project uses Git pre-commit hooks to automatically:
-
-- Run ESLint with auto-fix on staged files
-- Format staged files with Prettier
-- Block commits if any issues remain
-
-The pre-commit hook is configured at the repository root and automatically detects the frontend directory.
 
 ### Configuration Files
 

@@ -1,7 +1,9 @@
-using System.CommandLine;
+using Ivy.Helpers;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Ivy.Apps;
 using Ivy.Auth;
 using Ivy.Chrome;
@@ -24,7 +26,6 @@ namespace Ivy;
 public class ServerArgs
 {
     public const int DefaultPort = 5010;
-
     public int Port { get; set; } = DefaultPort;
     public bool Verbose { get; set; } = false;
     public bool IKillForThisPort { get; set; } = false;
@@ -32,6 +33,8 @@ public class ServerArgs
     public string? Args { get; set; } = null;
     public string? DefaultAppId { get; set; } = null;
     public bool Silent { get; set; } = false;
+    public string? MetaTitle { get; set; } = null;
+    public string? MetaDescription { get; set; } = null;
 }
 
 public class Server
@@ -67,8 +70,7 @@ public class Server
             Title = "Default",
             ViewFunc = viewFactory,
             Path = ["Apps"],
-            IsVisible = true,
-            RemoveIvyBranding = false
+            IsVisible = true
         });
         DefaultAppId = AppIds.Default;
     }
@@ -126,8 +128,7 @@ public class Server
             Title = "Chrome",
             ViewFactory = viewFactory ?? (() => new DefaultSidebarChrome(ChromeSettings.Default())),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = true
+            IsVisible = false
         });
         DefaultAppId = AppIds.Chrome;
         return this;
@@ -149,8 +150,7 @@ public class Server
             Title = "Auth",
             ViewFactory = viewFactory ?? (() => new DefaultAuthApp()),
             Path = [],
-            IsVisible = false,
-            RemoveIvyBranding = false
+            IsVisible = false
         });
         AuthProviderType = typeof(T);
         return this;
@@ -165,6 +165,18 @@ public class Server
     public Server UseBuilder(Action<WebApplicationBuilder> modify)
     {
         _builderMods.Add(modify);
+        return this;
+    }
+
+    public Server SetMetaTitle(string title)
+    {
+        _args.MetaTitle = title;
+        return this;
+    }
+
+    public Server SetMetaDescription(string description)
+    {
+        _args.MetaDescription = description;
         return this;
     }
 
@@ -285,7 +297,7 @@ public class Server
             };
         }
 
-        app.UseFrontend();
+        app.UseFrontend(_args);
         app.UseAssets("Assets");
 
         app.Lifetime.ApplicationStarted.Register(() =>
@@ -331,7 +343,7 @@ public class Server
 
 public static class WebApplicationExtensions
 {
-    public static WebApplication UseFrontend(this WebApplication app)
+    public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
     {
         var assembly = Assembly.GetExecutingAssembly()!;
         var embeddedProvider = new EmbeddedFileProvider(
@@ -354,6 +366,18 @@ public static class WebApplicationExtensions
                 {
                     var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
                     html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
+                }
+
+                //Inject Meta Title and Description
+                if (!string.IsNullOrEmpty(serverArgs.MetaDescription))
+                {
+                    var metaDescriptionTag = $"<meta name=\"description\" content=\"{serverArgs.MetaDescription}\" />";
+                    html = html.Replace("</head>", $"  {metaDescriptionTag}\n</head>");
+                }
+                if (!string.IsNullOrEmpty(serverArgs.MetaTitle))
+                {
+                    var metaTitleTag = $"<title>{serverArgs.MetaTitle}</title>";
+                    html = Regex.Replace(html, "<title>.*?</title>", metaTitleTag, RegexOptions.Singleline);
                 }
 
                 context.Response.ContentType = "text/html";
@@ -415,26 +439,18 @@ public static class IvyServerUtils
 {
     public static ServerArgs GetArgs()
     {
-        var portOption = new Option<int>("--port", () => ServerArgs.DefaultPort);
-        var verboseOption = new Option<bool>("--verbose", () => false);
-        var silentOption = new Option<bool>("--silent", () => false);
-        var iKillForThisPortOption = new Option<bool>("--i-kill-for-this-port", () => false);
-        var browseOption = new Option<bool>("--browse", () => false);
-        var argsOption = new Option<string?>("--args", () => null!);
-        var defaultAppIdOption = new Option<string?>("--app", () => null!);
-
-        var rootCommand = new RootCommand() { portOption, verboseOption, iKillForThisPortOption, browseOption, argsOption, defaultAppIdOption, silentOption };
-
-        var result = rootCommand.Parse(System.Environment.GetCommandLineArgs());
+        var parser = new ArgsParser();
+        var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        var parsedArgs = parser.Parse(args);
         return new ServerArgs()
         {
-            Port = result.GetValueForOption(portOption),
-            Verbose = result.GetValueForOption(verboseOption),
-            IKillForThisPort = result.GetValueForOption(iKillForThisPortOption),
-            Browse = result.GetValueForOption(browseOption),
-            Args = result.GetValueForOption(argsOption),
-            DefaultAppId = result.GetValueForOption(defaultAppIdOption),
-            Silent = result.GetValueForOption(silentOption)
+            Port = parser.GetValue(parsedArgs, "port", ServerArgs.DefaultPort),
+            Verbose = parser.GetValue(parsedArgs, "verbose", false),
+            IKillForThisPort = parser.GetValue(parsedArgs, "i-kill-for-this-port", false),
+            Browse = parser.GetValue(parsedArgs, "browse", false),
+            Args = parser.GetValue<string?>(parsedArgs, "args", null),
+            DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
+            Silent = parser.GetValue(parsedArgs, "silent", false)
         };
     }
 }

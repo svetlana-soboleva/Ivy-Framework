@@ -96,7 +96,6 @@ const flattenMenuItems = (
   return flat;
 };
 
-// Separate component for collapsible menu items to properly manage state
 const CollapsibleMenuItem: React.FC<{
   item: MenuItem;
   eventHandler: WidgetEventHandlerType;
@@ -131,9 +130,9 @@ const CollapsibleMenuItem: React.FC<{
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} className="text-primary" />
+              <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
-              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 text-primary" />
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
@@ -157,7 +156,7 @@ const CollapsibleMenuItem: React.FC<{
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
-          <Icon name={item.icon} size={20} className="text-primary" />
+          <Icon name={item.icon} size={20} />
           <span>{item.label}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -219,7 +218,7 @@ const renderMenuItems = (
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} className="text-primary" />
+              <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -231,7 +230,7 @@ const renderMenuItems = (
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} className="text-primary" />
+              <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
             </SidebarMenuSubButton>
           </SidebarMenuSubItem>
@@ -328,7 +327,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
                   : {}
               }
             >
-              <Icon name={item.icon} size={20} className="text-primary" />
+              <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -354,9 +353,17 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
       style={{ outline: 'none' }}
       data-sidebar-menu-widget
     >
-      {searchActive
-        ? renderMenuItemsWithHighlight(items, 0, flatIdxRef)
-        : renderMenuItems(items, eventHandler, id, 0)}
+      {searchActive ? (
+        flatItems.length > 0 ? (
+          renderMenuItemsWithHighlight(items, 0, flatIdxRef)
+        ) : (
+          <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
+            No results found
+          </div>
+        )
+      ) : (
+        renderMenuItems(items, eventHandler, id, 0)
+      )}
     </div>
   );
 };

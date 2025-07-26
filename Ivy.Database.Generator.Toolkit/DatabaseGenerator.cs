@@ -1,6 +1,4 @@
-﻿using Ivy.Console.Helpers;
-using Ivy.Console.Tui;
-using Ivy.Database.Generator.Toolkit.Databases;
+﻿using Ivy.Database.Generator.Toolkit.Databases;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
@@ -80,7 +78,7 @@ public class DatabaseGenerator
             await seeder.SeedAsync();
         }, "Seeding", verbose);
         
-        AnsiConsole.MarkupLine($"[{Styles.PrimaryColor}]Done![/]");
+        AnsiConsole.MarkupLine($"[green]Done![/]");
 
         return 0;
     }

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Ivy.Tables;
+using Ivy.Views.Tables;
 using Newtonsoft.Json;
 
 namespace Ivy.Docs.Helpers;
@@ -34,7 +34,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
 
         if (constructors.Any())
         {
-            constructorSection = Layout.Vertical().Gap(8)
+            constructorSection = Layout.Vertical().Gap(2)
                                  | Text.H3("Constructors")
                                  | constructors.ToTable().Width(Size.Full());
         }
@@ -82,7 +82,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
                     new TableCell(row[1]),
                     new TableCell(row[2])
                 ));
-                supportedTypesSection = Layout.Vertical().Gap(8)
+                supportedTypesSection = Layout.Vertical().Gap(2)
                     | Text.H3("Supported Types")
                     | new Table(
                         new[] { headerRow }.Concat(dataRows).ToArray()
@@ -94,9 +94,10 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
         var properties = type.GetProperties()
             .Where(p => p.GetCustomAttribute<PropAttribute>() != null)
             .Select(e => TypeUtils.GetPropRecord(e, defaultValueProvider, type, extensionTypes))
+            .Where(e => e.Name != "TestId")
             .OrderBy(e => e.Name);
 
-        var propertySection = Layout.Vertical().Gap(8)
+        var propertySection = Layout.Vertical().Gap(2)
                               | Text.H3("Properties")
                               | properties.ToTable().Width(Size.Full())
             ;
@@ -111,7 +112,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
 
         if (events.Any())
         {
-            eventSection = Layout.Vertical().Gap(8)
+            eventSection = Layout.Vertical().Gap(2)
                            | Text.H3("Events")
                            | events.ToTable().Width(Size.Full())
                 ;
@@ -119,7 +120,7 @@ public class WidgetDocsView(string typeName, string? extensionsTypeName, string?
 
         string? fileName = sourceUrl != null ? System.IO.Path.GetFileName(sourceUrl) : null;
 
-        return Layout.Vertical().Gap(8)
+        return Layout.Vertical().Gap(2)
                | Text.H2("API")
                | (fileName != null
                    ? (Layout.Horizontal().Align(Align.Left).Gap(0) | Icons.Github.ToIcon() |

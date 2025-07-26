@@ -175,6 +175,11 @@ public class SupabaseAuthProvider : IAuthProvider
             return null;
         }
 
+        if (user.Id == null || user.Email == null)
+        {
+            return null;
+        }
+
         return new UserInfo(
             user.Id,
             user.Email,
