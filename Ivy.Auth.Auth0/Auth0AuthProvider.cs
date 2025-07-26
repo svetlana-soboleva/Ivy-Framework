@@ -125,7 +125,6 @@ public class Auth0AuthProvider : IAuthProvider
     {
         try
         {
-            var logoutUrl = $"https://{_domain}/v2/logout?client_id={_clientId}";
             // Auth0 logout is typically handled on the client side
             // This method can be extended to revoke tokens if needed
             await Task.CompletedTask;
