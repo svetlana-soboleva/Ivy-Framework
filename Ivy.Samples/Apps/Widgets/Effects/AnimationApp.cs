@@ -126,7 +126,7 @@ public class AnimationApp : ViewBase
             | Icons.Database.ToIcon().Color(Colors.Blue).WithAnimation(AnimationType.Pulse).Duration(2).Intensity(0.8)
 
             | Icons.Cpu.ToIcon().Color(Colors.Purple).WithAnimation(AnimationType.Pulse).Duration(1.5).Intensity(1.2)
-                        | Icons.MemoryStick.ToIcon().Color(Colors.Orange).WithAnimation(AnimationType.Bounce).Duration(1).Intensity(0.7);
+            | Icons.MemoryStick.ToIcon().Color(Colors.Orange).WithAnimation(AnimationType.Bounce).Duration(1).Intensity(0.7);
     }
 
     private object CreateIconAnimations()
