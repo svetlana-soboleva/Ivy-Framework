@@ -541,9 +541,10 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                     }
                     disabled={disabled}
                     className={cn(
+                      'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
                       isSelected
                         ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
-                        : 'data-[state=unchecked]:bg-accent data-[state=unchecked]:border-accent'
+                        : undefined
                     )}
                   />
                 )}
