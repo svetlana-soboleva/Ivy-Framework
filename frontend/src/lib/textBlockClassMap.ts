@@ -32,4 +32,4 @@ export const textBlockClassMap: Record<string, string> = {
 };
 
 // Container class for text content with consistent spacing
-export const textContainerClass = 'flex flex-col gap-2';
+export const textContainerClass = 'flex flex-col gap-4';

@@ -255,22 +255,14 @@ export const TabsLayoutWidget = ({
   // Sync tab order on add/remove
   React.useEffect(() => {
     const prev = tabOrder;
-    const added = tabWidgets
-      .map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
-      .filter(id => !prev.includes(id));
-    const removed = prev.filter(
-      id =>
-        !tabWidgets
-          .map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
-          .includes(id)
+    const currentTabIds = tabWidgets.map(
+      tab => (tab as React.ReactElement<TabWidgetProps>).props.id
     );
+    const added = currentTabIds.filter(id => !prev.includes(id));
+    const removed = prev.filter(id => !currentTabIds.includes(id));
 
     if (added.length || removed.length) {
-      setTabOrder(
-        tabWidgets.map(
-          tab => (tab as React.ReactElement<TabWidgetProps>).props.id
-        )
-      );
+      setTabOrder(currentTabIds);
     }
   }, [tabWidgets]);
 
@@ -290,7 +282,12 @@ export const TabsLayoutWidget = ({
       const newTargetTabId = tabOrder[selectedIndex];
       // Only update state if the target tab ID is actually different from the current active one.
       if (newTargetTabId !== activeTabIdRef.current) {
-        setActiveTabId(newTargetTabId);
+        // Small delay to handle race condition between tabOrder and selectedIndex updates
+        const timeoutId = setTimeout(() => {
+          setActiveTabId(newTargetTabId);
+        }, 10);
+
+        return () => clearTimeout(timeoutId);
       }
     }
     // If selectedIndex is null or out of bounds, but we have a valid activeTabId that still exists,
