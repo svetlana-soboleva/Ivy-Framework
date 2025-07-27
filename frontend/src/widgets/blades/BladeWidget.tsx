@@ -45,27 +45,27 @@ export function BladeWidget({
         className="flex items-center justify-between px-4 bg-background text-foreground h-[70px] border-b border-border"
         onMouseDown={e => handleMouseDown(e)}
       >
-        <div className="h-[70px] flex items-center justify-between">
+        <div className="flex items-center h-[70px]">
           {!slots?.BladeHeader && (
             <h2 className="text-sm font-medium">{title}</h2>
           )}
           <div>{slots?.BladeHeader}</div>
-          <div className="flex items-center gap-1">
+        </div>
+        <div className="flex items-center h-[70px]">
+          <button
+            onClick={() => eventHandler('OnRefresh', id, [])}
+            className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
+          >
+            <RotateCw className="h-4 w-4" />
+          </button>
+          {index > 0 && (
             <button
-              onClick={() => eventHandler('OnRefresh', id, [])}
+              onClick={() => eventHandler('OnClose', id, [])}
               className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
             >
-              <RotateCw className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </button>
-            {index > 0 && (
-              <button
-                onClick={() => eventHandler('OnClose', id, [])}
-                className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
       <div className="bg-muted h-full">
