@@ -16,7 +16,7 @@ import 'katex/dist/katex.min.css';
 import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
-import { textBlockClassMap, textContainerClass } from '@/lib/textBlockClassMap';
+import { textBlockClassMap } from '@/lib/textBlockClassMap';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -322,18 +322,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   }, []);
 
   return (
-    <div className={textContainerClass}>
-      <ReactMarkdown
-        components={
-          components as React.ComponentProps<typeof ReactMarkdown>['components']
-        }
-        remarkPlugins={plugins.remarkPlugins}
-        rehypePlugins={plugins.rehypePlugins}
-        urlTransform={urlTransform}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
+    <ReactMarkdown
+      components={
+        components as React.ComponentProps<typeof ReactMarkdown>['components']
+      }
+      remarkPlugins={plugins.remarkPlugins}
+      rehypePlugins={plugins.rehypePlugins}
+      urlTransform={urlTransform}
+    >
+      {content}
+    </ReactMarkdown>
   );
 };
 
