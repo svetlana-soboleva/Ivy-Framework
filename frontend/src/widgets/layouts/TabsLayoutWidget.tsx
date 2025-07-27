@@ -288,6 +288,18 @@ export const TabsLayoutWidget = ({
       selectedIndex < tabOrder.length
     ) {
       const newTargetTabId = tabOrder[selectedIndex];
+
+      // CRITICAL: If our current active tab still exists in the new tabOrder,
+      // don't change it unless selectedIndex actually points to it
+      // This prevents flicker when tabOrder updates before selectedIndex
+      if (
+        activeTabIdRef.current &&
+        tabOrder.includes(activeTabIdRef.current) &&
+        newTargetTabId !== activeTabIdRef.current
+      ) {
+        return; // Don't update - wait for selectedIndex to point to the right tab
+      }
+
       // Only update state if the target tab ID is actually different from the current active one.
       if (newTargetTabId !== activeTabIdRef.current) {
         setActiveTabId(newTargetTabId);
