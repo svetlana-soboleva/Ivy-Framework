@@ -255,22 +255,14 @@ export const TabsLayoutWidget = ({
   // Sync tab order on add/remove
   React.useEffect(() => {
     const prev = tabOrder;
-    const added = tabWidgets
-      .map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
-      .filter(id => !prev.includes(id));
-    const removed = prev.filter(
-      id =>
-        !tabWidgets
-          .map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
-          .includes(id)
+    const currentTabIds = tabWidgets.map(
+      tab => (tab as React.ReactElement<TabWidgetProps>).props.id
     );
+    const added = currentTabIds.filter(id => !prev.includes(id));
+    const removed = prev.filter(id => !currentTabIds.includes(id));
 
     if (added.length || removed.length) {
-      setTabOrder(
-        tabWidgets.map(
-          tab => (tab as React.ReactElement<TabWidgetProps>).props.id
-        )
-      );
+      setTabOrder(currentTabIds);
     }
   }, [tabWidgets]);
 
@@ -288,21 +280,14 @@ export const TabsLayoutWidget = ({
       selectedIndex < tabOrder.length
     ) {
       const newTargetTabId = tabOrder[selectedIndex];
-
-      // CRITICAL: If our current active tab still exists in the new tabOrder,
-      // don't change it unless selectedIndex actually points to it
-      // This prevents flicker when tabOrder updates before selectedIndex
-      if (
-        activeTabIdRef.current &&
-        tabOrder.includes(activeTabIdRef.current) &&
-        newTargetTabId !== activeTabIdRef.current
-      ) {
-        return; // Don't update - wait for selectedIndex to point to the right tab
-      }
-
       // Only update state if the target tab ID is actually different from the current active one.
       if (newTargetTabId !== activeTabIdRef.current) {
-        setActiveTabId(newTargetTabId);
+        // Small delay to handle race condition between tabOrder and selectedIndex updates
+        const timeoutId = setTimeout(() => {
+          setActiveTabId(newTargetTabId);
+        }, 10);
+
+        return () => clearTimeout(timeoutId);
       }
     }
     // If selectedIndex is null or out of bounds, but we have a valid activeTabId that still exists,
