@@ -1,6 +1,7 @@
 import React from 'react';
 import { ivyTagClassMap } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
+import { textContainerClass } from '@/lib/textBlockClassMap';
 
 interface HtmlRendererProps {
   content: string;
@@ -162,10 +163,10 @@ export const HtmlRenderer: React.FC<Omit<HtmlRendererProps, 'onLinkClick'>> = ({
 
   // Render as React elements with Ivy classes
   return (
-    <>
+    <div className={textContainerClass}>
       {nodes.map((node, i) => (
         <React.Fragment key={i}>{domToReact(node)}</React.Fragment>
       ))}
-    </>
+    </div>
   );
 };
