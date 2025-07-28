@@ -437,7 +437,7 @@ export const TabsLayoutWidget = ({
         <div className="relative">
           {/* Hover Highlight */}
           <div
-            className="absolute h-[30px] transition-all duration-300 ease-out bg-[#0e0f1114] dark:bg-[#ffffff1a] rounded-[6px] flex items-center"
+            className="absolute h-[26px] transition-all duration-300 ease-out bg-accent/20 rounded-[6px] flex items-center"
             style={{
               opacity: activeIndex !== null ? 1 : 0,
               pointerEvents: 'none',
@@ -445,7 +445,7 @@ export const TabsLayoutWidget = ({
           />
           {/* Active Indicator */}
           <div
-            className="absolute bottom-[-6px] h-[2px] bg-[#0e0f11] dark:bg-white transition-all duration-300 ease-out"
+            className="absolute bottom-[-6px] h-[2px] bg-foreground transition-all duration-300 ease-out"
             style={activeStyle}
           />
           {/* Tabs */}
@@ -462,10 +462,10 @@ export const TabsLayoutWidget = ({
                     tabRefs.current[index] = el;
                   }}
                   className={cn(
-                    'px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px]',
+                    'px-3 py-1.5 cursor-pointer transition-colors duration-300 h-[26px]',
                     index === activeIndex
-                      ? 'text-[#0e0e10] dark:text-white'
-                      : 'text-[#0e0f1199] dark:text-[#ffffff99]'
+                      ? 'text-foreground'
+                      : 'text-muted-foreground'
                   )}
                   onClick={() => {
                     setActiveIndex(index);
@@ -473,7 +473,7 @@ export const TabsLayoutWidget = ({
                     eventHandler('OnSelect', id, [index]);
                   }}
                 >
-                  <div className="text-large-body font-medium leading-5 whitespace-nowrap flex items-center justify-center h-full">
+                  <div className="text-sm font-medium leading-4 whitespace-nowrap flex items-center justify-center h-full">
                     {title}
                   </div>
                 </div>
