@@ -7,7 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { useFocusable } from '@/hooks/use-focus-management';
 
@@ -23,11 +23,17 @@ interface SidebarLayoutWidgetProps {
 export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
 }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="flex flex-row h-full w-full remove-parent-padding">
       <div className="flex h-full w-full">
-        {/* Custom Sidebar */}
-        <div className="flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-border">
+        {/* Custom Sidebar with Slide Animation */}
+        <div
+          className={`flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-transform duration-300 ease-in-out relative ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           {slots?.SidebarHeader && (
             <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
               {slots.SidebarHeader}
@@ -47,8 +53,29 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
           )}
         </div>
 
+        {/* Toggle Button - Outside Sidebar but moves with it */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute top-4 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
+          style={{
+            left: isSidebarOpen ? 'calc(16rem + 32px)' : '1rem',
+            transition: 'left 300ms ease-in-out',
+          }}
+          aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+        >
+          <div className="transition-transform duration-300 ease-in-out">
+            {isSidebarOpen ? (
+              <PanelLeftClose className="h-4 w-4" />
+            ) : (
+              <PanelLeftOpen className="h-4 w-4" />
+            )}
+          </div>
+        </button>
+
         {/* Main Content */}
-        <div className="flex-1 overflow-hidden">{slots?.MainContent}</div>
+        <div className="flex-1 overflow-hidden relative">
+          {slots?.MainContent}
+        </div>
       </div>
     </div>
   );
