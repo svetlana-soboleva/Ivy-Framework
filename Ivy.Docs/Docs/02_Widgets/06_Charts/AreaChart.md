@@ -37,7 +37,7 @@ public class BasicAreaChart : ViewBase
 
 ## More Examples
 
-### COVID-19 Cases and Deaths in numbes
+### COVID-19 Cases and Deaths in numbers
 
 ```csharp demo-below
     
@@ -121,8 +121,7 @@ public class ImmigrationToEurope : ViewBase
                         .FillOpacity(0.55))   
                     .XAxis(new XAxis("Month").TickLine(false).AxisLine(false))
                     .Tooltip()
-                    .Legend();
-        ;
+                    .Legend();        
     }
 }
 ```
