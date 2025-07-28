@@ -425,7 +425,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
         return (
           <li key={item.tag}>
             <button
-              className={`flex w-full items-center gap-2 rounded-lg p-2 text-descriptive font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8 ${
+              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer h-8 ${
                 isActive ? 'bg-accent text-accent-foreground' : ''
               }`}
               tabIndex={-1} // Not focusable
@@ -439,7 +439,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
               }}
             >
               <Icon name={item.icon} size={16} />
-              <span className="text-descriptive">{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </button>
           </li>
         );
