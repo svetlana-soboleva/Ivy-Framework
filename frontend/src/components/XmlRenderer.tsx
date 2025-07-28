@@ -162,7 +162,7 @@ export const XmlRenderer = ({ data }: XmlRendererProps) => {
 
   return (
     <div className="w-full max-w-2xl">
-      <div className="font-mono text-sm">{renderNode(parsedXml, 'root')}</div>
+      <div className="font-mono text-body">{renderNode(parsedXml, 'root')}</div>
     </div>
   );
 };

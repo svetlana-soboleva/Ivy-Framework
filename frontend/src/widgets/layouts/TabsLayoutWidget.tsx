@@ -138,7 +138,7 @@ function SortableDropdownMenuItem({
       {...listeners}
       onClick={onClick}
       className={cn(
-        'group w-full flex items-center px-2 py-1.5 text-sm cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
+        'group w-full flex items-center px-2 py-1.5 text-large-body cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
         isActive && 'bg-accent text-accent-foreground'
       )}
     >
@@ -473,7 +473,7 @@ export const TabsLayoutWidget = ({
                     eventHandler('OnSelect', id, [index]);
                   }}
                 >
-                  <div className="text-sm font-medium leading-5 whitespace-nowrap flex items-center justify-center h-full">
+                  <div className="text-large-body font-medium leading-5 whitespace-nowrap flex items-center justify-center h-full">
                     {title}
                   </div>
                 </div>

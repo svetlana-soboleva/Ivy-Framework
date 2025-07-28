@@ -98,7 +98,7 @@ const CodeBlock = memo(
             <div className="absolute top-2 right-2 z-10">
               <CopyToClipboardButton textToCopy={cleanContent} />
             </div>
-            <pre className="p-4 bg-muted rounded-md overflow-x-auto font-mono text-sm">
+            <pre className="p-4 bg-muted rounded-md overflow-x-auto font-mono text-body">
               {lines.map((line, index) => (
                 <div key={index} className="flex">
                   <span className="text-muted-foreground select-none pointer-events-none mr-2">
@@ -139,7 +139,7 @@ const CodeBlock = memo(
     return (
       <code
         className={cn(
-          'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
+          'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-body',
           className
         )}
       >

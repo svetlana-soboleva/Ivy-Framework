@@ -86,7 +86,9 @@ export const JsonRenderer = ({ data }: JsonRendererProps) => {
 
   return (
     <div className="w-full max-w-2xl">
-      <div className="font-mono text-sm">{renderValue(parsedData, 'root')}</div>
+      <div className="font-mono text-body">
+        {renderValue(parsedData, 'root')}
+      </div>
     </div>
   );
 };

@@ -25,7 +25,7 @@ export const ListItemWidget: React.FC<ListItemWidgetProps> = ({
       onClick={() => eventHandler('OnClick', id, [])}
       className="pl-4 pr-4 w-full h-full flex-left flex items-center rounded-none hover:bg-accent focus:bg-accent focus:outline-none cursor-pointer"
     >
-      <div className="flex flex-col items-start text-sm text-nowrap overflow-hidden">
+      <div className="flex flex-col items-start text-large-body text-nowrap overflow-hidden">
         <span>{title}</span>
         {subtitle && <span className="text-muted-foreground">{subtitle}</span>}
       </div>
