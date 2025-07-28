@@ -41,34 +41,12 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
 
   // Detect if this is the main app's sidebar (Chrome) or an app's sidebar
   // The main app's sidebar will have SidebarMenu in its content, while app sidebars won't
-  // Use a more reliable detection method that works in production builds
-  const isMainAppSidebar = useMemo(() => {
-    return (
-      slots?.SidebarContent?.some(content => {
-        // Check if the content is a React element
-        if (!React.isValidElement(content)) return false;
-
-        // Check if it has the data-sidebar-menu-widget attribute
-        if (
-          content.props &&
-          typeof content.props === 'object' &&
-          'data-sidebar-menu-widget' in content.props
-        ) {
-          return true;
-        }
-
-        // Fallback: check if it's the SidebarMenuWidget component (works in development)
-        if (
-          typeof content.type === 'function' &&
-          content.type.name === 'SidebarMenuWidget'
-        ) {
-          return true;
-        }
-
-        return false;
-      }) ?? false
-    );
-  }, [slots?.SidebarContent]);
+  const isMainAppSidebar = slots?.SidebarContent?.some(
+    content =>
+      React.isValidElement(content) &&
+      typeof content.type === 'function' &&
+      content.type.name === 'SidebarMenuWidget'
+  );
 
   // Handle manual toggle
   const handleManualToggle = useCallback(() => {
