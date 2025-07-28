@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 
 import Icon from '@/components/Icon';
 import { useEventHandler } from '@/components/EventHandlerContext';
@@ -19,13 +25,18 @@ interface SidebarLayoutWidgetProps {
     MainContent: React.ReactNode[];
   };
   showToggleButton?: boolean;
+  autoCollapseThreshold?: number; // Width threshold for auto-collapse (default: 768px)
 }
 
 export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
   showToggleButton = true,
+  autoCollapseThreshold = 768,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isManuallyToggled, setIsManuallyToggled] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   // Detect if this is the main app's sidebar (Chrome) or an app's sidebar
   // The main app's sidebar will have SidebarMenu in its content, while app sidebars won't
@@ -36,8 +47,73 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       content.type.name === 'SidebarMenuWidget'
   );
 
+  // Handle manual toggle
+  const handleManualToggle = useCallback(() => {
+    setIsSidebarOpen(prev => !prev);
+    setIsManuallyToggled(true);
+  }, []);
+
+  // Auto-collapse/expand based on width
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const handleResize = (entries: ResizeObserverEntry[]) => {
+      const entry = entries[0];
+      if (!entry) return;
+
+      const containerWidth = entry.contentRect.width;
+
+      // Only auto-collapse/expand if user hasn't manually toggled
+      if (!isManuallyToggled) {
+        if (containerWidth < autoCollapseThreshold) {
+          setIsSidebarOpen(false);
+        } else {
+          setIsSidebarOpen(true);
+        }
+      }
+    };
+
+    resizeObserverRef.current = new ResizeObserver(handleResize);
+    resizeObserverRef.current.observe(containerRef.current);
+
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
+    };
+  }, [autoCollapseThreshold, isManuallyToggled]);
+
+  // Reset manual toggle flag when width changes significantly
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const handleResize = (entries: ResizeObserverEntry[]) => {
+      const entry = entries[0];
+      if (!entry) return;
+
+      const containerWidth = entry.contentRect.width;
+
+      // Reset manual toggle flag when width changes significantly
+      // This allows auto-behavior to resume after significant size changes
+      if (
+        containerWidth < autoCollapseThreshold * 0.8 ||
+        containerWidth > autoCollapseThreshold * 1.2
+      ) {
+        setIsManuallyToggled(false);
+      }
+    };
+
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [autoCollapseThreshold]);
+
   return (
     <div
+      ref={containerRef}
       className="grid h-full w-full remove-parent-padding"
       style={{
         gridTemplateColumns: isSidebarOpen ? '16rem 1fr' : '0 1fr',
@@ -72,7 +148,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       {/* Toggle Button - Only show for main app sidebar */}
       {showToggleButton && isMainAppSidebar && (
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={handleManualToggle}
           className="absolute top-2 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
           style={{
             left: isSidebarOpen ? 'calc(16rem + 8px)' : '8px',
