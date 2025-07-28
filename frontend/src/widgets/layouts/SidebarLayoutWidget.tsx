@@ -18,48 +18,60 @@ interface SidebarLayoutWidgetProps {
     SidebarFooter?: React.ReactNode[];
     MainContent: React.ReactNode[];
   };
+  showToggleButton?: boolean;
 }
 
 export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
+  showToggleButton = true,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // Detect if this is the main app's sidebar (Chrome) or an app's sidebar
+  // The main app's sidebar will have SidebarMenu in its content, while app sidebars won't
+  const isMainAppSidebar = slots?.SidebarContent?.some(
+    content =>
+      React.isValidElement(content) &&
+      typeof content.type === 'function' &&
+      content.type.name === 'SidebarMenuWidget'
+  );
+
   return (
     <div className="flex flex-row h-full w-full remove-parent-padding">
-      <div className="flex h-full w-full">
-        {/* Custom Sidebar with Slide Animation */}
-        <div
-          className={`flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-transform duration-300 ease-in-out relative ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          {slots?.SidebarHeader && (
-            <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
-              {slots.SidebarHeader}
+      {/* Custom Sidebar with Slide Animation */}
+      <div
+        className={`flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-all duration-300 ease-in-out relative overflow-hidden ${
+          isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full'
+        }`}
+      >
+        {slots?.SidebarHeader && (
+          <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
+            {slots.SidebarHeader}
+          </div>
+        )}
+        {slots?.SidebarContent && (
+          <div className="flex-1 overflow-hidden">
+            <div className="h-full overflow-y-auto p-2">
+              {slots.SidebarContent}
             </div>
-          )}
-          {slots?.SidebarContent && (
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full overflow-y-auto p-2">
-                {slots.SidebarContent}
-              </div>
-            </div>
-          )}
-          {slots?.SidebarFooter && (
-            <div className="flex h-16 shrink-0 items-center border-t px-4">
-              {slots.SidebarFooter}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
+        {slots?.SidebarFooter && (
+          <div className="flex h-16 shrink-0 items-center border-t px-4">
+            {slots.SidebarFooter}
+          </div>
+        )}
+      </div>
 
-        {/* Toggle Button - Outside Sidebar but moves with it */}
+      {/* Toggle Button - Only show for main app sidebar */}
+      {showToggleButton && isMainAppSidebar && (
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute top-4 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
+          className="absolute top-2 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
           style={{
-            left: isSidebarOpen ? 'calc(16rem + 32px)' : '1rem',
+            left: isSidebarOpen ? 'calc(16rem + 28px)' : '8px',
             transition: 'left 300ms ease-in-out',
+            transform: 'translateX(0)', // Ensure button moves with its parent sidebar
           }}
           aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
         >
@@ -71,12 +83,10 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
             )}
           </div>
         </button>
+      )}
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden relative">
-          {slots?.MainContent}
-        </div>
-      </div>
+      {/* Main Content - Always takes full remaining width */}
+      <div className="flex-1 relative">{slots?.MainContent}</div>
     </div>
   );
 };
