@@ -232,7 +232,7 @@ const TextareaVariant: React.FC<{
       <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none h-6">
         {props.shortcutKey && !isFocused && (
           <div className="pointer-events-auto flex items-center h-6">
-            <kbd className="px-1 py-0.5 text-xs font-medium text-gray-800 bg-gray-100 border border-gray-200 rounded-md">
+            <kbd className="px-1 py-0.5 text-xs font-medium text-foreground bg-muted border border-border rounded-md">
               {shortcutDisplay}
             </kbd>
           </div>
