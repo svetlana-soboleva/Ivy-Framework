@@ -36,10 +36,13 @@ export function BladeWidget({
     ...getWidth(width),
   };
 
+  // Only apply flex-1 when no explicit width is provided
+  const flexClass = width ? '' : 'flex-1';
+
   return (
     <div
       style={styles}
-      className="flex flex-col bg-background border-l border-border h-full flex-1"
+      className={`flex flex-col bg-background border-l border-border h-full ${flexClass}`}
     >
       <div
         className="flex items-center justify-between px-4 bg-background text-foreground h-[70px] border-b border-border"
