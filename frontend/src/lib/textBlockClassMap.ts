@@ -17,7 +17,7 @@ export const textBlockClassMap: Record<string, string> = {
 
   // Inline code styling
   InlineCode:
-    'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-body',
+    'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
 
   // HTML tag equivalents
   h1: 'text-display-60 scroll-m-20 mt-8 mb-4',
@@ -37,7 +37,7 @@ export const textBlockClassMap: Record<string, string> = {
   tr: 'border border-border',
   th: 'border border-border px-4 py-2 text-left font-bold text-large-label',
   td: 'border border-border px-4 py-2 text-body',
-  code: 'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-body',
+  code: 'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm',
   img: 'max-w-full h-auto cursor-zoom-in mb-2',
 };
 
