@@ -139,7 +139,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
           </div>
         )}
         {slots?.SidebarFooter && (
-          <div className="flex h-16 shrink-0 items-center border-t px-4">
+          <div className="flex h-12 shrink-0 items-center border-t px-4">
             {slots.SidebarFooter}
           </div>
         )}
@@ -231,7 +231,7 @@ const CollapsibleMenuItem: React.FC<{
         <li className="relative">
           <CollapsibleTrigger asChild>
             <button
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => {
                 // For items with children, toggle the collapsible state
                 // Only try to navigate if the item has a tag
@@ -264,7 +264,7 @@ const CollapsibleMenuItem: React.FC<{
     return (
       <li key={item.label}>
         <button
-          className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+          className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
@@ -298,8 +298,8 @@ const renderMenuItems = (
     if ('children' in item) {
       if (level === 0) {
         return (
-          <div key={item.label} className="space-y-1">
-            <h4 className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+          <div key={item.label} className="space-y-1 mt-6 first:mt-0">
+            <h4 className="px-3 py-2 text-xs font-medium text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">
@@ -327,7 +327,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -340,7 +340,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -402,8 +402,8 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     return items.map(item => {
       if (item.children && item.children.length > 0) {
         return (
-          <div key={item.label} className="space-y-1">
-            <h4 className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+          <div key={item.label} className="space-y-1 mt-6 first:mt-0">
+            <h4 className="px-3 py-2 text-xs font-medium text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">
@@ -422,7 +422,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
         return (
           <li key={item.tag}>
             <button
-              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer ${
+              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8 ${
                 isActive ? 'bg-accent text-accent-foreground' : ''
               }`}
               tabIndex={-1} // Not focusable
