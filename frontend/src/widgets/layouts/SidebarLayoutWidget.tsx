@@ -37,11 +37,17 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   );
 
   return (
-    <div className="flex flex-row h-full w-full remove-parent-padding">
+    <div
+      className="grid h-full w-full remove-parent-padding"
+      style={{
+        gridTemplateColumns: isSidebarOpen ? '16rem 1fr' : '0 1fr',
+        transition: 'grid-template-columns 300ms ease-in-out',
+      }}
+    >
       {/* Custom Sidebar with Slide Animation */}
       <div
-        className={`flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-all duration-300 ease-in-out relative overflow-hidden ${
-          isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full'
+        className={`flex h-full w-59 flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-transform duration-300 ease-in-out relative overflow-hidden ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {slots?.SidebarHeader && (
@@ -69,7 +75,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="absolute top-2 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
           style={{
-            left: isSidebarOpen ? 'calc(16rem + 28px)' : '8px',
+            left: isSidebarOpen ? 'calc(16rem + 8px)' : '8px',
             transition: 'left 300ms ease-in-out',
             transform: 'translateX(0)', // Ensure button moves with its parent sidebar
           }}
@@ -86,7 +92,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className="flex-1 relative">{slots?.MainContent}</div>
+      <div className="relative">{slots?.MainContent}</div>
     </div>
   );
 };
