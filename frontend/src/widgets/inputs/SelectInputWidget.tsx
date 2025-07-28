@@ -670,7 +670,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
             hideClearAllButton={!nullable}
             hidePlaceholderWhenSelected
             emptyIndicator={
-              <p className="text-center text-sm">No results found</p>
+              <p className="text-center text-large-body">No results found</p>
             }
           />
           {invalid && (

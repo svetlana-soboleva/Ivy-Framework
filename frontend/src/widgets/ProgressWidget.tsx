@@ -56,7 +56,7 @@ export const ProgressWidget: React.FC<ProgressWidgetProps> = ({
         {goal && (
           <div
             className={cn(
-              'rounded-xl rounded-br-none bg-muted p-2 mb-2 text-xs w-fit ml-auto',
+              'rounded-xl rounded-br-none bg-muted p-2 mb-2 text-small-label w-fit ml-auto',
               'text-muted-foreground flex flex-row items-center',
               !isCompleted && 'opacity-50 group-hover:opacity-100',
               isCompleted && 'sparkle-glow'

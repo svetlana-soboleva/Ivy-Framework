@@ -172,7 +172,7 @@ function News({ articles }: { articles: NewsArticle[] }) {
             style={{ '--offset': '10px' } as React.CSSProperties}
           >
             <div className="animate-fade-in absolute inset-0 rounded-lg border border-neutral-300 [animation-delay:2.3s] [animation-direction:reverse] [animation-duration:0.2s]" />
-            <span className="animate-fade-in text-xs font-medium text-muted-foreground [animation-delay:2.3s] [animation-direction:reverse] [animation-duration:0.2s]">
+            <span className="animate-fade-in text-small-label font-medium text-muted-foreground [animation-delay:2.3s] [animation-direction:reverse] [animation-duration:0.2s]">
               You're all caught up!
             </span>
           </div>
@@ -341,7 +341,7 @@ function NewsCard({
             'sm:group-has-[*[data-dragging=true]]:h-7 sm:group-has-[*[data-dragging=true]]:opacity-100 sm:group-hover:group-data-[active=true]:h-7 sm:group-hover:group-data-[active=true]:opacity-100'
           )}
         >
-          <div className="flex items-center justify-between pt-3 text-xs">
+          <div className="flex items-center justify-between pt-3 text-small-label">
             <a
               href={href}
               target="_blank"

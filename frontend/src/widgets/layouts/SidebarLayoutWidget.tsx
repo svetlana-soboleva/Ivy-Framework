@@ -234,7 +234,7 @@ const CollapsibleMenuItem: React.FC<{
         <li className="relative">
           <CollapsibleTrigger asChild>
             <button
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-large-label hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => {
                 // For items with children, toggle the collapsible state
                 // Only try to navigate if the item has a tag
@@ -267,7 +267,7 @@ const CollapsibleMenuItem: React.FC<{
     return (
       <li key={item.label}>
         <button
-          className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+          className="flex w-full items-center gap-2 rounded-lg p-2 text-large-label hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
@@ -302,7 +302,7 @@ const renderMenuItems = (
       if (level === 0) {
         return (
           <div key={item.label} className="space-y-1 mt-6 first:mt-0">
-            <h4 className="px-3 py-2 text-xs font-medium text-muted-foreground mb-0">
+            <h4 className="px-3 py-2 text-small-label font-medium text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">
@@ -330,7 +330,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-large-body font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -343,7 +343,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-large-body font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -406,7 +406,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
       if (item.children && item.children.length > 0) {
         return (
           <div key={item.label} className="space-y-1 mt-6 first:mt-0">
-            <h4 className="px-3 py-2 text-xs font-medium text-muted-foreground mb-0">
+            <h4 className="px-3 py-2 text-small-label font-medium text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">
@@ -425,7 +425,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
         return (
           <li key={item.tag}>
             <button
-              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8 ${
+              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer h-8 ${
                 isActive ? 'bg-accent text-accent-foreground' : ''
               }`}
               tabIndex={-1} // Not focusable
@@ -468,7 +468,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
         flatItems.length > 0 ? (
           renderMenuItemsWithHighlight(items, 0, flatIdxRef)
         ) : (
-          <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
+          <div className="flex items-center justify-center p-4 text-descriptive text-muted-foreground">
             No results found
           </div>
         )

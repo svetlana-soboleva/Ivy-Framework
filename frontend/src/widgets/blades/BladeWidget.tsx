@@ -50,7 +50,7 @@ export function BladeWidget({
       >
         <div className="flex items-center h-[70px]">
           {!slots?.BladeHeader && (
-            <h2 className="text-sm font-medium">{title}</h2>
+            <h2 className="text-large-body font-medium">{title}</h2>
           )}
           <div>{slots?.BladeHeader}</div>
         </div>
