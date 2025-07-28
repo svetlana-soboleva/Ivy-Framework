@@ -27,26 +27,19 @@ interface SidebarLayoutWidgetProps {
   };
   showToggleButton?: boolean;
   autoCollapseThreshold?: number; // Width threshold for auto-collapse (default: 768px)
+  mainAppSidebar?: boolean;
 }
 
 export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
   showToggleButton = true,
   autoCollapseThreshold = 768,
+  mainAppSidebar = false,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isManuallyToggled, setIsManuallyToggled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
-
-  // Detect if this is the main app's sidebar (Chrome) or an app's sidebar
-  // The main app's sidebar will have SidebarMenu in its content, while app sidebars won't
-  const isMainAppSidebar = slots?.SidebarContent?.some(
-    content =>
-      React.isValidElement(content) &&
-      typeof content.type === 'function' &&
-      content.type.name === 'SidebarMenuWidget'
-  );
 
   // Handle manual toggle
   const handleManualToggle = useCallback(() => {
@@ -54,9 +47,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
     setIsManuallyToggled(true);
   }, []);
 
-  // Auto-collapse/expand based on width
+  // Auto-collapse/expand based on width (only for main app sidebar)
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !mainAppSidebar) return;
 
     const handleResize = (entries: ResizeObserverEntry[]) => {
       const entry = entries[0];
@@ -82,11 +75,11 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
         resizeObserverRef.current.disconnect();
       }
     };
-  }, [autoCollapseThreshold, isManuallyToggled]);
+  }, [autoCollapseThreshold, isManuallyToggled, mainAppSidebar]);
 
-  // Reset manual toggle flag when width changes significantly
+  // Reset manual toggle flag when width changes significantly (only for main app sidebar)
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !mainAppSidebar) return;
 
     const handleResize = (entries: ResizeObserverEntry[]) => {
       const entry = entries[0];
@@ -110,7 +103,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [autoCollapseThreshold]);
+  }, [autoCollapseThreshold, mainAppSidebar]);
 
   return (
     <div
@@ -149,7 +142,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       </div>
 
       {/* Toggle Button - Only show for main app sidebar */}
-      {showToggleButton && isMainAppSidebar && (
+      {showToggleButton && mainAppSidebar && (
         <button
           onClick={handleManualToggle}
           className="absolute top-2 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
