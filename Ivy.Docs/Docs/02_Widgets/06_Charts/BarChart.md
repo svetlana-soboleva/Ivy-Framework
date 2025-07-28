@@ -31,7 +31,7 @@ the `BarChart` type, the recommended way to easily draw Bar Charts is using `ToB
 ## Changing Colors
 
 There are two different color schemes supported; namely `Default` and `Rainbow`. The following
-demo shows how the rainbow color scheme.
+demo shows how the rainbow color scheme works.
 
 ```csharp demo-below
 public class RainbowBarChartBasic : ViewBase 
