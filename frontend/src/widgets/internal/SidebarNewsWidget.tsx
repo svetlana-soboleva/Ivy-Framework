@@ -111,10 +111,7 @@ function News({ articles }: { articles: NewsArticle[] }) {
   if (cards.length === 0 && showCompleted) return null;
 
   return cards.length > 0 ? (
-    <div
-      className="group overflow-hidden px-3 pb-3 pt-8"
-      data-active={cardCount !== 0}
-    >
+    <div className="group overflow-hidden px-2" data-active={cardCount !== 0}>
       <div className="relative size-full">
         {[...cards]
           .reverse()
@@ -306,7 +303,7 @@ function NewsCard({
       ref={ref}
       className={cn(
         'bg-gradient-to-br from-background to-muted',
-        'relative select-none gap-2 p-3 text-[0.8125rem]',
+        'relative select-none gap-2 p-2 text-[0.8125rem]',
         'translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]',
         'transition-shadow data-[dragging=true]:shadow-md'
       )}
@@ -319,11 +316,11 @@ function NewsCard({
           <span className="line-clamp-1 font-medium text-foreground">
             {title}
           </span>
-          <p className="line-clamp-2 h-10 leading-5 text-muted-foreground">
+          <p className="line-clamp-2 h-8 leading-4 text-muted-foreground">
             {description}
           </p>
         </div>
-        <div className="relative mt-3 aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted">
+        <div className="relative mt-2 aspect-[16/10] w-full shrink-0 overflow-hidden rounded border bg-muted">
           {image && (
             <a href={href} target="_blank" rel="noopener noreferrer">
               <img
