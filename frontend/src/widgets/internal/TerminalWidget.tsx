@@ -15,7 +15,7 @@ export interface TerminalWidgetProps {
 
 const TerminalWidget = ({ lines, title, showHeader }: TerminalWidgetProps) => {
   const commandColor = 'text-white';
-  const outputColor = 'text-gray-300';
+  const outputColor = 'text-muted-foreground';
 
   return (
     <div
