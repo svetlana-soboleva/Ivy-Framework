@@ -103,7 +103,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [autoCollapseThreshold, isMainAppSidebar]);
+  }, [autoCollapseThreshold, mainAppSidebar]);
 
   return (
     <div
@@ -142,7 +142,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       </div>
 
       {/* Toggle Button - Only show for main app sidebar */}
-      {showToggleButton && isMainAppSidebar && (
+      {showToggleButton && mainAppSidebar && (
         <button
           onClick={handleManualToggle}
           className="absolute top-2 z-50 p-2 rounded-md bg-background border border-border hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
