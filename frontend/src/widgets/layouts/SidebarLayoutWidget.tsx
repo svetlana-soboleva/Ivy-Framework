@@ -41,9 +41,6 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
-  // Use the backend-provided MainAppSidebar property
-  const isMainAppSidebar = mainAppSidebar;
-
   // Handle manual toggle
   const handleManualToggle = useCallback(() => {
     setIsSidebarOpen(prev => !prev);
@@ -52,7 +49,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
 
   // Auto-collapse/expand based on width (only for main app sidebar)
   useEffect(() => {
-    if (!containerRef.current || !isMainAppSidebar) return;
+    if (!containerRef.current || !mainAppSidebar) return;
 
     const handleResize = (entries: ResizeObserverEntry[]) => {
       const entry = entries[0];
@@ -78,11 +75,11 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
         resizeObserverRef.current.disconnect();
       }
     };
-  }, [autoCollapseThreshold, isManuallyToggled, isMainAppSidebar]);
+  }, [autoCollapseThreshold, isManuallyToggled, mainAppSidebar]);
 
   // Reset manual toggle flag when width changes significantly (only for main app sidebar)
   useEffect(() => {
-    if (!containerRef.current || !isMainAppSidebar) return;
+    if (!containerRef.current || !mainAppSidebar) return;
 
     const handleResize = (entries: ResizeObserverEntry[]) => {
       const entry = entries[0];
