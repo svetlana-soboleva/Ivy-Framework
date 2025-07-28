@@ -199,7 +199,7 @@ const TableOfContents = ({
               key={heading.id}
               href={`#${heading.id}`}
               className={cn(
-                'block text-large-label py-1 hover:text-primary transition-colors',
+                'block text-sm py-1 hover:text-primary transition-colors',
                 heading.level === 1 ? 'pl-0' : `pl-${(heading.level - 1) * 4}`,
                 activeId === heading.id
                   ? 'text-primary'
