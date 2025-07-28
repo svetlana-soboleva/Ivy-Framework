@@ -65,7 +65,7 @@ const InputLabel: React.FC<{
     <div>
       {label && <Label htmlFor={id}>{label}</Label>}
       {description && (
-        <p className="text-large-body text-muted-foreground">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       )}
     </div>
   );
