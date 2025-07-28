@@ -241,9 +241,9 @@ const CollapsibleMenuItem: React.FC<{
               }}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={16} />
               <span>{item.label}</span>
-              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent>
@@ -264,11 +264,11 @@ const CollapsibleMenuItem: React.FC<{
     return (
       <li key={item.label}>
         <button
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+          className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
-          <Icon name={item.icon} size={20} />
+          <Icon name={item.icon} size={16} />
           <span>{item.label}</span>
         </button>
       </li>
@@ -327,11 +327,11 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={16} />
               <span>{item.label}</span>
             </button>
           </li>
@@ -340,11 +340,11 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={16} />
               <span>{item.label}</span>
             </button>
           </li>
@@ -422,7 +422,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
         return (
           <li key={item.tag}>
             <button
-              className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm ${
+              className={`flex w-full items-center gap-2 rounded-lg p-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer ${
                 isActive ? 'bg-accent text-accent-foreground' : ''
               }`}
               tabIndex={-1} // Not focusable
@@ -435,7 +435,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
                 }
               }}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={16} />
               <span className="text-sm">{item.label}</span>
             </button>
           </li>
