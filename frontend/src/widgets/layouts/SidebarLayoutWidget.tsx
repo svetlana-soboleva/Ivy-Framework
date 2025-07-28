@@ -1,23 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarTrigger,
-  SidebarProvider,
-  SidebarInset,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-} from '@/components/ui/sidebar';
 import Icon from '@/components/Icon';
 import { useEventHandler } from '@/components/EventHandlerContext';
 import {
@@ -27,7 +9,6 @@ import {
 } from '@/components/ui/collapsible';
 import { ChevronRight } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useFocusable } from '@/hooks/use-focus-management';
 
 interface SidebarLayoutWidgetProps {
@@ -43,28 +24,32 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
 }) => {
   return (
-    <div className="flex flex-row h-screen w-screen remove-parent-padding">
-      <SidebarProvider>
-        <Sidebar>
+    <div className="flex flex-row h-full w-full remove-parent-padding">
+      <div className="flex h-full w-full">
+        {/* Custom Sidebar */}
+        <div className="flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-border">
           {slots?.SidebarHeader && (
-            <SidebarHeader>{slots?.SidebarHeader}</SidebarHeader>
+            <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
+              {slots.SidebarHeader}
+            </div>
           )}
           {slots?.SidebarContent && (
-            <SidebarContent>
-              <ScrollArea className="h-full">
-                {slots?.SidebarContent}
-              </ScrollArea>
-            </SidebarContent>
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-y-auto p-2">
+                {slots.SidebarContent}
+              </div>
+            </div>
           )}
           {slots?.SidebarFooter && (
-            <SidebarFooter>{slots?.SidebarFooter}</SidebarFooter>
+            <div className="flex h-16 shrink-0 items-center border-t px-4">
+              {slots.SidebarFooter}
+            </div>
           )}
-        </Sidebar>
-        <SidebarInset>
-          <SidebarTrigger className="absolute z-50 ml-2 mt-3" />
-          {slots?.MainContent}
-        </SidebarInset>
-      </SidebarProvider>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-hidden">{slots?.MainContent}</div>
+      </div>
     </div>
   );
 };
@@ -124,19 +109,26 @@ const CollapsibleMenuItem: React.FC<{
         open={isOpen}
         onOpenChange={setIsOpen}
       >
-        <SidebarMenuItem>
+        <li className="relative">
           <CollapsibleTrigger asChild>
-            <SidebarMenuButton
-              onClick={() => onItemClick(item)}
+            <button
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              onClick={() => {
+                // For items with children, toggle the collapsible state
+                // Only try to navigate if the item has a tag
+                if (item.tag) {
+                  onItemClick(item);
+                }
+              }}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
               <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-            </SidebarMenuButton>
+            </button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <SidebarMenuSub>
+            <ul className="mt-1 space-y-1 px-3">
               {item.children &&
                 renderMenuItems(
                   item.children!,
@@ -144,22 +136,23 @@ const CollapsibleMenuItem: React.FC<{
                   widgetId,
                   level + 1
                 )}
-            </SidebarMenuSub>
+            </ul>
           </CollapsibleContent>
-        </SidebarMenuItem>
+        </li>
       </Collapsible>
     );
   } else {
     return (
-      <SidebarMenuItem key={item.label}>
-        <SidebarMenuButton
+      <li key={item.label}>
+        <button
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
           onClick={() => onItemClick(item)}
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
           <Icon name={item.icon} size={20} />
           <span>{item.label}</span>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+        </button>
+      </li>
     );
   }
 };
@@ -186,15 +179,15 @@ const renderMenuItems = (
     if ('children' in item) {
       if (level === 0) {
         return (
-          <SidebarGroup key={item.label}>
-            <SidebarGroupLabel>{item.label}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.children &&
-                  renderMenuItems(item.children!, eventHandler, widgetId, 1)}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <div key={item.label} className="space-y-1">
+            <h4 className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+              {item.label}
+            </h4>
+            <ul className="space-y-1">
+              {item.children &&
+                renderMenuItems(item.children!, eventHandler, widgetId, 1)}
+            </ul>
+          </div>
         );
       } else {
         return (
@@ -213,27 +206,29 @@ const renderMenuItems = (
       }
       if (level === 1) {
         return (
-          <SidebarMenuItem key={item.tag}>
-            <SidebarMenuButton
+          <li key={item.tag}>
+            <button
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+            </button>
+          </li>
         );
       } else {
         return (
-          <SidebarMenuSubItem key={item.tag}>
-            <SidebarMenuSubButton
+          <li key={item.tag}>
+            <button
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={20} />
               <span>{item.label}</span>
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
+            </button>
+          </li>
         );
       }
     }
@@ -288,27 +283,29 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     return items.map(item => {
       if (item.children && item.children.length > 0) {
         return (
-          <SidebarGroup key={item.label}>
-            <SidebarGroupLabel>{item.label}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {renderMenuItemsWithHighlight(
-                  item.children,
-                  level + 1,
-                  flatIdxRef
-                )}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <div key={item.label} className="space-y-1">
+            <h4 className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+              {item.label}
+            </h4>
+            <ul className="space-y-1">
+              {renderMenuItemsWithHighlight(
+                item.children,
+                level + 1,
+                flatIdxRef
+              )}
+            </ul>
+          </div>
         );
       } else {
         const flatIdx = flatIdxRef.current;
         flatIdxRef.current++;
         const isActive = searchActive && flatIdx === selectedIndex;
         return (
-          <SidebarMenuItem key={item.tag}>
-            <SidebarMenuButton
-              isActive={isActive}
+          <li key={item.tag}>
+            <button
+              className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm ${
+                isActive ? 'bg-accent text-accent-foreground' : ''
+              }`}
               tabIndex={-1} // Not focusable
               onClick={() =>
                 item.tag && eventHandler('OnSelect', id, [item.tag])
@@ -318,19 +315,11 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
                   setSelectedIndex(flatIdx);
                 }
               }}
-              style={
-                isActive
-                  ? {
-                      background: 'var(--sidebar-accent)',
-                      color: 'var(--sidebar-accent-foreground)',
-                    }
-                  : {}
-              }
             >
               <Icon name={item.icon} size={20} />
-              <span>{item.label}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+              <span className="text-sm">{item.label}</span>
+            </button>
+          </li>
         );
       }
     });
