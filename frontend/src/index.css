@@ -604,10 +604,6 @@
   }
 
   /* Ensure autocomplete dropdowns use theme colors */
-  input::-webkit-calendar-picker-indicator {
-    background: var(--background);
-    color: var(--foreground);
-  }
 }
 
 /* Additional autocomplete styling for better theme support */
