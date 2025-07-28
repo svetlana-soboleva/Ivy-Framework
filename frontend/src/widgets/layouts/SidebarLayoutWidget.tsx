@@ -13,6 +13,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { useFocusable } from '@/hooks/use-focus-management';
@@ -133,9 +134,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
         )}
         {slots?.SidebarContent && (
           <div className="flex-1 overflow-hidden">
-            <div className="h-full overflow-y-auto p-2">
-              {slots.SidebarContent}
-            </div>
+            <ScrollArea className="h-full w-full">
+              <div className="p-2">{slots.SidebarContent}</div>
+            </ScrollArea>
           </div>
         )}
         {slots?.SidebarFooter && (
