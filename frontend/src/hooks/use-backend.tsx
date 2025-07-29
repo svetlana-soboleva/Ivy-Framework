@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast';
+import { showError } from '@/hooks/use-error-sheet';
 import { getIvyHost, getMachineId } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
@@ -178,7 +179,20 @@ export const useBackend = (
         title: error.title,
         description: error.description,
         variant: 'destructive',
-        action: <ToastAction altText="View error details">Details</ToastAction>,
+        action: (
+          <ToastAction
+            altText="View error details"
+            onClick={() => {
+              showError({
+                title: error.title,
+                message: error.description,
+                stackTrace: error.stackTrace,
+              });
+            }}
+          >
+            Details
+          </ToastAction>
+        ),
       });
     },
     [toast]
