@@ -13,7 +13,6 @@ public class ToasterMessage
 public class ErrorMessage
 {
     public required string Title { get; set; }
-    public required string Type { get; set; }
     public required string Description { get; set; }
     public string? StackTrace { get; set; }
 }
@@ -66,8 +65,7 @@ public static class ClientExtensions
         var notification = new ErrorMessage
         {
             Description = innerException.Message,
-            Title = "Error",
-            Type = innerException.GetType().Name,
+            Title = innerException.GetType().Name,
             StackTrace = innerException.StackTrace   
         };
         client.Sender.Send("Error", notification);

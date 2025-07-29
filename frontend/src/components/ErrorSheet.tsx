@@ -4,11 +4,10 @@ import { useErrorSheet } from '@/hooks/use-error-sheet';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Exception } from '@/components/Exception';
+import { ErrorDisplay } from '@/components/ErrorDisplay';
 
 export function ErrorSheet() {
   const { errors, hideError, clearError } = useErrorSheet();
@@ -31,13 +30,10 @@ export function ErrorSheet() {
             className="w-full sm:max-w-lg overflow-y-auto"
           >
             <SheetHeader>
-              <SheetTitle>Error Details</SheetTitle>
-              <SheetDescription>
-                An error occurred in the application
-              </SheetDescription>
+              <SheetTitle>Oops! Something went wrong</SheetTitle>
             </SheetHeader>
             <div className="mt-6">
-              <Exception
+              <ErrorDisplay
                 title={title}
                 message={message}
                 stackTrace={stackTrace}
