@@ -6,9 +6,17 @@ The ReadOnlyInput widget displays data in an input-like format that cannot be ed
 
 Here's a simple example of a ReadOnlyInput displaying a value:
 
-```csharp
-double value = 123.45;
-var readOnlyInput = new ReadOnlyInput<double>(value);
+```csharp demo-below
+public class ReadOnlyDemo : ViewBase
+{    
+    public override object? Build()
+    {    
+        double value = 123.45;
+        var readOnlyInput = new ReadOnlyInput<double>(value);
+        return Layout.Vertical()
+                | readOnlyInput;
+    }    
+}    
 ```
 
 ## Examples

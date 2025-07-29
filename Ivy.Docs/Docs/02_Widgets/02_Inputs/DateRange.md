@@ -1,15 +1,30 @@
 # DateRangeInput
 
-The DateRangeInput widget allows users to select a range of dates. It provides a calendar interface for both start and end date selection, making it ideal for filtering data by date ranges or scheduling events.
+The `DateRangeInput` widget allows users to select a range of dates. It provides a calendar interface for both start and end date selection, making it ideal for filtering data by date ranges or scheduling events.
 
 ## Basic Usage
 
 Here's a simple example of a DateRangeInput that allows users to select a date range:
 
-```csharp
-var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
-dateRangeState.ToDateRangeInput()
+```csharp demo-below
+public class BasicDateRangeDemo : ViewBase
+{
+    public override object? Build()
+    {    
+        var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
+        var start = dateRangeState.Value.Item1;
+        var end = dateRangeState.Value.Item2;
+        var span = $"That's {(end-start).Days} days";
+        return Layout.Vertical()
+                | dateRangeState.ToDateRangeInput()
+                | Text.Large(span);
+    }    
+}        
 ```
+
+As can be seen, the starting and ending date of the date range can be extracted using the 
+`DateTimeRange.Value.Item1` and `DateTimeRange.Value.Item2` 
+
 
 ## Supported Types
 
@@ -24,35 +39,58 @@ The DateRangeInput can be customized with various states:
 
 ### Disabled State
 
-```csharp
-dateRangeState.ToDateRangeInput().Disabled()
+To render a date time range in the disabled state the `Disabled` function 
+should be used. 
+
+```csharp demo-below
+public class DisabledDateRange : ViewBase
+{   
+    public override object? Build()
+    {    
+        var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
+        return Layout.Vertical()
+                | dateRangeState.ToDateRangeInput().Disabled();
+    }
+}    
 ```
 
 ### Invalid State
 
-```csharp
-dateRangeState.ToDateRangeInput().Invalid("Invalid date range")
+To render a date time range in the invalid state the `Invalid` function
+should be used.
+
+```csharp demo-below
+public class InvalidDateRangeDemo : ViewBase 
+{    
+    public override object? Build()
+    {    
+        var dateRangeState = this.UseState(() => (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
+        return Layout.Vertical()
+                | dateRangeState.ToDateRangeInput().Invalid("Invalid date range");
+    }
+}    
 ```
 
 ### Nullable State
 
-```csharp
-var nullableRange = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
-nullableRange.ToDateRangeInput()
-```
+Sometimes it is needed to render a date time with possible nullable from and to dates. 
+The following demo shows how this can be done. 
 
-## Event Handling
-
-DateRangeInput can handle changes in the selected date range using the `OnChange` event:
-
-```csharp
-var dateRangeState = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), to: DateOnly.FromDateTime(DateTime.Today)));
-var onChange = (Event<IInput<(DateOnly, DateOnly)>, (DateOnly, DateOnly)> e) =>
+```csharp demo-below
+public class NullableDateRangeDemo : ViewBase
 {
-    // Handle the change event
-};
-new DateRangeInput<(DateOnly, DateOnly)>(dateRangeState, onChange)
+    public override object? Build()
+    {    
+        var nullableRange = this.UseState<(DateOnly?, DateOnly?)>(() => 
+            (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), 
+             DateOnly.FromDateTime(DateTime.Today)));
+        return Layout.Vertical()
+                |  nullableRange.ToDateRangeInput();
+    }    
+}
 ```
+
+
 
 ## Styling
 
@@ -60,40 +98,39 @@ DateRangeInput can be customized with various styling options:
 
 ### Placeholder
 
-```csharp
-dateRangeState.ToDateRangeInput().Placeholder("Select a date range")
+A friendly placeholder text can be used to give users a clue about what the data range depicts.
+
+```csharp demo-below
+public class DateRangePlaceHolderDemo : ViewBase 
+{   
+    public override object? Build()
+    {    
+        var dateRangeState = this.UseState(() => 
+            (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
+        return Layout.Vertical()
+                | dateRangeState.ToDateRangeInput().Placeholder("Select a date range");
+    }
+}    
 ```
 
 ### Format
 
-```csharp
-dateRangeState.ToDateRangeInput().Format("yyyy-MM-dd")
+To change the format of selected dates the `Format` function needs to be used. 
+
+```csharp demo-below
+public class FormatDateRangeDemo : ViewBase
+{
+    public override object? Build()
+    {   
+         var dateRangeState = this.UseState(() => 
+            (from: DateTime.Today.AddDays(-7), to: DateTime.Today));
+         return Layout.Vertical()
+                 | dateRangeState.ToDateRangeInput()
+                                  .Format("yyyy-MM-dd");
+    }    
+}        
 ```
 
-### Combined Styling
-
-```csharp
-dateRangeState.ToDateRangeInput()
-    .Placeholder("Select a date range")
-    .Format("MM/dd/yyyy")
-    .Invalid("Please select a valid date range")
-```
-
-## Data Binding Examples
-
-### DateOnly Range
-
-```csharp
-var dateOnlyRange = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), to: DateOnly.FromDateTime(DateTime.Today)));
-dateOnlyRange.ToDateRangeInput()
-```
-
-### Nullable DateOnly Range
-
-```csharp
-var nullableDateOnlyRange = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
-nullableDateOnlyRange.ToDateRangeInput()
-```
 
 <WidgetDocs Type="Ivy.DateRangeInput" ExtensionTypes="Ivy.DateRangeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateRangeInput.cs"/>
 
@@ -101,14 +138,42 @@ nullableDateOnlyRange.ToDateRangeInput()
 
 ### Complete Example with All Features
 
-```csharp
-var dateRangeState = this.UseState(() => (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), to: DateOnly.FromDateTime(DateTime.Today)));
-var nullableRangeState = this.UseState<(DateOnly?, DateOnly?)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
+```csharp demo-tabs
+public class DateRangeRealisticDemo : ViewBase
+{
+    public override object? Build()
+    {
+      var leaveRangeState = this.UseState(() =>
+            (from: DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), 
+            to: DateOnly.FromDateTime(DateTime.Today)));
 
-return Layout.Vertical(
-    dateRangeState.ToDateRangeInput().Placeholder("Select date range"),
-    dateRangeState.ToDateRangeInput().Disabled(),
-    dateRangeState.ToDateRangeInput().Invalid("Invalid range"),
-    nullableRangeState.ToDateRangeInput().Placeholder("Nullable range")
-);
+        var toDateTime = new DateTime(leaveRangeState.Value.Item2.Year,
+            leaveRangeState.Value.Item2.Month, leaveRangeState.Value.Item2.Day);
+        
+        var fromDateTime = new DateTime(leaveRangeState.Value.Item1.Year,
+            leaveRangeState.Value.Item1.Month, leaveRangeState.Value.Item1.Day);
+
+        ;
+        
+        int saturdays = 0;
+        int sundays = 0;
+        for(var d = fromDateTime ; d <= toDateTime; d=d.AddDays(1))
+        {
+            if(d.DayOfWeek == DayOfWeek.Saturday)
+                saturdays++;
+            if(d.DayOfWeek == DayOfWeek.Sunday)
+                sundays++;
+        }
+        var moreThanTwoWeeks = (toDateTime - fromDateTime).Days - (saturdays + sundays) > 10;
+        var invalidLeave = UseState("");
+        if (moreThanTwoWeeks)
+            invalidLeave.Set("Only two consecutive weeks allowed!");    
+        else
+            invalidLeave.Set(string.Empty);
+                            
+        return Layout.Vertical()
+                | H3("Select Leave Range")
+                | leaveRangeState.ToDateRangeInput().Invalid(invalidLeave.Value);
+    }    
+}    
 ``` 
