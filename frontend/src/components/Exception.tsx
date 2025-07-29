@@ -31,7 +31,7 @@ export class Exception extends React.PureComponent<ExceptionProps> {
           {title && <h3>{title}</h3>}
           {message && <p>{message}</p>}
           {stackTrace && (
-            <details className="mt-4" style={{ whiteSpace: 'pre-wrap' }} open>
+            <details className="mt-4 max-w-100" style={{ whiteSpace: 'wrap' }}>
               <pre>{stackTrace}</pre>
             </details>
           )}
