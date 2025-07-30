@@ -49,9 +49,7 @@ export function BladeWidget({
         onMouseDown={e => handleMouseDown(e)}
       >
         <div className="flex items-center h-[70px]">
-          {!slots?.BladeHeader && (
-            <h2 className="text-large-body font-medium">{title}</h2>
-          )}
+          {!slots?.BladeHeader && <h2 className="text-body">{title}</h2>}
           <div>{slots?.BladeHeader}</div>
         </div>
         <div className="flex items-center h-[70px]">
