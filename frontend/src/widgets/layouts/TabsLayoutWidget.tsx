@@ -425,28 +425,18 @@ export const TabsLayoutWidget = ({
 
         const newOrder = arrayMove(tabOrder, oldIndex, newIndex);
         setTabOrder(newOrder);
-
-        // Maintain the active tab selection during drag operations
-        // If the active tab was moved, update its position but keep it selected
-        if (activeTabId) {
-          const activeTabIdInNewOrder = newOrder.indexOf(activeTabId);
-          if (activeTabIdInNewOrder !== -1) {
-            // Force the active tab to remain selected by updating the state
-            setActiveTabId(activeTabId);
-          }
-        }
       }
       isDraggingRef.current = false;
     },
-    [tabOrder, activeTabId]
+    [tabOrder]
   );
 
   React.useEffect(() => {
     const handleTabEvent = (eventType: string) => (e: Event) => {
       const customEvent = e as CustomEvent<{ id: string }>;
       if (!customEvent.detail?.id) return;
-      const idx = tabOrder.indexOf(customEvent.detail.id);
-      if (idx !== -1) eventHandler(eventType, id, [idx]);
+      const idx = tabOrderRef.current.indexOf(customEvent.detail.id);
+      if (idx !== -1) eventHandlerRef.current(eventType, id, [idx]);
     };
 
     const closeHandler = handleTabEvent('OnClose');
@@ -459,7 +449,7 @@ export const TabsLayoutWidget = ({
       window.removeEventListener('tab-close', closeHandler);
       window.removeEventListener('tab-refresh', refreshHandler);
     };
-  }, [tabOrder, eventHandler, id]);
+  }, [id]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
