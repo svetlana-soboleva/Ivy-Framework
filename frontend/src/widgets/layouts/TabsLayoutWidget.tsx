@@ -195,6 +195,8 @@ export const TabsLayoutWidget = ({
   const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
   const tabWidgetsRef = React.useRef(tabWidgets);
   const tabOrderRef = React.useRef(tabOrder);
+  const eventHandlerRef = React.useRef(eventHandler);
+  const isDraggingRef = React.useRef(false);
 
   // Restore animated underline logic for 'Content' variant
   const [activeIndex, setActiveIndex] = React.useState(selectedIndex ?? 0);
@@ -211,6 +213,10 @@ export const TabsLayoutWidget = ({
   React.useEffect(() => {
     tabOrderRef.current = tabOrder;
   }, [tabOrder]);
+
+  React.useEffect(() => {
+    eventHandlerRef.current = eventHandler;
+  }, [eventHandler]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -388,43 +394,6 @@ export const TabsLayoutWidget = ({
     if (activeTabId) setLoadedTabs(prev => new Set(prev).add(activeTabId));
   }, [activeTabId]);
 
-  // Sync with selectedIndex prop
-  React.useEffect(() => {
-    // Only update active tab if selectedIndex is explicitly provided and valid
-    if (
-      selectedIndex != null &&
-      selectedIndex >= 0 &&
-      selectedIndex < tabOrder.length
-    ) {
-      const newTargetTabId = tabOrder[selectedIndex];
-      // Only update state if the target tab ID is actually different from the current active one.
-      if (newTargetTabId !== activeTabIdRef.current) {
-        // Small delay to handle race condition between tabOrder and selectedIndex updates
-        const timeoutId = setTimeout(() => {
-          setActiveTabId(newTargetTabId);
-        }, 10);
-
-        return () => clearTimeout(timeoutId);
-      }
-    }
-    // If selectedIndex is null or out of bounds, but we have a valid activeTabId that still exists,
-    // keep the current active tab instead of clearing it
-    else if (
-      selectedIndex === null &&
-      activeTabIdRef.current &&
-      tabOrder.includes(activeTabIdRef.current)
-    ) {
-      // Keep current active tab
-    }
-    // If selectedIndex is null and we don't have a valid active tab, let it be null
-    else if (
-      selectedIndex === null &&
-      (!activeTabIdRef.current || !tabOrder.includes(activeTabIdRef.current))
-    ) {
-      setActiveTabId(null);
-    }
-  }, [selectedIndex, tabOrder]);
-
   // Event handlers
   const handleTabSelect = (tabId: string) => {
     setLoadedTabs(prev => new Set(prev).add(tabId));
@@ -440,6 +409,10 @@ export const TabsLayoutWidget = ({
     }
   };
 
+  const handleDragStart = React.useCallback(() => {
+    isDraggingRef.current = true;
+  }, []);
+
   const handleDragEnd = React.useCallback(
     (event: {
       active: { id: string | number };
@@ -447,16 +420,25 @@ export const TabsLayoutWidget = ({
     }) => {
       const { active, over } = event;
       if (active && over && active.id !== over.id) {
-        setTabOrder(items =>
-          arrayMove(
-            items,
-            items.indexOf(String(active.id)),
-            items.indexOf(String(over.id))
-          )
-        );
+        const oldIndex = tabOrder.indexOf(String(active.id));
+        const newIndex = tabOrder.indexOf(String(over.id));
+
+        const newOrder = arrayMove(tabOrder, oldIndex, newIndex);
+        setTabOrder(newOrder);
+
+        // Maintain the active tab selection during drag operations
+        // If the active tab was moved, update its position but keep it selected
+        if (activeTabId) {
+          const activeTabIdInNewOrder = newOrder.indexOf(activeTabId);
+          if (activeTabIdInNewOrder !== -1) {
+            // Force the active tab to remain selected by updating the state
+            setActiveTabId(activeTabId);
+          }
+        }
       }
+      isDraggingRef.current = false;
     },
-    []
+    [tabOrder, activeTabId]
   );
 
   React.useEffect(() => {
@@ -644,6 +626,7 @@ export const TabsLayoutWidget = ({
         >
           <DndContext
             collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             sensors={sensors}
           >
