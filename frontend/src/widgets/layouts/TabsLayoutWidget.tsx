@@ -463,13 +463,36 @@ export const TabsLayoutWidget = ({
         const originalTabOrder = tabWidgets.map(
           tab => (tab as React.ReactElement<TabWidgetProps>).props.id
         );
-        const reorderMapping = newOrder.map(tabId =>
-          originalTabOrder.indexOf(tabId)
-        );
+        const reorderMapping = newOrder.map(tabId => {
+          const index = originalTabOrder.indexOf(tabId);
+          if (index === -1) {
+            console.error(
+              'Tab reorder error: Tab ID not found in original order',
+              {
+                tabId,
+                newOrder,
+                originalTabOrder,
+              }
+            );
+          }
+          return index;
+        });
 
-        // Mark as user-initiated to prevent backend sync from interfering
-        isUserInitiatedChangeRef.current = true;
-        eventHandler('OnReorder', id, [reorderMapping]);
+        // Safety check: Only send reorder if all indices are valid
+        if (
+          !reorderMapping.includes(-1) &&
+          reorderMapping.length === originalTabOrder.length
+        ) {
+          // Mark as user-initiated to prevent backend sync from interfering
+          isUserInitiatedChangeRef.current = true;
+          eventHandler('OnReorder', id, [reorderMapping]);
+        } else {
+          console.error('Tab reorder aborted: Invalid mapping', {
+            reorderMapping,
+            newOrder,
+            originalTabOrder,
+          });
+        }
 
         // Check if the active tab's position changed after ANY drag operation
         if (activeTabId && oldActiveIndex !== -1) {

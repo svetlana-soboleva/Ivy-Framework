@@ -169,8 +169,6 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         void OnTabReorder(Event<TabsLayout, int[]> @event)
         {
             var newOrder = @event.Value;
-            if (newOrder.Length != tabs.Value.Length) return; // Safety check
-
             // Reorder tabs according to the new indices
             var reorderedTabs = newOrder.Select(index => tabs.Value[index]).ToArray();
             tabs.Set([.. reorderedTabs]);
