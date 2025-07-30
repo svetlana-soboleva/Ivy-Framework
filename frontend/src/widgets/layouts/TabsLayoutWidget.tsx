@@ -336,13 +336,18 @@ export const TabsLayoutWidget = ({
   const debouncedCalculateVisibleTabsRef = React.useRef(
     debouncedCalculateVisibleTabs
   );
+  const calculateVisibleTabsRef = React.useRef(calculateVisibleTabs);
 
   React.useEffect(() => {
     debouncedCalculateVisibleTabsRef.current = debouncedCalculateVisibleTabs;
   }, [debouncedCalculateVisibleTabs]);
 
   React.useEffect(() => {
-    calculateVisibleTabs();
+    calculateVisibleTabsRef.current = calculateVisibleTabs;
+  }, [calculateVisibleTabs]);
+
+  React.useEffect(() => {
+    calculateVisibleTabsRef.current();
     const handleResize = () => debouncedCalculateVisibleTabsRef.current();
     window.addEventListener('resize', handleResize);
     return () => {
@@ -351,7 +356,7 @@ export const TabsLayoutWidget = ({
   }, []);
 
   React.useEffect(() => {
-    calculateVisibleTabs();
+    calculateVisibleTabsRef.current();
   }, [tabOrder]);
 
   // Keep ref in sync with state
@@ -371,7 +376,7 @@ export const TabsLayoutWidget = ({
     if (added.length || removed.length) {
       setTabOrder(currentTabIds);
     }
-  }, [tabWidgets]);
+  }, [tabWidgets, tabOrder]);
 
   // Load active tab
   React.useEffect(() => {
