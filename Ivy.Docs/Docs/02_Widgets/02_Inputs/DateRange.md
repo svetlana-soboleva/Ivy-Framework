@@ -153,7 +153,7 @@ public class DateRangeRealisticDemo : ViewBase
         var fromDateTime = new DateTime(leaveRangeState.Value.Item1.Year,
             leaveRangeState.Value.Item1.Month, leaveRangeState.Value.Item1.Day);
 
-        ;
+        
         
         int saturdays = 0;
         int sundays = 0;
