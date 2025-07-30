@@ -31,7 +31,7 @@ public class TabsApp : ViewBase
             tabs.Set(tabs.Value.RemoveAt(@event.Value));
         }
 
-        var tabsLayout = new TabsLayout(OnTabSelect, OnTabClose, null, selectedIndex.Value,
+        var tabsLayout = new TabsLayout(OnTabSelect, OnTabClose, null, null, selectedIndex.Value,
             tabs.Value.ToArray()
         ).Variant(TabsVariant.Tabs).Width(150);
 

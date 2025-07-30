@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Icon from '@/components/Icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -61,6 +61,7 @@ function SortableTabTrigger({
   onMouseDown,
   className,
   children,
+  useRadix = false,
   ...props
 }: {
   id: string;
@@ -71,6 +72,7 @@ function SortableTabTrigger({
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   children: React.ReactNode;
+  useRadix?: boolean;
 }) {
   const {
     attributes,
@@ -96,6 +98,7 @@ function SortableTabTrigger({
       onClick={onClick}
       onMouseDown={onMouseDown}
       className={className}
+      useRadix={useRadix}
       {...attributes}
       {...listeners}
       {...props}
@@ -193,6 +196,11 @@ export const TabsLayoutWidget = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const tabWidgetsRef = React.useRef(tabWidgets);
+  const tabOrderRef = React.useRef(tabOrder);
+  const eventHandlerRef = React.useRef(eventHandler);
+  const isDraggingRef = React.useRef(false);
+  const isUserInitiatedChangeRef = React.useRef(false);
 
   // Restore animated underline logic for 'Content' variant
   const [activeIndex, setActiveIndex] = React.useState(selectedIndex ?? 0);
@@ -200,6 +208,19 @@ export const TabsLayoutWidget = ({
     left: '0px',
     width: '0px',
   });
+
+  // Update refs when they change
+  React.useEffect(() => {
+    tabWidgetsRef.current = tabWidgets;
+  }, [tabWidgets]);
+
+  React.useEffect(() => {
+    tabOrderRef.current = tabOrder;
+  }, [tabOrder]);
+
+  React.useEffect(() => {
+    eventHandlerRef.current = eventHandler;
+  }, [eventHandler]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -211,7 +232,7 @@ export const TabsLayoutWidget = ({
         width: `${offsetWidth}px`,
       });
     }
-  }, [activeIndex, tabOrder, tabWidgets, variant]);
+  }, [activeIndex, tabOrder, variant]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -255,7 +276,7 @@ export const TabsLayoutWidget = ({
     try {
       // Process tabs in their original order - first come, first served
       for (const tabId of tabOrder) {
-        const tabWidget = tabWidgets.find(
+        const tabWidget = tabWidgetsRef.current.find(
           tab => (tab as React.ReactElement<TabWidgetProps>).props.id === tabId
         );
         if (!tabWidget || !React.isValidElement(tabWidget)) continue;
@@ -324,21 +345,34 @@ export const TabsLayoutWidget = ({
 
     setVisibleTabs(newVisibleTabs);
     setHiddenTabs(newHiddenTabs);
-  }, [tabOrder, tabWidgets, dropdownOpen]);
+  }, [tabOrder, dropdownOpen]);
 
   const debouncedCalculateVisibleTabs = useDebounce(calculateVisibleTabs, 100);
+  const debouncedCalculateVisibleTabsRef = React.useRef(
+    debouncedCalculateVisibleTabs
+  );
+  const calculateVisibleTabsRef = React.useRef(calculateVisibleTabs);
 
   React.useEffect(() => {
-    calculateVisibleTabs();
-    window.addEventListener('resize', debouncedCalculateVisibleTabs);
+    debouncedCalculateVisibleTabsRef.current = debouncedCalculateVisibleTabs;
+  }, [debouncedCalculateVisibleTabs]);
+
+  React.useEffect(() => {
+    calculateVisibleTabsRef.current = calculateVisibleTabs;
+  }, [calculateVisibleTabs]);
+
+  React.useEffect(() => {
+    calculateVisibleTabsRef.current();
+    const handleResize = () => debouncedCalculateVisibleTabsRef.current();
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', debouncedCalculateVisibleTabs);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [calculateVisibleTabs, debouncedCalculateVisibleTabs]);
+  }, []);
 
   React.useEffect(() => {
-    calculateVisibleTabs();
-  }, [tabOrder, calculateVisibleTabs]);
+    calculateVisibleTabsRef.current();
+  }, [tabOrder]);
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -347,7 +381,7 @@ export const TabsLayoutWidget = ({
 
   // Sync tab order on add/remove
   React.useEffect(() => {
-    const prev = tabOrder;
+    const prev = tabOrderRef.current;
     const currentTabIds = tabWidgets.map(
       tab => (tab as React.ReactElement<TabWidgetProps>).props.id
     );
@@ -359,54 +393,43 @@ export const TabsLayoutWidget = ({
     }
   }, [tabWidgets]);
 
+  // Sync activeTabId with selectedIndex prop from backend (only when not user-initiated)
+  React.useEffect(() => {
+    if (selectedIndex != null && tabOrder[selectedIndex]) {
+      const targetTabId = tabOrder[selectedIndex];
+      // Only sync if it's not user-initiated OR if the current activeTabId is invalid
+      if (
+        !isUserInitiatedChangeRef.current ||
+        !activeTabId ||
+        !tabOrder.includes(activeTabId)
+      ) {
+        if (targetTabId !== activeTabId) {
+          setActiveTabId(targetTabId);
+          setLoadedTabs(prev => new Set(prev).add(targetTabId));
+          // Update activeIndex for Content variant animation
+          setActiveIndex(selectedIndex);
+        }
+      }
+    }
+    // Reset the flag after processing
+    isUserInitiatedChangeRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- activeTabId intentionally excluded to prevent race conditions
+  }, [selectedIndex, tabOrder]);
+
   // Load active tab
   React.useEffect(() => {
     if (activeTabId) setLoadedTabs(prev => new Set(prev).add(activeTabId));
   }, [activeTabId]);
-
-  // Sync with selectedIndex prop
-  React.useEffect(() => {
-    // Only update active tab if selectedIndex is explicitly provided and valid
-    if (
-      selectedIndex != null &&
-      selectedIndex >= 0 &&
-      selectedIndex < tabOrder.length
-    ) {
-      const newTargetTabId = tabOrder[selectedIndex];
-      // Only update state if the target tab ID is actually different from the current active one.
-      if (newTargetTabId !== activeTabIdRef.current) {
-        // Small delay to handle race condition between tabOrder and selectedIndex updates
-        const timeoutId = setTimeout(() => {
-          setActiveTabId(newTargetTabId);
-        }, 10);
-
-        return () => clearTimeout(timeoutId);
-      }
-    }
-    // If selectedIndex is null or out of bounds, but we have a valid activeTabId that still exists,
-    // keep the current active tab instead of clearing it
-    else if (
-      selectedIndex === null &&
-      activeTabIdRef.current &&
-      tabOrder.includes(activeTabIdRef.current)
-    ) {
-      // Keep current active tab
-    }
-    // If selectedIndex is null and we don't have a valid active tab, let it be null
-    else if (
-      selectedIndex === null &&
-      (!activeTabIdRef.current || !tabOrder.includes(activeTabIdRef.current))
-    ) {
-      setActiveTabId(null);
-    }
-  }, [selectedIndex, tabOrder]);
 
   // Event handlers
   const handleTabSelect = (tabId: string) => {
     setLoadedTabs(prev => new Set(prev).add(tabId));
     setActiveTabId(tabId);
     setDropdownOpen(false);
-    eventHandler('OnSelect', id, [tabOrder.indexOf(tabId)]);
+    // Update activeIndex for Content variant animation
+    const newIndex = tabOrder.indexOf(tabId);
+    setActiveIndex(newIndex);
+    eventHandler('OnSelect', id, [newIndex]);
   };
 
   const handleMouseDown = (e: React.MouseEvent, index: number) => {
@@ -416,6 +439,10 @@ export const TabsLayoutWidget = ({
     }
   };
 
+  const handleDragStart = React.useCallback(() => {
+    isDraggingRef.current = true;
+  }, []);
+
   const handleDragEnd = React.useCallback(
     (event: {
       active: { id: string | number };
@@ -423,24 +450,71 @@ export const TabsLayoutWidget = ({
     }) => {
       const { active, over } = event;
       if (active && over && active.id !== over.id) {
-        setTabOrder(items =>
-          arrayMove(
-            items,
-            items.indexOf(String(active.id)),
-            items.indexOf(String(over.id))
-          )
+        const oldIndex = tabOrder.indexOf(String(active.id));
+        const newIndex = tabOrder.indexOf(String(over.id));
+
+        // Track active tab's position before the move
+        const oldActiveIndex = activeTabId ? tabOrder.indexOf(activeTabId) : -1;
+
+        const newOrder = arrayMove(tabOrder, oldIndex, newIndex);
+        setTabOrder(newOrder);
+
+        // Send reorder event to backend with mapping from new order to original backend indices
+        const originalTabOrder = tabWidgets.map(
+          tab => (tab as React.ReactElement<TabWidgetProps>).props.id
         );
+        const reorderMapping = newOrder.map(tabId => {
+          const index = originalTabOrder.indexOf(tabId);
+          if (index === -1) {
+            console.error(
+              'Tab reorder error: Tab ID not found in original order',
+              {
+                tabId,
+                newOrder,
+                originalTabOrder,
+              }
+            );
+          }
+          return index;
+        });
+
+        // Safety check: Only send reorder if all indices are valid
+        if (
+          !reorderMapping.includes(-1) &&
+          reorderMapping.length === originalTabOrder.length
+        ) {
+          // Mark as user-initiated to prevent backend sync from interfering
+          isUserInitiatedChangeRef.current = true;
+          eventHandler('OnReorder', id, [reorderMapping]);
+        } else {
+          console.error('Tab reorder aborted: Invalid mapping', {
+            reorderMapping,
+            newOrder,
+            originalTabOrder,
+          });
+        }
+
+        // Check if the active tab's position changed after ANY drag operation
+        if (activeTabId && oldActiveIndex !== -1) {
+          const newActiveIndex = newOrder.indexOf(activeTabId);
+          if (newActiveIndex !== oldActiveIndex) {
+            // Active tab's index changed due to other tabs moving around it
+            setActiveIndex(newActiveIndex);
+            // The OnReorder event will handle updating the backend about the new active position
+          }
+        }
       }
+      isDraggingRef.current = false;
     },
-    []
+    [tabOrder, activeTabId, eventHandler, id, tabWidgets]
   );
 
   React.useEffect(() => {
     const handleTabEvent = (eventType: string) => (e: Event) => {
       const customEvent = e as CustomEvent<{ id: string }>;
       if (!customEvent.detail?.id) return;
-      const idx = tabOrder.indexOf(customEvent.detail.id);
-      if (idx !== -1) eventHandler(eventType, id, [idx]);
+      const idx = tabOrderRef.current.indexOf(customEvent.detail.id);
+      if (idx !== -1) eventHandlerRef.current(eventType, id, [idx]);
     };
 
     const closeHandler = handleTabEvent('OnClose');
@@ -453,7 +527,7 @@ export const TabsLayoutWidget = ({
       window.removeEventListener('tab-close', closeHandler);
       window.removeEventListener('tab-refresh', refreshHandler);
     };
-  }, [tabOrder, eventHandler, id]);
+  }, [id]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -463,13 +537,17 @@ export const TabsLayoutWidget = ({
   );
   const showClose = events.includes('OnClose');
   const showRefresh = events.includes('OnRefresh');
-  const orderedTabWidgets = tabOrder
-    .map(id =>
-      tabWidgets.find(
-        tab => (tab as React.ReactElement<TabWidgetProps>).props.id === id
-      )
-    )
-    .filter(Boolean);
+  const orderedTabWidgets = React.useMemo(
+    () =>
+      tabOrder
+        .map(id =>
+          tabWidgets.find(
+            tab => (tab as React.ReactElement<TabWidgetProps>).props.id === id
+          )
+        )
+        .filter(Boolean),
+    [tabOrder, tabWidgets]
+  );
 
   if (tabWidgets.length === 0)
     return <div className="remove-parent-padding"></div>;
@@ -494,6 +572,8 @@ export const TabsLayoutWidget = ({
             <a
               onClick={e => {
                 e.stopPropagation();
+                // Mark as user-initiated to prevent sync issues
+                isUserInitiatedChangeRef.current = true;
                 eventHandler('OnRefresh', id, [tabOrder.indexOf(tabId)]);
               }}
               className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
@@ -505,6 +585,8 @@ export const TabsLayoutWidget = ({
             <a
               onClick={e => {
                 e.stopPropagation();
+                // Mark as user-initiated since close affects selection
+                isUserInitiatedChangeRef.current = true;
                 eventHandler('OnClose', id, [tabOrder.indexOf(tabId)]);
               }}
               className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
@@ -561,6 +643,8 @@ export const TabsLayoutWidget = ({
                       : 'text-muted-foreground'
                   )}
                   onClick={() => {
+                    // Mark as user-initiated for Content variant
+                    isUserInitiatedChangeRef.current = true;
                     setActiveIndex(index);
                     setActiveTabId(tabOrder[index]);
                     eventHandler('OnSelect', id, [index]);
@@ -601,9 +685,23 @@ export const TabsLayoutWidget = ({
     );
   }
 
+  const useRadix = (variant as string) === 'Content'; // Use Radix only for Content variant, custom for Tabs variant
+
   return (
     <Tabs
       value={activeTabId ?? undefined}
+      onValueChange={value => {
+        if (!useRadix) {
+          handleTabSelect(value);
+        } else {
+          // For Radix tabs, also mark as user-initiated to prevent flicker
+          isUserInitiatedChangeRef.current = true;
+          const newIndex = tabOrder.indexOf(value);
+          setActiveIndex(newIndex);
+          eventHandler('OnSelect', id, [newIndex]);
+        }
+      }}
+      useRadix={useRadix}
       className={cn(
         removeParentPadding && 'remove-parent-padding',
         'flex flex-col h-full'
@@ -616,12 +714,14 @@ export const TabsLayoutWidget = ({
         >
           <DndContext
             collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             sensors={sensors}
           >
             <SortableContext items={tabOrder}>
               <TabsList
                 ref={tabsListRef}
+                useRadix={useRadix}
                 className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap"
               >
                 {orderedTabWidgets.map(tabWidget => {
@@ -638,7 +738,12 @@ export const TabsLayoutWidget = ({
                       key={id}
                       id={id}
                       value={id}
-                      onClick={() => handleTabSelect(id)}
+                      useRadix={useRadix}
+                      onClick={() => {
+                        // Mark as user-initiated to prevent flicker
+                        isUserInitiatedChangeRef.current = true;
+                        handleTabSelect(id);
+                      }}
                       onMouseDown={(e: React.MouseEvent) =>
                         handleMouseDown(e, tabOrder.indexOf(id))
                       }
@@ -682,20 +787,22 @@ export const TabsLayoutWidget = ({
                       {orderedTabWidgets.map(tabWidget => {
                         if (!React.isValidElement(tabWidget)) return null;
                         const props =
-                          tabWidget.props as Partial<TabWidgetProps> & {
-                            key?: string;
-                          };
+                          tabWidget.props as Partial<TabWidgetProps>;
                         if (!props.id) return null;
-                        const { title, id, key } = props;
+                        const { title, id } = props;
 
                         // Only render tabs that are hidden
                         if (!hiddenTabs.includes(id)) return null;
 
                         return (
                           <SortableDropdownMenuItem
-                            key={key ?? id}
+                            key={id}
                             id={id}
-                            onClick={() => handleTabSelect(id)}
+                            onClick={() => {
+                              // Mark as user-initiated to prevent flicker
+                              isUserInitiatedChangeRef.current = true;
+                              handleTabSelect(id);
+                            }}
                             isActive={activeTabId === id}
                           >
                             {title}
@@ -722,13 +829,28 @@ export const TabsLayoutWidget = ({
 
           const paddingStyle = getPadding(padding);
 
+          if (useRadix) {
+            // Use TabsContent for Radix version (Content variant)
+            return (
+              <TabsContent
+                key={id}
+                value={id}
+                useRadix={useRadix}
+                className={cn('h-full overflow-auto border-none mt-0')}
+                style={paddingStyle}
+              >
+                {tabWidget}
+              </TabsContent>
+            );
+          }
+
+          // Use custom div-based content for non-Radix version (Tabs variant)
           return (
             <div
               key={id}
               className={cn(
                 'h-full overflow-auto',
-                activeTabId === id ? 'block' : 'hidden',
-                (variant as string) === 'Content' && 'border-none'
+                activeTabId === id ? 'block' : 'hidden'
               )}
               style={paddingStyle}
             >

@@ -213,7 +213,11 @@ export const useBackend = (
       connection
         .start()
         .then(() => {
-          logger.info('SignalR connection established');
+          logger.info('✅ WebSocket connection established for:', {
+            appId,
+            parentId,
+            connectionId: connection.connectionId,
+          });
 
           connection.on('Refresh', message => {
             logger.debug(`[${connection.connectionId}] Refresh`, message);
