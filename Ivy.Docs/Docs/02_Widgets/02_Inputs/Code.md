@@ -121,7 +121,7 @@ public class HtmlLanguageHighlightDemo : ViewBase
 {
     public override object? Build()
     {    
-        var htmlCode = UseState("<html><body><h1>Hello World!</h1></body><html>");
+        var htmlCode = UseState("<html><body><h1>Hello World!</h1></body></html>");
         return Layout.Vertical()
                     | Text.H3("HTML")
                     | Text.Html("<i>Enter HTML code below!</i>") 
