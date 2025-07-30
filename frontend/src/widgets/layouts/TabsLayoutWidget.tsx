@@ -370,15 +370,6 @@ export const TabsLayoutWidget = ({
     calculateVisibleTabsRef.current();
   }, [tabOrder]);
 
-  // Sync activeTabId with selectedIndex prop changes
-  React.useEffect(() => {
-    const targetTabId = tabOrder[selectedIndex];
-    if (targetTabId) {
-      setActiveTabId(targetTabId);
-      setActiveIndex(selectedIndex);
-    }
-  }, [selectedIndex, tabOrder]);
-
   // Keep ref in sync with state
   React.useEffect(() => {
     activeTabIdRef.current = activeTabId;
