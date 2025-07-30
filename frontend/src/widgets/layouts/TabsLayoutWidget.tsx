@@ -193,6 +193,7 @@ export const TabsLayoutWidget = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const tabWidgetsRef = React.useRef(tabWidgets);
 
   // Restore animated underline logic for 'Content' variant
   const [activeIndex, setActiveIndex] = React.useState(selectedIndex ?? 0);
@@ -200,6 +201,11 @@ export const TabsLayoutWidget = ({
     left: '0px',
     width: '0px',
   });
+
+  // Update tabWidgets ref when it changes
+  React.useEffect(() => {
+    tabWidgetsRef.current = tabWidgets;
+  }, [tabWidgets]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -211,7 +217,7 @@ export const TabsLayoutWidget = ({
         width: `${offsetWidth}px`,
       });
     }
-  }, [activeIndex, tabOrder, tabWidgets, variant]);
+  }, [activeIndex, tabOrder, variant]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -255,7 +261,7 @@ export const TabsLayoutWidget = ({
     try {
       // Process tabs in their original order - first come, first served
       for (const tabId of tabOrder) {
-        const tabWidget = tabWidgets.find(
+        const tabWidget = tabWidgetsRef.current.find(
           tab => (tab as React.ReactElement<TabWidgetProps>).props.id === tabId
         );
         if (!tabWidget || !React.isValidElement(tabWidget)) continue;
@@ -324,21 +330,29 @@ export const TabsLayoutWidget = ({
 
     setVisibleTabs(newVisibleTabs);
     setHiddenTabs(newHiddenTabs);
-  }, [tabOrder, tabWidgets, dropdownOpen]);
+  }, [tabOrder, dropdownOpen]);
 
   const debouncedCalculateVisibleTabs = useDebounce(calculateVisibleTabs, 100);
+  const debouncedCalculateVisibleTabsRef = React.useRef(
+    debouncedCalculateVisibleTabs
+  );
+
+  React.useEffect(() => {
+    debouncedCalculateVisibleTabsRef.current = debouncedCalculateVisibleTabs;
+  }, [debouncedCalculateVisibleTabs]);
 
   React.useEffect(() => {
     calculateVisibleTabs();
-    window.addEventListener('resize', debouncedCalculateVisibleTabs);
+    const handleResize = () => debouncedCalculateVisibleTabsRef.current();
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', debouncedCalculateVisibleTabs);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [calculateVisibleTabs, debouncedCalculateVisibleTabs]);
+  }, []);
 
   React.useEffect(() => {
     calculateVisibleTabs();
-  }, [tabOrder, calculateVisibleTabs]);
+  }, [tabOrder]);
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -463,13 +477,17 @@ export const TabsLayoutWidget = ({
   );
   const showClose = events.includes('OnClose');
   const showRefresh = events.includes('OnRefresh');
-  const orderedTabWidgets = tabOrder
-    .map(id =>
-      tabWidgets.find(
-        tab => (tab as React.ReactElement<TabWidgetProps>).props.id === id
-      )
-    )
-    .filter(Boolean);
+  const orderedTabWidgets = React.useMemo(
+    () =>
+      tabOrder
+        .map(id =>
+          tabWidgets.find(
+            tab => (tab as React.ReactElement<TabWidgetProps>).props.id === id
+          )
+        )
+        .filter(Boolean),
+    [tabOrder, tabWidgets]
+  );
 
   if (tabWidgets.length === 0)
     return <div className="remove-parent-padding"></div>;
