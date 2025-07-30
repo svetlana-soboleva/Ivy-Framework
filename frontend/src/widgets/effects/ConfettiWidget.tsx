@@ -12,12 +12,17 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
 }) => {
   const elementRef = useRef<HTMLDivElement>(null);
 
+  const quadrant = confetti.shapeFromPath({
+    path: 'M47 0H0V47.0222C25.9234 47.0222 47 25.9801 47 0Z',
+  });
+
   const triggerConfetti = (x: number, y: number) => {
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { x, y },
-      colors: ['#004734', '#006d4c', '#009464', '#00b97d', '#00df97'],
+      shapes: [quadrant],
+      colors: ['#00CC92', '#0D4A2F'],
     });
   };
 
