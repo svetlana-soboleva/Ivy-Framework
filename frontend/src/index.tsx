@@ -32,7 +32,7 @@ function App() {
     appArgs,
     parentId
   );
-  const [removeBranding, setRemoveBranding] = useState(false);
+  const [removeBranding, setRemoveBranding] = useState(true);
 
   useEffect(() => {
     hasLicensedFeature('RemoveBranding').then(setRemoveBranding);
