@@ -138,7 +138,7 @@ function SortableDropdownMenuItem({
       {...listeners}
       onClick={onClick}
       className={cn(
-        'group w-full flex items-center px-2 py-1.5 text-body cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
+        'group w-full flex items-center p-1 text-sm cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
         isActive && 'bg-accent text-accent-foreground'
       )}
     >
@@ -678,7 +678,7 @@ export const TabsLayoutWidget = ({
                   sensors={sensors}
                 >
                   <SortableContext items={tabOrder}>
-                    <div className="flex flex-col w-48">
+                    <div className="flex flex-col gap-1 w-48">
                       {orderedTabWidgets.map(tabWidget => {
                         if (!React.isValidElement(tabWidget)) return null;
                         const props =
