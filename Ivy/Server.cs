@@ -235,7 +235,7 @@ public class Server
         {
             builder.Configuration.AddUserSecrets(entryAssembly);
         }
-        
+
         foreach (var mod in _builderMods)
         {
             mod(builder);
