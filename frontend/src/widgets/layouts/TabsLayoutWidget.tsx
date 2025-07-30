@@ -705,18 +705,16 @@ export const TabsLayoutWidget = ({
                       {orderedTabWidgets.map(tabWidget => {
                         if (!React.isValidElement(tabWidget)) return null;
                         const props =
-                          tabWidget.props as Partial<TabWidgetProps> & {
-                            key?: string;
-                          };
+                          tabWidget.props as Partial<TabWidgetProps>;
                         if (!props.id) return null;
-                        const { title, id, key } = props;
+                        const { title, id } = props;
 
                         // Only render tabs that are hidden
                         if (!hiddenTabs.includes(id)) return null;
 
                         return (
                           <SortableDropdownMenuItem
-                            key={key ?? id}
+                            key={id}
                             id={id}
                             onClick={() => handleTabSelect(id)}
                             isActive={activeTabId === id}
