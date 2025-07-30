@@ -782,6 +782,22 @@
     background: var(--accent);
     color: var(--accent-foreground);
   }
+
+  /* Prevent dialog from getting focus rings when elements inside are focused */
+  [data-radix-dialog-content] {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-radix-dialog-content]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-radix-dialog-content]:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 /* CSS variable for filter to invert colors in dark mode */
