@@ -231,8 +231,11 @@ public class Server
         var builder = WebApplication.CreateBuilder();
 
         builder.Configuration.AddEnvironmentVariables();
-        builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
-
+        if (Assembly.GetEntryAssembly() is { } entryAssembly)
+        {
+            builder.Configuration.AddUserSecrets(entryAssembly);
+        }
+        
         foreach (var mod in _builderMods)
         {
             mod(builder);
@@ -367,6 +370,15 @@ public static class WebApplicationExtensions
                     var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
                     html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
                 }
+#if DEBUG
+                var ivyLicensePublicKey = configuration["IVY_LICENSE_PUBLIC_KEY"] ?? "";
+                if (!string.IsNullOrEmpty(ivyLicensePublicKey))
+                {
+                    var ivyLicensePublicKeyTag =
+                        $"<meta name=\"ivy-license-public-key\" content=\"{ivyLicensePublicKey}\" />";
+                    html = html.Replace("</head>", $"  {ivyLicensePublicKeyTag}\n</head>");
+                }
+#endif
 
                 //Inject Meta Title and Description
                 if (!string.IsNullOrEmpty(serverArgs.MetaDescription))
@@ -374,6 +386,7 @@ public static class WebApplicationExtensions
                     var metaDescriptionTag = $"<meta name=\"description\" content=\"{serverArgs.MetaDescription}\" />";
                     html = html.Replace("</head>", $"  {metaDescriptionTag}\n</head>");
                 }
+
                 if (!string.IsNullOrEmpty(serverArgs.MetaTitle))
                 {
                     var metaTitleTag = $"<title>{serverArgs.MetaTitle}</title>";
