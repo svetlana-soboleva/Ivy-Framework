@@ -47,7 +47,7 @@ public static class ClientExtensions
     {
         client.Sender.Send("SetTheme", theme.ToString());
     }
-    
+
     public static void Toast(this IClientProvider client, string description, string? title = null)
     {
         client.Sender.Send("Toast", new ToasterMessage { Description = description, Title = title });
@@ -66,7 +66,7 @@ public static class ClientExtensions
         {
             Description = innerException.Message,
             Title = innerException.GetType().Name,
-            StackTrace = innerException.StackTrace   
+            StackTrace = innerException.StackTrace
         };
         client.Sender.Send("Error", notification);
     }

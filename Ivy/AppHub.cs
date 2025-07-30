@@ -127,21 +127,21 @@ public class AppHub(
         logger.LogInformation($"Connected: {Context.ConnectionId} [{appId}]");
 
         var clientProvider = new ClientProvider(new ClientSender(clientNotifier, Context.ConnectionId));
-        
+
         if (server.Services.All(sd => sd.ServiceType != typeof(IExceptionHandler)))
         {
             appServices.AddSingleton<IExceptionHandler>(_ => new ExceptionHandlerPipeline()
                 .Use(new ConsoleExceptionHandler()).Use(new ClientExceptionHandler(clientProvider))
                 .Build());
         }
-        
+
         appServices.AddSingleton(typeof(IContentBuilder), contentBuilder);
         appServices.AddSingleton(typeof(IAppRepository), server.AppRepository);
         appServices.AddSingleton(typeof(IDownloadService), new DownloadService(Context.ConnectionId));
         appServices.AddSingleton(typeof(IClientProvider), clientProvider);
         appServices.AddSingleton(appDescriptor);
         appServices.AddSingleton(appArgs);
-        
+
         appServices.AddTransient<IWebhookRegistry, WebhookController>();
         appServices.AddTransient<SignalRouter>(_ => new SignalRouter(sessionStore));
 
@@ -248,7 +248,7 @@ public class AppHub(
             logger.LogWarning($"Event: {eventName} {widgetId} [AppSession Not Found]");
             return;
         }
-        
+
         try
         {
             if (server.AuthProviderType != null)

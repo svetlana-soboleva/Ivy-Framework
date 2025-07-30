@@ -268,7 +268,7 @@ public class TableBuilder<TModel> : ViewBase, IStateless
         _removeHeader = true;
         return this;
     }
-    
+
     public TableBuilder<TModel> RemoveEmptyColumns()
     {
         _removeEmptyColumns = true;
@@ -357,7 +357,7 @@ public class TableBuilder<TModel> : ViewBase, IStateless
 
         var rows = _records.Select(RenderRow);
 
-        var joinedRows = header!=null ? new[] { header }.Concat(rows).ToArray() : rows.ToArray();
+        var joinedRows = header != null ? new[] { header }.Concat(rows).ToArray() : rows.ToArray();
 
         if (columns.Any(e => e.FooterAggregate != null))
         {

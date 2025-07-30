@@ -375,17 +375,17 @@ public class WidgetTree : IWidgetTree, IObservable<WidgetTreeChanged[]>
                 }
 
                 view.BeforeBuild(context);
-                
+
                 object? buildResult;
                 try
                 {
                     buildResult = view.Build();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     buildResult = e;
                 }
-                
+
                 node = BuildObject(buildResult, path.Clone(), index, view.Id, context, isHotReload);
                 view.AfterBuild();
                 context.Reset();

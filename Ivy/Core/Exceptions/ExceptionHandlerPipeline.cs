@@ -15,7 +15,7 @@ public class ExceptionHandlerPipeline
         _handlers.Add(new DelegateExceptionHandler(handlerFunc));
         return this;
     }
-    
+
     public IExceptionHandler Build()
     {
         return new CompositeExceptionHandler(_handlers);
@@ -26,7 +26,7 @@ public class ExceptionHandlerPipeline
         public bool HandleException(Exception exception) => handlerFunc(exception);
     }
 
-    
+
     private class CompositeExceptionHandler(IEnumerable<IExceptionHandler> handlers) : IExceptionHandler
     {
         public bool HandleException(Exception exception)
