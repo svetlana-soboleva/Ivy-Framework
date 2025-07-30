@@ -203,9 +203,10 @@ export const useBackend = (
 
   useEffect(() => {
     const connectionKey = `${appId}::${appArgs ?? ''}::${parentId ?? ''}::${machineId}`;
+    const cache = connectionCache.current;
 
     // Check if we already have a connection for this app
-    const existingConnection = connectionCache.current.get(connectionKey);
+    const existingConnection = cache.get(connectionKey);
 
     if (
       existingConnection &&
@@ -223,12 +224,11 @@ export const useBackend = (
       .build();
 
     // Cache the connection
-    connectionCache.current.set(connectionKey, newConnection);
+    cache.set(connectionKey, newConnection);
     setConnection(newConnection);
 
     // Cleanup old/disconnected connections periodically
     return () => {
-      const cache = connectionCache.current;
       // Don't immediately close connection on unmount - keep it alive for potential reuse
       setTimeout(() => {
         const conn = cache.get(connectionKey);
@@ -382,7 +382,7 @@ export const useBackend = (
         logger.error('SignalR Error when sending event:', err);
       });
     },
-    [connection]
+    [connection, connectionId]
   );
 
   return {
