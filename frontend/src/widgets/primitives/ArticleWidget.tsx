@@ -40,7 +40,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
 
   return (
     <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8 ">
-      <div className="flex gap-2 flex-grow">
+      <div className="flex gap-8 flex-grow">
         <article ref={articleRef} className="w-[48rem]">
           <div className="flex flex-col gap-2 flex-grow min-h-[calc(100vh+8rem)]">
             {children}
@@ -115,10 +115,14 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
                 <div className="text-body mb-4">Table of Contents</div>
                 <ScrollArea>
                   <div className="space-y-2">
-                    <div className="h-4 bg-muted rounded animate-pulse w-full"></div>
-                    <div className="h-4 bg-muted rounded animate-pulse w-full"></div>
-                    <div className="h-4 bg-muted rounded animate-pulse w-full"></div>
-                    <div className="h-4 bg-muted rounded animate-pulse w-full"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
                   </div>
                 </ScrollArea>
               </div>
