@@ -177,7 +177,8 @@ export const TabsLayoutWidget = ({
 
   // Shared state and logic
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const [isOverflowing, setIsOverflowing] = React.useState(false);
+  const [visibleTabs, setVisibleTabs] = React.useState<string[]>([]);
+  const [hiddenTabs, setHiddenTabs] = React.useState<string[]>([]);
   const [tabOrder, setTabOrder] = React.useState<string[]>(() =>
     tabWidgets.map(tab => (tab as React.ReactElement<TabWidgetProps>).props.id)
   );
@@ -191,6 +192,7 @@ export const TabsLayoutWidget = ({
   const eventHandler = useEventHandler();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
+  const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   // Restore animated underline logic for 'Content' variant
   const [activeIndex, setActiveIndex] = React.useState(selectedIndex ?? 0);
@@ -198,7 +200,6 @@ export const TabsLayoutWidget = ({
     left: '0px',
     width: '0px',
   });
-  const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -226,26 +227,118 @@ export const TabsLayoutWidget = ({
     });
   }, [variant]);
 
-  const checkOverflow = React.useCallback(() => {
-    const tabsList = tabsListRef.current;
-    if (tabsList) {
-      setIsOverflowing(tabsList.scrollWidth > tabsList.clientWidth + 1); // +1 for rounding
+  // Calculate which tabs fit and which don't - preserving order
+  const calculateVisibleTabs = React.useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Don't recalculate when dropdown is open to prevent infinite loops
+    if (dropdownOpen) return;
+
+    const containerWidth = container.clientWidth - 200; // Account for dropdown button space
+    const newVisibleTabs: string[] = [];
+    const newHiddenTabs: string[] = [];
+    let currentWidth = 0;
+
+    // Create temporary elements to measure tab widths
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.visibility = 'hidden';
+    tempContainer.style.whiteSpace = 'nowrap';
+    tempContainer.style.fontSize = '14px'; // Match the tab font size
+    tempContainer.style.fontWeight = '500'; // Match the tab font weight
+    tempContainer.style.padding = '8px 12px'; // Match the tab padding
+    tempContainer.style.border = '1px solid transparent'; // Match the tab border
+    tempContainer.style.marginRight = '2px'; // Match the tab gap
+    document.body.appendChild(tempContainer);
+
+    try {
+      // Process tabs in their original order - first come, first served
+      for (const tabId of tabOrder) {
+        const tabWidget = tabWidgets.find(
+          tab => (tab as React.ReactElement<TabWidgetProps>).props.id === tabId
+        );
+        if (!tabWidget || !React.isValidElement(tabWidget)) continue;
+
+        const { title, icon, badge } = tabWidget.props as TabWidgetProps;
+
+        // Create a temporary element to measure the tab content
+        const tempTab = document.createElement('div');
+        tempTab.style.display = 'inline-flex';
+        tempTab.style.alignItems = 'center';
+        tempTab.style.gap = '6px';
+
+        // Add icon if present
+        if (icon) {
+          const iconSpan = document.createElement('span');
+          iconSpan.textContent = '🔧'; // Placeholder for icon
+          iconSpan.style.fontSize = '16px';
+          iconSpan.style.opacity = '0.6';
+          tempTab.appendChild(iconSpan);
+        }
+
+        // Add title
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = title;
+        tempTab.appendChild(titleSpan);
+
+        // Add badge if present
+        if (badge) {
+          const badgeSpan = document.createElement('span');
+          badgeSpan.textContent = badge;
+          badgeSpan.style.marginLeft = '8px';
+          badgeSpan.style.padding = '2px 6px';
+          badgeSpan.style.fontSize = '12px';
+          badgeSpan.style.borderRadius = '4px';
+          badgeSpan.style.backgroundColor = 'var(--accent)';
+          tempTab.appendChild(badgeSpan);
+        }
+
+        // Add close/refresh buttons space
+        const buttonsSpan = document.createElement('span');
+        buttonsSpan.style.marginLeft = '8px';
+        buttonsSpan.style.width = '24px'; // Approximate space for buttons
+        tempTab.appendChild(buttonsSpan);
+
+        tempContainer.appendChild(tempTab);
+
+        const tabWidth = tempTab.offsetWidth;
+        tempContainer.removeChild(tempTab);
+
+        // Check if this tab fits in the remaining space
+        if (currentWidth + tabWidth <= containerWidth) {
+          newVisibleTabs.push(tabId);
+          currentWidth += tabWidth;
+        } else {
+          // This tab doesn't fit, so it and all remaining tabs go to dropdown
+          newHiddenTabs.push(tabId);
+          // Add all remaining tabs to hidden list
+          const remainingTabIds = tabOrder.slice(tabOrder.indexOf(tabId) + 1);
+          newHiddenTabs.push(...remainingTabIds);
+          break; // Stop processing - order is preserved
+        }
+      }
+    } finally {
+      document.body.removeChild(tempContainer);
     }
-  }, []);
 
-  const debouncedCheckOverflow = useDebounce(checkOverflow, 100);
+    setVisibleTabs(newVisibleTabs);
+    setHiddenTabs(newHiddenTabs);
+  }, [tabOrder, tabWidgets, dropdownOpen]);
+
+  const debouncedCalculateVisibleTabs = useDebounce(calculateVisibleTabs, 100);
 
   React.useEffect(() => {
-    checkOverflow();
-    window.addEventListener('resize', debouncedCheckOverflow);
+    calculateVisibleTabs();
+    window.addEventListener('resize', debouncedCalculateVisibleTabs);
     return () => {
-      window.removeEventListener('resize', debouncedCheckOverflow);
+      window.removeEventListener('resize', debouncedCalculateVisibleTabs);
     };
-  }, [checkOverflow, debouncedCheckOverflow]);
+  }, [calculateVisibleTabs, debouncedCalculateVisibleTabs]);
 
   React.useEffect(() => {
-    checkOverflow();
-  }, [tabOrder.length, checkOverflow]);
+    calculateVisibleTabs();
+  }, [tabOrder, calculateVisibleTabs]);
 
   // Keep ref in sync with state
   React.useEffect(() => {
@@ -529,17 +622,16 @@ export const TabsLayoutWidget = ({
             <SortableContext items={tabOrder}>
               <TabsList
                 ref={tabsListRef}
-                className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap overflow-x-auto scrollbar-hide"
-                style={{
-                  msOverflowStyle: 'none',
-                  scrollbarWidth: 'none',
-                }}
+                className="relative h-auto w-full gap-0.5 mt-3 bg-transparent p-0 flex justify-start flex-nowrap"
               >
                 {orderedTabWidgets.map(tabWidget => {
                   if (!React.isValidElement(tabWidget)) return null;
                   const props = tabWidget.props as Partial<TabWidgetProps>;
                   if (!props.id) return null;
                   const { id } = props;
+
+                  // Only render tabs that are visible
+                  if (!visibleTabs.includes(id)) return null;
 
                   return (
                     <SortableTabTrigger
@@ -566,8 +658,8 @@ export const TabsLayoutWidget = ({
             </SortableContext>
           </DndContext>
 
-          {/* Only render dropdown if overflowing */}
-          {isOverflowing && (
+          {/* Only render dropdown if there are hidden tabs */}
+          {hiddenTabs.length > 0 && (
             <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -595,6 +687,9 @@ export const TabsLayoutWidget = ({
                           };
                         if (!props.id) return null;
                         const { title, id, key } = props;
+
+                        // Only render tabs that are hidden
+                        if (!hiddenTabs.includes(id)) return null;
 
                         return (
                           <SortableDropdownMenuItem
