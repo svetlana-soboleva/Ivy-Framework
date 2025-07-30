@@ -33,25 +33,158 @@ public class JSCodeDemo: ViewBase
 
 ## Variants
 
-The CodeInput widget can be customized with different languages for syntax highlighting:
+The `CodeInput` widget can be customized with different languages for syntax highlighting:
 
-```csharp demo-tabs
-public class LanguageHighlightDemo : ViewBase
+### Languages.Csharp variant 
+
+The following code shows how to use this variant to make the syntax highlighting work 
+for C#. 
+
+```csharp demo-below
+public class CSharpLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+        var csCode = UseState("Console.WriteLine(\"Hello World!\");");
+        return Layout.Vertical()
+                    | Text.H3("C#")
+                    | Text.Html("<i>Enter C# code below!</i>") 
+                    | csCode.ToCodeInput().Language(Languages.Csharp);
+    }
+}
+```
+
+### Languages.JavaScript variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for Javascript.
+
+```csharp demo-below
+public class JavaScriptLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
     {    
         var jsCode = UseState("console.log('hello world!');");
-        var csCode = UseState("Console.WriteLine(\"Hello World!\");");
+        return Layout.Vertical()
+                    | Text.H3("JavaScript")
+                    | Text.Html("<i>Enter JavaScript code below!</i>") 
+                    | jsCode.ToCodeInput().Language(Languages.Javascript);
+    }
+}
+```
+
+### Languages.Python variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for Python.
+
+```csharp demo-below
+public class PythonLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
         var pyCode = UseState("print('hello world!')");
+        return Layout.Vertical()
+                    | Text.H3("Python")
+                    | Text.Html("<i>Enter Python code below!</i>") 
+                    | pyCode.ToCodeInput().Language(Languages.Python);
+    }
+}
+```
+
+### Languages.Sql variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for SQL.
+
+```csharp demo-below
+public class SqlLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
         var sqlCode = UseState("select * from employees;");
-        var htmlCode = UseState("<h1> Hello World! </h1>");
+        return Layout.Vertical()
+                    | Text.H3("Sql")
+                    | Text.Html("<i>Enter SQL code below!</i>") 
+                    | sqlCode.ToCodeInput().Language(Languages.Sql);
+    }
+}
+```
+
+### Languages.Html variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for HTML.
+
+```csharp demo-below
+public class HtmlLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+        var htmlCode = UseState("<html><body><h1>Hello World!</h1></body></html>");
+        return Layout.Vertical()
+                    | Text.H3("HTML")
+                    | Text.Html("<i>Enter HTML code below!</i>") 
+                    | htmlCode.ToCodeInput().Language(Languages.Html);
+    }
+}
+```
+
+### Languages.Json variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for JSON.
+
+```csharp demo-tabs
+public class JsonLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+        var jsonCode = UseState(@"{ ""name"" : ""Ivy"", ""version"" : ""1.0.0""}");
+        return Layout.Vertical()
+                    | Text.H3("JSON")
+                    | Text.Html("<i>Enter JSON below!</i>") 
+                    | jsonCode.ToCodeInput().Language(Languages.Json);
+    }
+}
+```
+
+
+### Languages.Css variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for CSS.
+
+```csharp demo-tabs
+public class CssLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
         var cssCode = UseState(@"<style>
                                 p {
                                   text-align: center;
                                   color: red;
                                 } 
                                 </style>");
-        var dbmlCode = UseState(
+        return Layout.Vertical()
+                    | Text.H3("CSS")
+                    | Text.Html("<i>Enter CSS below!</i>") 
+                    | cssCode.ToCodeInput().Language(Languages.Css);
+    }
+}
+```
+
+### Languages.Dbml variant
+
+The following code shows how to use this variant to make the syntax highlighting work
+for DBML.
+
+```csharp demo-tabs
+public class DbmlLanguageHighlightDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+         var dbmlCode = UseState(
             @"Table users {
                     id integer [primary key]
                     username varchar
@@ -65,51 +198,14 @@ public class LanguageHighlightDemo : ViewBase
                 user_id integer
                 created_at timestamp
             }");
-        var jsonCode = UseState(@"{ name : ""Ivy"", version : ""1.0.0""}");
-        return Layout.Vertical()
-            | Layout.Grid().Columns(2) 
-                | Layout.Vertical()
-                    | Text.H3("JavaScript")
-                    | Text.Small("Enter JavaScript code below!") 
-                | jsCode.ToCodeInput().Language(Languages.Javascript)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("C#")
-                    | Text.Small("Enter C# code below!")
-                | csCode.ToCodeInput().Language(Languages.Csharp)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("Python")
-                    | Text.Small("Enter Python code below!")
-                | pyCode.ToCodeInput().Language(Languages.Python)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("SQL")
-                    | Text.Small("Enter SQL code below!")
-                | sqlCode.ToCodeInput().Language(Languages.Sql)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("CSS")
-                    | Text.Small("Enter CSS code below!")
-                | cssCode.ToCodeInput().Language(Languages.Css)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("HTML")
-                    | Text.Small("Enter HTML code below!")
-                | htmlCode.ToCodeInput().Language(Languages.Html)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
-                    | Text.H3("JSON")
-                    | Text.Small("Enter JSON code below!")
-                | jsonCode.ToCodeInput().Language(Languages.Json)
-            | Layout.Grid().Columns(2)
-                | Layout.Vertical()
+         return Layout.Vertical()
                     | Text.H3("DBML")
-                    | Text.Small("Enter DBML code below!")
-                | dbmlCode.ToCodeInput().Language(Languages.Dbml);        
-    }   
-}    
+                    | Text.Html("<i>Enter DBML below!</i>") 
+                    | dbmlCode.ToCodeInput().Language(Languages.Dbml);
+    }
+}
 ```
+
 
 ## Styling 
 There are several styles that can be applied to these code inputs. 

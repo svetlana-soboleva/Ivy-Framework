@@ -47,7 +47,7 @@ public class NumberSliderInput : ViewBase
     {        
         var tapes = UseState(1.0);
         var cart = UseState("");
-        return Layout.Horizontal()
+        return Layout.Vertical()
                 | Text.Block("Tapes")
                 | new NumberInput<double>(
                       tapes.Value,

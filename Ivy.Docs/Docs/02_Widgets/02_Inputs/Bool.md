@@ -45,6 +45,33 @@ You can create `BoolInput` instances in several ways:
 
 The non-generic `BoolInput` constructor is the most convenient when you need a simple boolean input without nullable types or other boolean-like representations.
 
+## Nullable Bool Inputs
+
+Null values are supported for boolean values. The following example shows it in action.
+These values are useful in situations where boolean values can be either not set (`null`) 
+or set (`true` or `false`). These can be really handy to capture different answers from 
+questions in a survey. 
+
+```csharp demo-below
+
+public class NullableBoolDemo: ViewBase
+{
+    public override object? Build()
+    {
+        var going = UseState((bool?)null);
+        var status = UseState("");
+        if(going.Value == null)
+            status.Set("Not answered");
+        else 
+            status.Set(going.Value == true ? "Yes!" : "No, not yet!");
+        return Layout.Vertical()
+                | Text.Small("Have you booked return tickets?")
+                | Text.Html($"<i>{status}</i>")
+                | going.ToSwitchInput();        
+    }    
+}
+```
+
 ## Variants
 
 There are three variants of bool inputs. The following blocks show how to create and use them.

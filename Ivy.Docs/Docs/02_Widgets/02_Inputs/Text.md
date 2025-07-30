@@ -276,8 +276,8 @@ We can use associate keyboard shortcuts to text inputs the following way.
 
 ```csharp
  new TextInput(name)
-    .Placeholder("Name (Ctrl+N)")
-    .ShortcutKey("Ctrl+N")   
+    .Placeholder("Name (Ctrl+S)")
+    .ShortcutKey("Ctrl+S")   
 ```
 
 The following demo shows this in action with multiple text inputs each
@@ -293,10 +293,10 @@ public class ShortCutDemo : ViewBase
         var message = UseState("");
         return Layout.Vertical()
                 | new TextBlock("Keyboard Shortcuts Demo")
-                | new TextBlock("Ctrl+N - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")  
+                | new TextBlock("Ctrl+F - Focus Name, Ctrl+E - Focus Email, Ctrl+M - Focus Message")  
                 | new TextInput(name)
-                      .Placeholder("Name (Ctrl+N)")
-                      .ShortcutKey("Ctrl+N")    
+                      .Placeholder("Name (Ctrl+F)")
+                      .ShortcutKey("Ctrl+F")    
                 | new TextInput(email)
                       .Placeholder("Email (Ctrl+E)")
                       .ShortcutKey("Ctrl+E")
