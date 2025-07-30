@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Azure.Identity;
 using Ivy.Hooks;
 
 namespace Ivy.Auth.MicrosoftEntra;
@@ -20,10 +19,9 @@ public class MicrosoftEntraOAuthException(string? error, string? errorCode, stri
 public class MicrosoftEntraAuthProvider : IAuthProvider
 {
     private readonly IConfidentialClientApplication _app;
-    private readonly GraphServiceClient _graphServiceClient;
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email"];
 
-    private readonly List<AuthOption> _authOptions = new();
+    private readonly List<AuthOption> _authOptions = [];
 
     private string? _codeVerifier = null;
 
@@ -38,20 +36,18 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         var clientId = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_ID") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_ID is required");
         var clientSecret = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_SECRET") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_SECRET is required");
 
+        // Create a confidential client application for OAuth flow
         _app = ConfidentialClientApplicationBuilder
             .Create(clientId)
             .WithClientSecret(clientSecret)
             .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}"))
+            // TODO: don't hardcode this
+            .WithRedirectUri("http://localhost:5010/webhook")
             .Build();
-
-        var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-        _graphServiceClient = new GraphServiceClient(credential);
     }
 
-    public async Task<AuthToken?> LoginAsync(string email, string password)
-    {
-        throw new NotSupportedException("Microsoft Entra does not support password authentication directly. Use OAuth flow instead.");
-    }
+    public Task<AuthToken?> LoginAsync(string email, string password)
+        => throw new InvalidOperationException("Microsoft Entra login with email/password is not supported");
 
     public async Task<Uri> GetOAuthUriAsync(AuthOption option, WebhookEndpoint callback)
     {
@@ -60,11 +56,12 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
         var authUrl = await _app
             .GetAuthorizationRequestUrl(_scopes)
-            .WithRedirectUri(callback.GetUri().ToString())
+            .WithRedirectUri(callback.GetUri(includeIdInPath: false).ToString())
             .WithExtraQueryParameters(new Dictionary<string, string>
             {
                 ["code_challenge"] = codeChallenge,
-                ["code_challenge_method"] = "S256"
+                ["code_challenge_method"] = "S256",
+                ["state"] = callback.Id,
             })
             .ExecuteAsync();
 
@@ -73,15 +70,15 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
     public async Task<AuthToken?> HandleOAuthCallbackAsync(HttpRequest request)
     {
-        var code = request.Query["code"];
-        var error = request.Query["error"];
-        var errorDescription = request.Query["error_description"];
+        var code = request.Query["code"].ToString();
+        var error = request.Query["error"].ToString();
+        var errorDescription = request.Query["error_description"].ToString();
 
-        if (error.Count > 0 || errorDescription.Count > 0)
+        if (error.Length > 0 || errorDescription.Length > 0)
         {
             throw new MicrosoftEntraOAuthException(error, null, errorDescription);
         }
-        else if (code.Count == 0)
+        else if (code.Length == 0)
         {
             throw new Exception("Received no authorization code from Microsoft Entra.");
         }
@@ -91,55 +88,65 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             throw new Exception("Code verifier not found. OAuth flow was not properly initiated.");
         }
 
-        try
-        {
-            var result = await _app.AcquireTokenByAuthorizationCode(_scopes, code)
-                .WithPkceCodeVerifier(_codeVerifier)
-                .ExecuteAsync();
+        var result = await _app.AcquireTokenByAuthorizationCode(_scopes, code)
+            .WithPkceCodeVerifier(_codeVerifier)
+            .ExecuteAsync();
 
-            var authToken = new AuthToken(
-                result.AccessToken,
-                result.Account?.HomeAccountId?.Identifier,
-                result.ExpiresOn
-            );
+        var authToken = new AuthToken(
+            result.AccessToken,
+            result.Account?.HomeAccountId?.Identifier,
+            result.ExpiresOn
+        );
 
-            return authToken;
-        }
-        catch (MsalException ex)
-        {
-            throw new MicrosoftEntraOAuthException(ex.ErrorCode, ex.ErrorCode, ex.Message);
-        }
+        return authToken;
     }
 
     public async Task LogoutAsync(string jwt)
     {
         // For Microsoft Entra, logout typically involves clearing the token cache
         // The actual logout URL would be handled by the client application
-        var accounts = await _app.GetAccountsAsync();
-        foreach (var account in accounts)
-        {
-            await _app.RemoveAsync(account);
-        }
+        await _app.RemoveAsync(null);
     }
 
     public async Task<AuthToken?> RefreshJwtAsync(AuthToken jwt)
     {
-        if (jwt.ExpiresAt == null || jwt.RefreshToken == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
+        if (jwt.ExpiresAt == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
         {
             // Refresh not needed (or not possible).
             return jwt;
         }
 
+        if (string.IsNullOrEmpty(jwt.RefreshToken))
+        {
+            // Can't refresh without account identifier
+            return null;
+        }
+
         try
         {
-            var accounts = await _app.GetAccountsAsync();
-            var account = accounts.FirstOrDefault();
-
-            if (account == null)
+            // Get all accounts from token cache
+            IEnumerable<IAccount> accounts;
+            try
             {
+                // Use GetAccountsAsync but we'll handle finding the right account ourselves
+                accounts = await _app.GetAccountsAsync();
+            }
+            catch (MsalException)
+            {
+                // Fallback if GetAccountsAsync fails
                 return null;
             }
 
+            // Try to find the account using the RefreshToken (which stores the account identifier)
+            var account = accounts.FirstOrDefault(a => a.HomeAccountId.Identifier == jwt.RefreshToken);
+
+            if (account == null)
+            {
+                // Account not found in token cache
+                return null;
+            }
+
+            // Acquire token silently using the account
             var result = await _app.AcquireTokenSilent(_scopes, account)
                 .ExecuteAsync();
 
@@ -202,12 +209,12 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
     public AuthOption[] GetAuthOptions()
     {
-        return _authOptions.ToArray();
+        return [.. _authOptions];
     }
 
     public MicrosoftEntraAuthProvider UseMicrosoftEntra()
     {
-        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Microsoft", "microsoft", Icons.None));
+        _authOptions.Add(new AuthOption(AuthFlow.OAuth, "Microsoft", "microsoft", Icons.Microsoft));
         return this;
     }
 
