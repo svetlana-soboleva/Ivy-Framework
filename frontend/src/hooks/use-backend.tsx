@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast';
@@ -198,27 +198,81 @@ export const useBackend = (
     [toast]
   );
 
+  // Global connection cache to survive component unmounting during tab reordering
+  const connectionCache = useRef<Map<string, signalR.HubConnection>>(new Map());
+
   useEffect(() => {
+    const connectionKey = `${appId}::${appArgs ?? ''}::${parentId ?? ''}::${machineId}`;
+
+    // Check if we already have a connection for this app
+    const existingConnection = connectionCache.current.get(connectionKey);
+
+    if (
+      existingConnection &&
+      existingConnection.state === signalR.HubConnectionState.Connected
+    ) {
+      setConnection(existingConnection);
+      return;
+    }
+
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(
         `${getIvyHost()}/messages?appId=${appId ?? ''}&appArgs=${appArgs ?? ''}&machineId=${machineId}&parentId=${parentId ?? ''}`
       )
       .withAutomaticReconnect()
       .build();
+
+    // Cache the connection
+    connectionCache.current.set(connectionKey, newConnection);
     setConnection(newConnection);
+
+    // Cleanup old/disconnected connections periodically
+    return () => {
+      const cache = connectionCache.current;
+      // Don't immediately close connection on unmount - keep it alive for potential reuse
+      setTimeout(() => {
+        const conn = cache.get(connectionKey);
+        if (conn && conn.state === signalR.HubConnectionState.Disconnected) {
+          cache.delete(connectionKey);
+        }
+      }, 5000); // Give 5 seconds for potential remount during tab reordering
+    };
   }, [appArgs, appId, machineId, parentId]);
 
   useEffect(() => {
     if (connection) {
-      connection
-        .start()
-        .then(() => {
-          logger.info('✅ WebSocket connection established for:', {
-            appId,
-            parentId,
-            connectionId: connection.connectionId,
-          });
+      const setupConnection = async () => {
+        try {
+          // Only start connection if it's not already connected
+          if (connection.state === signalR.HubConnectionState.Disconnected) {
+            await connection.start();
+            logger.info('✅ WebSocket connection established for:', {
+              appId,
+              parentId,
+              connectionId: connection.connectionId,
+            });
+          } else if (
+            connection.state === signalR.HubConnectionState.Connected
+          ) {
+            logger.info('✅ WebSocket connection reused for:', {
+              appId,
+              parentId,
+              connectionId: connection.connectionId,
+            });
+          }
 
+          // Remove existing handlers to avoid duplicates
+          connection.off('Refresh');
+          connection.off('Update');
+          connection.off('Toast');
+          connection.off('Error');
+          connection.off('SetJwt');
+          connection.off('SetTheme');
+          connection.off('CopyToClipboard');
+          connection.off('OpenUrl');
+          connection.off('HotReload');
+
+          // Setup handlers
           connection.on('Refresh', message => {
             logger.debug(`[${connection.connectionId}] Refresh`, message);
             handleRefreshMessage(message);
@@ -278,12 +332,15 @@ export const useBackend = (
             logger.warn(`[${connection.connectionId}] Closed`);
             setDisconnected(true);
           });
-        })
-        .catch(e => {
+        } catch (e) {
           logger.error('SignalR connection failed:', e);
-        });
+        }
+      };
+
+      setupConnection();
 
       return () => {
+        // Don't close the connection on cleanup - let it be reused
         connection.off('Refresh');
         connection.off('Update');
         connection.off('Toast');
@@ -307,6 +364,8 @@ export const useBackend = (
     handleSetJwt,
     handleSetTheme,
     handleError,
+    appId,
+    parentId,
   ]);
 
   const eventHandler: WidgetEventHandlerType = useCallback(
