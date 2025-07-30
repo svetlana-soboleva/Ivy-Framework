@@ -120,7 +120,7 @@ export const useBackend = (
       }
       logger.debug(`[${connectionId}]`, xml);
     }
-  }, [widgetTree, connectionId]);
+  }, [widgetTree]);
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     setWidgetTree(message.widgets);
@@ -205,21 +205,15 @@ export const useBackend = (
     const connectionKey = `${appId}::${appArgs ?? ''}::${parentId ?? ''}::${machineId}`;
     const cache = connectionCache.current;
 
-    // Only use connection caching for tabs within a TabsLayout (when parentId exists and looks like a tab parent)
-    // This ensures page navigation gets fresh connections while tab reordering reuses connections
-    const isTabContext = parentId !== null && parentId.includes('Tab');
+    // Check if we already have a connection for this app
+    const existingConnection = cache.get(connectionKey);
 
-    if (isTabContext) {
-      // Check if we already have a connection for this tab
-      const existingConnection = cache.get(connectionKey);
-
-      if (
-        existingConnection &&
-        existingConnection.state === signalR.HubConnectionState.Connected
-      ) {
-        setConnection(existingConnection);
-        return;
-      }
+    if (
+      existingConnection &&
+      existingConnection.state === signalR.HubConnectionState.Connected
+    ) {
+      setConnection(existingConnection);
+      return;
     }
 
     const newConnection = new signalR.HubConnectionBuilder()
@@ -229,23 +223,19 @@ export const useBackend = (
       .withAutomaticReconnect()
       .build();
 
-    // Cache the connection only for tabs
-    if (isTabContext) {
-      cache.set(connectionKey, newConnection);
-    }
+    // Cache the connection
+    cache.set(connectionKey, newConnection);
     setConnection(newConnection);
 
-    // Cleanup old/disconnected connections periodically (only for cached connections)
+    // Cleanup old/disconnected connections periodically
     return () => {
-      if (isTabContext) {
-        // Don't immediately close connection on unmount - keep it alive for potential reuse
-        setTimeout(() => {
-          const conn = cache.get(connectionKey);
-          if (conn && conn.state === signalR.HubConnectionState.Disconnected) {
-            cache.delete(connectionKey);
-          }
-        }, 5000); // Give 5 seconds for potential remount during tab reordering
-      }
+      // Don't immediately close connection on unmount - keep it alive for potential reuse
+      setTimeout(() => {
+        const conn = cache.get(connectionKey);
+        if (conn && conn.state === signalR.HubConnectionState.Disconnected) {
+          cache.delete(connectionKey);
+        }
+      }, 5000); // Give 5 seconds for potential remount during tab reordering
     };
   }, [appArgs, appId, machineId, parentId]);
 
