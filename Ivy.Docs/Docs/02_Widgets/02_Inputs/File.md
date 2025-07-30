@@ -83,7 +83,7 @@ public class MultiFileSelectionDemo : ViewBase
         
         var filesState = UseState<IEnumerable<FileInput>>([]);
         var selected = UseState("");
-        if(filesState.Value.Count()> 0)
+        if(filesState.Value.Count() > 0)
         {
             selected.Set($"Files selected: {string.Join(", ", filesState.Value?.Select(f => f.Name) ?? new string[0])}");
         }   
