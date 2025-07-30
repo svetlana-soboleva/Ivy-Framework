@@ -36,7 +36,19 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   autoCollapseThreshold = 768,
   mainAppSidebar = false,
 }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Initialize sidebar state based on current window width (only for main app sidebar)
+  const getInitialSidebarState = () => {
+    if (!mainAppSidebar) return true;
+
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= autoCollapseThreshold;
+    }
+
+    return true; // Default to open if we can't determine width
+  };
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(getInitialSidebarState);
   const [isManuallyToggled, setIsManuallyToggled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
