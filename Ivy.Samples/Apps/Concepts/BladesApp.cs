@@ -23,7 +23,7 @@ public class RootView(string someId) : ViewBase
         {
             bladeController.Push(this, new RootView(@event.Sender.Tag?.ToString() ?? "?"), $"Blade {index + 1}");
         }
-        
+
         void OnClickWithError(Event<Button> @event)
         {
             bladeController.Push(this, new BladeWithError(), "Blade With Error");
