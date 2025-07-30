@@ -297,7 +297,7 @@ const renderMenuItems = (
       if (level === 0) {
         return (
           <div key={item.label} className="space-y-1 mt-6 first:mt-0">
-            <h4 className="px-3 py-2 text-small-label font-medium text-muted-foreground mb-0">
+            <h4 className="px-3 py-2 text-small-label text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">
@@ -325,7 +325,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-large-body font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-body hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -338,7 +338,7 @@ const renderMenuItems = (
         return (
           <li key={item.tag}>
             <button
-              className="flex w-full items-center gap-2 rounded-lg p-2 text-large-body font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
+              className="flex w-full items-center gap-2 rounded-lg p-2 text-body hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
@@ -401,7 +401,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
       if (item.children && item.children.length > 0) {
         return (
           <div key={item.label} className="space-y-1 mt-6 first:mt-0">
-            <h4 className="px-3 py-2 text-small-label font-medium text-muted-foreground mb-0">
+            <h4 className="px-3 py-2 text-small-label text-muted-foreground mb-0">
               {item.label}
             </h4>
             <ul className="space-y-1">

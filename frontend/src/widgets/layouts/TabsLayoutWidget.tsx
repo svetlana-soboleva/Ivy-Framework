@@ -138,7 +138,7 @@ function SortableDropdownMenuItem({
       {...listeners}
       onClick={onClick}
       className={cn(
-        'group w-full flex items-center px-2 py-1.5 text-large-body cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
+        'group w-full flex items-center px-2 py-1.5 text-body cursor-pointer select-none rounded-sm transition-colors hover:bg-accent',
         isActive && 'bg-accent text-accent-foreground'
       )}
     >
