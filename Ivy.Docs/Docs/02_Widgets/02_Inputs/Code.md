@@ -201,7 +201,7 @@ public class DbmlLanguageHighlightDemo : ViewBase
          return Layout.Vertical()
                     | Text.H3("DBML")
                     | Text.Html("<i>Enter DBML below!</i>") 
-                    | dbmlCode.ToCodeInput().Language(Languages.Css);
+                    | dbmlCode.ToCodeInput().Language(Languages.Dbml);
     }
 }
 ```
