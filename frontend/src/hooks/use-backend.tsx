@@ -213,7 +213,7 @@ export const useBackend = (
       connection
         .start()
         .then(() => {
-          console.log('✅ WebSocket connection established for:', {
+          logger.info('✅ WebSocket connection established for:', {
             appId,
             parentId,
             connectionId: connection.connectionId,
