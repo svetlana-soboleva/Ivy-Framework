@@ -194,6 +194,7 @@ export const TabsLayoutWidget = ({
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
   const tabWidgetsRef = React.useRef(tabWidgets);
+  const tabOrderRef = React.useRef(tabOrder);
 
   // Restore animated underline logic for 'Content' variant
   const [activeIndex, setActiveIndex] = React.useState(selectedIndex ?? 0);
@@ -202,10 +203,14 @@ export const TabsLayoutWidget = ({
     width: '0px',
   });
 
-  // Update tabWidgets ref when it changes
+  // Update refs when they change
   React.useEffect(() => {
     tabWidgetsRef.current = tabWidgets;
   }, [tabWidgets]);
+
+  React.useEffect(() => {
+    tabOrderRef.current = tabOrder;
+  }, [tabOrder]);
 
   React.useEffect(() => {
     if (variant !== 'Content') return;
@@ -366,7 +371,7 @@ export const TabsLayoutWidget = ({
 
   // Sync tab order on add/remove
   React.useEffect(() => {
-    const prev = tabOrder;
+    const prev = tabOrderRef.current;
     const currentTabIds = tabWidgets.map(
       tab => (tab as React.ReactElement<TabWidgetProps>).props.id
     );
@@ -376,7 +381,7 @@ export const TabsLayoutWidget = ({
     if (added.length || removed.length) {
       setTabOrder(currentTabIds);
     }
-  }, [tabWidgets, tabOrder]);
+  }, [tabWidgets]);
 
   // Load active tab
   React.useEffect(() => {
