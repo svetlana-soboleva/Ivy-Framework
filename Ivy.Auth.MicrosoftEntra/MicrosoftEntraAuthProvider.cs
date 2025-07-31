@@ -23,6 +23,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
+    byte[]? _serializedRefreshTokens = null;
 
     private string? _codeVerifier = null;
 
@@ -58,6 +59,19 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .WithAuthority(new Uri($"https://login.microsoftonline.com/{_tenantId}"))
             .WithRedirectUri(baseUrl)
             .Build();
+
+        _app.UserTokenCache.SetBeforeAccess(args =>
+        {
+            if (_serializedRefreshTokens != null)
+            {
+                args.TokenCache.DeserializeAdalV3(_serializedRefreshTokens);
+            }
+        });
+
+        _app.UserTokenCache.SetAfterAccess(args =>
+        {
+            _serializedRefreshTokens = args.TokenCache.SerializeAdalV3();
+        });
     }
 
     private IConfidentialClientApplication GetApp()
@@ -116,24 +130,17 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .WithPkceCodeVerifier(_codeVerifier)
             .ExecuteAsync();
 
-        Console.WriteLine($"logged in: {new AuthToken(
-            result.AccessToken,
-            null,
-            result.ExpiresOn,
-            result.Account.HomeAccountId?.Identifier
-        )}");
-
         return new AuthToken(
             result.AccessToken,
-            null,
+            GetCurrentRefreshToken(),
             result.ExpiresOn,
             result.Account.HomeAccountId?.Identifier
         );
-
     }
 
     public async Task LogoutAsync(string jwt)
     {
+        _serializedRefreshTokens = null;
         await GetApp().RemoveAsync(null);
     }
 
@@ -141,25 +148,34 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     {
         var app = GetApp();
 
-        if (app is not IByRefreshToken refresher
-            || jwt.Tag is not JsonElement tag
+        if (jwt.Tag is not JsonElement tag
             || tag.GetString() is not string accountId
             || accountId.Length <= 0)
         {
             return jwt;
         }
 
-        // if (jwt.ExpiresAt == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
+        // if (jwt.ExpiresAt == null || jwt.RefreshToken == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
         // {
-        //     // Refresh not needed (token hasn't expired yet)
         //     return jwt;
         // }
+
+        if (jwt.RefreshToken == null)
+        {
+            return jwt;
+        }
+
+        _serializedRefreshTokens = Convert.FromBase64String(jwt.RefreshToken!);
 
         try
         {
             var account = await app.GetAccountAsync(accountId);
 
-            if (account != null)
+            if (account == null)
+            {
+                return jwt;
+            }
+            else
             {
                 var result = await GetApp().AcquireTokenSilent(_scopes, account)
                     .ExecuteAsync();
@@ -169,28 +185,10 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
                     return jwt;
                 }
 
-                return new AuthToken(
-                    result.AccessToken,
-                    null,
-                    result.ExpiresOn,
-                    account.HomeAccountId?.Identifier
-                );
-            }
-            else
-            {
-                var result = await refresher.AcquireTokenByRefreshToken(_scopes, jwt.RefreshToken)
-                    .ExecuteAsync();
-
-                if (result == null)
-                {
-                    return jwt;
-                }
-
-                account = result.Account;
 
                 return new AuthToken(
                     result.AccessToken,
-                    null,
+                    GetCurrentRefreshToken(),
                     result.ExpiresOn,
                     account.HomeAccountId?.Identifier
                 );
@@ -279,4 +277,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .Replace('/', '_');
     }
 
+    private string? GetCurrentRefreshToken() => _serializedRefreshTokens != null
+        ? Convert.ToBase64String(_serializedRefreshTokens)
+        : null;
 }
