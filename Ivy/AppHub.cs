@@ -85,6 +85,8 @@ public class AppHub(
         if (isAuthProtected)
         {
             var authProvider = server.Services.BuildServiceProvider().GetService<IAuthProvider>() ?? throw new Exception("IAuthProvider not found");
+            authProvider.SetHttpContext(httpContext);
+
             var jwt = httpContext.Request.Cookies["jwt"].NullIfEmpty();
 
             try

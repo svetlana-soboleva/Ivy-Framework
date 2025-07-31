@@ -18,12 +18,16 @@ public class MicrosoftEntraOAuthException(string? error, string? errorCode, stri
 
 public class MicrosoftEntraAuthProvider : IAuthProvider
 {
-    private readonly IConfidentialClientApplication _app;
+    private IConfidentialClientApplication? _app;
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email"];
 
     private readonly List<AuthOption> _authOptions = [];
 
     private string? _codeVerifier = null;
+
+    private readonly string _tenantId;
+    private readonly string _clientId;
+    private readonly string _clientSecret;
 
     public MicrosoftEntraAuthProvider()
     {
@@ -32,18 +36,35 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .AddUserSecrets(Assembly.GetEntryAssembly()!)
             .Build();
 
-        var tenantId = configuration.GetValue<string>("MICROSOFT_ENTRA_TENANT_ID") ?? throw new Exception("MICROSOFT_ENTRA_TENANT_ID is required");
-        var clientId = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_ID") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_ID is required");
-        var clientSecret = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_SECRET") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_SECRET is required");
+        _tenantId = configuration.GetValue<string>("MICROSOFT_ENTRA_TENANT_ID") ?? throw new Exception("MICROSOFT_ENTRA_TENANT_ID is required");
+        _clientId = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_ID") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_ID is required");
+        _clientSecret = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_SECRET") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_SECRET is required");
+    }
+
+    public void SetHttpContext(HttpContext context)
+    {
+        if (_app != null)
+        {
+            return;
+        }
 
         // Create a confidential client application for OAuth flow
         _app = ConfidentialClientApplicationBuilder
-            .Create(clientId)
-            .WithClientSecret(clientSecret)
-            .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}"))
-            // TODO: don't hardcode this
-            .WithRedirectUri("http://localhost:5010/webhook")
+            .Create(_clientId)
+            .WithClientSecret(_clientSecret)
+            .WithAuthority(new Uri($"https://login.microsoftonline.com/{_tenantId}"))
+            .WithRedirectUri(WebhookEndpoint.BuildBaseUrl(context.Request.Scheme, context.Request.Host.Value!))
             .Build();
+    }
+
+    private IConfidentialClientApplication GetApp()
+    {
+        if (_app == null)
+        {
+            throw new InvalidOperationException("SetHttpContext() must be called before GetApp()");
+        }
+
+        return _app;
     }
 
     public Task<AuthToken?> LoginAsync(string email, string password)
@@ -54,7 +75,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         _codeVerifier = GenerateCodeVerifier();
         var codeChallenge = GenerateCodeChallenge(_codeVerifier);
 
-        var authUrl = await _app
+        var authUrl = await GetApp()
             .GetAuthorizationRequestUrl(_scopes)
             .WithRedirectUri(callback.GetUri(includeIdInPath: false).ToString())
             .WithExtraQueryParameters(new Dictionary<string, string>
@@ -88,7 +109,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             throw new Exception("Code verifier not found. OAuth flow was not properly initiated.");
         }
 
-        var result = await _app.AcquireTokenByAuthorizationCode(_scopes, code)
+        var result = await GetApp().AcquireTokenByAuthorizationCode(_scopes, code)
             .WithPkceCodeVerifier(_codeVerifier)
             .ExecuteAsync();
 
@@ -105,7 +126,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     {
         // For Microsoft Entra, logout typically involves clearing the token cache
         // The actual logout URL would be handled by the client application
-        await _app.RemoveAsync(null);
+        await GetApp().RemoveAsync(null);
     }
 
     public async Task<AuthToken?> RefreshJwtAsync(AuthToken jwt)
@@ -129,7 +150,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             try
             {
                 // Use GetAccountsAsync but we'll handle finding the right account ourselves
-                accounts = await _app.GetAccountsAsync();
+                accounts = await GetApp().GetAccountsAsync();
             }
             catch (MsalException)
             {
@@ -147,7 +168,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             }
 
             // Acquire token silently using the account
-            var result = await _app.AcquireTokenSilent(_scopes, account)
+            var result = await GetApp().AcquireTokenSilent(_scopes, account)
                 .ExecuteAsync();
 
             return new AuthToken(
