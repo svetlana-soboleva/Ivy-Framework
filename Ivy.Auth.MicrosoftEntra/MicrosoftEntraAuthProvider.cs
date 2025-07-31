@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using Ivy.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,7 @@ public class MicrosoftEntraOAuthException(string? error, string? errorCode, stri
 public class MicrosoftEntraAuthProvider : IAuthProvider
 {
     private IConfidentialClientApplication? _app;
-    private readonly string[] _scopes = ["User.Read", "openid", "profile", "email"];
+    private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
 
@@ -49,11 +50,13 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         }
 
         // Create a confidential client application for OAuth flow
+        var baseUrl = WebhookEndpoint.BuildBaseUrl(context.Request.Scheme, context.Request.Host.Value!);
+
         _app = ConfidentialClientApplicationBuilder
             .Create(_clientId)
             .WithClientSecret(_clientSecret)
             .WithAuthority(new Uri($"https://login.microsoftonline.com/{_tenantId}"))
-            .WithRedirectUri(WebhookEndpoint.BuildBaseUrl(context.Request.Scheme, context.Request.Host.Value!))
+            .WithRedirectUri(baseUrl)
             .Build();
     }
 
@@ -113,72 +116,89 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .WithPkceCodeVerifier(_codeVerifier)
             .ExecuteAsync();
 
-        var authToken = new AuthToken(
+        Console.WriteLine($"logged in: {new AuthToken(
             result.AccessToken,
-            result.Account?.HomeAccountId?.Identifier,
-            result.ExpiresOn
+            null,
+            result.ExpiresOn,
+            result.Account.HomeAccountId?.Identifier
+        )}");
+
+        return new AuthToken(
+            result.AccessToken,
+            null,
+            result.ExpiresOn,
+            result.Account.HomeAccountId?.Identifier
         );
 
-        return authToken;
     }
 
     public async Task LogoutAsync(string jwt)
     {
-        // For Microsoft Entra, logout typically involves clearing the token cache
-        // The actual logout URL would be handled by the client application
         await GetApp().RemoveAsync(null);
     }
 
     public async Task<AuthToken?> RefreshJwtAsync(AuthToken jwt)
     {
-        if (jwt.ExpiresAt == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
+        var app = GetApp();
+
+        if (app is not IByRefreshToken refresher
+            || jwt.Tag is not JsonElement tag
+            || tag.GetString() is not string accountId
+            || accountId.Length <= 0)
         {
-            // Refresh not needed (or not possible).
             return jwt;
         }
 
-        if (string.IsNullOrEmpty(jwt.RefreshToken))
-        {
-            // Can't refresh without account identifier
-            return null;
-        }
+        // if (jwt.ExpiresAt == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
+        // {
+        //     // Refresh not needed (token hasn't expired yet)
+        //     return jwt;
+        // }
 
         try
         {
-            // Get all accounts from token cache
-            IEnumerable<IAccount> accounts;
-            try
+            var account = await app.GetAccountAsync(accountId);
+
+            if (account != null)
             {
-                // Use GetAccountsAsync but we'll handle finding the right account ourselves
-                accounts = await GetApp().GetAccountsAsync();
+                var result = await GetApp().AcquireTokenSilent(_scopes, account)
+                    .ExecuteAsync();
+
+                if (result == null)
+                {
+                    return jwt;
+                }
+
+                return new AuthToken(
+                    result.AccessToken,
+                    null,
+                    result.ExpiresOn,
+                    account.HomeAccountId?.Identifier
+                );
             }
-            catch (MsalException)
+            else
             {
-                // Fallback if GetAccountsAsync fails
-                return null;
+                var result = await refresher.AcquireTokenByRefreshToken(_scopes, jwt.RefreshToken)
+                    .ExecuteAsync();
+
+                if (result == null)
+                {
+                    return jwt;
+                }
+
+                account = result.Account;
+
+                return new AuthToken(
+                    result.AccessToken,
+                    null,
+                    result.ExpiresOn,
+                    account.HomeAccountId?.Identifier
+                );
             }
-
-            // Try to find the account using the RefreshToken (which stores the account identifier)
-            var account = accounts.FirstOrDefault(a => a.HomeAccountId.Identifier == jwt.RefreshToken);
-
-            if (account == null)
-            {
-                // Account not found in token cache
-                return null;
-            }
-
-            // Acquire token silently using the account
-            var result = await GetApp().AcquireTokenSilent(_scopes, account)
-                .ExecuteAsync();
-
-            return new AuthToken(
-                result.AccessToken,
-                result.Account?.HomeAccountId?.Identifier,
-                result.ExpiresOn
-            );
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error during token refresh: {ex.Message}");
             return null;
         }
     }
