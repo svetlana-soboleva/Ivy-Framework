@@ -232,7 +232,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                            | (user.Value.FullName != null
                                ? Text.Muted(user.Value.FullName!).Overflow(Overflow.Ellipsis)
                                : null!)
-                           | Text.Small(user.Value.Email).Overflow(Overflow.Ellipsis))
+                           | Text.Label(user.Value.Email).Overflow(Overflow.Ellipsis))
                         .Grow()
                         .Size(Size.Full().Min(0))
                         | Icons.ChevronsUpDown
