@@ -2,9 +2,9 @@
 
 The Icon widget displays vector icons from Ivy's built-in icon set. Icons enhance visual communication and can be customized with different colors and sizes.
 
-## Luicide Icons
+## Lucide Icons
 
-We use the [Luicide Icons](https://luicide.com/icons/) set, which is a collection of 1000+ free icons. You can find the full set [here](https://luicide.com/icons/).
+We use the [Lucide Icons](https://lucide.dev/icons/) set, which is a collection of 1000+ free icons. You can find the full set [here](https://lucide.dev/icons/).
 
 ```csharp demo-tabs
 Layout.Horizontal()
