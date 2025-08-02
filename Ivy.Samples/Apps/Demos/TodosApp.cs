@@ -25,7 +25,7 @@ public class TodosApp : SampleBase
                                 client.Toast($"New '{title}' todo added.", "Todos");
                                 newTitle.Set("");
                             }
-                        ).Icon(Icons.Plus).Variant(ButtonVariant.Default)
+                        ).Icon(Icons.Plus).Variant(ButtonVariant.Primary)
                     ).Width(Size.Full()),
                     Layout.Vertical(
                         todos.Value.Select(todo => new TodoItem(todo,

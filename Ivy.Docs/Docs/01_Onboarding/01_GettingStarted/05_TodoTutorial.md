@@ -71,7 +71,7 @@ return new Card().Title("Todos").Description("What do you want to get done today
                   client.Toast($"New '{title}' todo added.", "Todos");
                   newTitle.Set("");
               }
-          ).Icon(Icons.Plus).Variant(ButtonVariant.Default)
+          ).Icon(Icons.Plus).Variant(ButtonVariant.Primary)
        )
        | (Layout.Vertical()
           | todos.Value.Select(todo => new TodoItem(todo,

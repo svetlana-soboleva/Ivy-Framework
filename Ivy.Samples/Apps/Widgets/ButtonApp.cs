@@ -6,7 +6,7 @@ namespace Ivy.Samples.Apps.Widgets;
 public class ButtonApp() : SampleBase
 {
     private static readonly ButtonVariant[] Variants = [
-        ButtonVariant.Default,
+        ButtonVariant.Primary,
         ButtonVariant.Destructive,
         ButtonVariant.Secondary,
         ButtonVariant.Outline,
@@ -15,7 +15,7 @@ public class ButtonApp() : SampleBase
     ];
 
     private static readonly string[] VariantNames = [
-        "Default",
+        "Primary",
         "Destructive",
         "Secondary",
         "Outline",
