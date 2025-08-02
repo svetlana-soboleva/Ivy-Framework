@@ -1,21 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../Ivy/Directory.Build.props" Condition="Exists('../../Ivy/Directory.Build.props')" />
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <IsPackable>true</IsPackable>
     <PackageId>Ivy.Analyser</PackageId>
-    <PackageVersion>1.0.1</PackageVersion>
-    <Authors>Ivy Interactive</Authors>
+    <Company>Ivy Interactive</Company>
     <Description>Roslyn analyzer for enforcing proper Ivy hook usage</Description>
     <PackageTags>analyzers, roslyn, ivy</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <NoWarn>$(NoWarn);RS2007;RS2008</NoWarn>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +38,10 @@
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
