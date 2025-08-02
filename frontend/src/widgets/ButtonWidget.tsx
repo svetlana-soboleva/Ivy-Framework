@@ -19,7 +19,7 @@ interface ButtonWidgetProps {
   iconPosition?: 'Left' | 'Right';
   size?: 'Default' | 'Small' | 'Large';
   variant?:
-    | 'Default'
+    | 'Primary'
     | 'Inline'
     | 'Destructive'
     | 'Outline'
@@ -110,7 +110,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       size={buttonSize}
       onClick={handleClick}
       variant={
-        camelCase(variant) as
+        (variant === 'Primary' ? 'default' : camelCase(variant)) as
           | 'default'
           | 'destructive'
           | 'outline'

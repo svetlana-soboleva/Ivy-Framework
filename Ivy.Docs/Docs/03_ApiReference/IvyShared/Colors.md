@@ -190,7 +190,7 @@ public class ButtonColorsView : ViewBase
     public override object? Build()
     {
         return Layout.Vertical(
-            new Button("Primary Action").Variant(ButtonVariant.Default),
+            new Button("Primary Action").Variant(ButtonVariant.Primary),
             new Button("Secondary Action").Variant(ButtonVariant.Secondary),
             new Button("Destructive Action").Variant(ButtonVariant.Destructive)
         ).Gap(10);
