@@ -1,3 +1,5 @@
+#pragma warning disable IVYHOOK001
+
 using Ivy.Shared;
 
 namespace Ivy.Samples.Apps.Widgets.Inputs;
@@ -346,3 +348,5 @@ public class SelectInputApp : SampleBase
         };
     }
 }
+
+#pragma warning enable IVYHOOK001
