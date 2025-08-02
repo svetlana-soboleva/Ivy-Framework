@@ -433,16 +433,16 @@
   .text-large-body {
     font-family: 'Inter Variable', var(--font-sans);
     font-weight: 400;
-    font-size: 18px;
-    line-height: 26px;
+    font-size: 14px;
+    line-height: 22px;
     letter-spacing: 1%;
   }
 
   .text-body {
     font-family: 'Inter Variable', var(--font-sans);
     font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 14px;
+    line-height: 22px;
     letter-spacing: 2%;
   }
 
@@ -451,7 +451,7 @@
     font-family: 'Inter Variable', var(--font-sans);
     font-weight: 400;
     font-size: 12px;
-    line-height: 20px;
+    line-height: 18px;
     letter-spacing: 4%;
   }
 
