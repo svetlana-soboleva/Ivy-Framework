@@ -31,7 +31,7 @@ public enum Icons
     Vimeo, //<FaVimeo />
     Spotify, //<FaSpotify />
     Notion, //<FaNotion />
-    
+
     // Lucide Icons:
     AArrowDown,
     AArrowUp,
