@@ -265,15 +265,40 @@ public class TableIntegrationExample : ViewBase
 {
     public override object? Build()
     {
-        var products = new[] {
+        var products = UseState(() => new[] {
             new {Sku = "1234", Name = "T-shirt", Price = 10.0},
             new {Sku = "1235", Name = "Jeans", Price = 20.0}
+        });
+
+        var client = UseService<IClientProvider>();
+        var counter = UseState(0);
+
+        var addProduct = (Event<Button> e) =>
+        {
+            var newProduct = new { Sku = $"SKU{1000 + counter.Value}", Name = $"Product {counter.Value + 1}", Price = 15.0 + counter.Value };
+            products.Set(products.Value.Concat(new[] { newProduct }).ToArray());
+            counter.Set(counter.Value + 1);
+            client.Toast($"Added {newProduct.Name}", "Product Added");
         };
 
-        // Integration with Cards and Buttons
+        var clearProducts = (Event<Button> e) =>
+        {
+            products.Set(new[] {
+                new {Sku = "", Name = "", Price = 0.0}
+            }.Take(0).ToArray()); // Empty array of the same type
+            counter.Set(0);
+            client.Toast("All products cleared", "Products Cleared");
+        };
+
         return Layout.Vertical()
-            | new Card(products.ToTable()).Title("Product List")
-            | new Button("Add Product");
+            | new Card(
+                Layout.Vertical()
+                    | products.Value.ToTable().Width(Size.Full())
+                    | Layout.Horizontal().Gap(2)
+                        | new Button("Add Product", addProduct).Variant(ButtonVariant.Secondary)
+                        | new Button("Clear All", clearProducts).Variant(ButtonVariant.Destructive)
+                        | Text.Block($"Total Products: {products.Value.Length}")
+            ).Title("Product List").Width(Size.Full());
     }
 }
 ```
