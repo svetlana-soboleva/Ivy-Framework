@@ -35,7 +35,7 @@ export const ListItemWidget: React.FC<ListItemWidgetProps> = ({
         <Icon className="h-6 w-6 text-muted-foreground ml-auto" name={icon} />
       )}
       {badge && (
-        <Badge variant="default" className="ml-auto">
+        <Badge variant="primary" className="ml-auto">
           {badge}
         </Badge>
       )}

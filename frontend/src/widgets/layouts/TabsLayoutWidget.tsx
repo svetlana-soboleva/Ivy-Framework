@@ -563,7 +563,7 @@ export const TabsLayoutWidget = ({
         )}
         <span>{title}</span>
         {badge && (
-          <Badge variant="default" className="ml-2 w-min whitespace-nowrap">
+          <Badge variant="primary" className="ml-2 w-min whitespace-nowrap">
             {badge}
           </Badge>
         )}

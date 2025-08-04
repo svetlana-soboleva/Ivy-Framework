@@ -16,7 +16,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   title,
   icon = undefined,
   iconPosition = 'Left',
-  variant = 'default',
+  variant = 'primary',
   size = 'Default',
 }) => {
   let badgeClasses = 'text-descriptive px-2.5 py-0.5';
@@ -39,7 +39,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
     <Badge
       variant={
         camelCase(variant) as
-          | 'default'
+          | 'primary'
           | 'destructive'
           | 'outline'
           | 'secondary'
