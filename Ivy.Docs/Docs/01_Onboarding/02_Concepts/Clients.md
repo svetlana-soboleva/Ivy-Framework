@@ -97,27 +97,46 @@ public class FileOperationsApp : ViewBase
         var client = UseService<IClientProvider>();
         var downloadTrigger = UseState(false);
         var uploadTrigger = UseState(false);
+        var downloadComplete = UseState(false);
+        var uploadComplete = UseState(false);
         
         if (downloadTrigger.Value)
         {
             downloadTrigger.Value = false;
+            downloadComplete.Value = false;
             client.Toast("Downloading file...", "Download Started");
-            // Simulate download completion
-            Task.Delay(2000).ContinueWith(_ => {
-                var client2 = UseService<IClientProvider>();
-                client2.Toast("File downloaded successfully!");
+            
+            // Simulate download completion after 2 seconds
+            Task.Run(async () => {
+                await Task.Delay(2000);
+                downloadComplete.Value = true;
             });
         }
         
         if (uploadTrigger.Value)
         {
             uploadTrigger.Value = false;
+            uploadComplete.Value = false;
             client.Toast("Uploading files...", "Upload Started");
-            // Simulate upload completion
-            Task.Delay(3000).ContinueWith(_ => {
-                var client2 = UseService<IClientProvider>();
-                client2.Toast("Files uploaded successfully!");
+            
+            // Simulate upload completion after 3 seconds
+            Task.Run(async () => {
+                await Task.Delay(3000);
+                uploadComplete.Value = true;
             });
+        }
+        
+        // Show completion messages when state changes
+        if (downloadComplete.Value)
+        {
+            downloadComplete.Value = false;
+            client.Toast("File downloaded successfully!");
+        }
+        
+        if (uploadComplete.Value)
+        {
+            uploadComplete.Value = false;
+            client.Toast("Files uploaded successfully!");
         }
         
         return Layout.Vertical(
