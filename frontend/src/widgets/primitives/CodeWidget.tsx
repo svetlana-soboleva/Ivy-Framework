@@ -1,12 +1,6 @@
 import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import { getHeight, getWidth } from '@/lib/styles';
-import React, {
-  CSSProperties,
-  useState,
-  useMemo,
-  memo,
-  useCallback,
-} from 'react';
+import React, { CSSProperties, useMemo, memo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
 
@@ -59,17 +53,12 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
     width,
     height,
   }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-    const handleMouseLeave = useCallback(() => setIsHovered(false), []);
-
     const styles = useMemo<CSSProperties>(() => {
       const baseStyles: CSSProperties = {
         ...getWidth(width),
         ...getHeight(height),
         margin: 0,
-        overflow: isHovered ? 'auto' : 'hidden',
+        overflow: 'auto',
       };
 
       if (!showBorder) {
@@ -79,7 +68,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
       }
 
       return baseStyles;
-    }, [width, height, isHovered, showBorder]);
+    }, [width, height, showBorder]);
 
     const highlighterKey = useMemo(
       () =>
@@ -90,11 +79,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
     const dynamicTheme = useMemo(() => createPrismTheme(), []);
 
     return (
-      <div
-        className="relative"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className="relative">
         {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
         <SyntaxHighlighter
           language={mapLanguageToPrism(language)}
