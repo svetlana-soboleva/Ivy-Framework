@@ -9,7 +9,18 @@ A simple way to create a table with a type of data.
 ```csharp
 new TableBuilder<Person>(people);
 ```
-
+```csharp demo-tabs
+public class BasicRowTable : ViewBase
+{
+    public override object? Build()
+    {
+        var firstRow[] = {"Name", "Age"};
+        var secondRow[] = {"Artem", "20"};
+        
+        return new Table(new TableRow(firstRow), new TableRow(SecondRow));
+    }
+}
+```
 Here's a basic example of creating a `Table` using rows and cells:
 
 ```csharp demo-below
