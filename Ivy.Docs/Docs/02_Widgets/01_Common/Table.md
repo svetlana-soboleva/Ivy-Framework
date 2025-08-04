@@ -13,15 +13,16 @@ new TableBuilder<Person>(people);
 ```csharp demo-tabs
 public class BasicRowTable : ViewBase
 {
-    public override object? Build()
-    {
-        public class Product
+       public class Product
 {
     public required string Sku { get; set; }
     public required string Name { get; set; }
     public required double Price { get; set; }
     public required string Url { get; set; }
 }
+    public override object? Build()
+    {
+     
 
         var products = new[] {
             new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
@@ -33,7 +34,7 @@ public class BasicRowTable : ViewBase
 
         return products.ToTable()
                 .RemoveHeader()
-                .Width(Size.Full())
+                .Width(Size.Full());
     }
 }
 ```
