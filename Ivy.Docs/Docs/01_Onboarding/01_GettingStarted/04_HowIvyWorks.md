@@ -51,6 +51,7 @@ Ivy provides React-inspired hooks for state management:
 - `UseState<T>()` - Local component state that triggers re-renders
 - `UseEffect()` - Side effects with dependency tracking  
 - `UseService<T>()` - Dependency injection integration
+- `UseSignal()`, `UseDownload()`, `UseWebhook()` - And many more...
 
 ```csharp
 public override object? Build()
@@ -73,10 +74,10 @@ Ivy ships with a comprehensive set of strongly-typed widgets:
 
 | Category | Examples |
 |----------|----------|
-| Layouts | `Card`, `Layout.Vertical()`, `GridLayout`, `TabsLayout` |
-| Inputs | `TextInput`, `NumberInput`, `BoolInput`, `DateTimeInput` |
-| Display | `Button`, `Badge`, `Progress`, `Table`, `Chart` |
-| Primitives | `Text`, `Icon`, `Image`, `Markdown`, `Json` |
+| Layouts | `Card`, `Layout.Vertical()`, `GridLayout`, `TabsLayout`, `SidebarLayout`... |
+| Inputs | `TextInput`, `NumberInput`, `BoolInput`, `DateTimeInput`, `FileInput`... |
+| Display | `Button`, `Badge`, `Progress`, `Table`, `Chart`, `Tooltip`... |
+| Primitives | `Text`, `Icon`, `Image`, `Markdown`, `Json`, `Code`... |
 
 ### 4. Real-time Communication
 The magic happens through WebSocket communication:
