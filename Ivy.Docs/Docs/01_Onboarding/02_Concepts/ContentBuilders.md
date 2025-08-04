@@ -97,17 +97,23 @@ Ivy provides a `BuilderFactory` that offers convenient methods for creating comm
 
 Here's a simple example showing how different types of content are automatically formatted:
 
-```csharp
-var content = Layout.Vertical(
-    null,                    // Empty view
-    "Hello World",          // Text block
-    123_456.78,            // Formatted number
-    false,                  // Boolean icon
-    true,                   // Boolean icon
-    DateTime.Now,           // Formatted date
-    new int[] { 1,2,3,4 }, // Table
-    new List<string> { "a", "b", "c" } // Table
-);
+```csharp demo-tabs
+public class ContentBuilderDemo : ViewBase
+{
+    public override object? Build()
+    {
+        return Layout.Vertical(
+            null,                    // Empty view
+            "Hello World",          // Text block
+            123_456.78,            // Formatted number
+            false,                  // Boolean icon
+            true,                   // Boolean icon
+            DateTime.Now,           // Formatted date
+            new int[] { 1,2,3,4 }, // Table
+            new List<string> { "a", "b", "c" } // Table
+        );
+    }
+}
 ```
 
 Each item in this layout will be automatically formatted by the appropriate content builder, resulting in a clean and consistent visual representation.
