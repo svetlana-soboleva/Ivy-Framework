@@ -9,18 +9,35 @@ A simple way to create a table with a type of data.
 ```csharp
 new TableBuilder<Person>(people);
 ```
+
 ```csharp demo-tabs
 public class BasicRowTable : ViewBase
 {
     public override object? Build()
     {
-        var firstRow[] = {"Name", "Age"};
-        var secondRow[] = {"Artem", "20"};
-        
-        return new Table(new TableRow(firstRow), new TableRow(SecondRow));
+        public class Product
+{
+    public required string Sku { get; set; }
+    public required string Name { get; set; }
+    public required double Price { get; set; }
+    public required string Url { get; set; }
+}
+
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans"},
+            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Url = "http://example.com/sneakers"},
+            new {Sku = "1237", Name = "Hat", Price = 5.0, Url = "http://example.com/hat"},
+            new {Sku = "1238", Name = "Socks", Price = 2.0, Url = "http://example.com/socks"}
+        };
+
+        return products.ToTable()
+                .RemoveHeader()
+                .Width(Size.Full())
     }
 }
 ```
+
 Here's a basic example of creating a `Table` using rows and cells:
 
 ```csharp demo-below

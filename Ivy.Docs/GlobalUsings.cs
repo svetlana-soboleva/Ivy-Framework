@@ -19,5 +19,5 @@ global using System.Globalization;
 global using Ivy;
 global using Ivy.Widgets.Internal;
 global using Ivy.Docs.Helpers;
-
+global using Ivy.Widgets.Tables;
 namespace Ivy.Docs;
