@@ -11,7 +11,7 @@ Ivy is a **server-side web framework** that brings React-like patterns to C#. In
 ```
 C# Views → Widget Tree → WebSocket → React Frontend → Browser
     ↑                                                        ↓
-    ← ← ← ← ← ← Event Handlers ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
+    ← ← ← ← ← ← Event Handlers ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
 ```
 
 ### 1. Views & Components
