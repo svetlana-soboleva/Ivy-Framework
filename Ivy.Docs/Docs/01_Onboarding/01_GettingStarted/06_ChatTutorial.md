@@ -135,3 +135,5 @@ You can now run the application and try it out! Describe your application, and t
 <Callout Icon="Info">
 Make sure you have set your OpenAI API key in the environment variables before running the application.
 </Callout>
+
+You can find the full source code for the project at https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Samples/Apps/Demos/LucideIconAgentApp.cs.
