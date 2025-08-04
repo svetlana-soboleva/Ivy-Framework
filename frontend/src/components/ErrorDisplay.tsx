@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { ClipboardCopy, Check } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface ErrorDisplayProps {
   title?: string | null;
@@ -60,6 +60,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
             >
               {stackTrace}
             </SyntaxHighlighter>
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </div>
       )}

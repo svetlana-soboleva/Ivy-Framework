@@ -3,7 +3,7 @@ import { getHeight, getWidth } from '@/lib/styles';
 import React, { CSSProperties, useMemo, memo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 interface CodeWidgetProps {
@@ -99,6 +99,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
           >
             {content}
           </SyntaxHighlighter>
+          <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
     );

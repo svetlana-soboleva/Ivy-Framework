@@ -17,7 +17,7 @@ import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
 import { textBlockClassMap, textContainerClass } from '@/lib/textBlockClassMap';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -110,6 +110,7 @@ const CodeBlock = memo(
                   </div>
                 ))}
               </pre>
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </div>
         );
@@ -120,6 +121,7 @@ const CodeBlock = memo(
           fallback={
             <ScrollArea className="w-full border border-border rounded-md">
               <pre className="p-4 bg-muted rounded-md">{content}</pre>
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
           }
         >
@@ -135,6 +137,7 @@ const CodeBlock = memo(
               >
                 {content}
               </SyntaxHighlighter>
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </div>
         </Suspense>
