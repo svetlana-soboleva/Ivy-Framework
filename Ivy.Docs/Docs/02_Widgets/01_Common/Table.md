@@ -33,14 +33,22 @@ public class BasicRowTable : ViewBase
 ```
 
 ## Custom Column Builders
-- `Width(Size)` - Sets the overall table width
-- `Width(Expression<Func<T, object>>, Size)` - Sets specific column width
-- `Header(Expression<Func<T, object>>, string)` - Sets custom header text
-- `Align(Expression<Func<T, object>>, Align)` - Sets column alignment
-- `Order(params Expression<Func<T, object>>[])` - Reorders columns
-- `Remove(params Expression<Func<T, object>>[])` - Hides specified columns
-- `Totals(Expression<Func<T, object>>)` - Adds column totals/aggregations
-- `Empty(object)` - Sets content to display when table is empty
+
+**Width(Size.Full())** - sets the overall table width
+
+**Width(p => p.ColumnName, Size.Units())** – sets the column width
+
+**Header(p => p.ColumnName)** is used to show custom header text of the table
+
+**Align(p => p.ColumnName)** - right alignment for selected column
+
+**Order(p => p.ColumnNameFirst, p.ColumnNameSecond, p.CulumnNameThird, ...)** - is used to order column specific way
+
+**Remove(p => p.ColumnName)** - makes possible not to show column in the table
+
+**Totals(p => p.ColumnName)** calculates the amount of the column if it contains numbers
+
+**Empty(new Card(""))** shows text if cell is empty. 
 
 ```csharp demo-tabs
 public class CustomBuilderTable : ViewBase
@@ -61,6 +69,115 @@ public class CustomBuilderTable : ViewBase
             .Remove(p => p.Url)
             .Totals(p => p.Price)
             .Empty(new Card("No products found").Width(Size.Full()));
+    }
+}
+```
+
+## Column Management Examples
+
+The `Clear()` method hides all columns, allowing you to selectively show only the columns you need. 
+Use `Add()` to show specific columns in the order you want them to appear.
+
+```csharp demo-tabs
+public class ColumnManagementTable : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Category = "Clothing", Stock = 50},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Category = "Clothing", Stock = 30},
+            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Category = "Footwear", Stock = 25}
+        };
+
+        return products.ToTable()
+            .Width(Size.Full())
+            .Clear()                                    // Hide all columns first
+            .Add(p => p.Name)                          // Show only Name column
+            .Add(p => p.Price)                         // Add Price column
+            .Add(p => p.Stock)                         // Add Stock column
+            .Header(p => p.Price, "Unit Price")
+            .Align(p => p.Price, Align.Right)
+            .Align(p => p.Stock, Align.Center);
+    }
+}
+```
+
+## Advanced Aggregations
+
+The `Totals()` method supports custom aggregation functions. 
+You can use LINQ methods like `Count()`, `Average()`, `Sum()`, `Max()`, and `Min()` to create sophisticated calculations for your data.
+
+```csharp demo-tabs
+public class AdvancedAggregationsTable : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Stock = 50},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Stock = 30},
+            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Stock = 25}
+        };
+
+        return products.ToTable()
+            .Width(Size.Full())
+            .Header(p => p.Price, "Unit Price")
+            .Header(p => p.Stock, "In Stock")
+            .Align(p => p.Price, Align.Right)
+            .Align(p => p.Stock, Align.Center)
+            .Totals(p => p.Price)                      // Sum of prices
+            .Totals(p => p.Stock, items => items.Count()) // Count of items
+            .Totals(p => p.Price, items => items.Average(p => p.Price)) // Average price
+            .Totals(p => p.Stock, items => items.Sum(p => p.Stock)); // Total stock
+    }
+}
+```
+
+## Empty Columns Handling
+
+The `RemoveEmptyColumns()` method automatically hides columns that contain no data (empty strings, null values, or zero values). This is useful for dynamic data where some columns might be empty across all rows.
+
+```csharp demo-tabs
+public class EmptyColumnsTable : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Description = "", Notes = ""},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Description = "Blue jeans", Notes = ""},
+            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Description = "", Notes = "Limited edition"}
+        };
+
+        return products.ToTable()
+            .Width(Size.Full())
+            .RemoveEmptyColumns()                      // Hide columns with no data
+            .Header(p => p.Price, "Unit Price")
+            .Align(p => p.Price, Align.Right);
+    }
+}
+```
+
+## Reset and Rebuild
+
+The `Reset()` method restores all column settings to their default values. This is useful when you want to start fresh with a new configuration or when building dynamic table configurations.
+
+```csharp demo-tabs
+public class ResetTableExample : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Category = "Clothing"},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Category = "Clothing"}
+        };
+
+        return products.ToTable()
+            .Width(Size.Full())
+            .Remove(p => p.Category)                   // Hide Category column
+            .Align(p => p.Price, Align.Right)          // Set alignment
+            .Header(p => p.Price, "Unit Price")        // Custom header
+            .Reset()                                   // Reset all settings to defaults
+            .Order(p => p.Name, p => p.Price)          // Apply new order
+            .Totals(p => p.Price);                     // Add totals
     }
 }
 ```
@@ -89,6 +206,77 @@ public class ManualTableDemo : ViewBase
     }
 }
 ```
+## Custom Column Builders
+
+The `Builder()` method allows you to specify how different data types should be rendered. Use the builder factory methods to create appropriate renderers for your data.
+
+```csharp demo-tabs
+public class CustomBuildersTable : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt", Description = "Comfortable cotton shirt"},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans", Description = "Blue denim jeans"}
+        };
+
+        return products.ToTable()
+            .Width(Size.Full())
+            .Builder(p => p.Url, f => f.Link())               // Link builder
+            .Builder(p => p.Description, f => f.Text())       // Text builder
+            .Builder(p => p.Sku, f => f.CopyToClipboard())    // Copy to clipboard
+            .Builder(p => p.Name, f => f.Default())           // Default builder
+            .Header(p => p.Price, "Unit Price")
+            .Align(p => p.Price, Align.Right);
+    }
+}
+```
+
+## Automatic Table Conversion
+
+Any `IEnumerable` is automatically converted to a table when returned from a view. This works through the `DefaultContentBuilder` which detects collections and converts them to tables.
+
+```csharp demo-tabs
+public class AutomaticTableConversion : ViewBase
+{
+    public override object? Build()
+    {
+        // Any IEnumerable is automatically converted to a table
+        object data = GetProductData();
+        return data; // Automatically becomes a table via DefaultContentBuilder
+    }
+
+    private object GetProductData()
+    {
+        return new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0}
+        };
+    }
+}
+```
+
+## Integration with Other Widgets
+
+Tables integrate seamlessly with other Ivy widgets, allowing you to create rich, interactive interfaces.
+
+```csharp demo-tabs
+public class TableIntegrationExample : ViewBase
+{
+    public override object? Build()
+    {
+        var products = new[] {
+            new {Sku = "1234", Name = "T-shirt", Price = 10.0},
+            new {Sku = "1235", Name = "Jeans", Price = 20.0}
+        };
+
+        // Integration with Cards and Buttons
+        return Layout.Vertical()
+            | new Card(products.ToTable()).Title("Product List")
+            | new Button("Add Product");
+    }
+}
+```
 
 ### Missing Context and Examples
 
@@ -99,3 +287,4 @@ public class ManualTableDemo : ViewBase
   ```
   
 <WidgetDocs Type="Ivy.Table" ExtensionTypes="Ivy.Views.Tables.TableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Tables/Table.cs"/>
+
