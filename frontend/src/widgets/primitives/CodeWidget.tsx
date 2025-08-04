@@ -3,6 +3,8 @@ import { getHeight, getWidth } from '@/lib/styles';
 import React, { CSSProperties, useMemo, memo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface CodeWidgetProps {
   id: string;
@@ -58,7 +60,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
         ...getWidth(width),
         ...getHeight(height),
         margin: 0,
-        overflow: 'auto',
+        // Remove overflow: 'auto' to use ScrollArea instead
       };
 
       if (!showBorder) {
@@ -81,16 +83,24 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
     return (
       <div className="relative">
         {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
-        <SyntaxHighlighter
-          language={mapLanguageToPrism(language)}
-          customStyle={styles}
-          style={dynamicTheme}
-          showLineNumbers={showLineNumbers}
-          wrapLines={true}
-          key={highlighterKey}
+        <ScrollArea
+          className={cn(
+            'w-full h-full',
+            showBorder && 'border border-border rounded-md'
+          )}
         >
-          {content}
-        </SyntaxHighlighter>
+          <SyntaxHighlighter
+            language={mapLanguageToPrism(language)}
+            customStyle={styles}
+            style={dynamicTheme}
+            showLineNumbers={showLineNumbers}
+            wrapLines={true}
+            key={highlighterKey}
+          >
+            {content}
+          </SyntaxHighlighter>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     );
   }
