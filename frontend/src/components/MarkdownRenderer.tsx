@@ -137,14 +137,7 @@ const CodeBlock = memo(
     }
 
     return (
-      <code
-        className={cn(
-          'relative rounded bg-muted px-[0.25rem] py-[0.05rem] font-mono text-body',
-          className
-        )}
-      >
-        {children}
-      </code>
+      <code className={cn(textBlockClassMap.code, className)}>{children}</code>
     );
   }
 );
