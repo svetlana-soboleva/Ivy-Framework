@@ -141,6 +141,12 @@ public static class ButtonExtensions
     }
 
     [RelatedTo(nameof(Button.Variant))]
+    public static Button Primary(this Button button)
+    {
+        return button.Variant(ButtonVariant.Primary);
+    }
+
+    [RelatedTo(nameof(Button.Variant))]
     public static Button Secondary(this Button button)
     {
         return button.Variant(ButtonVariant.Secondary);

@@ -24,9 +24,12 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 
 Buttons come in several variants to suit different use cases.
 
+> **Note:** Primary is the default variant applied to all buttons. You don't need to explicitly call `.Primary()` unless you want to be explicit in your code for clarity.
+
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Button("Primary")
+    | new Button("Primary (Default)")
+    | new Button("Primary (Explicit)").Primary()
     | new Button("Destructive").Destructive()
     | new Button("Secondary").Secondary()
     | new Button("Outline").Outline()
