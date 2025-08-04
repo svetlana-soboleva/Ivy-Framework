@@ -357,7 +357,7 @@ function NewsCard({
             <button
               type="button"
               onClick={dismiss}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-75"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-75 cursor-pointer"
             >
               Dismiss
             </button>
