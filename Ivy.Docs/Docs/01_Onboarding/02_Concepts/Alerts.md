@@ -1,116 +1,190 @@
-# Alerts
+# Alerts & Notifications
 
-Alerts in Ivy are powerful notification components that provide feedback to users about important information, warnings, or errors in your application. They are designed to be visually distinct and attention-grabbing while maintaining a clean and professional appearance.
+> **TL;DR:** Ivy provides two types of user notifications: modal dialog alerts for important confirmations and toast notifications for feedback messages.
 
-## Overview
+Ivy offers a comprehensive alerting system to communicate with users effectively. Whether you need to confirm important actions or provide quick feedback, Ivy has you covered.
 
-Alerts are typically used to:
-- Display success messages after completing an action
-- Show warnings about potential issues
-- Present error messages when something goes wrong
-- Provide important information to users
+## Types of Alerts
 
-## Basic Usage
+Ivy provides two main types of alerts:
 
-Here's a simple example of creating an alert:
+1. **Dialog Alerts** - Modal dialogs for important confirmations and decisions
+2. **Toast Notifications** - Non-blocking notifications for feedback and status updates
 
-```csharp
-return new Alert(
-    "Operation completed successfully!",
-    variant: AlertVariant.Success
+## Dialog Alerts
+
+Dialog alerts are modal windows that require user interaction. They're perfect for confirmations, important messages, or collecting user decisions.
+
+### Basic Dialog Alert
+
+```code-demo
+var (alertView, showAlert) = UseAlert();
+var client = UseService<IClientProvider>();
+
+return Layout.Vertical(
+    new Button("Show Alert", _ => 
+        showAlert("Are you sure you want to continue?", result => {
+            client.Toast($"You selected: {result}");
+        })
+    ),
+    alertView
 );
 ```
 
-## Variants
+### Alert Button Sets
 
-Alerts come in several variants to match different use cases:
+Dialog alerts support different button combinations:
 
-```csharp
-Layout.Vertical(
-    new Alert("Success message", variant: AlertVariant.Success),
-    new Alert("Warning message", variant: AlertVariant.Warning),
-    new Alert("Error message", variant: AlertVariant.Error),
-    new Alert("Info message", variant: AlertVariant.Info)
-)
+```code-demo
+var (alertView, showAlert) = UseAlert();
+var client = UseService<IClientProvider>();
+
+return Layout.Vertical(
+    new Button("Ok Only", _ => 
+        showAlert("This is an info message", _ => {}, "Information", AlertButtonSet.Ok)
+    ),
+    new Button("Ok/Cancel", _ => 
+        showAlert("Do you want to save changes?", result => {
+            client.Toast($"Result: {result}");
+        }, "Confirm Save", AlertButtonSet.OkCancel)
+    ),
+    new Button("Yes/No", _ => 
+        showAlert("Do you like Ivy?", result => {
+            client.Toast($"Answer: {result}");
+        }, "Quick Poll", AlertButtonSet.YesNo)
+    ),
+    new Button("Yes/No/Cancel", _ => 
+        showAlert("Save changes before closing?", result => {
+            client.Toast($"Choice: {result}");
+        }, "Unsaved Changes", AlertButtonSet.YesNoCancel)
+    ),
+    alertView
+);
 ```
 
-## Icons
+## Toast Notifications
 
-Alerts can include icons to enhance their visual meaning:
+Toast notifications are lightweight, non-blocking messages that appear temporarily and then disappear automatically. They're perfect for providing quick feedback about user actions.
 
-```csharp
-new Alert(
-    "File uploaded successfully",
-    icon: Icons.CheckCircle,
-    variant: AlertVariant.Success
-)
+### Basic Toast Notifications
+
+```code-demo
+var client = UseService<IClientProvider>();
+
+return Layout.Vertical(
+    new Button("Success Toast", _ => 
+        client.Toast("Operation completed successfully!", "Success")
+    ),
+    new Button("Info Toast", _ => 
+        client.Toast("Here's some helpful information", "Info")
+    ),
+    new Button("Simple Toast", _ => 
+        client.Toast("Just a simple message")
+    )
+);
 ```
 
-## Dismissible Alerts
+### Toast with Exception Handling
 
-Alerts can be made dismissible, allowing users to close them:
+```code-demo
+var client = UseService<IClientProvider>();
 
-```csharp
-var isVisible = UseState(true);
-return isVisible.Value
-    ? new Alert(
-        "This alert can be dismissed",
-        onDismiss: () => isVisible.Set(false)
-      )
-    : null;
+return Layout.Vertical(
+    new Button("Simulate Error", _ => {
+        try {
+            throw new InvalidOperationException("Something went wrong!");
+        } catch (Exception ex) {
+            client.Toast(ex); // Automatically formats exception
+        }
+    }),
+    new Button("Custom Error Toast", _ => 
+        client.Toast("Custom error message", "Error")
+    )
+);
+```
+
+## Real-World Examples
+
+### Form Submission with Feedback
+
+```code-demo
+var (alertView, showAlert) = UseAlert();
+var client = UseService<IClientProvider>();
+var isSubmitting = UseState(false);
+
+return Layout.Vertical(
+    new Button(
+        isSubmitting.Value ? "Submitting..." : "Submit Form", 
+        _ => {
+            showAlert("Are you ready to submit this form?", async result => {
+                if (result == AlertResult.Ok) {
+                    isSubmitting.Set(true);
+                    
+                    // Simulate API call
+                    await Task.Delay(2000);
+                    
+                    isSubmitting.Set(false);
+                    client.Toast("Form submitted successfully!", "Success");
+                }
+            }, "Confirm Submission", AlertButtonSet.OkCancel);
+        }
+    ).Disabled(isSubmitting.Value),
+    alertView
+);
+```
+
+### Delete Confirmation
+
+```code-demo
+var (alertView, showAlert) = UseAlert();
+var client = UseService<IClientProvider>();
+var items = UseState(new[] { "Document 1", "Document 2", "Document 3" });
+
+return Layout.Vertical(
+    items.Value.Select(item => 
+        Layout.Horizontal(
+            Text.Literal(item).Width(Size.Grow()),
+            new Button("Delete", _ => {
+                showAlert(
+                    $"Are you sure you want to delete '{item}'? This action cannot be undone.", 
+                    result => {
+                        if (result == AlertResult.Yes) {
+                            items.Set(items.Value.Where(x => x != item).ToArray());
+                            client.Toast($"'{item}' has been deleted", "Deleted");
+                        }
+                    }, 
+                    "Confirm Delete", 
+                    AlertButtonSet.YesNo
+                );
+            }).Variant(ButtonVariant.Destructive).Size(Size.Small)
+        ).Align(Align.Center).Gap(Size.Medium)
+    ).ToArray(),
+    alertView
+);
 ```
 
 ## Best Practices
 
-1. **Clarity**: Keep alert messages clear and concise
-2. **Appropriate Variants**: Use the correct variant for the type of message
-3. **Timing**: Consider auto-dismissing alerts for non-critical messages
-4. **Accessibility**: Ensure alerts are accessible to screen readers
-5. **Consistency**: Maintain consistent alert styling across your application
+### When to Use Dialog Alerts
+- Confirming destructive actions (delete, reset, etc.)
+- Important decisions that affect data
+- Critical error messages that require acknowledgment
+- Multi-step processes requiring user choice
 
-## Examples
+### When to Use Toast Notifications
+- Success confirmations after actions
+- Non-critical error messages
+- Status updates and progress notifications
+- Quick feedback that doesn't require user action
 
-### Form Submission Feedback
+### Writing Good Alert Messages
+1. **Be Clear**: Use simple, direct language
+2. **Be Specific**: Explain exactly what will happen
+3. **Be Actionable**: Make it clear what the user needs to do
+4. **Be Concise**: Keep messages as short as possible while staying informative
 
-```csharp
-public class FormView : ViewBase
-{
-    public override object? Build()
-    {
-        var submitStatus = UseState<AlertVariant?>(null);
-        var message = UseState("");
-
-        return Layout.Vertical(
-            submitStatus.Value != null
-                ? new Alert(
-                    message.Value,
-                    variant: submitStatus.Value,
-                    onDismiss: () => submitStatus.Set(null)
-                  )
-                : null,
-            new Form(
-                onSubmit: async () => {
-                    try {
-                        await api.Submit(formData);
-                        message.Set("Form submitted successfully!");
-                        submitStatus.Set(AlertVariant.Success);
-                    } catch (Exception ex) {
-                        message.Set("Failed to submit form: " + ex.Message);
-                        submitStatus.Set(AlertVariant.Error);
-                    }
-                }
-            )
-        );
-    }
-}
-```
-
-### Toast Alerts
-
-For temporary notifications, consider using the client's toast functionality:
-
-```csharp
-var client = this.UseService<IClientProvider>();
-client.Toast("Operation completed!", variant: AlertVariant.Success);
-```
-
+### Accessibility Considerations
+- Alert dialogs automatically focus and trap keyboard navigation
+- Toast messages are announced by screen readers
+- Button labels should be descriptive (avoid just "OK" when possible)
+- Important alerts should be modal to ensure they're not missed
