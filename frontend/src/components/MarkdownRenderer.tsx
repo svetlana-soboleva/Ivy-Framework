@@ -139,7 +139,7 @@ const CodeBlock = memo(
     return (
       <code
         className={cn(
-          'relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-body',
+          'relative rounded bg-muted px-[0.25rem] py-[0.05rem] font-mono text-body',
           className
         )}
       >
