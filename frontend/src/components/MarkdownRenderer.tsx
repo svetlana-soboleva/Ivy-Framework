@@ -17,6 +17,7 @@ import { cn, getIvyHost } from '@/lib/utils';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { createPrismTheme } from '@/lib/ivy-prism-theme';
 import { textBlockClassMap, textContainerClass } from '@/lib/textBlockClassMap';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
@@ -98,16 +99,18 @@ const CodeBlock = memo(
             <div className="absolute top-2 right-2 z-10">
               <CopyToClipboardButton textToCopy={cleanContent} />
             </div>
-            <pre className="p-4 bg-muted rounded-md overflow-x-auto font-mono text-body">
-              {lines.map((line, index) => (
-                <div key={index} className="flex">
-                  <span className="text-muted-foreground select-none pointer-events-none mr-2">
-                    {'> '}
-                  </span>
-                  <span className="flex-1">{line}</span>
-                </div>
-              ))}
-            </pre>
+            <ScrollArea className="w-full border border-border rounded-md">
+              <pre className="p-4 bg-muted rounded-md font-mono text-body">
+                {lines.map((line, index) => (
+                  <div key={index} className="flex">
+                    <span className="text-muted-foreground select-none pointer-events-none mr-2">
+                      {'> '}
+                    </span>
+                    <span className="flex-1">{line}</span>
+                  </div>
+                ))}
+              </pre>
+            </ScrollArea>
           </div>
         );
       }
@@ -115,22 +118,24 @@ const CodeBlock = memo(
       return (
         <Suspense
           fallback={
-            <pre className="p-4 bg-muted rounded-md overflow-x-auto">
-              {content}
-            </pre>
+            <ScrollArea className="w-full border border-border rounded-md">
+              <pre className="p-4 bg-muted rounded-md">{content}</pre>
+            </ScrollArea>
           }
         >
           <div className="relative">
             <div className="absolute top-2 right-2 z-10">
               <CopyToClipboardButton textToCopy={content} />
             </div>
-            <SyntaxHighlighter
-              language={match[1]}
-              style={dynamicTheme}
-              customStyle={{ margin: 0 }}
-            >
-              {content}
-            </SyntaxHighlighter>
+            <ScrollArea className="w-full border border-border rounded-md">
+              <SyntaxHighlighter
+                language={match[1]}
+                style={dynamicTheme}
+                customStyle={{ margin: 0 }}
+              >
+                {content}
+              </SyntaxHighlighter>
+            </ScrollArea>
           </div>
         </Suspense>
       );

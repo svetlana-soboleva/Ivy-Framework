@@ -15,8 +15,8 @@ const createIvyPrismTheme = (): Record<string, CSSProperties> => ({
     padding: '1em',
     margin: 0,
     color: 'var(--foreground)',
-    overflow: 'auto',
-    border: '1px solid var(--border)',
+    // Remove overflow: 'auto' to use ScrollArea instead
+    // Remove border since it's now applied to ScrollArea container
     borderRadius: '0.5em',
   },
   comment: { color: 'var(--muted-foreground)', fontStyle: 'italic' },
