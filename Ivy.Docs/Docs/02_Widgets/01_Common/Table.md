@@ -4,7 +4,8 @@ The `Table` widget is a layout container designed to render data in a tabular fo
 
 ## Basic Usage
 
-There is a recommended way to create a table with data:
+There is a recommended way to create tables from data arrays.
+The `ToTable()` extension method automatically converts collections into formatted tables.
 
 ```csharp demo-tabs
 public class BasicRowTable : ViewBase
@@ -31,50 +32,15 @@ public class BasicRowTable : ViewBase
 }
 ```
 
-Here's a basic example of creating a `Table` using rows and cells:
-
-```csharp demo-below
-public class BasicTableDemo : ViewBase
-{
-    public override object? Build()
-    {
-        return new Table(
-            new TableRow(
-                new TableCell("Name"),
-                new TableCell("Age")
-            ),
-            new TableRow(
-                new TableCell("Alice"),
-                new TableCell("30")
-            )
-        );
-    }
-}
-```
-
-## Data-Driven Tables
-
-### Basic Data Table
-
-```csharp demo-tabs
-public class ProductTable : ViewBase
-{
-    public override object? Build()
-    {
-        var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0}
-        };
-
-        return products.ToTable()
-            .Width(Size.Full())
-            .Header(p => p.Price, "Unit Price")
-            .Align(p => p.Price, Align.Right);
-    }
-}
-```
-
 ## Custom Column Builders
+- `Width(Size)` - Sets the overall table width
+- `Width(Expression<Func<T, object>>, Size)` - Sets specific column width
+- `Header(Expression<Func<T, object>>, string)` - Sets custom header text
+- `Align(Expression<Func<T, object>>, Align)` - Sets column alignment
+- `Order(params Expression<Func<T, object>>[])` - Reorders columns
+- `Remove(params Expression<Func<T, object>>[])` - Hides specified columns
+- `Totals(Expression<Func<T, object>>)` - Adds column totals/aggregations
+- `Empty(object)` - Sets content to display when table is empty
 
 ```csharp demo-tabs
 public class CustomBuilderTable : ViewBase
@@ -99,7 +65,9 @@ public class CustomBuilderTable : ViewBase
 }
 ```
 
-## Manual Table with Headers
+## Manual Table
+
+It's also possible to create manual tables with headers and other methods using rows and cells:
 
 ```csharp demo-tabs
 public class ManualTableDemo : ViewBase
@@ -122,4 +90,12 @@ public class ManualTableDemo : ViewBase
 }
 ```
 
+### Missing Context and Examples
+
+- `Empty(object)` - Sets content to display when the table has no data
+
+  ```csharp
+  .Empty(new Card("No products found").Width(Size.Full()))
+  ```
+  
 <WidgetDocs Type="Ivy.Table" ExtensionTypes="Ivy.Views.Tables.TableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Tables/Table.cs"/>
