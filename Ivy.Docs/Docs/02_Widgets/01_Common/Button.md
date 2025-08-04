@@ -27,6 +27,7 @@ Buttons come in several variants to suit different use cases.
 ```csharp demo-tabs
 Layout.Horizontal()
     | new Button("Primary")
+    | new Button("Primary Explicit").Primary()
     | new Button("Destructive").Destructive()
     | new Button("Secondary").Secondary()
     | new Button("Outline").Outline()
