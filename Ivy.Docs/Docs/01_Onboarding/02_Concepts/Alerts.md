@@ -17,49 +17,61 @@ Dialog alerts are modal windows that require user interaction. They're perfect f
 
 ### Basic Dialog Alert
 
-```code-demo
-var (alertView, showAlert) = UseAlert();
-var client = UseService<IClientProvider>();
+```csharp demo-below
+public class BasicDialogAlertDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var (alertView, showAlert) = this.UseAlert();
+        var client = UseService<IClientProvider>();
 
-return Layout.Vertical(
-    new Button("Show Alert", _ => 
-        showAlert("Are you sure you want to continue?", result => {
-            client.Toast($"You selected: {result}");
-        })
-    ),
-    alertView
-);
+        return Layout.Vertical(
+            new Button("Show Alert", _ => 
+                showAlert("Are you sure you want to continue?", result => {
+                    client.Toast($"You selected: {result}");
+                })
+            ),
+            alertView
+        );
+    }
+}
 ```
 
 ### Alert Button Sets
 
 Dialog alerts support different button combinations:
 
-```code-demo
-var (alertView, showAlert) = UseAlert();
-var client = UseService<IClientProvider>();
+```csharp demo-below
+public class AlertButtonSetsDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var (alertView, showAlert) = this.UseAlert();
+        var client = UseService<IClientProvider>();
 
-return Layout.Vertical(
-    new Button("Ok Only", _ => 
-        showAlert("This is an info message", _ => {}, "Information", AlertButtonSet.Ok)
-    ),
-    new Button("Ok/Cancel", _ => 
-        showAlert("Do you want to save changes?", result => {
-            client.Toast($"Result: {result}");
-        }, "Confirm Save", AlertButtonSet.OkCancel)
-    ),
-    new Button("Yes/No", _ => 
-        showAlert("Do you like Ivy?", result => {
-            client.Toast($"Answer: {result}");
-        }, "Quick Poll", AlertButtonSet.YesNo)
-    ),
-    new Button("Yes/No/Cancel", _ => 
-        showAlert("Save changes before closing?", result => {
-            client.Toast($"Choice: {result}");
-        }, "Unsaved Changes", AlertButtonSet.YesNoCancel)
-    ),
-    alertView
-);
+        return Layout.Vertical(
+            new Button("Ok Only", _ => 
+                showAlert("This is an info message", _ => {}, "Information", AlertButtonSet.Ok)
+            ),
+            new Button("Ok/Cancel", _ => 
+                showAlert("Do you want to save changes?", result => {
+                    client.Toast($"Result: {result}");
+                }, "Confirm Save", AlertButtonSet.OkCancel)
+            ),
+            new Button("Yes/No", _ => 
+                showAlert("Do you like Ivy?", result => {
+                    client.Toast($"Answer: {result}");
+                }, "Quick Poll", AlertButtonSet.YesNo)
+            ),
+            new Button("Yes/No/Cancel", _ => 
+                showAlert("Save changes before closing?", result => {
+                    client.Toast($"Choice: {result}");
+                }, "Unsaved Changes", AlertButtonSet.YesNoCancel)
+            ),
+            alertView
+        );
+    }
+}
 ```
 
 ## Toast Notifications
@@ -68,99 +80,87 @@ Toast notifications are lightweight, non-blocking messages that appear temporari
 
 ### Basic Toast Notifications
 
-```code-demo
-var client = UseService<IClientProvider>();
+```csharp demo-below
+public class BasicToastDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var client = UseService<IClientProvider>();
 
-return Layout.Vertical(
-    new Button("Success Toast", _ => 
-        client.Toast("Operation completed successfully!", "Success")
-    ),
-    new Button("Info Toast", _ => 
-        client.Toast("Here's some helpful information", "Info")
-    ),
-    new Button("Simple Toast", _ => 
-        client.Toast("Just a simple message")
-    )
-);
+        return Layout.Vertical(
+            new Button("Success Toast", _ => 
+                client.Toast("Operation completed successfully!", "Success")
+            ),
+            new Button("Info Toast", _ => 
+                client.Toast("Here's some helpful information", "Info")
+            ),
+            new Button("Simple Toast", _ => 
+                client.Toast("Just a simple message")
+            )
+        );
+    }
+}
 ```
 
 ### Toast with Exception Handling
 
-```code-demo
-var client = UseService<IClientProvider>();
+```csharp demo-below
+public class ToastExceptionDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var client = UseService<IClientProvider>();
 
-return Layout.Vertical(
-    new Button("Simulate Error", _ => {
-        try {
-            throw new InvalidOperationException("Something went wrong!");
-        } catch (Exception ex) {
-            client.Toast(ex); // Automatically formats exception
-        }
-    }),
-    new Button("Custom Error Toast", _ => 
-        client.Toast("Custom error message", "Error")
-    )
-);
+        return Layout.Vertical(
+            new Button("Simulate Error", _ => {
+                try {
+                    throw new InvalidOperationException("Something went wrong!");
+                } catch (Exception ex) {
+                    client.Toast(ex); // Automatically formats exception
+                }
+            }),
+            new Button("Custom Error Toast", _ => 
+                client.Toast("Custom error message", "Error")
+            )
+        );
+    }
+}
 ```
 
 ## Real-World Examples
 
 ### Form Submission with Feedback
 
-```code-demo
-var (alertView, showAlert) = UseAlert();
-var client = UseService<IClientProvider>();
-var isSubmitting = UseState(false);
+```csharp demo-below
+public class FormSubmissionDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var (alertView, showAlert) = this.UseAlert();
+        var client = UseService<IClientProvider>();
+        var isSubmitting = UseState(false);
 
-return Layout.Vertical(
-    new Button(
-        isSubmitting.Value ? "Submitting..." : "Submit Form", 
-        _ => {
-            showAlert("Are you ready to submit this form?", async result => {
-                if (result == AlertResult.Ok) {
-                    isSubmitting.Set(true);
-                    
-                    // Simulate API call
-                    await Task.Delay(2000);
-                    
-                    isSubmitting.Set(false);
-                    client.Toast("Form submitted successfully!", "Success");
-                }
-            }, "Confirm Submission", AlertButtonSet.OkCancel);
-        }
-    ).Disabled(isSubmitting.Value),
-    alertView
-);
-```
-
-### Delete Confirmation
-
-```code-demo
-var (alertView, showAlert) = UseAlert();
-var client = UseService<IClientProvider>();
-var items = UseState(new[] { "Document 1", "Document 2", "Document 3" });
-
-return Layout.Vertical(
-    items.Value.Select(item => 
-        Layout.Horizontal(
-            Text.Literal(item).Width(Size.Grow()),
-            new Button("Delete", _ => {
-                showAlert(
-                    $"Are you sure you want to delete '{item}'? This action cannot be undone.", 
-                    result => {
-                        if (result == AlertResult.Yes) {
-                            items.Set(items.Value.Where(x => x != item).ToArray());
-                            client.Toast($"'{item}' has been deleted", "Deleted");
+        return Layout.Vertical(
+            new Button(
+                isSubmitting.Value ? "Submitting..." : "Submit Form", 
+                _ => {
+                    showAlert("Are you ready to submit this form?", async result => {
+                        if (result == AlertResult.Ok) {
+                            isSubmitting.Set(true);
+                            
+                            // Simulate API call
+                            await Task.Delay(2000);
+                            
+                            isSubmitting.Set(false);
+                            client.Toast("Form submitted successfully!", "Success");
                         }
-                    }, 
-                    "Confirm Delete", 
-                    AlertButtonSet.YesNo
-                );
-            }).Variant(ButtonVariant.Destructive).Size(Size.Small)
-        ).Align(Align.Center).Gap(Size.Medium)
-    ).ToArray(),
-    alertView
-);
+                    }, "Confirm Submission", AlertButtonSet.OkCancel);
+                }
+            ).Disabled(isSubmitting.Value),
+            alertView
+        );
+    }
+}
 ```
 
 ## Best Practices
