@@ -8,9 +8,6 @@ After the initial rendering the widget tree is sent over websocket to a React ba
 
 On the frontend side widgets can trigger events. Ivy auto-detects state changes and rerenders subset of the view tree. 
 
-![Foo](/Assets/niels.jpg)
-
-
 Ivy is a lightweight C# framework for building internal tools and small web apps. The framework runs entirely on the server and renders HTML using a set of strongly typed widgets.  A typical Ivy application consists of one or more **Views**.  A view is just a C# class that inherits from `ViewBase` and implements a single `Build()` method.  The `Build()` method returns either another view or a widget that Ivy knows how to render.
 
 Ivy borrows ideas from React.  Views are pure functions of their props and state.  Hooks such as `UseState`, `UseEffect` and `UseService` provide a reactive programming model.  When state changes Ivy automatically re-renders the view hierarchy.
