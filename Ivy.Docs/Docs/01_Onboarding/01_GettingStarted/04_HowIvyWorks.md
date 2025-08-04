@@ -93,8 +93,8 @@ The magic happens through WebSocket communication:
 ### Hot Reloading
 The development workflow is incredibly smooth:
 
-```bash
-dotnet watch
+```terminal
+>dotnet watch
 ```
 
 That's it! Changes to your C# code instantly refresh the browser.
