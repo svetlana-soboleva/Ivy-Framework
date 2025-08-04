@@ -1,6 +1,6 @@
 # Svg
 
-The Svg widget renders scalable vector graphics directly in your application. SVGs are resolution-independent and perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
+The `Svg` widget renders scalable vector graphics directly in your application. SVGs are resolution-independent and perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
 
 ```csharp demo-tabs
 public class SvgDashboardView : ViewBase

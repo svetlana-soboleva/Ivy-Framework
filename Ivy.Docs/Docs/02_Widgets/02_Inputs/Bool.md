@@ -74,7 +74,7 @@ public class NullableBoolDemo: ViewBase
 
 ## Variants
 
-There are three variants of bool inputs. The following blocks show how to create and use them.
+There are three variants of `BoolInput`s. The following blocks show how to create and use them.
 
 ### CheckBox
 
@@ -194,7 +194,7 @@ public class BoolInputVariants : ViewBase
 
 ## Bool represented by integers 
 
-Bool inputs have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`. 
+`BoolInput`s have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`. 
 The following example shows how integers can be used to represent bool inputs. 
 
 ```csharp demo-below

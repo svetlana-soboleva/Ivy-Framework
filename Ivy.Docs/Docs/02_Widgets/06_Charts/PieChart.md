@@ -1,6 +1,6 @@
 # PieChart
 
-Pie charts represent parts of a whole. Each slice is drawn from the provided data.
+`PieChart`s represent parts of a whole. Each slice is drawn from the provided data.
 
 The following example showcases a sample case where possible sale data from a store is listed.
 The pie chart shows these data. 

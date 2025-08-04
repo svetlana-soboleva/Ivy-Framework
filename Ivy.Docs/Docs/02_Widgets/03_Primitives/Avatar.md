@@ -1,6 +1,6 @@
 # Avatar
 
-Avatars are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
+`Avatar`s are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
 
 ```csharp demo-below
 Layout.Horizontal()

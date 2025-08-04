@@ -1,6 +1,6 @@
 # Confetti
 
-Confetti adds a fun celebratory effect to any widget. The confetti can be
+`Confetti` adds a fun celebratory effect to any widget. The confetti can be
 triggered automatically, on click or when the mouse hovers the widget.
 
 ```csharp

@@ -1,6 +1,6 @@
 # Code
 
-The Code widget displays formatted code snippets with syntax highlighting. It supports multiple programming languages and features line numbers and copy buttons for better user experience.
+The `Code` widget displays formatted code snippets with syntax highlighting. It supports multiple programming languages and features line numbers and copy buttons for better user experience.
 
 ```csharp demo-tabs
 public class CodeSamplesView : ViewBase

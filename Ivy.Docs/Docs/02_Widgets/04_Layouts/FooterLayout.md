@@ -1,6 +1,6 @@
 # FooterLayout
 
-FooterLayout pins footer content to the bottom of the view while the main content
+`FooterLayout` pins footer content to the bottom of the view while the main content
 scrolls above it.
 
 ```csharp

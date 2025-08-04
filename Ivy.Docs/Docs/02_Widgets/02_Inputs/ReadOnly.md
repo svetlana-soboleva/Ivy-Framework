@@ -1,10 +1,10 @@
 # ReadOnlyInput
 
-The ReadOnlyInput widget displays data in an input-like format that cannot be edited by the user. It's useful for showing form values in a consistent style with other inputs, while preventing modification.
+The `ReadOnlyInput` widget displays data in an input-like format that cannot be edited by the user. It's useful for showing form values in a consistent style with other inputs, while preventing modification.
 
 ## Basic Usage
 
-Here's a simple example of a ReadOnlyInput displaying a value:
+Here's a simple example of a `ReadOnlyInput` displaying a value:
 
 ```csharp demo-below
 public class ReadOnlyDemo : ViewBase

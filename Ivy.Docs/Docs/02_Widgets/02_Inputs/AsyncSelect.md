@@ -1,10 +1,10 @@
 # AsyncSelectInput
 
-The AsyncSelectInput widget provides a select dropdown that loads options asynchronously. It's useful for scenarios where options need to be fetched from an API or when the list of options is large and should be loaded on-demand.
+The `AsyncSelectInput` widget provides a select dropdown that loads options asynchronously. It's useful for scenarios where options need to be fetched from an API or when the list of options is large and should be loaded on-demand.
 
 ## Basic Usage
 
-Here's a simple example of an AsyncSelectInput that fetches categories from a database:
+Here's a simple example of an `AsyncSelectInput` that fetches categories from a database:
 
 ```csharp
 var guidState = this.UseState(default(Guid?));
@@ -35,7 +35,7 @@ return guidState.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder
 
 ## Event Handling
 
-The AsyncSelectInput can handle selection events using the `OnChange` parameter:
+The `AsyncSelectInput` can handle selection events using the `OnChange` parameter:
 
 ```csharp
 var state = this.UseState(default(Guid?));
@@ -45,7 +45,7 @@ input.OnChange = e => Console.WriteLine($"Selected: {e.Value}");
 
 ## Styling
 
-The AsyncSelectInput can be customized with various styling options, such as setting a placeholder or disabling the input:
+The `AsyncSelectInput` can be customized with various styling options, such as setting a placeholder or disabling the input:
 
 ```csharp
 var input = state.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder:"Select Category", disabled: true);
@@ -57,7 +57,7 @@ var input = state.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholde
 
 ### Advanced Usage
 
-Here's an example of using AsyncSelectInput in a form:
+Here's an example of using `AsyncSelectInput` in a form:
 
 ```csharp
 var product = this.UseState(() => new ProductCreateRequest());

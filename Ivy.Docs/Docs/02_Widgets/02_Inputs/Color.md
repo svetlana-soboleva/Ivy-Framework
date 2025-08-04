@@ -25,11 +25,11 @@ public class ColorDemo : ViewBase
 
 ### Using the Non-Generic Constructor
 
-For convenience, you can create a ColorInput without specifying the generic type, which defaults to `string`:
+For convenience, you can create a `ColorInput` without specifying the generic type, which defaults to `string`:
 
 ```csharp
 // Using the non-generic constructor (defaults to string)
-var colorInput = new ColorInput();
+var`ColorInput`= new ColorInput();
 
 // With placeholder
 var colorInputWithPlaceholder = new ColorInput("Choose a color");
@@ -124,7 +124,7 @@ public class ColorChangedDemo : ViewBase
 
 ### Disabled
 
-To render a disabled ColorInput the function `Disabled` should be used.  
+To render a disabled `ColorInput` the function `Disabled` should be used.  
 
 ```csharp demo-below
 public class DisabledColorInput : ViewBase
@@ -160,7 +160,7 @@ public class InvalidStyleDemo : ViewBase
 
 ## Examples
 
-The following example shows how ColorPicker control can be used in a developer tool setting that 
+The following example shows how `ColorPicker` control can be used in a developer tool setting that 
 generates CSS blocks. 
 
 ```csharp demo-tabs

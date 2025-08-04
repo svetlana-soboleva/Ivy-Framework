@@ -1,6 +1,6 @@
 # Xml
 
-The Xml widget displays XML data in a formatted, syntax-highlighted view. It's useful for displaying configuration files, data feeds, and other XML-structured content.
+The `Xml` widget displays XML data in a formatted, syntax-highlighted view. It's useful for displaying configuration files, data feeds, and other XML-structured content.
 
 ```csharp demo-tabs
 public class XmlConfigView : ViewBase

@@ -88,7 +88,7 @@ public class DateTimeVariantsDemo : ViewBase
 
 ## Supported State Types
 
-DateTimeInput supports various date and time types:
+`DateTimeInput` supports various date and time types:
 
 - `DateTime` and `DateTime?`
 - `DateTimeOffset` and `DateTimeOffset?`
@@ -98,7 +98,7 @@ DateTimeInput supports various date and time types:
 
 ## Event Handling
 
-DateTimeInput can handle change and blur events:
+`DateTimeInput` can handle change and blur events:
 
 ```csharp
 var dateState = this.UseState(DateTime.Now);

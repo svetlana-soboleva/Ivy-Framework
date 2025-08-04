@@ -1,6 +1,6 @@
 # AreaChart
 
-Area charts display quantitative data over time. Multiple series can be stacked
+`AreaChart`s display quantitative data over time. Multiple series can be stacked
 with different colors.
 
 ```csharp demo-below

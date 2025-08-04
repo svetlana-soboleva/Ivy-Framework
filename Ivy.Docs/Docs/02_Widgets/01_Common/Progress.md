@@ -5,7 +5,7 @@ prepare: |
 
 # Progress
 
-The Progress widget is used to visually represent the completion status of a task or process. It can display a percentage of completion and can be customized with different color variants.
+The `Progress` widget is used to visually represent the completion status of a task or process. It can display a percentage of completion and can be customized with different color variants.
 
 ## Basic Usage
 

@@ -1,6 +1,6 @@
 # Skeleton
 
-The Skeleton widget creates placeholder loading indicators that mimic the shape of your content. It improves perceived performance by showing users the layout of the page while data is loading.
+The `Skeleton` widget creates placeholder loading indicators that mimic the shape of your content. It improves perceived performance by showing users the layout of the page while data is loading.
 
 ```csharp demo-tabs
 public class ProductCardView : ViewBase

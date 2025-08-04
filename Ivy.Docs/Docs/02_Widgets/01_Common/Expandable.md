@@ -1,6 +1,6 @@
 ﻿# Expandable
 
-The Expandable widget allows you to hide and show content interactively, providing a clean and organized way to present information.
+The `Expandable` widget allows you to hide and show content interactively, providing a clean and organized way to present information.
 
 ## Basic Usage
 

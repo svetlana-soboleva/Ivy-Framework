@@ -1,6 +1,6 @@
 # Icon
 
-The Icon widget displays vector icons from Ivy's built-in icon set. Icons enhance visual communication and can be customized with different colors and sizes.
+The `Icon` widget displays vector icons from Ivy's built-in icon set. Icons enhance visual communication and can be customized with different colors and sizes.
 
 ## Lucide Icons
 

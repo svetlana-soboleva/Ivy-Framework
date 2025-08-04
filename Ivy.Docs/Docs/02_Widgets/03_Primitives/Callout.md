@@ -1,6 +1,6 @@
 # Callout
 
-Callouts are attention-grabbing components used to highlight important information, warnings, or tips. They come in different variants including info, warning, error, and success.
+`Callout`s are attention-grabbing components used to highlight important information, warnings, or tips. They come in different variants including info, warning, error, and success.
 
 ```csharp demo-tabs
 public class UserGuideView : ViewBase
