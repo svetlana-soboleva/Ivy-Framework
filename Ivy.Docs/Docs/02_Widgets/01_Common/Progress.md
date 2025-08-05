@@ -48,6 +48,7 @@ public class StateBoundProgressApp : ViewBase
 The `Progress` widget supports different color variants to match your application's design:
 
 ### Primary (Default)
+
 ```csharp demo-below
 public class PrimaryProgressApp : ViewBase
 {
@@ -56,6 +57,7 @@ public class PrimaryProgressApp : ViewBase
 ```
 
 ### Emerald Gradient
+
 ```csharp demo-below
 public class EmeraldProgressApp : ViewBase
 {
@@ -133,6 +135,7 @@ public class InteractiveProgressApp : ViewBase
 ## Common Use Cases
 
 ### File Upload Progress
+
 ```csharp demo-below
 public class FileUploadProgressApp : ViewBase
 {
@@ -150,6 +153,7 @@ public class FileUploadProgressApp : ViewBase
 ```
 
 ### Task Completion
+
 ```csharp demo-below
 public class TaskCompletionApp : ViewBase
 {
@@ -171,6 +175,7 @@ public class TaskCompletionApp : ViewBase
 ```
 
 ### Loading States
+
 ```csharp demo-below
 public class LoadingStatesApp : ViewBase
 {
