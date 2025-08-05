@@ -16,11 +16,7 @@ const isLazyComponent = (
 const isChartComponent = (nodeType: string): boolean => {
   return (
     nodeType.startsWith('Ivy.') &&
-    (nodeType.includes('Chart') ||
-      nodeType === 'Ivy.LineChart' ||
-      nodeType === 'Ivy.PieChart' ||
-      nodeType === 'Ivy.AreaChart' ||
-      nodeType === 'Ivy.BarChart')
+    nodeType.includes('Chart')
   );
 };
 
