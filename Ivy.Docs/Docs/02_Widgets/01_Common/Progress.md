@@ -109,39 +109,21 @@ public class InteractiveProgressApp : ViewBase
                     uploadProgress.Set(0);
                     uploadGoal.Set("Starting upload...");
                     
-                    // Use cancellation token for proper lifecycle management
-                    var cts = new CancellationTokenSource();
-                    this.TrackDisposable(cts);
-                    
                     Task.Run(async () => {
-                        try
-                        {
-                            var steps = new[] { 
-                                "Preparing files...", 
-                                "Uploading...", 
-                                "Processing...", 
-                                "Finalizing...", 
-                                "Complete!" 
-                            };
-                            
-                            for(int i = 0; i < steps.Length; i++) {
-                                if (cts.Token.IsCancellationRequested) break;
-                                
-                                uploadGoal.Set(steps[i]);
-                                uploadProgress.Set((i + 1) * 20);
-                                await Task.Delay(500, cts.Token);
-                            }
+                        var steps = new[] { 
+                            "Preparing files...", 
+                            "Uploading...", 
+                            "Processing...", 
+                            "Finalizing...", 
+                            "Complete!" 
+                        };
+                        
+                        for(int i = 0; i < steps.Length; i++) {
+                            uploadGoal.Set(steps[i]);
+                            uploadProgress.Set((i + 1) * 20);
+                            await Task.Delay(500);
                         }
-                        catch (OperationCanceledException)
-                        {
-                            // Handle cancellation gracefully
-                            uploadGoal.Set("Upload cancelled");
-                        }
-                        catch (Exception)
-                        {
-                            uploadGoal.Set("Upload failed");
-                        }
-                    }, cts.Token);
+                    });
                 })
             );
     }
@@ -203,38 +185,20 @@ public class LoadingStatesApp : ViewBase
                 loadingProgress.Set(0);
                 loadingGoal.Set("Initializing...");
                 
-                // Use cancellation token for proper lifecycle management
-                var cts = new CancellationTokenSource();
-                this.TrackDisposable(cts);
-                
                 Task.Run(async () => {
-                    try
-                    {
-                        var steps = new[] { 
-                            "Initializing...", 
-                            "Loading modules...", 
-                            "Connecting to services...", 
-                            "Ready!" 
-                        };
-                        
-                        for(int i = 0; i < steps.Length; i++) {
-                            if (cts.Token.IsCancellationRequested) break;
-                            
-                            loadingGoal.Set(steps[i]);
-                            loadingProgress.Set((i + 1) * 25);
-                            await Task.Delay(800, cts.Token);
-                        }
+                    var steps = new[] { 
+                        "Initializing...", 
+                        "Loading modules...", 
+                        "Connecting to services...", 
+                        "Ready!" 
+                    };
+                    
+                    for(int i = 0; i < steps.Length; i++) {
+                        loadingGoal.Set(steps[i]);
+                        loadingProgress.Set((i + 1) * 25);
+                        await Task.Delay(800);
                     }
-                    catch (OperationCanceledException)
-                    {
-                        // Handle cancellation gracefully
-                        loadingGoal.Set("Loading cancelled");
-                    }
-                    catch (Exception)
-                    {
-                        loadingGoal.Set("Loading failed");
-                    }
-                }, cts.Token);
+                });
             })
         );
     }
