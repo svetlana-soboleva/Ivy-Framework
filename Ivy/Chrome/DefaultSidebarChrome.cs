@@ -69,6 +69,9 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             if (settings.Navigation == ChromeNavigation.Pages)
             {
                 currentApp.Set(navigateArgs.ToAppHost(args.ConnectionId));
+                // Update browser address bar with clean URL
+                var cleanUrl = $"/{navigateArgs.AppId}";
+                client.UpdateUrl(cleanUrl);
             }
             else
             {
@@ -107,8 +110,16 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             {
                 user.Set(await auth.GetUserInfoAsync());
             }
-            if (!string.IsNullOrEmpty(settings.DefaultAppId))
+            
+            // Check if we have appArgs (specific app to load)
+            if (!string.IsNullOrEmpty(args.Args))
             {
+                // Load the specific app from appArgs
+                OpenApp(new NavigateArgs(args.Args));
+            }
+            else if (!string.IsNullOrEmpty(settings.DefaultAppId))
+            {
+                // Load default app
                 OpenApp(new NavigateArgs(settings.DefaultAppId));
             }
         });

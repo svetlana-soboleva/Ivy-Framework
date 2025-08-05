@@ -10,7 +10,7 @@ import { EventHandlerProvider } from './components/EventHandlerContext';
 import { TextShimmer } from './components/TextShimmer';
 import MadeWithIvy from './components/MadeWithIvy';
 import { ThemeProvider } from './components/ThemeProvider';
-import { getAppArgs, getAppId, getParentId } from './lib/utils';
+import { getCurrentRoute, updateRoute, type RouteInfo } from './lib/routing';
 import { hasLicensedFeature } from './lib/license';
 
 function ConnectionModal() {
@@ -24,18 +24,44 @@ function ConnectionModal() {
 }
 
 function App() {
-  const appId = getAppId();
-  const appArgs = getAppArgs();
-  const parentId = getParentId();
+  const [route, setRoute] = useState<RouteInfo>(() => getCurrentRoute());
   const { widgetTree, eventHandler, disconnected } = useBackend(
-    appId,
-    appArgs,
-    parentId
+    route.appId,
+    route.appArgs,
+    route.parentId
   );
   const [removeBranding, setRemoveBranding] = useState(true);
 
   useEffect(() => {
     hasLicensedFeature('RemoveBranding').then(setRemoveBranding);
+  }, []);
+
+  // Handle browser navigation (back/forward)
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoute(getCurrentRoute());
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Listen for navigation events from the backend
+  useEffect(() => {
+    const handleNavigation = (event: CustomEvent) => {
+      const { appId, appArgs, parentId } = event.detail;
+      const newRoute = {
+        appId,
+        appArgs,
+        parentId,
+        isMainApp: true, // Navigation events are always for main app
+      };
+      setRoute(newRoute);
+      updateRoute(appId, appArgs, parentId);
+    };
+
+    window.addEventListener('ivy-navigation', handleNavigation);
+    return () => window.removeEventListener('ivy-navigation', handleNavigation);
   }, []);
 
   return (

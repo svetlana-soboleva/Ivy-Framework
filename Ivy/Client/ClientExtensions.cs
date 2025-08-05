@@ -33,6 +33,11 @@ public static class ClientExtensions
         client.Sender.Send("OpenUrl", uri.ToString());
     }
 
+    public static void UpdateUrl(this IClientProvider client, string url)
+    {
+        client.Sender.Send("UpdateUrl", url);
+    }
+
     public static void Redirect(this IClientProvider client, string url)
     {
         client.Sender.Send("Redirect", url);

@@ -60,6 +60,9 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    historyApiFallback: true,
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
