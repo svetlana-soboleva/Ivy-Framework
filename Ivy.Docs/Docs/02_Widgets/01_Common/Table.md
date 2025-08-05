@@ -14,18 +14,18 @@ public class BasicRowTable : ViewBase
     {
         public required string Sku { get; set; }
         public required string Name { get; set; }
-        public required double Price { get; set; }
+        public required decimal Price { get; set; }
         public required string Url { get; set; }
     }
-    
+
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans"},
-            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Url = "http://example.com/sneakers"},
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Url = "http://example.com/tshirt"},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Url = "http://example.com/jeans"},
+            new {Sku = "1236", Name = "Sneakers", Price = 30, Url = "http://example.com/sneakers"},
         };
-        
+
         return products.ToTable()
             .Width(Size.Full());
     }
@@ -48,7 +48,7 @@ public class BasicRowTable : ViewBase
 
 **Totals(p => p.ColumnName)** calculates the amount of the column if it contains numbers
 
-**Empty(new Card(""))** shows text if cell is empty. 
+**Empty(new Card(""))** shows text if cell is empty.
 
 ```csharp demo-tabs
 public class CustomBuilderTable : ViewBase
@@ -56,8 +56,8 @@ public class CustomBuilderTable : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans"}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Url = "http://example.com/tshirt"},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Url = "http://example.com/jeans"}
         };
 
         return products.ToTable()
@@ -75,7 +75,7 @@ public class CustomBuilderTable : ViewBase
 
 ## Column Management Examples
 
-The `Clear()` method hides all columns, allowing you to selectively show only the columns you need. 
+The `Clear()` method hides all columns, allowing you to selectively show only the columns you need.
 Use `Add()` to show specific columns in the order you want them to appear.
 
 ```csharp demo-tabs
@@ -84,9 +84,9 @@ public class ColumnManagementTable : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Category = "Clothing", Stock = 50},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Category = "Clothing", Stock = 30},
-            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Category = "Footwear", Stock = 25}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Category = "Clothing", Stock = 50},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Category = "Clothing", Stock = 30},
+            new {Sku = "1236", Name = "Sneakers", Price = 30, Category = "Footwear", Stock = 25}
         };
 
         return products.ToTable()
@@ -104,7 +104,7 @@ public class ColumnManagementTable : ViewBase
 
 ## Advanced Aggregations
 
-The `Totals()` method supports custom aggregation functions. 
+The `Totals()` method supports custom aggregation functions.
 You can use LINQ methods like `Count()`, `Average()`, `Sum()`, `Max()`, and `Min()` to create sophisticated calculations for your data.
 
 ```csharp demo-tabs
@@ -113,9 +113,9 @@ public class AdvancedAggregationsTable : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Stock = 50},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Stock = 30},
-            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Stock = 25}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Stock = 50},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Stock = 30},
+            new {Sku = "1236", Name = "Sneakers", Price = 30, Stock = 25}
         };
 
         return products.ToTable()
@@ -142,9 +142,9 @@ public class EmptyColumnsTable : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Description = "", Notes = ""},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Description = "Blue jeans", Notes = ""},
-            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Description = "", Notes = "Limited edition"}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Description = "", Notes = ""},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Description = "Blue jeans", Notes = ""},
+            new {Sku = "1236", Name = "Sneakers", Price = 30, Description = "", Notes = "Limited edition"}
         };
 
         return products.ToTable()
@@ -166,8 +166,8 @@ public class ResetTableExample : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Category = "Clothing"},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Category = "Clothing"}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Category = "Clothing"},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Category = "Clothing"}
         };
 
         return products.ToTable()
@@ -206,6 +206,7 @@ public class ManualTableDemo : ViewBase
     }
 }
 ```
+
 ## Builder Factory Methods
 
 The `Builder()` method allows you to specify how different data types should be rendered. Use the builder factory methods to create appropriate renderers for your data.
@@ -216,8 +217,8 @@ public class CustomBuildersTable : ViewBase
     public override object? Build()
     {
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt", Description = "Comfortable cotton shirt"},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans", Description = "Blue denim jeans"}
+            new {Sku = "1234", Name = "T-shirt", Price = 10, Url = "http://example.com/tshirt", Description = "Comfortable cotton shirt"},
+            new {Sku = "1235", Name = "Jeans", Price = 20, Url = "http://example.com/jeans", Description = "Blue denim jeans"}
         };
 
         return products.ToTable()
@@ -249,8 +250,8 @@ public class AutomaticTableConversion : ViewBase
     private object GetProductData()
     {
         return new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0}
+            new {Sku = "1234", Name = "T-shirt", Price = 10},
+            new {Sku = "1235", Name = "Jeans", Price = 20}
         };
     }
 }
@@ -263,30 +264,35 @@ Tables integrate seamlessly with other Ivy widgets, allowing you to create rich,
 ```csharp demo-tabs
 public class TableIntegrationExample : ViewBase
 {
+    record Product(string Sku, string Name, double Price);
     public override object? Build()
     {
-        var products = UseState(() => new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0}
-        });
+
+        var products = UseState<Product[]>(
+            [new Product("1234", "T-shirt", 10.0), new Product("1235", "Jeans", 20.0)]
+            );
 
         var client = UseService<IClientProvider>();
-        var counter = UseState(0);
 
         var addProduct = (Event<Button> e) =>
         {
-            var newProduct = new { Sku = $"SKU{1000 + counter.Value}", Name = $"Product {counter.Value + 1}", Price = 15.0 + counter.Value };
-            products.Set(products.Value.Concat(new[] { newProduct }).ToArray());
-            counter.Set(counter.Value + 1);
+            var currentCount = products.Value.Length;
+
+            var newProduct = new Product(
+                Sku: $"SKU{1000 + currentCount}",
+                Name: $"Product {currentCount + 1}",
+                Price: 15.0 + currentCount
+            );
+
+            var updatedProducts = products.Value.Append(newProduct).ToArray();
+            products.Set(updatedProducts);
+
             client.Toast($"Added {newProduct.Name}", "Product Added");
         };
 
         var clearProducts = (Event<Button> e) =>
         {
-            products.Set(new[] {
-                new {Sku = "", Name = "", Price = 0.0}
-            }.Take(0).ToArray()); // Empty array of the same type
-            counter.Set(0);
+            products.Set(new Product[0]);
             client.Toast("All products cleared", "Products Cleared");
         };
 
@@ -310,6 +316,5 @@ public class TableIntegrationExample : ViewBase
   ```csharp
   .Empty(new Card("No products found").Width(Size.Full()))
   ```
-  
-<WidgetDocs Type="Ivy.Table" ExtensionTypes="Ivy.Views.Tables.TableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Tables/Table.cs"/>
 
+<WidgetDocs Type="Ivy.Table" ExtensionTypes="Ivy.Views.Tables.TableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Tables/Table.cs"/>
