@@ -259,6 +259,38 @@ export const useBackend = (
             window.open(url, '_blank');
           });
 
+          connection.on('UpdateUrl', (url: string) => {
+            logger.debug(`[${connection.connectionId}] UpdateUrl`, { url });
+
+            // Handle clean URLs (e.g., "/onboarding/getting-started/introduction-app")
+            if (url.startsWith('/')) {
+              // Extract appId from the path
+              const targetAppId = url.substring(1); // Remove leading slash
+
+              // Dispatch custom navigation event for Chrome app with target app as appArgs
+              const navigationEvent = new CustomEvent('ivy-navigation', {
+                detail: {
+                  appId: '$chrome',
+                  appArgs: targetAppId,
+                  parentId: null,
+                },
+              });
+              window.dispatchEvent(navigationEvent);
+            } else {
+              // Handle legacy query parameter URLs
+              const urlObj = new URL(url, window.location.origin);
+              const appId = urlObj.searchParams.get('appId');
+              const appArgs = urlObj.searchParams.get('appArgs');
+              const parentId = urlObj.searchParams.get('parentId');
+
+              // Dispatch custom navigation event
+              const navigationEvent = new CustomEvent('ivy-navigation', {
+                detail: { appId, appArgs, parentId },
+              });
+              window.dispatchEvent(navigationEvent);
+            }
+          });
+
           connection.on('HotReload', () => {
             logger.debug(`[${connection.connectionId}] HotReload`);
             handleHotReloadMessage();
@@ -293,6 +325,7 @@ export const useBackend = (
         connection.off('SetJwt');
         connection.off('SetTheme');
         connection.off('OpenUrl');
+        connection.off('UpdateUrl');
         connection.off('reconnecting');
         connection.off('reconnected');
         connection.off('close');
