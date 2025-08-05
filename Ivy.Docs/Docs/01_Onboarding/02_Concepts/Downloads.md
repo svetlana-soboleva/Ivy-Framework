@@ -65,31 +65,26 @@ client.DownloadFile(
 
 Proper error handling is essential for downloads:
 
-```csharp
+```csharp demo-below
 public class DownloadView : ViewBase
 {
-    public override object? Build()
+        public override object? Build()
     {
         var client = this.UseService<IClientProvider>();
-        var error = UseState<string?>(null);
+        var error = UseState<string?>(() => null);
+        var downloadUrl = this.UseDownload(
+            () => Task.FromResult(System.Text.Encoding.UTF8.GetBytes("Hello World")),
+            "text/plain",
+            "file.txt"
+        );
+
+        if (downloadUrl.Value == null) return null;
 
         return Layout.Vertical(
             error.Value != null
-                ? new Alert(error.Value, variant: AlertVariant.Error)
+                ? Callout.Error(error.Value)
                 : null,
-            new Button(
-                "Download",
-                onClick: async _ => {
-                    try {
-                        await client.DownloadFileAsync(
-                            "file.txt",
-                            content
-                        );
-                    } catch (Exception ex) {
-                        error.Set($"Download failed: {ex.Message}");
-                    }
-                }
-            )
+            new Button("Download").Url(downloadUrl.Value)
         );
     }
 }
@@ -108,69 +103,49 @@ public class DownloadView : ViewBase
 
 ### CSV Export
 
-```csharp
+```csharp demo-below
 public class DataExportView : ViewBase
 {
-    public override object? Build()
+        public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var isExporting = UseState(false);
-
-        return new Button(
-            "Export to CSV",
-            disabled: isExporting.Value,
-            onClick: async _ => {
-                isExporting.Set(true);
-                try {
-                    var data = await api.GetExportData();
-                    var csv = ConvertToCsv(data);
-                    await client.DownloadFileAsync(
-                        $"export-{DateTime.Now:yyyy-MM-dd}.csv",
-                        csv,
-                        contentType: "text/csv"
-                    );
-                } finally {
-                    isExporting.Set(false);
-                }
-            }
+        var downloadUrl = this.UseDownload(
+            () => Task.FromResult(System.Text.Encoding.UTF8.GetBytes("Name,Email,Age\nJohn,john@example.com,30\nJane,jane@example.com,25")),
+            "text/csv",
+            $"export-{DateTime.Now:yyyy-MM-dd}.csv"
         );
+
+        if (downloadUrl.Value == null) return null;
+
+        return new Button("Export to CSV").Url(downloadUrl.Value);
     }
+
+
 }
 ```
 
 ### Large File Download with Progress
 
-```csharp
+```csharp demo-below
 public class LargeFileView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var progress = UseState(0.0);
-        var isDownloading = UseState(false);
-
-        return Layout.Vertical(
-            isDownloading.Value
-                ? new ProgressBar(progress.Value)
-                : null,
-            new Button(
-                "Download Large File",
-                disabled: isDownloading.Value,
-                onClick: async _ => {
-                    isDownloading.Set(true);
-                    try {
-                        await client.DownloadFileAsync(
-                            "large-file.zip",
-                            fileContent,
-                            onProgress: p => progress.Set(p)
-                        );
-                    } finally {
-                        isDownloading.Set(false);
-                        progress.Set(0.0);
-                    }
-                }
-            )
+        var downloadUrl = this.UseDownload(
+            () => Task.FromResult(GenerateLargeFile()),
+            "application/zip",
+            "large-file.zip"
         );
+
+        if (downloadUrl.Value == null) return null;
+
+        return new Button("Download Large File").Url(downloadUrl.Value);
+    }
+
+    // Helper method
+    private byte[] GenerateLargeFile()
+    {
+        // Simulate large file generation
+        return System.Text.Encoding.UTF8.GetBytes("Large file content...");
     }
 }
 ```

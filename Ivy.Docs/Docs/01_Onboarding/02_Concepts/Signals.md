@@ -90,7 +90,7 @@ public class SignalCompositionExample : ViewBase
             new TextInput("First Name", value: firstName.Value, onChange: v => firstName.Set(v)),
             new TextInput("Last Name", value: lastName.Value, onChange: v => lastName.Set(v)),
             fullName,
-            new Button("Submit", disabled: !isValid.Value)
+            new Button("Submit").Disabled(!isValid.Value)
         );
     }
 }
@@ -173,7 +173,7 @@ public class ValidationExample : ViewBase
         return Layout.Vertical(
             new TextInput("Email", value: email.Value, onChange: v => email.Set(v)),
             new TextInput("Password", value: password.Value, onChange: v => password.Set(v)),
-            new Button("Submit", disabled: !canSubmit.Value)
+            new Button("Submit").Disabled(!canSubmit.Value)
         );
     }
 }

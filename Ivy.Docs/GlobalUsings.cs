@@ -7,6 +7,7 @@ global using Ivy.Builders;
 global using Ivy.Client;
 global using Ivy.Core;
 global using Ivy.Core.Hooks;
+global using Ivy.Hooks;
 global using Ivy.Helpers;
 global using Ivy.Views;
 global using Ivy.Shared;
