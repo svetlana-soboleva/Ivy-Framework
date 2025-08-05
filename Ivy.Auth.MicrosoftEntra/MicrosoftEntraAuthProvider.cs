@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Ivy.Hooks;
+using System.Text.Json.Serialization;
 
 namespace Ivy.Auth.MicrosoftEntra;
 
@@ -23,13 +24,22 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
-    byte[]? _serializedRefreshTokens = null;
+    SerializedCache? _serializedTokenCache = null;
 
     private string? _codeVerifier = null;
 
     private readonly string _tenantId;
     private readonly string _clientId;
     private readonly string _clientSecret;
+
+    record struct SerializedCache(
+        Dictionary<string, object> AccessToken,
+        Dictionary<string, SerializedRefreshToken> RefreshToken,
+        Dictionary<string, object> IdToken,
+        Dictionary<string, object> Account,
+        Dictionary<string, object> AppMetadata);
+
+    record struct SerializedRefreshToken([property: JsonPropertyName("secret")] string Secret);
 
     public MicrosoftEntraAuthProvider()
     {
@@ -60,17 +70,10 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .WithRedirectUri(baseUrl)
             .Build();
 
-        _app.UserTokenCache.SetBeforeAccess(args =>
-        {
-            if (_serializedRefreshTokens != null)
-            {
-                args.TokenCache.DeserializeAdalV3(_serializedRefreshTokens);
-            }
-        });
-
         _app.UserTokenCache.SetAfterAccess(args =>
         {
-            _serializedRefreshTokens = args.TokenCache.SerializeAdalV3();
+            var cacheBytes = args.TokenCache.SerializeMsalV3();
+            _serializedTokenCache = JsonSerializer.Deserialize<SerializedCache>(cacheBytes);
         });
     }
 
@@ -130,17 +133,18 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .WithPkceCodeVerifier(_codeVerifier)
             .ExecuteAsync();
 
+        var accountId = result.Account.HomeAccountId!.Identifier;
         return new AuthToken(
             result.AccessToken,
-            GetCurrentRefreshToken(),
+            GetCurrentRefreshToken(accountId),
             result.ExpiresOn,
-            result.Account.HomeAccountId?.Identifier
+            accountId
         );
     }
 
     public async Task LogoutAsync(string jwt)
     {
-        _serializedRefreshTokens = null;
+        _serializedTokenCache = null;
         await GetApp().RemoveAsync(null);
     }
 
@@ -165,12 +169,11 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             return jwt;
         }
 
-        _serializedRefreshTokens = Convert.FromBase64String(jwt.RefreshToken!);
+        // _serializedRefreshTokens = Convert.FromBase64String(jwt.RefreshToken!);
 
         try
         {
             var account = await app.GetAccountAsync(accountId);
-
             if (account == null)
             {
                 return jwt;
@@ -179,18 +182,17 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             {
                 var result = await GetApp().AcquireTokenSilent(_scopes, account)
                     .ExecuteAsync();
-
                 if (result == null)
                 {
                     return jwt;
                 }
 
-
+                accountId = account.HomeAccountId!.Identifier;
                 return new AuthToken(
                     result.AccessToken,
-                    GetCurrentRefreshToken(),
+                    GetCurrentRefreshToken(accountId),
                     result.ExpiresOn,
-                    account.HomeAccountId?.Identifier
+                    accountId
                 );
             }
         }
@@ -277,7 +279,21 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             .Replace('/', '_');
     }
 
-    private string? GetCurrentRefreshToken() => _serializedRefreshTokens != null
-        ? Convert.ToBase64String(_serializedRefreshTokens)
-        : null;
+    private string? GetCurrentRefreshToken(string accountId)
+    {
+        if (_serializedTokenCache is not { } serializedTokenCache)
+        {
+            return null;
+        }
+
+        foreach (var (key, token) in serializedTokenCache.RefreshToken)
+        {
+            if (key.StartsWith(accountId))
+            {
+                return token.Secret;
+            }
+        }
+
+        return null;
+    }
 }
