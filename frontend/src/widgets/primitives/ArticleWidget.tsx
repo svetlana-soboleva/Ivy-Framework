@@ -33,7 +33,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
     // Small delay to ensure any Suspense boundaries have resolved
     const timer = setTimeout(() => {
       setContentLoaded(true);
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
