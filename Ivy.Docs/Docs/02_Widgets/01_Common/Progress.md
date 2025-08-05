@@ -89,6 +89,7 @@ public class InteractiveProgressApp : ViewBase
     {
         var taskProgress = this.UseState(0);
         var uploadProgress = this.UseState(33);
+        var uploadGoal = this.UseState("Ready to upload");
 
         return Layout.Vertical()
             | Text.H3("Task Progress")
@@ -101,18 +102,46 @@ public class InteractiveProgressApp : ViewBase
             )
             | Text.H3("Upload Progress") 
             | new Progress(uploadProgress.Value)
-                .Goal("Uploading files...")
+                .Goal(uploadGoal.Value)
                 .ColorVariant(Progress.ColorVariants.EmeraldGradient)
             | Layout.Horizontal(
                 new Button("Simulate Upload", _ => {
                     uploadProgress.Set(0);
-                    // Simulate progress updates
+                    uploadGoal.Set("Starting upload...");
+                    
+                    // Use cancellation token for proper lifecycle management
+                    var cts = new CancellationTokenSource();
+                    this.TrackDisposable(cts);
+                    
                     Task.Run(async () => {
-                        for(int i = 0; i <= 100; i += 10) {
-                            uploadProgress.Set(i);
-                            await Task.Delay(200);
+                        try
+                        {
+                            var steps = new[] { 
+                                "Preparing files...", 
+                                "Uploading...", 
+                                "Processing...", 
+                                "Finalizing...", 
+                                "Complete!" 
+                            };
+                            
+                            for(int i = 0; i < steps.Length; i++) {
+                                if (cts.Token.IsCancellationRequested) break;
+                                
+                                uploadGoal.Set(steps[i]);
+                                uploadProgress.Set((i + 1) * 20);
+                                await Task.Delay(500, cts.Token);
+                            }
                         }
-                    });
+                        catch (OperationCanceledException)
+                        {
+                            // Handle cancellation gracefully
+                            uploadGoal.Set("Upload cancelled");
+                        }
+                        catch (Exception)
+                        {
+                            uploadGoal.Set("Upload failed");
+                        }
+                    }, cts.Token);
                 })
             );
     }
@@ -166,17 +195,46 @@ public class LoadingStatesApp : ViewBase
     public override object? Build()
     {
         var loadingProgress = this.UseState(0);
+        var loadingGoal = this.UseState("Ready to start");
 
         return Layout.Vertical(
-            new Progress(loadingProgress.Value).Goal("Loading application..."),
+            new Progress(loadingProgress.Value).Goal(loadingGoal.Value),
             new Button("Start Loading", _ => {
+                loadingProgress.Set(0);
+                loadingGoal.Set("Initializing...");
+                
+                // Use cancellation token for proper lifecycle management
+                var cts = new CancellationTokenSource();
+                this.TrackDisposable(cts);
+                
                 Task.Run(async () => {
-                    var steps = new[] { "Initializing...", "Loading modules...", "Connecting...", "Ready!" };
-                    for(int i = 0; i < steps.Length; i++) {
-                        loadingProgress.Set((i + 1) * 25);
-                        await Task.Delay(500);
+                    try
+                    {
+                        var steps = new[] { 
+                            "Initializing...", 
+                            "Loading modules...", 
+                            "Connecting to services...", 
+                            "Ready!" 
+                        };
+                        
+                        for(int i = 0; i < steps.Length; i++) {
+                            if (cts.Token.IsCancellationRequested) break;
+                            
+                            loadingGoal.Set(steps[i]);
+                            loadingProgress.Set((i + 1) * 25);
+                            await Task.Delay(800, cts.Token);
+                        }
                     }
-                });
+                    catch (OperationCanceledException)
+                    {
+                        // Handle cancellation gracefully
+                        loadingGoal.Set("Loading cancelled");
+                    }
+                    catch (Exception)
+                    {
+                        loadingGoal.Set("Loading failed");
+                    }
+                }, cts.Token);
             })
         );
     }
