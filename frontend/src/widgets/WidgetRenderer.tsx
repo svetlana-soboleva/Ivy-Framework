@@ -14,10 +14,7 @@ const isLazyComponent = (
 };
 
 const isChartComponent = (nodeType: string): boolean => {
-  return (
-    nodeType.startsWith('Ivy.') &&
-    nodeType.includes('Chart')
-  );
+  return nodeType.startsWith('Ivy.') && nodeType.includes('Chart');
 };
 
 const flattenChildren = (children: WidgetNode[]): WidgetNode[] => {
