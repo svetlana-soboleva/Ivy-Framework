@@ -42,7 +42,7 @@ public class BasicRowTable : ViewBase
 
 **Align(p => p.ColumnName)** - right alignment for selected column
 
-**Order(p => p.ColumnNameFirst, p.ColumnNameSecond, p.CulumnNameThird, ...)** - is used to order column specific way
+**Order(p => p.ColumnNameFirst, p.ColumnNameSecond, p.ColumnNameThird, ...)** - is used to order column specific way
 
 **Remove(p => p.ColumnName)** - makes possible not to show column in the table
 
