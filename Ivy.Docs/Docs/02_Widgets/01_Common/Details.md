@@ -1,6 +1,6 @@
 # Details
 
-Detail widgets display label and value pairs. They are usually generated from a model using `ToDetails()`.
+`Detail` widgets display label and value pairs. They are usually generated from a model using `ToDetails()`.
 
 ## Basic Usage
 

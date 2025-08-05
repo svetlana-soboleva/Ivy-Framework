@@ -1,7 +1,7 @@
 # BarChart
 
-Bar charts compare values across categories. The sample below shows a stacked bar
-chart with two series; sales of Desktop and Mobile in first quarter of an year.
+`BarChart`s compare values across categories. The sample below shows a stacked bar
+chart with two series; sales of Desktop and Mobile in the first quarter of a year.
 
 ```csharp demo-below
 
@@ -112,7 +112,7 @@ here is done for the `Blueberry` column.
 
 ## More Examples
 
-Barchart handles negative and double values. The following shows a demonstration of these
+`BarChart` handles negative and double values. The following shows a demonstration of these
 where TIOBE index is shown for some programming languages over the last five years.
 
 Changing the value of the year, changes the chart below.

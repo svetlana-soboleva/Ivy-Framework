@@ -1,6 +1,6 @@
 # ResizeablePanelGroup
 
-ResizeablePanelGroup arranges panels with draggable handles for resizable
+`ResizeablePanelGroup` arranges panels with draggable handles for resizable
 layouts. Panels can be placed horizontally or vertically.
 
 ```csharp

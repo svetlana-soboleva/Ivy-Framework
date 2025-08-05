@@ -1,6 +1,6 @@
 # Image
 
-The Image widget displays images in your application.
+The `Image` widget displays images in your application.
 
 ```csharp demo-below
 Layout.Horizontal()

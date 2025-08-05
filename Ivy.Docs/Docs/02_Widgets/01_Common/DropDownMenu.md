@@ -2,7 +2,7 @@
 
 ## Basic Usage
 
-Here's a simple example of a DropDownMenu that shows a toast message when an item is selected.
+Here's a simple example of a `DropDownMenu` that shows a toast message when an item is selected.
 
 ```csharp
 var client = this.UseService<IClientProvider>();
@@ -27,7 +27,7 @@ return new DropDownMenu(@evt =>
 
 ## Event Handling
 
-DropDownMenus can handle selection events using the event parameter:
+`DropDownMenu`s can handle selection events using the event parameter:
 
 ```csharp
 var client = this.UseService<IClientProvider>();

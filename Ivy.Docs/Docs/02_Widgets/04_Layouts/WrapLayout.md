@@ -1,6 +1,6 @@
 # WrapLayout
 
-WrapLayout arranges children in rows that wrap when they reach the end of the
+`WrapLayout` arranges children in rows that wrap when they reach the end of the
 available space.
 
 ```csharp

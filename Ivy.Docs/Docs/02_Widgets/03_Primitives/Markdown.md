@@ -1,6 +1,6 @@
 # Markdown
 
-The Markdown widget renders Markdown content as formatted HTML with rich features including syntax highlighting, math support, tables, images, and interactive link handling. It supports standard Markdown, GitHub Flavored Markdown (GFM), and several advanced features.
+The `Markdown` widget renders Markdown content as formatted HTML with rich features including syntax highlighting, math support, tables, images, and interactive link handling. It supports standard Markdown, GitHub Flavored Markdown (GFM), and several advanced features.
 
 ## Basic Usage
 
@@ -159,7 +159,7 @@ public class CodeMarkdownView : ViewBase
 
 ### Math Support
 
-The Markdown widget supports KaTeX for rendering mathematical expressions both inline and as blocks.
+The `Markdown` widget supports KaTeX for rendering mathematical expressions both inline and as blocks.
 
 ```csharp demo-tabs
 public class MathMarkdownView : ViewBase
@@ -288,7 +288,7 @@ public class HtmlMarkdownView : ViewBase
 
 ## Link Handling
 
-The Markdown widget provides interactive link handling through the `OnLinkClick` event.
+The `Markdown` widget provides interactive link handling through the `OnLinkClick` event.
 
 ```csharp demo-tabs
 public class LinkHandlingView : ViewBase

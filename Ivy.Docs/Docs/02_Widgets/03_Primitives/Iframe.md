@@ -1,6 +1,6 @@
 # Iframe
 
-The Iframe widget embeds external web pages into your application. It creates a contained browsing context that can display content from other websites while maintaining security boundaries.
+The `Iframe` widget embeds external web pages into your application. It creates a contained browsing context that can display content from other websites while maintaining security boundaries.
 
 ```csharp demo-tabs
 public class ToolsDashboardView : ViewBase

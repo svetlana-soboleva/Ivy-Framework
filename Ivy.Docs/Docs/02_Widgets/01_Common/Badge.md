@@ -5,7 +5,7 @@ prepare: |
 
 # Badge
 
-The Badge widget is a versatile component used to display small pieces of information, such as counts, statuses, or labels, in a compact and visually appealing form. Badges are commonly used for notifications, status indicators, and categorization.
+The `Badge` widget is a versatile component used to display small pieces of information, such as counts or statuses, in a compact form.
 
 ## Basic Usage
 
@@ -63,7 +63,7 @@ Layout.Grid().Columns(4)
 
 ### Icons
 
-Badges can include icons to enhance their visual appearance and meaning.
+`Badge`s can include icons to enhance their visual appearance and meaning.
 
 #### Icons on the Left (Default)
 ```csharp demo-tabs

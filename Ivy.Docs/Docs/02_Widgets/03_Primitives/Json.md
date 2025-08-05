@@ -1,6 +1,6 @@
 # Json
 
-The Json widget displays JSON data in a formatted, syntax-highlighted view. It's useful for debugging, data visualization, and displaying API responses.
+The `Json` widget displays JSON data in a formatted, syntax-highlighted view. It's useful for debugging, data visualization, and displaying API responses.
 
 ```csharp demo-tabs
 public class ApiResponseViewer : ViewBase

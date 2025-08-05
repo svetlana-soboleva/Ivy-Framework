@@ -32,7 +32,7 @@ public class BasicUsageDemo : ViewBase
 
 ## Variants
 
-TextInputs come in several variants to suit different use cases:
+`TextInput`s come in several variants to suit different use cases:
 The following blocks shows how to use these.
 
 ### Password
@@ -61,7 +61,7 @@ public class PasswordCaptureDemo: ViewBase
 ### TextArea
 
 When a multiline text is needed, `TextInputs.Textarea` variant should be used. A common use-case is for capturing address
-that typically spans over multiple lines. The following demo shows how  to use it.
+that typically spans over multiple lines. The following demo shows how to use it.
 
 See it in action here.
 
@@ -86,7 +86,7 @@ Please note that how the newlines (`\n`) are recognized and used to create newli
 
 ### Search
 
-When it is needed to find an element from a collection of items, it is better to give users a visual clue.  
+When it is necessary to find an element from a collection of items, it is better to give users a visual clue.  
 Using the `TextInputs.Search` variant, this visual clue (with a looking glass icon) becomes obvious.
 The following demo shows how to add such an text input.
 
@@ -242,7 +242,7 @@ Whatever text is provided to the `Invalid` function, shows up when mouse is hove
 
 ### Disabled
 
-When it is needed to disable a `TextInput` variant, `Disabled` style is needed.
+When it is necessary to disable a `TextInput` variant, `Disabled` style is needed.
 The following code shows how to disable a `TextInput`.
 
 ```csharp
@@ -280,7 +280,7 @@ We can use associate keyboard shortcuts to text inputs the following way.
     .ShortcutKey("Ctrl+S")   
 ```
 
-The following demo shows this in action with multiple text inputs each
+The following demo shows this in action with multiple `TextInput`s each
 with different shortcut keys.
 
 ```csharp demo-below
@@ -311,7 +311,7 @@ public class ShortCutDemo : ViewBase
 
 ## Helper functions
 
-There are several helper functions to create TextInput variants from state instances. Instead of employing the constructor to create a
+There are several helper functions to create `TextInput` variants from state instances. Instead of employing the constructor to create a
 `TextInput`, these functions should be used. The following is an example of how Ivy can be employed to generate UI idiomatically using
 these functions.
 
