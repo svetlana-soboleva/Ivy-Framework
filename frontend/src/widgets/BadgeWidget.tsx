@@ -38,7 +38,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   // Map backend variant names to frontend badge variants
   const getBadgeVariant = (variant: string) => {
     switch (variant) {
-      case 'Default':
+      case 'Primary':
         return 'primary';
       case 'Destructive':
         return 'destructive';
