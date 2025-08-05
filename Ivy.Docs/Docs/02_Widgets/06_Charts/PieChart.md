@@ -1,10 +1,9 @@
 # PieChart
 
-Pie charts represent parts of a whole. Each slice is drawn from the provided data.
+`PieChart`s represent parts of a whole. Each slice is drawn from the provided data.
 
 The following example showcases a sample case where possible sale data from a store is listed.
-The pie chart shows these data. 
-
+The pie chart shows these data.
 
 ## Creating a Pie or a Donut chart
 
@@ -12,23 +11,23 @@ To create a pie chart or a donut chart easily the function `ToPieChart` should b
 lambda expressions to project the keys of the Pie and the values. The type of the pie can be
 altered via the `PieChartStyles` enum.
 
-The following example shows how to create a Pie and a Donut chart easily. 
+The following example shows how to create a Pie and a Donut chart easily.
 
 ```csharp demo-tabs
-public class PieChartDemo : ViewBase 
-{    
+public class PieChartDemo : ViewBase
+{
     public override object? Build()
-    {    
+    {
         //Sales data
         var data = new[]
-        {   
+        {
             new { Month = "January", Desktop = 186, Mobile = 100 },
             new { Month = "February", Desktop = 305, Mobile = 200 },
             new { Month = "March", Desktop = 237, Mobile = 300 },
-        };  
-         //Showing default placement of the legend at the bottom of the chart 
+        };
+         //Showing default placement of the legend at the bottom of the chart
          return Layout.Vertical()
-            | Text.Large("Mobile sales over Q1(January-March)") 
+            | Text.Large("Mobile sales over Q1(January-March)")
             | data.ToPieChart
                  (
                     e => e.Month,
@@ -44,37 +43,35 @@ public class PieChartDemo : ViewBase
                     PieChartStyles.Donut
                 );
     }
-}    
+}
 ```
-
-
 
 ### Browser Market Share
 
-The following example shows how to use `PieChart` type to create a more fine controlled pie chart. 
-The color scheme of the Pie can be changed using `ColorScheme` enum. The legend can be placed 
-in any corner using `Alignment` and `VerticalAlignment` enums. 
+The following example shows how to use `PieChart` type to create a more fine controlled pie chart.
+The color scheme of the Pie can be changed using `ColorScheme` enum. The legend can be placed
+in any corner using `Alignment` and `VerticalAlignment` enums.
 
 ```csharp demo-tabs
-public class BrowserStatsPie : ViewBase 
+public class BrowserStatsPie : ViewBase
 {
     public override object? Build()
     {
         var years = new string[]{"2019","2025"};
         var year = this.UseState(years[0]);
-        
+
         var map = new Dictionary<string,object>();
         var browserSharesYear1 = new []
         {
-             //Rounded 
+             //Rounded
             new { Browser = "Chrome", Company = "Google", Share = 30},
             new { Browser = "Safari", Company = "Apple", Share = 16},
             new { Browser = "Edge", Company= "Microsoft", Share = 52},
             new { Browser = "Firefox", Company= "Mozilla", Share = 2}
-        };    
+        };
         var browserSharesYear2 = new []
         {
-            //Rounded 
+            //Rounded
             new { Browser = "Chrome", Company = "Google", Share = 70},
             new { Browser = "Safari", Company = "Apple", Share = 16},
             new { Browser = "Edge", Company = "Microsoft", Share = 12},
@@ -92,26 +89,25 @@ public class BrowserStatsPie : ViewBase
             | new PieChart(map[year.Value])
                  .Pie(new Pie("Share","Browser")
                          .OuterRadius(150)
-                         .InnerRadius(90))                      
+                         .InnerRadius(90))
                  .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
                  .Legend(new Legend()
                              .Align(Ivy.Charts.Legend.Alignments.Right)
                              .VerticalAlign(Ivy.Charts.Legend.VerticalAlignments.Bottom));
-    }    
+    }
 }
 ```
 
 The legend can be placed in any of the nine positions by altering the values of the alignment enums.
-Also, by default, the inner and outer radius is same resulting in a circle. However, as 
+Also, by default, the inner and outer radius is same resulting in a circle. However, as
 can be seen in this example, these values can be altered to create a custom donut. The function
 `Tooltip` makes sure that the labels show up on mouse hover. The `Animated` function makes a nice animation
-when users hover on that specific part of the pie chart. 
+when users hover on that specific part of the pie chart.
 
-
-## Drill down chart 
+## Drill down chart
 
 The following example shows how these combinations of charts can be used in a realistic example
-for showing how populated some countries are. 
+for showing how populated some countries are.
 
 ```csharp demo-tabs
 
@@ -223,9 +219,9 @@ public class DrillDownDemo : ViewBase
         var selectedCountryStates = populationData
             .Where(t => t.Country.Equals(country.Value))
             .ToArray();
-        
+
         return Layout.Horizontal()
-                 
+
                 | (Layout.Vertical()
                    | Text.Small("Countries Population")
                    | new PieChart(countryData)
@@ -234,16 +230,12 @@ public class DrillDownDemo : ViewBase
                             .OuterRadius(80)).Tooltip())
                 | (Layout.Vertical()
                     | Text.Small($"{country.Value} - States Population")
-                        
                     | new PieChart(selectedCountryStates)
                             .Pie(new Pie("Population", "State")
                                      .OuterRadius(80)).Tooltip()
                     | countryInput);
 
-    
+
     }
 }
 ```
-
-
-

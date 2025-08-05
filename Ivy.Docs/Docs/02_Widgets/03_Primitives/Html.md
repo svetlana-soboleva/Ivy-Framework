@@ -1,6 +1,6 @@
 # Html
 
-The Html widget allows you to render raw HTML content in your Ivy application. This is useful when you need to include content from external sources, display formatted text, or when you want direct control over the markup.
+The `Html` widget allows you to render raw HTML content in your Ivy application. This is useful when you need to include content from external sources, display formatted text, or when you want direct control over the markup.
 
 ## Basic Usage
 

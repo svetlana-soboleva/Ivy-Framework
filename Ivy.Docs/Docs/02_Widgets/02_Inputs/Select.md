@@ -5,7 +5,7 @@ and multiple selections, option grouping, and custom rendering of option items.
 
 ## Basic Usage
 
-Here's a simple example of a SelectInput with a few options:
+Here's a simple example of a `SelectInput` with a few options:
 
 ```csharp demo-below
 public class SelectColorDemo : ViewBase

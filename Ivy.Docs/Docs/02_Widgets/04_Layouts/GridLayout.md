@@ -5,7 +5,7 @@ prepare: |
 
 # GridLayout
 
-The GridLayout widget arranges child elements in a two-dimensional grid system with precise control over positioning, spacing, and spanning. It provides both automatic flow and explicit positioning for flexible grid layouts.
+The `GridLayout` widget arranges child elements in a two-dimensional grid system with precise control over positioning, spacing, and spanning. It provides both automatic flow and explicit positioning for flexible grid layouts.
 
 ## Basic Usage
 

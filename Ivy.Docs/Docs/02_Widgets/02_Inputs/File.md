@@ -1,10 +1,10 @@
 # FileInput
 
-The FileInput widget allows users to upload files. It provides a file selector interface with options for file type filtering, size limitations, and support for single or multiple file selections.
+The `FileInput` widget allows users to upload files. It provides a file selector interface with options for file type filtering, size limitations, and support for single or multiple file selections.
 
 ## Basic Usage
 
-Here's a simple example of a FileInput that allows users to select files:
+Here's a simple example of a `FileInput` that allows users to select files:
 
 ```csharp demo-below
 public class BasicFileInputDemo : ViewBase
@@ -27,7 +27,7 @@ To create a file upload input, `ToFileInput` is the recommended function.
 
 ## Variants
 
-The FileInput widget supports different variants to suit various use cases. It has a variant 
+The `FileInput` widget supports different variants to suit various use cases. It has a variant 
 where users can select a single file or multiple files and drag and drop them in the file upload
 section. The following demo showcases this. 
 
@@ -48,11 +48,11 @@ public class FileDropDemo : ViewBase
 
 ## Styling
 
-FileInput can be customized with various styling options:
+`FileInput` can be customized with various styling options:
 
 ### Disabled
 
-To render a disabled FileInput control, the `Disabled` function should be used. 
+To render a disabled `FileInput` control, the `Disabled` function should be used. 
 
 ```csharp
 public class FileInputDisabledDemo : ViewBase

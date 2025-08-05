@@ -98,7 +98,7 @@ public class FeedbackHandling: ViewBase
 
 ### Disabled 
 
-To render a feedback input in disabled state, this function `Disabled` should be used. 
+To render a `FeedbackInput` in disabled state, this function `Disabled` should be used. 
 
 ```csharp demo-below
 public class DisabledFeedbackDemo : ViewBase
@@ -116,7 +116,7 @@ public class DisabledFeedbackDemo : ViewBase
 
 ### Invalid
 
-To render a feedback input in invalid (or error) state, the function `Invalid` should be used.
+To render a `FeedbackInput` in invalid (or error) state, the function `Invalid` should be used.
 
 ```csharp demo-below
 public class InvalidFeedbackDemo : ViewBase

@@ -1,6 +1,6 @@
 # Tooltip
 
-Tooltips provide contextual information when hovering or focusing on a widget.
+`Tooltip`s provide contextual information when hovering or focusing on a widget.
 
 ## Basic Usage
 

@@ -5,12 +5,12 @@ prepare: |
 
 # CodeInput
 
-The CodeInput widget provides a specialized text input field for entering and editing code with syntax highlighting. 
+The `CodeInput` widget provides a specialized text input field for entering and editing code with syntax highlighting. 
 It supports various programming languages and offers features like line numbers and code formatting.
 
 ## Basic Usage
 
-Here's a simple example of a CodeInput widget:
+Here's a simple example of a `CodeInput` widget:
 
 ```csharp
 public class JSCodeDemo: ViewBase

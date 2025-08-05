@@ -205,7 +205,7 @@ public class FormatStyleDemos : ViewBase
 
 ## Event Handling
 
-NumberInputs can handle change and blur events:
+`NumberInput`s can handle change and blur events:
 
 ```csharp
 var onChangedState = UseState(0);

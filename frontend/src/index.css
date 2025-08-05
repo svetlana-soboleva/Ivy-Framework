@@ -470,6 +470,31 @@
     line-height: 18px;
     letter-spacing: 14%;
   }
+
+  /* Badge-specific typography classes that don't interfere with colors */
+  .badge-text-default {
+    font-family: 'Inter Variable', var(--font-sans);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 4%;
+  }
+
+  .badge-text-small {
+    font-family: 'Inter Variable', var(--font-sans);
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 14px;
+    letter-spacing: 6%;
+  }
+
+  .badge-text-large {
+    font-family: 'Inter Variable', var(--font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -2%;
+  }
 }
 
 @keyframes accordion-down {

@@ -1,6 +1,6 @@
 # Box
 
-Boxes are versatile container elements with customizable borders, colors, and padding. They're useful for visually grouping related content or creating distinct sections in your UI.
+`Box`es are versatile container elements with customizable borders, colors, and padding. They're useful for visually grouping related content or creating distinct sections in your UI.
 
 ```csharp demo-tabs
 public class StatusDashboardView : ViewBase

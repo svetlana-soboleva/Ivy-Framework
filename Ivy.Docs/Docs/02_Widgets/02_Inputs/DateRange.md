@@ -4,7 +4,7 @@ The `DateRangeInput` widget allows users to select a range of dates. It provides
 
 ## Basic Usage
 
-Here's a simple example of a DateRangeInput that allows users to select a date range:
+Here's a simple example of a `DateRangeInput` that allows users to select a date range:
 
 ```csharp demo-below
 public class BasicDateRangeDemo : ViewBase
@@ -35,7 +35,7 @@ DateRangeInput supports DateOnly tuple types:
 
 ## Variants
 
-The DateRangeInput can be customized with various states:
+The `DateRangeInput`can be customized with various states:
 
 ### Disabled State
 
@@ -56,7 +56,7 @@ public class DisabledDateRange : ViewBase
 
 ### Invalid State
 
-To render a date time range in the invalid state the `Invalid` function
+To render a `DateTimeRange` in the invalid state the `Invalid` function
 should be used.
 
 ```csharp demo-below
@@ -73,7 +73,7 @@ public class InvalidDateRangeDemo : ViewBase
 
 ### Nullable State
 
-Sometimes it is needed to render a date time with possible nullable from and to dates. 
+Sometimes it is necessary to render a date time with possible nullable from and to dates. 
 The following demo shows how this can be done. 
 
 ```csharp demo-below
@@ -94,7 +94,7 @@ public class NullableDateRangeDemo : ViewBase
 
 ## Styling
 
-DateRangeInput can be customized with various styling options:
+`DateRangeInput` can be customized with various styling options:
 
 ### Placeholder
 
