@@ -472,7 +472,7 @@
   }
 
   /* Badge-specific typography classes that don't interfere with colors */
-  .badge-text-default {
+  .badge-text-primary {
     font-family: 'Inter Variable', var(--font-sans);
     font-weight: 400;
     font-size: 12px;

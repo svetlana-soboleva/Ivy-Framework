@@ -6,14 +6,14 @@ namespace Ivy.Samples.Apps.Widgets;
 public class BadgeApp : SampleBase
 {
     private static readonly BadgeVariant[] Variants = [
-        BadgeVariant.Default,
+        BadgeVariant.Primary,
         BadgeVariant.Destructive,
         BadgeVariant.Secondary,
         BadgeVariant.Outline
     ];
 
     private static readonly string[] VariantNames = [
-        "Default",
+        "Primary",
         "Destructive",
         "Secondary",
         "Outline"
