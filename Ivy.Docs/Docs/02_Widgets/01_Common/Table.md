@@ -206,7 +206,7 @@ public class ManualTableDemo : ViewBase
     }
 }
 ```
-## Custom Column Builders
+## Builder Factory Methods
 
 The `Builder()` method allows you to specify how different data types should be rendered. Use the builder factory methods to create appropriate renderers for your data.
 
