@@ -19,31 +19,45 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   variant = 'primary',
   size = 'Default',
 }) => {
-  let badgeClasses = 'badge-text-default px-2.5 py-0.5';
+  let badgeClasses = 'badge-text-default';
   let iconClasses = 'h-3 w-3';
 
   switch (size) {
     case 'Small':
-      badgeClasses = 'badge-text-small px-2 py-0.5';
+      badgeClasses = 'badge-text-small';
       iconClasses = 'h-2.5 w-2.5';
       break;
     case 'Large':
-      badgeClasses = 'badge-text-large px-3 py-1';
+      badgeClasses = 'badge-text-large';
       iconClasses = 'h-4 w-4';
       break;
     default:
       break;
   }
 
-  return (
-    <Badge
-      variant={
-        camelCase(variant) as
+  // Map backend variant names to frontend badge variants
+  const getBadgeVariant = (variant: string) => {
+    switch (variant) {
+      case 'Default':
+        return 'primary';
+      case 'Destructive':
+        return 'destructive';
+      case 'Outline':
+        return 'outline';
+      case 'Secondary':
+        return 'secondary';
+      default:
+        return camelCase(variant) as
           | 'primary'
           | 'destructive'
           | 'outline'
-          | 'secondary'
-      }
+          | 'secondary';
+    }
+  };
+
+  return (
+    <Badge
+      variant={getBadgeVariant(variant)}
       className={cn('w-min whitespace-nowrap', badgeClasses)}
     >
       {iconPosition === 'Left' && icon && icon !== 'None' && (
