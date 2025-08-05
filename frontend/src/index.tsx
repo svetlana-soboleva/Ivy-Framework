@@ -57,11 +57,18 @@ function App() {
         isMainApp: true, // Navigation events are always for main app
       };
       setRoute(newRoute);
-      updateRoute(appId, appArgs, parentId);
+      updateRoute(appId, appArgs);
     };
 
-    window.addEventListener('ivy-navigation', handleNavigation);
-    return () => window.removeEventListener('ivy-navigation', handleNavigation);
+    window.addEventListener(
+      'ivy-navigation',
+      handleNavigation as EventListener
+    );
+    return () =>
+      window.removeEventListener(
+        'ivy-navigation',
+        handleNavigation as EventListener
+      );
   }, []);
 
   return (
