@@ -353,7 +353,7 @@ public static class WebApplicationExtensions
             assembly,
             $"{assembly.GetName().Name}"
         );
-        app.MapGet("/", async context =>
+        async Task ServeIndexHtml(HttpContext context)
         {
             var resourceName = $"{assembly.GetName().Name}.index.html";
             await using var stream = assembly.GetManifestResourceStream(resourceName);
@@ -397,6 +397,26 @@ public static class WebApplicationExtensions
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);
             }
+        }
+
+        app.MapGet("/", ServeIndexHtml);
+        
+        // SPA fallback - serve index.html for all frontend routes
+        app.MapFallback(async context =>
+        {
+            var path = context.Request.Path.Value?.ToLower();
+
+            // if we are here, relative path must 
+            // not be a signalr, auth or assets path or a file
+            if (path?.StartsWith("/messages") == true ||
+                path?.StartsWith("/auth") == true ||
+                path?.StartsWith("/assets") == true ||
+                path?.Contains('.') == true)
+            {
+                context.Response.StatusCode = 404;
+                return;
+            }
+            await ServeIndexHtml(context);
         });
 
         app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
