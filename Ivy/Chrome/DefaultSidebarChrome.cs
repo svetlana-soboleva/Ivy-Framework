@@ -110,7 +110,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
             {
                 user.Set(await auth.GetUserInfoAsync());
             }
-            
+
             // Check if we have appArgs (specific app to load)
             if (!string.IsNullOrEmpty(args.Args))
             {
