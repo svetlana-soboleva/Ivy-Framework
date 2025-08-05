@@ -400,7 +400,7 @@ public static class WebApplicationExtensions
         }
 
         app.MapGet("/", ServeIndexHtml);
-        
+
         // SPA fallback - serve index.html for all frontend routes
         app.MapFallback(async context =>
         {
