@@ -48,7 +48,7 @@ public class BasicRowTable : ViewBase
 
 **Totals(p => p.ColumnName)** calculates the amount of the column if it contains numbers
 
-**Empty(new Card(""))** shows text if cell is empty.
+**Empty(new Card(""))** shows content when the table is empty.
 
 ```csharp demo-tabs
 public class CustomBuilderTable : ViewBase
