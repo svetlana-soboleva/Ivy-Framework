@@ -22,7 +22,7 @@ public class IvyTeamDemo : ViewBase
     {
         var team = new Dictionary<string,string>()
         {
-             {"Neils Bosma", 
+             {"Niels Bosma", 
                  "https://ca.slack-edge.com/T08GFP8DV5F-U08GFP8DV6V-c4f29d91e630-72"},
              {"Mikael Rinne", 
                  "https://ca.slack-edge.com/T08GFP8DV5F-U091ZQY4LLS-0b7df2f0bdc1-72"},
