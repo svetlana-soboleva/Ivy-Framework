@@ -12,7 +12,7 @@ The `Badge` widget is a versatile component used to display small pieces of info
 Here's a simple example of a badge:
 
 ```csharp demo-below
-new Badge("Default")
+new Badge("Primary")
 ```
 
 ## Variants
@@ -21,7 +21,7 @@ Badges come in several variants to suit different use cases and visual hierarchi
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Badge("Default")
+    | new Badge("Primary")
     | new Badge("Destructive", variant:BadgeVariant.Destructive)
     | new Badge("Outline", variant:BadgeVariant.Outline)
     | new Badge("Secondary", variant:BadgeVariant.Secondary)
@@ -33,7 +33,7 @@ You can also use extension methods for cleaner code:
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Badge("Default")
+    | new Badge("Primary")
     | new Badge("Destructive").Destructive()
     | new Badge("Outline").Outline()
     | new Badge("Secondary").Secondary()
@@ -48,16 +48,16 @@ Badges support different sizes to match your design requirements.
 ```csharp demo-tabs
 Layout.Grid().Columns(4)
     | new Badge("Small").Small()
-    | new Badge("Default")
+    | new Badge("Primary")
     | new Badge("Large").Large()
     | new Badge("Small").Secondary().Small()
-    | new Badge("Default").Secondary()
+    | new Badge("Secondary").Secondary()
     | new Badge("Large").Secondary().Large()
     | new Badge("Small").Destructive().Small()
-    | new Badge("Default").Destructive()
+    | new Badge("Destructive").Destructive()
     | new Badge("Large").Destructive().Large()
     | new Badge("Small").Outline().Small()
-    | new Badge("Default").Outline()
+    | new Badge("Outline").Outline()
     | new Badge("Large").Outline().Large()
 ```
 
