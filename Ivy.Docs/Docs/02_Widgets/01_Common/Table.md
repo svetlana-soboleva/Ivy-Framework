@@ -46,7 +46,7 @@ public class BasicRowTable : ViewBase
 
 **Remove(p => p.ColumnName)** - makes possible not to show column in the table
 
-**Totals(p => p.ColumnName)** calculates the amount of the column if it contains numbers
+**Totals(p => p.ColumnName)** calculates the sum of the column if it contains numbers
 
 **Empty(new Card(""))** shows content when the table is empty.
 
