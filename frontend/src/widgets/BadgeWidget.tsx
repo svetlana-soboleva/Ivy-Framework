@@ -19,7 +19,7 @@ export const BadgeWidget: React.FC<BadgeWidgetProps> = ({
   variant = 'primary',
   size = 'Default',
 }) => {
-  let badgeClasses = 'badge-text-default';
+  let badgeClasses = 'badge-text-primary';
   let iconClasses = 'h-3 w-3';
 
   switch (size) {
