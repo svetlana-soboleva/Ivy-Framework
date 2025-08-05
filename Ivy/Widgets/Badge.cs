@@ -89,4 +89,10 @@ public static class BadgeExtensions
     {
         return badge with { Variant = BadgeVariant.Default };
     }
+
+    [RelatedTo(nameof(Badge.Variant))]
+    public static Badge Primary(this Badge badge)
+    {
+        return badge with { Variant = BadgeVariant.Default };
+    }
 }
