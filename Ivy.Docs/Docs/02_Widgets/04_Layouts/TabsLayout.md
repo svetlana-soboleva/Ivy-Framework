@@ -32,10 +32,6 @@ Layout.Tabs(
     new Tab("Settings", "Configuration").Icon(Icons.Settings).Badge("999")
 )
 .Variant(TabsVariant.Tabs)
-.Width(200)
-.Height(200)
-.Padding(8)
-.RemoveParentPadding()
 ```
 
 This demonstrates the fluent API of TabView, allowing you to chain multiple configuration methods for a complete tab setup with visual indicators and precise layout control.
@@ -110,78 +106,6 @@ new TabsLayout(null, null, null, null, 0,
     new Tab("Settings", "Configuration").Icon(Icons.Settings).Badge("999")
 ).Variant(TabsVariant.Tabs)
 ```
-
-### Tab Keys for Refresh
-
-Use the Key extension method to force tab re-rendering when content changes:
-
-```csharp demo-tabs
-new TabsLayout(
-    onSelect: (e) => Console.WriteLine($"Selected: {e.Value}"),
-    onClose: null,
-    onRefresh: (e) => Console.WriteLine($"Refreshed: {e.Value}"),
-    onReorder: null,
-    selectedIndex: 0,
-    new Tab("Data", "Current data").Key("f"),
-    new Tab("Logs", "System logs").Key("logs-tab-1"),
-    new Tab("Status", "System status").Key("status-tab-1")
-).Variant(TabsVariant.Tabs)
-```
-
-### Advanced Padding Control
-
-Customize padding with various overloads:
-
-```csharp demo-tabs
-Layout.Vertical()
-    | Text.Block("Default Padding (4px)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content 1"),
-        new Tab("Tab 2", "Content 2")
-    ).Variant(TabsVariant.Tabs)
-    | Text.Block("Uniform Padding (16px)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content with uniform padding"),
-        new Tab("Tab 2", "Content with uniform padding")
-    ).Padding(16)
-    | Text.Block("Horizontal/Vertical Padding (20px/8px)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content with different horizontal/vertical padding"),
-        new Tab("Tab 2", "Content with different horizontal/vertical padding")
-    ).Padding(20, 8)
-    | Text.Block("Custom Padding (Left: 12, Top: 8, Right: 12, Bottom: 16)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content with custom padding on all sides"),
-        new Tab("Tab 2", "Content with custom padding on all sides")
-    ).Padding(12, 8, 12, 16)
-```
-
-Different padding overloads allow fine-grained control over spacing. Uniform padding is simplest, while custom padding gives precise control over each side.
-
-## Size and Dimensions
-
-Control the TabsLayout dimensions:
-
-```csharp demo-tabs
-Layout.Vertical()
-    | Text.Block("Fixed Width (300px)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content 1"),
-        new Tab("Tab 2", "Content 2")
-    ).Variant(TabsVariant.Tabs).Width(300)
-    | Text.Block("Fixed Height (200px)")
-    | new TabsLayout(null, null, null, null, 0,
-        new Tab("Tab 1", "Content 1"),
-        new Tab("Tab 2", "Content 2")
-    ).Variant(TabsVariant.Tabs).Height(200)
-    | Text.Block("Using TabView with Size Control")
-    | Layout.Tabs(
-        new Tab("Tab 1", "Content 1"),
-        new Tab("Tab 2", "Content 2")
-    ).Variant(TabsVariant.Tabs).Size(250).Grow()
-```
-
-Width and Height methods control the layout dimensions. TabView provides additional size control methods like Size() and Grow() for more flexible sizing options.
 
 ## Default Values
 
