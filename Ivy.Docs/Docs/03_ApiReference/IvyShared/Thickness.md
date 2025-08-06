@@ -16,7 +16,7 @@ new Box("Content")
     .Padding(new Thickness(10))
 ```
 
-You can create elements with thickness. In the base example, there is the only one parametr to asign uniform thickness.
+You can create elements with thickness. In the basic example, there is only one parameter to assign uniform thickness.
 
 ### Horizontal/Vertical Thickness
 
