@@ -1,5 +1,4 @@
 #!/bin/sh
+dotnet format
 cd frontend
 npx lint-staged
-cd ..
-dotnet format
