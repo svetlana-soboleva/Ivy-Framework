@@ -29,7 +29,7 @@ public static class BuilderFactoryExtensions
     {
         return new LinkBuilder<TModel>(url, label);
     }
-    
+
     public static IBuilder<TModel> CopyToClipboard<TModel>(this IBuilderFactory<TModel> factory)
     {
         return new CopyToClipboardBuilder<TModel>();

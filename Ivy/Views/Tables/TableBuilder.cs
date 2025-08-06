@@ -115,8 +115,8 @@ public class TableBuilder<TModel> : ViewBase, IStateless
             {
                 cellAlignment = Shared.Align.Center;
             }
-            
-            else if(
+
+            else if (
                 (field.Name.EndsWith("url", StringComparison.OrdinalIgnoreCase) || field.Name.EndsWith("link", StringComparison.OrdinalIgnoreCase))
                     && (field.Type == typeof(string) || field.Type == typeof(Uri)))
             {
