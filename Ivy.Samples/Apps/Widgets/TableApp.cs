@@ -1,3 +1,4 @@
+using System.Reflection.Emit;
 using Ivy.Shared;
 using Ivy.Views.Tables;
 
@@ -6,6 +7,7 @@ namespace Ivy.Samples.Apps.Widgets;
 public class Product
 {
     public required string Sku { get; set; }
+    public required bool Foo { get; set; } = true; // Example of a boolean property
     public required string Name { get; set; }
     public required double Price { get; set; }
     public required string Url { get; set; }
@@ -19,15 +21,16 @@ public class TableApp : SampleBase
         //Anonymous type array
 
         var products = new[] {
-            new {Sku = "1234", Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
-            new {Sku = "1235", Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans"},
-            new {Sku = "1236", Name = "Sneakers", Price = 30.0, Url = "http://example.com/sneakers"},
-            new {Sku = "1237", Name = "Hat", Price = 5.0, Url = "http://example.com/hat"},
-            new {Sku = "1238", Name = "Socks", Price = 2.0, Url = "http://example.com/socks"}
+            new {Sku = "1234", Foo = true, Name = "T-shirt", Price = 10.0, Url = "http://example.com/tshirt"},
+            new {Sku = "1235", Foo = true, Name = "Jeans", Price = 20.0, Url = "http://example.com/jeans"},
+            new {Sku = "1236", Foo = true, Name = "Sneakers", Price = 30.0, Url = "http://example.com/sneakers"},
+            new {Sku = "1237", Foo = true, Name = "Hat", Price = 5.0, Url = "http://example.com/hat"},
+            new {Sku = "1238", Foo = true, Name = "Socks", Price = 2.0, Url = "http://example.com/socks"}
         };
 
-        return products.ToTable()
-                .RemoveHeader()
+        return products
+                .ToTable()
+                .Builder(e => e.Url, e => e.Link())
                 .Width(Size.Full())
             // .Width(e => e.Sku, Size.Fraction(0))
             // .Width(e => e.Name, Size.Fraction(1 / 3f))
