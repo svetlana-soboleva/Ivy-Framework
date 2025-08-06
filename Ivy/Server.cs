@@ -353,8 +353,9 @@ public static class WebApplicationExtensions
             assembly,
             $"{assembly.GetName().Name}"
         );
-        async Task ServeIndexHtml(HttpContext context)
+        static async Task ServeIndexHtml(HttpContext context, IConfiguration configuration, ServerArgs serverArgs)
         {
+            var assembly = Assembly.GetExecutingAssembly()!;
             var resourceName = $"{assembly.GetName().Name}.index.html";
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
@@ -363,7 +364,6 @@ public static class WebApplicationExtensions
                 var html = await reader.ReadToEndAsync();
 
                 //Inject IVY_LICENSE:
-                var configuration = app.Services.GetRequiredService<IConfiguration>();
                 var ivyLicense = configuration["IVY_LICENSE"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicense))
                 {
@@ -399,7 +399,7 @@ public static class WebApplicationExtensions
             }
         }
 
-        app.MapGet("/", ServeIndexHtml);
+        app.MapGet("/", context => ServeIndexHtml(context, app.Services.GetRequiredService<IConfiguration>(), serverArgs));
 
         app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
 
@@ -417,7 +417,7 @@ public static class WebApplicationExtensions
                 return;
             }
 
-            await ServeIndexHtml(context);
+            await ServeIndexHtml(context, app.Services.GetRequiredService<IConfiguration>(), serverArgs);
         });
 
         return app;
