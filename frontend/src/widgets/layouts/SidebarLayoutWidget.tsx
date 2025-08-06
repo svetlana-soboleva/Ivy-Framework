@@ -409,6 +409,13 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
     level: number,
     flatIdxRef: { current: number }
   ) => {
+    const onCtrlRightMouseClick = (e: React.MouseEvent, item: MenuItem) => {
+      if (e.ctrlKey && e.button === 2 && !!item.tag) {
+        e.preventDefault();
+        eventHandler('OnCtrlRightClickSelect', id, [item.tag]);
+      }
+    };
+
     return items.map(item => {
       if (item.children && item.children.length > 0) {
         return (
@@ -439,6 +446,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
               onClick={() =>
                 item.tag && eventHandler('OnSelect', id, [item.tag])
               }
+              onMouseDown={e => onCtrlRightMouseClick(e, item)}
               onMouseEnter={() => {
                 if (searchActive) {
                   setSelectedIndex(flatIdx);
