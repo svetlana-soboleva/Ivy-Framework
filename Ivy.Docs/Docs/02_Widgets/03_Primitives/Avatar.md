@@ -2,15 +2,21 @@
 
 `Avatars` are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
 
+To create a new avatar, it is recommended to use a layout.
+
+Make sure to define a name and supply a `url` to fetch the image.
+
+If no image is provided, a default avatar will be used, showing the first letters of the name.
+
 ```csharp demo-tabs
 Layout.Horizontal()
     | new Avatar("Niels Bosma", "https://api.images.cat/150/150?1")
     | new Avatar("Niels Bosma")
 ```
 
-<WidgetDocs Type="Ivy.Avatar" ExtensionTypes="Ivy.AvatarExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Avatar.cs"/>
-
 ## Practical Usage
+
+It's possible to create a dictionary where each object contains a name and an associated avatar.
 
 `Avatars` can be used to showcase Teams like this.
 
@@ -53,7 +59,9 @@ public class IvyTeamDemo : ViewBase
 }
 ```
 
-### Food Menu
+### Integration with Other Widgets
+
+Avatars can be integrated into other widgets, including cards, add buttons, and more.
 
 ```csharp demo-tabs
 public class AvatarAsFoodIcon : ViewBase
@@ -77,3 +85,5 @@ public class AvatarAsFoodIcon : ViewBase
 }
 
 ```
+
+<WidgetDocs Type="Ivy.Avatar" ExtensionTypes="Ivy.AvatarExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Avatar.cs"/>
