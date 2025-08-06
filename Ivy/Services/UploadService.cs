@@ -15,7 +15,7 @@ public class UploadController(AppSessionStore sessionStore) : Controller
             var uploadService = session.AppServices.GetRequiredService<IUploadService>();
             return await uploadService.Upload(uploadId, file);
         }
-        throw new Exception($"Upload 'upload/{connectionId}/{uploadId}' not found.");
+        throw new Exception($"Session for connectionId '{connectionId}' not found.");
     }
 }
 
