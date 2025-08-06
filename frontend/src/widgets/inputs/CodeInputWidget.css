@@ -46,6 +46,7 @@
   word-break: break-word !important;
   max-width: 100% !important;
 }
+
 .ͼb {
   color: var(--purple);
 }
@@ -58,7 +59,6 @@
 .ͼe {
   color: var(--red);
 }
-.ͼi
 
 /* CodeMirror syntax highlighting - using CSS variables for theme support */
 .cm-token.cm-keyword {
