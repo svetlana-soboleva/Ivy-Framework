@@ -10,6 +10,18 @@ public class UploadController(AppSessionStore sessionStore) : Controller
     [Route("upload/{connectionId}/{uploadId}")]
     public async Task<IActionResult> Upload(string connectionId, string uploadId, IFormFile file)
     {
+        if (string.IsNullOrEmpty(connectionId))
+        {
+            return BadRequest("connectionId is required.");
+        }
+        if (string.IsNullOrEmpty(uploadId))
+        {
+            return BadRequest("uploadId is required.");
+        }
+        if (file == null)
+        {
+            return BadRequest("file is required.");
+        }
         if (sessionStore.Sessions.TryGetValue(connectionId, out var session))
         {
             var uploadService = session.AppServices.GetRequiredService<IUploadService>();
