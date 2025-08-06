@@ -152,42 +152,65 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     {
         var app = GetApp();
 
-        if (jwt.Tag is not JsonElement tag
+        if (app is not IByRefreshToken refresher
+            || jwt.Tag is not JsonElement tag
             || tag.GetString() is not string accountId
             || accountId.Length <= 0)
         {
             return jwt;
         }
 
-        // if (jwt.ExpiresAt == null || jwt.RefreshToken == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
-        // {
-        //     return jwt;
-        // }
+        if (jwt.ExpiresAt == null || jwt.RefreshToken == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
+        {
+            return jwt;
+        }
 
         if (jwt.RefreshToken == null)
         {
             return jwt;
         }
 
-        // _serializedRefreshTokens = Convert.FromBase64String(jwt.RefreshToken!);
-
         try
         {
             var account = await app.GetAccountAsync(accountId);
-            if (account == null)
+
+            if (account != null)
             {
-                return jwt;
-            }
-            else
-            {
+                if (account.HomeAccountId?.Identifier != accountId)
+                {
+                    throw new Exception("account ID does not match");
+                }
+
                 var result = await GetApp().AcquireTokenSilent(_scopes, account)
                     .ExecuteAsync();
+
                 if (result == null)
                 {
                     return jwt;
                 }
 
-                accountId = account.HomeAccountId!.Identifier;
+                return new AuthToken(
+                    result.AccessToken,
+                    GetCurrentRefreshToken(accountId),
+                    result.ExpiresOn,
+                    accountId
+                );
+            }
+            else
+            {
+                var result = await refresher.AcquireTokenByRefreshToken(_scopes, jwt.RefreshToken)
+                    .ExecuteAsync();
+
+                if (result == null)
+                {
+                    return jwt;
+                }
+
+                if (result.Account.HomeAccountId.Identifier != accountId)
+                {
+                    throw new Exception("account ID does not match");
+                }
+
                 return new AuthToken(
                     result.AccessToken,
                     GetCurrentRefreshToken(accountId),
@@ -239,7 +262,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
                 user.Id,
                 user.Mail ?? user.UserPrincipalName ?? string.Empty,
                 user.DisplayName,
-                null // Microsoft Graph doesn't provide avatar URL in basic user info
+                null
             );
         }
         catch (Exception)
