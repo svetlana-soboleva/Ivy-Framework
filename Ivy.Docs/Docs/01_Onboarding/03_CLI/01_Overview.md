@@ -71,8 +71,6 @@ YourProject/
 - Use `ivy docs` to open documentation
 - Use `ivy samples` to see example projects
 
-## Authentication
-
 Most Ivy commands require authentication. Use `ivy login` to authenticate with your Ivy account.
 
 ## Next Steps

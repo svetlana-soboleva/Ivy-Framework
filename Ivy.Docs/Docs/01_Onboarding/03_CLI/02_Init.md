@@ -17,41 +17,31 @@ This command will:
 
 ## Command Options
 
-### `--namespace <NAMESPACE>`
-
-Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
+`--namespace <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
 ```terminal
 >ivy init --namespace MyCompany.MyApp
 ```
 
-### `--dangerous-clear`
-
-Clear the current folder before creating the new project. **Use with caution!**
+`--dangerous-clear` - Clear the current folder before creating the new project. **Use with caution!**
 
 ```terminal
 >ivy init --dangerous-clear
 ```
 
-### `--dangerous-overwrite`
-
-Overwrite existing files in the current folder. **Use with caution!**
+`--dangerous-overwrite` - Overwrite existing files in the current folder. **Use with caution!**
 
 ```terminal
 >ivy init --dangerous-overwrite
 ```
 
-### `--verbose`
-
-Enable verbose output for detailed logging during initialization.
+`--verbose` - Enable verbose output for detailed logging during initialization.
 
 ```terminal
 >ivy init --verbose
 ```
 
-### `--helloworld` or `--hello`
-
-Include a simple demo application in the new project to help you get started.
+`--helloworld` or `--hello` - Include a simple demo application in the new project to help you get started.
 
 ```terminal
 >ivy init --helloworld
@@ -153,17 +143,13 @@ Ivy performs several validations during initialization:
 
 ## Error Handling
 
-### Empty Directory Required
-
-If the current directory is not empty, Ivy will show an error:
+**Empty Directory Required** - If the current directory is not empty, Ivy will show an error:
 
 ```terminal
 The current folder is not empty. Please clear the folder or use the --dangerous-clear option or --dangerous-overwrite
 ```
 
-### Invalid Namespace
-
-If you provide an invalid namespace, Ivy will prompt you to enter a valid one:
+**Invalid Namespace** - If you provide an invalid namespace, Ivy will prompt you to enter a valid one:
 
 ```terminal
 Invalid 'invalid-namespace' namespace. Please enter a valid namespace.
@@ -180,7 +166,7 @@ After initializing your project:
 
 ## Examples
 
-### Basic Project Initialization
+**Basic Project Initialization**
 
 ```terminal
 >mkdir MyIvyApp
@@ -188,19 +174,19 @@ After initializing your project:
 >ivy init
 ```
 
-### Project with Custom Namespace
+**Project with Custom Namespace**
 
 ```terminal
 >ivy init --namespace AcmeCorp.InventorySystem
 ```
 
-### Project with Demo App
+**Project with Demo App**
 
 ```terminal
 >ivy init --helloworld --namespace MyDemoApp
 ```
 
-### Verbose Initialization
+**Verbose Initialization**
 
 ```terminal
 >ivy init --verbose --namespace MyApp
@@ -208,22 +194,16 @@ After initializing your project:
 
 ## Troubleshooting
 
-### Permission Issues
+**Permission Issues** - If you encounter permission issues, ensure you have write access to the current directory.
 
-If you encounter permission issues, ensure you have write access to the current directory.
-
-### .NET Tools Not Found
-
-If required .NET tools are missing, Ivy will attempt to install them automatically. You may need to run:
+**NET Tools Not Found** - If required .NET tools are missing, Ivy will attempt to install them automatically. You may need to run:
 
 ```terminal
 >dotnet tool install -g dotnet-ef
 >dotnet tool install -g dotnet-user-secrets
 ```
 
-### Git Issues
-
-If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
+**Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
 ## Related Commands
 
