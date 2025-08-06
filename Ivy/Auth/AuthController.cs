@@ -31,7 +31,8 @@ public class AuthController() : Controller
 
             // If the token is too big, try putting the refresh token into its own cookie.
             // I'm not trying to be overly precise here.
-            if (tokenJson.Length > 4000 && tokenJson.Length - (token.RefreshToken?.Length ?? 0) < 4000)
+            const int CookieSizeLimit = 4000;
+            if (tokenJson.Length > CookieSizeLimit && tokenJson.Length - (token.RefreshToken?.Length ?? 0) < CookieSizeLimit)
             {
                 var refreshToken = token.RefreshToken!; // non-nullness implied by condition above
                 var modifiedToken = token with { RefreshToken = null };

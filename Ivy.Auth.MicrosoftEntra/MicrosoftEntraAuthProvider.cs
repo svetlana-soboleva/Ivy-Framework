@@ -21,6 +21,8 @@ public class MicrosoftEntraOAuthException(string? error, string? errorCode, stri
 public class MicrosoftEntraAuthProvider : IAuthProvider
 {
     private IConfidentialClientApplication? _app;
+    private HttpContext? _httpContext = null;
+    private readonly HttpClient _httpClient = new();
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
@@ -55,8 +57,23 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             return;
         }
 
+        _httpContext = context;
+    }
+
+    private IConfidentialClientApplication GetApp()
+    {
+        if (_app != null)
+        {
+            return _app;
+        }
+
+        if (_httpContext == null)
+        {
+            throw new InvalidOperationException("SetHttpContext() must be called before GetApp()");
+        }
+
         // Create a confidential client application for OAuth flow
-        var baseUrl = WebhookEndpoint.BuildBaseUrl(context.Request.Scheme, context.Request.Host.Value!);
+        var baseUrl = WebhookEndpoint.BuildBaseUrl(_httpContext.Request.Scheme, _httpContext.Request.Host.Value!);
 
         _app = ConfidentialClientApplicationBuilder
             .Create(_clientId)
@@ -70,14 +87,6 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
             var cacheBytes = args.TokenCache.SerializeMsalV3();
             _tokenCache = JsonSerializer.Deserialize<TokenCache>(cacheBytes);
         });
-    }
-
-    private IConfidentialClientApplication GetApp()
-    {
-        if (_app == null)
-        {
-            throw new InvalidOperationException("SetHttpContext() must be called before GetApp()");
-        }
 
         return _app;
     }
@@ -137,10 +146,12 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         );
     }
 
-    public async Task LogoutAsync(string jwt)
+    public Task LogoutAsync(string jwt)
     {
         _tokenCache = null;
-        await GetApp().RemoveAsync(null);
+        _app = null;
+
+        return Task.CompletedTask;
     }
 
     public async Task<AuthToken?> RefreshJwtAsync(AuthToken jwt)
@@ -156,11 +167,6 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         }
 
         if (jwt.ExpiresAt == null || jwt.RefreshToken == null || DateTimeOffset.UtcNow < jwt.ExpiresAt)
-        {
-            return jwt;
-        }
-
-        if (jwt.RefreshToken == null)
         {
             return jwt;
         }
@@ -214,9 +220,8 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
                 );
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Error during token refresh: {ex.Message}");
             return null;
         }
     }
@@ -225,11 +230,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     {
         try
         {
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
-
-            var tempGraphClient = new GraphServiceClient(httpClient);
-            var user = await tempGraphClient.Me.GetAsync();
+            var user = await GetMeAsync(jwt);
             return user != null;
         }
         catch (Exception)
@@ -242,11 +243,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     {
         try
         {
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
-
-            var tempGraphClient = new GraphServiceClient(httpClient);
-            var user = await tempGraphClient.Me.GetAsync();
+            var user = await GetMeAsync(jwt);
 
             if (user == null || user.Id == null)
             {
@@ -313,5 +310,12 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         }
 
         return null;
+    }
+
+    private async Task<Microsoft.Graph.Models.User?> GetMeAsync(string jwt)
+    {
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        var tempGraphClient = new GraphServiceClient(_httpClient);
+        return await tempGraphClient.Me.GetAsync();
     }
 }
