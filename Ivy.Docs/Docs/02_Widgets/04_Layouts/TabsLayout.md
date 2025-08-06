@@ -9,7 +9,7 @@ The TabsLayout widget creates a tabbed interface that allows users to switch bet
 
 ## Basic Usage
 
-We recommend to use Layout.Tabs to create simple tabs:
+We recommend using Layout.Tabs to create simple tabbed interfaces.
 
 ```csharp demo-tabs
 Layout.Tabs(
