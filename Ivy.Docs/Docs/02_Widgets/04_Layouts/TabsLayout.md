@@ -5,11 +5,11 @@ prepare: |
 
 # TabsLayout
 
-The TabsLayout widget creates a tabbed interface that allows users to switch between different content sections. It supports both traditional tabs and content-based variants, with features like closable tabs, badges, icons, and drag-and-drop reordering.
+The TabsLayout widget creates a tabbed interface that allows users to switch between different content sections. It supports both traditional tabs and content-based variants, with features such as closable tabs, badges, icons, and drag-and-drop reordering.
 
 ## Basic Usage
 
-Use the TabView helper te create simple tabs:
+Use the TabsLayout helper to create simple tabs:
 
 ```csharp demo-tabs
 Layout.Tabs(
@@ -19,11 +19,11 @@ Layout.Tabs(
 )
 ```
 
-This creates a basic tabs layout with three tabs.
+This example creates a basic layout with three tabs.
 
 ### TabView with Customization
 
-This example shows how to combine multiple TabView features including icons, badges, variant selection, and size control:
+This example demonstrates how to combine multiple TabView features, including icons, badges, variant selection, and size control:
 
 ```csharp demo-tabs
 Layout.Tabs(
@@ -34,7 +34,7 @@ Layout.Tabs(
 .Variant(TabsVariant.Tabs)
 ```
 
-This demonstrates the fluent API of TabView, allowing you to chain multiple configuration methods for a complete tab setup with visual indicators and precise layout control.
+It showcases the fluent API of TabView, which allows chaining multiple configuration methods for a complete tab setup with visual indicators and precise layout control.
 
 ## TabsLayout usage
 
@@ -48,7 +48,7 @@ new TabsLayout(null, null, null, null, 0,
 )
 ```
 
-## With Event Handlers
+### With Event Handlers
 
 - `onSelect`: Handles tab selection events
 - `onClose`: Adds close functionality to tabs
@@ -56,7 +56,7 @@ new TabsLayout(null, null, null, null, 0,
 - `onReorder`: Enables drag-and-drop tab reordering
 - `selectedIndex`: Sets the initially selected tab
 
-This example shows how to handle all available events. The event handlers receive the tab index and can perform custom actions like logging, state updates, or API calls.
+This example demonstrates how to handle all available events. The event handlers receive the tab index and can perform custom actions such as logging, state updates, or API calls.
 
 ```csharp demo-tabs
 new TabsLayout(
@@ -70,10 +70,11 @@ new TabsLayout(
     new Tab("Tab 3", "Content 3")
 )
 ```
+## Variant usage
 
-## Tabs Variant
+### Tabs Variant
 
-The Tabs variant displays tabs as clickable buttons with an underline indicator for the active tab, providing a more traditional tab interface.
+The Tabs variant displays tabs as clickable buttons with an underline indicator for the active tab, providing a traditional tab interface.
 
 ```csharp demo-tabs
 new TabsLayout(null, null, null, null, 0,
@@ -83,9 +84,9 @@ new TabsLayout(null, null, null, null, 0,
 ).Variant(TabsVariant.Tabs)
 ```
 
-## Content Variant
+### Content Variant
 
-The Content variant emphasizes the content area with subtle tab indicators, ideal for content-heavy applications where the focus should be on the displayed information.
+The Content variant emphasizes the content area with subtle tab indicators. This is ideal for content-heavy applications where the focus should be on the displayed information.
 
 ```csharp demo-tabs
 new TabsLayout(null, null, null, null, 0,
@@ -94,8 +95,9 @@ new TabsLayout(null, null, null, null, 0,
     new Tab("Settings", "Configuration options here")
 ).Variant(TabsVariant.Content)
 ```
+## Customise
 
-## With Icons and Badges
+### With Icons and Badges
 
 Enhance tabs with icons and badges for better visual representation:
 
@@ -107,61 +109,4 @@ new TabsLayout(null, null, null, null, 0,
 ).Variant(TabsVariant.Tabs)
 ```
 
-## Default Values
-
-TabsLayout has the following default values:
-
-- `Variant`: `TabsVariant.Content`
-- `RemoveParentPadding`: `true`
-- `Padding`: `new Thickness(4)` (16px)
-- `Width`: `Size.Full()`
-- `Height`: `Size.Full()`
-
-## Constructor Parameters
-
-The TabsLayout constructor accepts the following parameters:
-
-- `onSelect`: Event handler for tab selection
-- `onClose`: Event handler for tab closing (optional)
-- `onRefresh`: Event handler for tab refresh (optional)
-- `onReorder`: Event handler for tab reordering (optional)
-- `selectedIndex`: The initially selected tab index (0-based)
-- `tabs`: Variable number of Tab objects
-
-## Tab Properties
-
-Each Tab object supports the following properties:
-
-- `Title`: The display text for the tab
-- `Icon`: Optional icon to display alongside the tab title
-- `Badge`: Optional badge to display on the tab
-
-## Tab Extension Methods
-
-Enhance Tab objects with these extension methods:
-
-- `Icon(Icons?)`: Add an icon to the tab
-- `Badge(string)`: Add a badge to the tab
-- `Key(object)`: Set a unique key for forcing re-renders
-
-## TabsLayout Extension Methods
-
-Customize the TabsLayout behavior with these extension methods:
-
-- `Variant(TabsVariant)`: Set tabs or content variant
-- `Padding(int)`: Set uniform padding around the layout
-- `Padding(int, int)`: Set vertical and horizontal padding
-- `Padding(int, int, int, int)`: Set left, top, right, bottom padding
-- `Padding(Thickness?)`: Set padding using Thickness object
-- `RemoveParentPadding()`: Remove parent container padding
-
-## TabView Extension Methods
-
-The TabView helper provides additional methods for size control:
-
-- `Width(Size)`: Set the width of the layout
-- `Height(Size)`: Set the height of the layout
-- `Size(Size)`: Set both width and height
-- `Size(int)`: Set both width and height using units
-- `Size(float)`: Set both width and height using fraction
-- `Grow()`: Make the layout grow to fill available space
+<WidgetDocs Type="Ivy.TabsLayout" ExtensionTypes="Ivy.Views.Tabs.TabsLayoutExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/TabsLayout/TabsLayout.cs"/>
