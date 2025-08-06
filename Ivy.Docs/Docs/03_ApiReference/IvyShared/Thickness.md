@@ -11,12 +11,12 @@ prepare: |
 
 Suggested approach for configuring thickness:
 
-You can create elements with thickness. In the base example, there is the only one parametr to asign uniform thickness.
-
 ```csharp demo-tabs
 new Box("Content")
     .Padding(new Thickness(10))
 ```
+
+You can create elements with thickness. In the base example, there is the only one parametr to asign uniform thickness.
 
 ### Horizontal/Vertical Thickness
 
@@ -51,7 +51,9 @@ new Box("Content")
 
 ### Widget Padding
 
-This example demonstrates different padding approaches on three cards. The first card has uniform padding, the second has horizontal/vertical padding, and the third has individual side padding.
+This example demonstrates different padding approaches on three cards.
+
+The first card has uniform padding, the second has horizontal/vertical padding, and the third has individual side padding.
 
 ```csharp demo-tabs
 Layout.Vertical()
@@ -71,7 +73,9 @@ Layout.Vertical()
 
 ## Layout Margins
 
-Margins create space around elements. They can be omitted or defined separately for horizontal and vertical spacing.
+Margins create space around elements. 
+
+They can be omitted or defined separately for horizontal and vertical spacing.
 
 ```csharp demo-tabs
 Layout.Vertical()
@@ -101,7 +105,9 @@ Layout.Horizontal()
 ```
 ### Border Thickness
 
-Border thickness defines the width of the border around an element. It can be thin or thick, depending on the design needs:
+Border thickness defines the width of the border around an element. 
+
+It can be thin or thick, depending on the design needs:
 
 ```csharp demo-tabs
 Layout.Horizontal()
