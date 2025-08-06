@@ -290,12 +290,18 @@ const renderMenuItems = (
   items: MenuItem[],
   eventHandler: WidgetEventHandlerType,
   widgetId: string,
-  level: number,
-  onCtrlRightMouseClick?: (e: React.MouseEvent, item: MenuItem) => void
+  level: number
 ) => {
   const onItemClick = (item: MenuItem) => {
     if (!item.tag) return;
     eventHandler('OnSelect', widgetId, [item.tag]);
+  };
+
+  const onCtrlRightMouseClick = (e: React.MouseEvent, item: MenuItem) => {
+    if (e.ctrlKey && e.button === 2 && !!item.tag) {
+      e.preventDefault();
+      eventHandler('OnCtrlRightClickSelect', widgetId, [item.tag]);
+    }
   };
 
   return items.map(item => {
@@ -308,13 +314,7 @@ const renderMenuItems = (
             </h4>
             <ul className="space-y-1">
               {item.children &&
-                renderMenuItems(
-                  item.children!,
-                  eventHandler,
-                  widgetId,
-                  1,
-                  onCtrlRightMouseClick
-                )}
+                renderMenuItems(item.children!, eventHandler, widgetId, 1)}
             </ul>
           </div>
         );
@@ -339,7 +339,7 @@ const renderMenuItems = (
             <button
               className="flex w-full items-center gap-2 rounded-lg p-2 text-body hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
-              onMouseDown={e => onCtrlRightMouseClick?.(e, item)}
+              onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={16} />
               <span>{item.label}</span>
@@ -352,7 +352,7 @@ const renderMenuItems = (
             <button
               className="flex w-full items-center gap-2 rounded-lg p-2 text-body hover:bg-accent hover:text-accent-foreground cursor-pointer h-8"
               onClick={() => onItemClick(item)}
-              onMouseDown={e => onCtrlRightMouseClick?.(e, item)}
+              onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={16} />
               <span>{item.label}</span>
@@ -375,13 +375,6 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   // Register only the sidebar menu container with useFocusable
   const { ref: focusRef } = useFocusable('sidebar-navigation', 1);
-
-  const onCtrlRightMouseClick = (e: React.MouseEvent, item: MenuItem) => {
-    if (e.ctrlKey && e.button === 2 && !!item.tag) {
-      e.preventDefault();
-      eventHandler('OnCtrlRightClickSelect', id, [item.tag]);
-    }
-  };
 
   const flatItems: FlatMenuItem[] = useMemo(() => {
     return searchActive ? flattenMenuItems(items).filter(i => !i.isGroup) : [];
@@ -446,7 +439,6 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
               onClick={() =>
                 item.tag && eventHandler('OnSelect', id, [item.tag])
               }
-              onMouseDown={e => onCtrlRightMouseClick(e, item)}
               onMouseEnter={() => {
                 if (searchActive) {
                   setSelectedIndex(flatIdx);
@@ -488,7 +480,7 @@ export const SidebarMenuWidget: React.FC<SidebarMenuWidgetProps> = ({
           </div>
         )
       ) : (
-        renderMenuItems(items, eventHandler, id, 0, onCtrlRightMouseClick)
+        renderMenuItems(items, eventHandler, id, 0)
       )}
     </div>
   );
