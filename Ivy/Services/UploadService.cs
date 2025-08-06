@@ -44,13 +44,13 @@ public class UploadService(string connectionId) : IUploadService, IDisposable
         }
 
         var (handler, contentType, fileName) = upload;
-        
+
         using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
         var fileBytes = memoryStream.ToArray();
-        
+
         await handler(fileBytes);
-        
+
         return new OkResult();
     }
 
@@ -64,4 +64,4 @@ public interface IUploadService
     (IDisposable cleanup, string url) AddUpload(Func<byte[], Task> handler, string mimeType, string fileName);
 
     Task<IActionResult> Upload(string uploadId, IFormFile file);
-} 
+}
