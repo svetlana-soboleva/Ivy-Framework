@@ -33,11 +33,7 @@ This command will:
 
 ## Command Options
 
-### `ivy auth add` Options
-
-#### `--provider <PROVIDER>`
-
-Specify the authentication provider directly:
+`--provider <PROVIDER>` - Specify the authentication provider directly:
 
 ```terminal
 >ivy auth add --provider Auth0
@@ -45,17 +41,13 @@ Specify the authentication provider directly:
 
 Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
 
-#### `--connection-string <CONNECTION_STRING>`
-
-Provide provider-specific configuration using connection string syntax:
+`--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax:
 
 ```terminal
 >ivy auth add --provider Auth0 --connection-string YourConnectionString
 ```
 
-#### `--verbose`
-
-Enable verbose output for detailed logging:
+`--verbose` - Enable verbose output for detailed logging:
 
 ```terminal
 >ivy auth add --verbose
@@ -71,109 +63,71 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 
 ## Authentication Provider Configuration
 
-### Auth0
+**Auth0** - Universal authentication platform that supports multiple identity providers.
 
-Auth0 is a universal authentication platform that supports multiple identity providers.
-
-#### Setup Process
+**Setup Process**
 
 ```terminal
 >ivy auth add --provider Auth0
 ```
 
-#### Required Configuration
+**Required Configuration** - Domain (e.g., `your-app.auth0.com`), Client ID, and Client Secret.
 
-- **Domain**: Your Auth0 domain (e.g., `your-app.auth0.com`)
-- **Client ID**: Your Auth0 application client ID
-- **Client Secret**: Your Auth0 application client secret
-
-#### Connection String Format
+**Connection String Format**
 
 ```text
 Domain=your-domain.auth0.com;ClientId=your-client-id;ClientSecret=your-client-secret
 ```
 
-#### Auth0 Application Setup
+**Auth0 Application Setup** - Create an application in your Auth0 dashboard, set the callback URL to `https://your-app.com/callback`, configure allowed logout URLs, and note your Domain, Client ID, and Client Secret.
 
-1. Create an application in your Auth0 dashboard
-2. Set the callback URL to: `https://your-app.com/callback`
-3. Configure the allowed logout URLs
-4. Note your Domain, Client ID, and Client Secret
+**Supabase Auth** - Built-in authentication for Supabase projects.
 
-### Supabase Auth
-
-Supabase Auth provides built-in authentication for Supabase projects.
-
-#### Setup Process
+**Setup Process**
 
 ```terminal
 >ivy auth add --provider Supabase
 ```
 
-#### Required Configuration
+**Required Configuration** - Project URL, Anon Key, and optionally Service Role Key for admin operations.
 
-- **Project URL**: Your Supabase project URL
-- **Anon Key**: Your Supabase anonymous key
-- **Service Role Key**: Your Supabase service role key (optional)
-
-#### Connection String Format
+**Connection String Format**
 
 ```text
 ProjectUrl=https://your-project.supabase.co;AnonKey=your-anon-key;ServiceRoleKey=your-service-role-key
 ```
 
-#### Supabase Project Setup
+**Supabase Project Setup** - Create a project in Supabase, go to Settings > API, copy your Project URL and anon key, and optionally copy your service role key for admin operations.
 
-1. Create a project in Supabase
-2. Go to Settings > API
-3. Copy your Project URL and anon key
-4. Optionally copy your service role key for admin operations
+**Authelia** - Open-source identity provider that can integrate with various authentication systems.
 
-### Authelia
-
-Authelia is an open-source identity provider that can integrate with various authentication systems.
-
-#### Setup Process
+**Setup Process**
 
 ```terminal
 >ivy auth add --provider Authelia
 ```
 
-#### Required Configuration
+**Required Configuration** - Base URL, Client ID, and Client Secret.
 
-- **Base URL**: Your Authelia instance URL
-- **Client ID**: Your application client ID
-- **Client Secret**: Your application client secret
-
-#### Connection String Format
+**Connection String Format**
 
 ```text
 BaseUrl=https://auth.your-domain.com;ClientId=your-client-id;ClientSecret=your-client-secret
 ```
 
-#### Authelia Setup
+**Authelia Setup** - Install and configure Authelia, create an OAuth2 client for your application, configure the redirect URIs, and note your Base URL, Client ID, and Client Secret.
 
-1. Install and configure Authelia
-2. Create an OAuth2 client for your application
-3. Configure the redirect URIs
-4. Note your Base URL, Client ID, and Client Secret
+**Basic Auth** - Simple username/password authentication.
 
-### Basic Auth
-
-Basic authentication provides simple username/password authentication.
-
-#### Setup Process
+**Setup Process**
 
 ```terminal
 >ivy auth add --provider Basic
 ```
 
-#### Required Configuration
+**Required Configuration** - Username and Password.
 
-- **Username**: Default username for authentication
-- **Password**: Default password for authentication
-
-#### Connection String Format
+**Connection String Format**
 
 ```text
 Username=admin;Password=secure-password
@@ -201,7 +155,7 @@ export Auth0__ClientSecret="your-client-secret"
 
 Ivy automatically updates your `Program.cs` to include authentication:
 
-### Auth0 Integration
+**Auth0 Integration**
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
@@ -228,7 +182,7 @@ app.UseIvy();
 app.Run();
 ```
 
-### Supabase Auth Integration
+**Supabase Auth Integration**
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
@@ -284,9 +238,7 @@ You can configure multiple authentication providers in a single application:
 
 ## Authorization
 
-### Role-Based Authorization
-
-Configure roles in your authentication provider and use them in your application:
+**Role-Based Authorization** - Configure roles in your authentication provider and use them in your application:
 
 ```csharp
 [Authorize(Roles = "Admin")]
@@ -296,9 +248,7 @@ public class AdminController : Controller
 }
 ```
 
-### Policy-Based Authorization
-
-Create custom authorization policies:
+**Policy-Based Authorization** - Create custom authorization policies:
 
 ```csharp
 builder.Services.AddAuthorization(options =>
@@ -310,46 +260,33 @@ builder.Services.AddAuthorization(options =>
 
 ## Troubleshooting
 
-### Authentication Provider Issues
+**Authentication Provider Issues** - Verify your provider configuration is correct, check that your application is properly registered with the identity provider, ensure callback URLs are correctly configured, and verify network connectivity to the authentication provider.
 
-- Verify your provider configuration is correct
-- Check that your application is properly registered with the identity provider
-- Ensure callback URLs are correctly configured
-- Verify network connectivity to the authentication provider
+**Token Validation Issues** - Check that your JWT tokens are properly signed, verify audience and issuer claims, and ensure your application's clock is synchronized.
 
-### Token Validation Issues
-
-- Check that your JWT tokens are properly signed
-- Verify audience and issuer claims
-- Ensure your application's clock is synchronized
-
-### Configuration Issues
-
-- Ensure authentication settings are properly stored in user secrets
-- Verify environment variables are correctly set
-- Check that your `Program.cs` includes the necessary authentication middleware
+**Configuration Issues** - Ensure authentication settings are properly stored in user secrets, verify environment variables are correctly set, and check that your `Program.cs` includes the necessary authentication middleware.
 
 ## Examples
 
-### Auth0 Setup
+**Auth0 Setup**
 
 ```terminal
 >ivy auth add --provider Auth0 --connection-string YourConnectionString
 ```
 
-### Supabase Auth Setup
+**Supabase Auth Setup**
 
 ```terminal
 >ivy auth add --provider Supabase --connection-string YourConnectionString
 ```
 
-### Basic Auth Setup
+**Basic Auth Setup**
 
 ```terminal
 >ivy auth add --provider Basic --connection-string YourConnectionString
 ```
 
-### Multiple Providers
+**Multiple Providers**
 
 ```terminal
 >ivy auth add --provider Auth0
@@ -358,27 +295,11 @@ builder.Services.AddAuthorization(options =>
 
 ## Best Practices
 
-### Security
+**Security** - Always use HTTPS in production, store sensitive configuration in user secrets or environment variables, regularly rotate client secrets, use strong passwords for Basic Auth, and implement proper session management.
 
-- Always use HTTPS in production
-- Store sensitive configuration in user secrets or environment variables
-- Regularly rotate client secrets
-- Use strong passwords for Basic Auth
-- Implement proper session management
+**Configuration** - Use descriptive names for your authentication providers, keep configuration separate from code, use environment-specific settings, and document your authentication setup.
 
-### Configuration
-
-- Use descriptive names for your authentication providers
-- Keep configuration separate from code
-- Use environment-specific settings
-- Document your authentication setup
-
-### Testing
-
-- Test authentication flows in development
-- Verify token validation works correctly
-- Test authorization policies
-- Ensure logout functionality works properly
+**Testing** - Test authentication flows in development, verify token validation works correctly, test authorization policies, and ensure logout functionality works properly.
 
 ## Related Commands
 
