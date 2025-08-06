@@ -95,7 +95,7 @@ new TabsLayout(null, null, null, null, 0,
     new Tab("Settings", "Configuration options here")
 ).Variant(TabsVariant.Content)
 ```
-## Customise
+## Customize
 
 ### With Icons and Badges
 
