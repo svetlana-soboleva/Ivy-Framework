@@ -46,10 +46,23 @@
   word-break: break-word !important;
   max-width: 100% !important;
 }
+.ͼb {
+  color: var(--purple);
+}
+.ͼi {
+  color: var(--primary);
+}
+.ͼd {
+  color: var(--primary);
+}
+.ͼe {
+  color: var(--red);
+}
+.ͼi
 
 /* CodeMirror syntax highlighting - using CSS variables for theme support */
 .cm-token.cm-keyword {
-  color: var(--violet) !important;
+  color: var(--pink) !important;
 }
 
 .cm-token.cm-operator {
@@ -74,19 +87,19 @@
 }
 
 .cm-token.cm-variable {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-variable-2 {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-def {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-property {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-attribute {
@@ -94,19 +107,19 @@
 }
 
 .cm-token.cm-builtin {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-type {
-  color: var(--violet) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-atom {
-  color: var(--violet) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-tag {
-  color: var(--violet) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-bracket {
@@ -122,11 +135,11 @@
 }
 
 .cm-token.cm-header {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-qualifier {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-quote {
@@ -158,12 +171,12 @@
 }
 
 .cm-token.cm-formatting-strong {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
   font-weight: bold !important;
 }
 
 .cm-token.cm-formatting-em {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
   font-style: italic !important;
 }
 
@@ -181,31 +194,31 @@
 }
 
 .cm-token.cm-formatting-header {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-1 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-2 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-3 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-4 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-5 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-header-6 {
-  color: var(--violet) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-formatting-hr {
