@@ -353,9 +353,8 @@ public static class WebApplicationExtensions
             assembly,
             $"{assembly.GetName().Name}"
         );
-        static async Task ServeIndexHtml(HttpContext context, IConfiguration configuration, ServerArgs serverArgs)
+        app.MapGet("/", async context =>
         {
-            var assembly = Assembly.GetExecutingAssembly()!;
             var resourceName = $"{assembly.GetName().Name}.index.html";
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
@@ -364,6 +363,7 @@ public static class WebApplicationExtensions
                 var html = await reader.ReadToEndAsync();
 
                 //Inject IVY_LICENSE:
+                var configuration = app.Services.GetRequiredService<IConfiguration>();
                 var ivyLicense = configuration["IVY_LICENSE"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicense))
                 {
@@ -397,28 +397,9 @@ public static class WebApplicationExtensions
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);
             }
-        }
-
-        app.MapGet("/", context => ServeIndexHtml(context, app.Services.GetRequiredService<IConfiguration>(), serverArgs));
+        });
 
         app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
-
-        // SPA fallback - serve index.html for all frontend routes
-        app.MapFallback(async context =>
-        {
-            var path = context.Request.Path.Value;
-
-            // Block specific API and system paths
-            if (path?.StartsWith("/messages", StringComparison.OrdinalIgnoreCase) == true ||
-                path?.StartsWith("/auth", StringComparison.OrdinalIgnoreCase) == true ||
-                path?.StartsWith("/assets", StringComparison.OrdinalIgnoreCase) == true)
-            {
-                context.Response.StatusCode = 404;
-                return;
-            }
-
-            await ServeIndexHtml(context, app.Services.GetRequiredService<IConfiguration>(), serverArgs);
-        });
 
         return app;
     }
@@ -486,4 +467,3 @@ public static class IvyServerUtils
         };
     }
 }
-
