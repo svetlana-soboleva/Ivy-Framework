@@ -24,7 +24,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
-    SerializedCache? _serializedTokenCache = null;
+    TokenCache? _tokenCache = null;
 
     private string? _codeVerifier = null;
 
@@ -32,14 +32,9 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
     private readonly string _clientId;
     private readonly string _clientSecret;
 
-    record struct SerializedCache(
-        Dictionary<string, object> AccessToken,
-        Dictionary<string, SerializedRefreshToken> RefreshToken,
-        Dictionary<string, object> IdToken,
-        Dictionary<string, object> Account,
-        Dictionary<string, object> AppMetadata);
+    record struct TokenCache(Dictionary<string, RefreshToken> RefreshToken);
 
-    record struct SerializedRefreshToken([property: JsonPropertyName("secret")] string Secret);
+    record struct RefreshToken([property: JsonPropertyName("secret")] string Secret);
 
     public MicrosoftEntraAuthProvider()
     {
@@ -73,7 +68,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         _app.UserTokenCache.SetAfterAccess(args =>
         {
             var cacheBytes = args.TokenCache.SerializeMsalV3();
-            _serializedTokenCache = JsonSerializer.Deserialize<SerializedCache>(cacheBytes);
+            _tokenCache = JsonSerializer.Deserialize<TokenCache>(cacheBytes);
         });
     }
 
@@ -144,7 +139,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
     public async Task LogoutAsync(string jwt)
     {
-        _serializedTokenCache = null;
+        _tokenCache = null;
         await GetApp().RemoveAsync(null);
     }
 
@@ -304,12 +299,12 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
     private string? GetCurrentRefreshToken(string accountId)
     {
-        if (_serializedTokenCache is not { } serializedTokenCache)
+        if (_tokenCache is not { } tokenCache)
         {
             return null;
         }
 
-        foreach (var (key, token) in serializedTokenCache.RefreshToken)
+        foreach (var (key, token) in tokenCache.RefreshToken)
         {
             if (key.StartsWith(accountId))
             {
