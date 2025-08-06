@@ -401,25 +401,24 @@ public static class WebApplicationExtensions
 
         app.MapGet("/", ServeIndexHtml);
 
+        app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
+
         // SPA fallback - serve index.html for all frontend routes
         app.MapFallback(async context =>
         {
             var path = context.Request.Path.Value?.ToLower();
 
-            // if we are here, relative path must 
-            // not be a signalr, auth or assets path or a file
+            // Block specific API and system paths
             if (path?.StartsWith("/messages") == true ||
                 path?.StartsWith("/auth") == true ||
-                path?.StartsWith("/assets") == true ||
-                path?.Contains('.') == true)
+                path?.StartsWith("/assets") == true)
             {
                 context.Response.StatusCode = 404;
                 return;
             }
+
             await ServeIndexHtml(context);
         });
-
-        app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
 
         return app;
     }
@@ -487,3 +486,4 @@ public static class IvyServerUtils
         };
     }
 }
+
