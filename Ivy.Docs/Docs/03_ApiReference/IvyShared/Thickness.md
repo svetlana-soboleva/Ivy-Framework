@@ -9,14 +9,18 @@ prepare: |
 
 ## Base usage
 
-We recomment to use thickness this way:
+Suggested approach for configuring thickness:
+
+You can create elements with thickness. In the base example, there is the only one parametr to asign uniform thickness.
 
 ```csharp demo-tabs
 new Box("Content")
     .Padding(new Thickness(10))
 ```
 
-### Also you can add Horizontal/Vertical Thickness
+### Horizontal/Vertical Thickness
+
+You can define thickness for horizontal (left and right) and vertical (top and bottom) sides separately using two parameters:
 
 ```csharp demo-tabs
 new Box("Content")
@@ -27,6 +31,8 @@ new Box("Content")
 
 ### Individual Side Thickness
 
+To specify different thickness values for each side (left, top, right, bottom), use four parameters.
+
 ```csharp demo-tabs
 new Box("Content")
     .Width(Size.Units(30))
@@ -36,14 +42,16 @@ new Box("Content")
 
 ### Zero Thickness
 
+Use Thickness.Zero to completely remove padding or borders by setting all sides to zero.
+
 ```csharp demo-tabs
 new Box("Content")
     .Padding(Thickness.Zero)
 ```
 
-## Common Use Cases
-
 ### Widget Padding
+
+This example demonstrates different padding approaches on three cards. The first card has uniform padding, the second has horizontal/vertical padding, and the third has individual side padding.
 
 ```csharp demo-tabs
 Layout.Vertical()
@@ -61,7 +69,9 @@ Layout.Vertical()
         .Padding(new Thickness(5, 5, 100, 20))
 ```
 
-### Layout Margins
+## Layout Margins
+
+Margins create space around elements. They can be omitted or defined separately for horizontal and vertical spacing.
 
 ```csharp demo-tabs
 Layout.Vertical()
@@ -77,7 +87,10 @@ Layout.Vertical()
         .Width(Size.Units(170))
         .Height(Size.Units(20))
 ```
-## Horizontal layout Margins
+### Horizontal layout Margins
+
+In horizontal layouts, margin values can be adjusted to control spacing between elements.
+
 ```csharp demo-tabs
 Layout.Horizontal()
     .Margin(50, 5)  // Creates Thickness(4, 2) internally
@@ -87,6 +100,8 @@ Layout.Horizontal()
     | new Box("With margins (10, 5)").Width(Size.Units(30)).Height(Size.Units(20))
 ```
 ### Border Thickness
+
+Border thickness defines the width of the border around an element. It can be thin or thick, depending on the design needs:
 
 ```csharp demo-tabs
 Layout.Horizontal()
@@ -100,20 +115,20 @@ Layout.Horizontal()
         .BorderThickness(new Thickness(10))
 ```
 
-## Extension Method Support
-
-Many widgets provide convenient extension methods that accept Thickness:
-
 ### Layout Views
+
+You can apply both padding and margin to control the internal space of a component and the space around it.
 
 ```csharp demo-tabs
 Layout.Vertical()
-    .Padding(8)  // Creates Thickness(8) internally
-    .Margin(4)   // Creates Thickness(4) internally
+    .Padding(8)
+    .Margin(4)  
     | new Box("Content")
 ```
 
 ### Box Widget
+
+A single element can use padding, margin, and border thickness at the same time to precisely control layout and appearance.
 
 ```csharp demo-tabs
 new Box("Content")
