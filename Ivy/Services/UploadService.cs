@@ -38,9 +38,9 @@ public class UploadService(string connectionId) : IUploadService, IDisposable
 
     public async Task<IActionResult> Upload(string uploadId, IFormFile file)
     {
-        if (!_uploads.TryGetValue(Guid.Parse(uploadId), out var upload))
+        if (!Guid.TryParse(uploadId, out var guid) || !_uploads.TryGetValue(guid, out var upload))
         {
-            throw new Exception($"Upload '{uploadId}' not found.");
+            return new BadRequestObjectResult($"Invalid or unknown uploadId: '{uploadId}'.");
         }
 
         var (handler, contentType, fileName) = upload;
