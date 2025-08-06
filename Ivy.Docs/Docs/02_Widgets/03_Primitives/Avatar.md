@@ -1,6 +1,6 @@
 # Avatar
 
-`Avatar`s are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
+`Avatars` are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
 
 ```csharp demo-below
 Layout.Horizontal()
@@ -13,7 +13,7 @@ Layout.Horizontal()
 
 ## Practical Usage
 
-`Avatar`s can be used to showcase Teams like this. 
+`Avatars` can be used to showcase Teams like this. 
 
 ```csharp demo-tabs
 public class IvyTeamDemo : ViewBase
