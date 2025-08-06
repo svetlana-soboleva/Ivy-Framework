@@ -1,4 +1,5 @@
 #!/bin/sh
 dotnet format
+git add -A
 cd frontend
 npx lint-staged
