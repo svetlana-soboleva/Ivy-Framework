@@ -91,7 +91,7 @@ Layout.Vertical()
         .Width(Size.Units(170))
         .Height(Size.Units(20))
 ```
-### Horizontal layout Margins
+### Horizontal Layout Margins
 
 In horizontal layouts, margin values can be adjusted to control spacing between elements.
 
