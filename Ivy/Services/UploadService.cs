@@ -21,7 +21,7 @@ public class UploadController(AppSessionStore sessionStore) : Controller
 
 public class UploadService(string connectionId) : IUploadService, IDisposable
 {
-    private readonly Dictionary<Guid, (Func<byte[], Task> handler, string mimeType, string fileName)> _uploads = new();
+    private readonly ConcurrentDictionary<Guid, (Func<byte[], Task> handler, string mimeType, string fileName)> _uploads = new();
 
     public (IDisposable cleanup, string url) AddUpload(Func<byte[], Task> handler, string mimeType, string fileName)
     {
