@@ -406,12 +406,12 @@ public static class WebApplicationExtensions
         // SPA fallback - serve index.html for all frontend routes
         app.MapFallback(async context =>
         {
-            var path = context.Request.Path.Value?.ToLower();
+            var path = context.Request.Path.Value;
 
             // Block specific API and system paths
-            if (path?.StartsWith("/messages") == true ||
-                path?.StartsWith("/auth") == true ||
-                path?.StartsWith("/assets") == true)
+            if (path?.StartsWith("/messages", StringComparison.OrdinalIgnoreCase) == true ||
+                path?.StartsWith("/auth", StringComparison.OrdinalIgnoreCase) == true ||
+                path?.StartsWith("/assets", StringComparison.OrdinalIgnoreCase) == true)
             {
                 context.Response.StatusCode = 404;
                 return;
