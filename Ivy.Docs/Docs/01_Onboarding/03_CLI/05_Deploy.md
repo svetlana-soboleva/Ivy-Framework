@@ -16,8 +16,8 @@ Ivy supports the following cloud deployment providers:
 
 ### Deploying Your Application
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 ```
 
 This command will:
@@ -36,16 +36,16 @@ This command will:
 
 Specify the path to your project directory. Defaults to the current directory.
 
-```bash
-ivy deploy --project-path /path/to/your/project
+```terminal
+>ivy deploy --project-path /path/to/your/project
 ```
 
 #### `--verbose`
 
 Enable verbose output for detailed logging during deployment.
 
-```bash
-ivy deploy --verbose
+```terminal
+>ivy deploy --verbose
 ```
 
 ## Interactive Mode
@@ -65,8 +65,8 @@ AWS provides a comprehensive cloud platform with various services for applicatio
 
 #### Setup Process
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 # Select AWS when prompted
 ```
 
@@ -97,8 +97,8 @@ Azure provides cloud services for building, deploying, and managing applications
 
 #### Setup Process
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 # Select Azure when prompted
 ```
 
@@ -129,8 +129,8 @@ GCP provides cloud computing services for building, testing, and deploying appli
 
 #### Setup Process
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 # Select GCP when prompted
 ```
 
@@ -223,7 +223,7 @@ ENTRYPOINT ["dotnet", "YourProject.dll"]
 
 Ivy configures environment variables for your deployed application:
 
-```bash
+```text
 # Database connection strings
 ConnectionStrings__MyDatabase="your-connection-string"
 
@@ -324,8 +324,8 @@ Configure application scaling:
 
 #### Enable Verbose Logging
 
-```bash
-ivy deploy --verbose
+```terminal
+>ivy deploy --verbose
 ```
 
 #### Check Cloud Provider Logs
@@ -346,24 +346,24 @@ ivy deploy --verbose
 
 ### Basic AWS Deployment
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 # Select AWS
 # Follow prompts for configuration
 ```
 
 ### Azure Deployment with Custom Settings
 
-```bash
-ivy deploy --verbose
+```terminal
+>ivy deploy --verbose
 # Select Azure
 # Configure custom resource group and region
 ```
 
 ### GCP Deployment
 
-```bash
-ivy deploy
+```terminal
+>ivy deploy
 # Select GCP
 # Configure project and region
 ```

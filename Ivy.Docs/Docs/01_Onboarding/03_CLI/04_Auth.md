@@ -20,8 +20,8 @@ Ivy supports the following authentication providers:
 
 ### Adding an Authentication Provider
 
-```bash
-ivy auth add
+```terminal
+>ivy auth add
 ```
 
 This command will:
@@ -39,8 +39,8 @@ This command will:
 
 Specify the authentication provider directly:
 
-```bash
-ivy auth add --provider Auth0
+```terminal
+>ivy auth add --provider Auth0
 ```
 
 Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
@@ -49,16 +49,16 @@ Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
 
 Provide provider-specific configuration using connection string syntax:
 
-```bash
-ivy auth add --provider Auth0 --connection-string "Domain=your-domain.auth0.com;ClientId=your-client-id;ClientSecret=your-client-secret"
+```terminal
+>ivy auth add --provider Auth0 --connection-string YourConnectionString
 ```
 
 #### `--verbose`
 
 Enable verbose output for detailed logging:
 
-```bash
-ivy auth add --verbose
+```terminal
+>ivy auth add --verbose
 ```
 
 ## Interactive Mode
@@ -77,8 +77,8 @@ Auth0 is a universal authentication platform that supports multiple identity pro
 
 #### Setup Process
 
-```bash
-ivy auth add --provider Auth0
+```terminal
+>ivy auth add --provider Auth0
 ```
 
 #### Required Configuration
@@ -89,7 +89,7 @@ ivy auth add --provider Auth0
 
 #### Connection String Format
 
-```bash
+```text
 Domain=your-domain.auth0.com;ClientId=your-client-id;ClientSecret=your-client-secret
 ```
 
@@ -106,8 +106,8 @@ Supabase Auth provides built-in authentication for Supabase projects.
 
 #### Setup Process
 
-```bash
-ivy auth add --provider Supabase
+```terminal
+>ivy auth add --provider Supabase
 ```
 
 #### Required Configuration
@@ -118,7 +118,7 @@ ivy auth add --provider Supabase
 
 #### Connection String Format
 
-```
+```text
 ProjectUrl=https://your-project.supabase.co;AnonKey=your-anon-key;ServiceRoleKey=your-service-role-key
 ```
 
@@ -135,8 +135,8 @@ Authelia is an open-source identity provider that can integrate with various aut
 
 #### Setup Process
 
-```bash
-ivy auth add --provider Authelia
+```terminal
+>ivy auth add --provider Authelia
 ```
 
 #### Required Configuration
@@ -147,7 +147,7 @@ ivy auth add --provider Authelia
 
 #### Connection String Format
 
-```bash
+```text
 BaseUrl=https://auth.your-domain.com;ClientId=your-client-id;ClientSecret=your-client-secret
 ```
 
@@ -164,8 +164,8 @@ Basic authentication provides simple username/password authentication.
 
 #### Setup Process
 
-```bash
-ivy auth add --provider Basic
+```terminal
+>ivy auth add --provider Basic
 ```
 
 #### Required Configuration
@@ -175,7 +175,7 @@ ivy auth add --provider Basic
 
 #### Connection String Format
 
-```
+```text
 Username=admin;Password=secure-password
 ```
 
@@ -183,16 +183,15 @@ Username=admin;Password=secure-password
 
 Ivy automatically configures .NET User Secrets for secure authentication configuration:
 
-```bash
-# Authentication settings are stored in user secrets
-dotnet user-secrets list
+```terminal
+>dotnet user-secrets list
 ```
 
 ### Environment Variables
 
 You can also use environment variables for authentication configuration:
 
-```bash
+```text
 export Auth0__Domain="your-domain.auth0.com"
 export Auth0__ClientId="your-client-id"
 export Auth0__ClientSecret="your-client-secret"
@@ -260,12 +259,9 @@ app.Run();
 
 You can configure multiple authentication providers in a single application:
 
-```bash
-# Add Auth0 for user authentication
-ivy auth add --provider Auth0
-
-# Add Basic Auth for admin access
-ivy auth add --provider Basic
+```terminal
+>ivy auth add --provider Auth0
+>ivy auth add --provider Basic
 ```
 
 ## Authentication Flow
@@ -337,30 +333,27 @@ builder.Services.AddAuthorization(options =>
 
 ### Auth0 Setup
 
-```bash
-ivy auth add --provider Auth0 --connection-string "Domain=myapp.auth0.com;ClientId=abc123;ClientSecret=xyz789"
+```terminal
+>ivy auth add --provider Auth0 --connection-string YourConnectionString
 ```
 
 ### Supabase Auth Setup
 
-```bash
-ivy auth add --provider Supabase --connection-string "ProjectUrl=https://myproject.supabase.co;AnonKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```terminal
+>ivy auth add --provider Supabase --connection-string YourConnectionString
 ```
 
 ### Basic Auth Setup
 
-```bash
-ivy auth add --provider Basic --connection-string "Username=admin;Password=secure123"
+```terminal
+>ivy auth add --provider Basic --connection-string YourConnectionString
 ```
 
 ### Multiple Providers
 
-```bash
-# Primary authentication
-ivy auth add --provider Auth0
-
-# Admin authentication
-ivy auth add --provider Basic
+```terminal
+>ivy auth add --provider Auth0
+>ivy auth add --provider Basic
 ```
 
 ## Best Practices

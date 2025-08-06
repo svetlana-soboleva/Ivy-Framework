@@ -15,18 +15,11 @@ Ivy is a comprehensive development framework that provides:
 
 Get started with Ivy in just a few commands:
 
-```bash
-# Initialize a new Ivy project
-ivy init
-
-# Add a database connection
-ivy db add
-
-# Add authentication
-ivy auth add
-
-# Deploy your application
-ivy deploy
+```terminal
+>ivy init
+>ivy db add
+>ivy auth add
+>ivy deploy
 ```
 
 ## Key Features

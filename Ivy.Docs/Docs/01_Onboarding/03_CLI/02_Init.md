@@ -4,8 +4,8 @@ The `ivy init` command creates a new Ivy project with the necessary structure an
 
 ## Basic Usage
 
-```bash
-ivy init
+```terminal
+>ivy init
 ```
 
 This command will:
@@ -21,47 +21,47 @@ This command will:
 
 Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
-```bash
-ivy init --namespace MyCompany.MyApp
+```terminal
+>ivy init --namespace MyCompany.MyApp
 ```
 
 ### `--dangerous-clear`
 
 Clear the current folder before creating the new project. **Use with caution!**
 
-```bash
-ivy init --dangerous-clear
+```terminal
+>ivy init --dangerous-clear
 ```
 
 ### `--dangerous-overwrite`
 
 Overwrite existing files in the current folder. **Use with caution!**
 
-```bash
-ivy init --dangerous-overwrite
+```terminal
+>ivy init --dangerous-overwrite
 ```
 
 ### `--verbose`
 
 Enable verbose output for detailed logging during initialization.
 
-```bash
-ivy init --verbose
+```terminal
+>ivy init --verbose
 ```
 
 ### `--helloworld` or `--hello`
 
 Include a simple demo application in the new project to help you get started.
 
-```bash
-ivy init --helloworld
+```terminal
+>ivy init --helloworld
 ```
 
 ## Interactive Mode
 
 When you run `ivy init` without specifying a namespace, Ivy will prompt you to enter one:
 
-```bash
+```terminal
 Namespace for the new Ivy project: [suggested-namespace]
 ```
 
@@ -157,7 +157,7 @@ Ivy performs several validations during initialization:
 
 If the current directory is not empty, Ivy will show an error:
 
-```bash
+```terminal
 The current folder is not empty. Please clear the folder or use the --dangerous-clear option or --dangerous-overwrite
 ```
 
@@ -165,7 +165,7 @@ The current folder is not empty. Please clear the folder or use the --dangerous-
 
 If you provide an invalid namespace, Ivy will prompt you to enter a valid one:
 
-```bash
+```terminal
 Invalid 'invalid-namespace' namespace. Please enter a valid namespace.
 ```
 
@@ -182,28 +182,28 @@ After initializing your project:
 
 ### Basic Project Initialization
 
-```bash
-mkdir MyIvyApp
-cd MyIvyApp
-ivy init
+```terminal
+>mkdir MyIvyApp
+>cd MyIvyApp
+>ivy init
 ```
 
 ### Project with Custom Namespace
 
-```bash
-ivy init --namespace AcmeCorp.InventorySystem
+```terminal
+>ivy init --namespace AcmeCorp.InventorySystem
 ```
 
 ### Project with Demo App
 
-```bash
-ivy init --helloworld --namespace MyDemoApp
+```terminal
+>ivy init --helloworld --namespace MyDemoApp
 ```
 
 ### Verbose Initialization
 
-```bash
-ivy init --verbose --namespace MyApp
+```terminal
+>ivy init --verbose --namespace MyApp
 ```
 
 ## Troubleshooting
@@ -216,9 +216,9 @@ If you encounter permission issues, ensure you have write access to the current 
 
 If required .NET tools are missing, Ivy will attempt to install them automatically. You may need to run:
 
-```bash
-dotnet tool install -g dotnet-ef
-dotnet tool install -g dotnet-user-secrets
+```terminal
+>dotnet tool install -g dotnet-ef
+>dotnet tool install -g dotnet-user-secrets
 ```
 
 ### Git Issues
