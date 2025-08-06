@@ -97,7 +97,7 @@ In horizontal layouts, margin values can be adjusted to control spacing between 
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    .Margin(50, 5)  // Creates Thickness(4, 2) internally
+    .Margin(50, 5)  // Creates Thickness(50, 5) internally
     | new Box("With margins (50, 5)").Width(Size.Units(30)).Height(Size.Units(20))
 | Layout.Horizontal()
     .Margin(10, 5)
