@@ -49,31 +49,43 @@ new Box("Content")
 Layout.Vertical()
     | new Box("Card 1")
         .Width(Size.Units(170))
-        .Height(Size.Units(40))
-        .Padding(new Thickness(20))
+        .Height(Size.Units(20))
+        .Padding(new Thickness(10))
     | new Box("Card 2")
         .Width(Size.Units(170))
-        .Height(Size.Units(40))
-        .Padding(new Thickness(60, 30))
+        .Height(Size.Units(20))
+        .Padding(new Thickness(20, 15))
     | new Box("Card 3")
         .Width(Size.Units(170))
-        .Height(Size.Units(40))
-        .Padding(new Thickness(10, 20, 60, 20))
+        .Height(Size.Units(20))
+        .Padding(new Thickness(5, 5, 100, 20))
 ```
 
 ### Layout Margins
 
 ```csharp demo-tabs
 Layout.Vertical()
-    .Margin(4, 2)  // Creates Thickness(4, 2) internally
-    | new Box("Content with margins")
+    | new Box("box without margins")
         .Width(Size.Units(170))
-        .Height(Size.Units(40))
-    | new Box("Another box")
+        .Height(Size.Units(20))
+| Layout.Vertical()
+    .Margin(15, 5)  // Larger margins for comparison
+    | new Box("Large margins (15,5)")
         .Width(Size.Units(170))
-        .Height(Size.Units(40))
+        .Height(Size.Units(20))
+    | new Box("Another box without margins")
+        .Width(Size.Units(170))
+        .Height(Size.Units(20))
 ```
-
+## Horizontal layout Margins
+```csharp demo-tabs
+Layout.Horizontal()
+    .Margin(50, 5)  // Creates Thickness(4, 2) internally
+    | new Box("With margins (50, 5)").Width(Size.Units(30)).Height(Size.Units(20))
+| Layout.Horizontal()
+    .Margin(10, 5)
+    | new Box("With margins (10, 5)").Width(Size.Units(30)).Height(Size.Units(20))
+```
 ### Border Thickness
 
 ```csharp demo-tabs
@@ -85,7 +97,7 @@ Layout.Horizontal()
     | new Box("Thick Border")
         .Width(Size.Units(170))
         .Height(Size.Units(40))
-        .BorderThickness(new Thickness(20))
+        .BorderThickness(new Thickness(10))
 ```
 
 ## Extension Method Support
@@ -107,39 +119,7 @@ Layout.Vertical()
 new Box("Content")
     .Padding(new Thickness(8))
     .Margin(new Thickness(4))
-    .BorderThickness(new Thickness(2))
-```
-
-### ToString()
-
-Returns a string representation in the format: `"Left,Top,Right,Bottom"`
-
-### Implicit String Conversion
-
-Thickness can be implicitly converted to string:
-
-```csharp demo-tabs
-Layout.Vertical()
-    | Text.Block($"Thickness: {new Thickness(4, 8, 4, 8)}")
-    | Text.Block($"Zero: {Thickness.Zero}")
-```
-
-## Best Practices
-
-### When to Use Each Constructor
-
-- **Uniform**: Use when all sides need the same spacing
-- **Horizontal/Vertical**: Use for common layout patterns (e.g., cards, buttons)
-- **Individual**: Use when precise control is needed for each side
-
-### Common Patterns
-
-```csharp demo-tabs
-Layout.Vertical()
-    | new Box("Standard Box").Padding(new Thickness(16, 8))
-    | Layout.Horizontal().Margin(4)  // Creates Thickness(4) internally
-        | new Box("Left")
-        | new Box("Right")
+    .BorderThickness(new Thickness(8))
 ```
 
 <WidgetDocs Type="Ivy.Shared.Thickness" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Shared/Thickness.cs"/>
