@@ -22,7 +22,6 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 {
     private IConfidentialClientApplication? _app;
     private HttpContext? _httpContext = null;
-    private readonly HttpClient _httpClient = new();
     private readonly string[] _scopes = ["User.Read", "openid", "profile", "email", "offline_access"];
 
     private readonly List<AuthOption> _authOptions = [];
@@ -314,8 +313,9 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
     private async Task<Microsoft.Graph.Models.User?> GetMeAsync(string jwt)
     {
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
-        var tempGraphClient = new GraphServiceClient(_httpClient);
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        var tempGraphClient = new GraphServiceClient(httpClient);
         return await tempGraphClient.Me.GetAsync();
     }
 }
