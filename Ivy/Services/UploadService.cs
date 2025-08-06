@@ -43,7 +43,7 @@ public class UploadService(string connectionId) : IUploadService, IDisposable
 
         var cleanup = Disposable.Create(() =>
         {
-            _uploads.Remove(uploadId);
+            _uploads.TryRemove(uploadId, out _);
         });
 
         return (cleanup, $"/upload/{connectionId}/{uploadId}");
