@@ -23,8 +23,6 @@ public class AppArgs
 
     private string? ArgsJson { get; set; }
 
-    public string? Args => ArgsJson;
-
     public T? GetArgs<T>() where T : class
     {
         if (ArgsJson == null)
