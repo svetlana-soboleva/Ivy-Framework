@@ -40,7 +40,7 @@ public class TextVariantsDemo : ViewBase
 
 For displaying code and markup content:
 
-```csharp demo-below
+```csharp demo-tabs
 public class CodeVariantsDemo : ViewBase
 {   
     public override object? Build()
@@ -60,7 +60,7 @@ public class CodeVariantsDemo : ViewBase
 
 Text elements can be customized with various modifiers:
 
-```csharp demo-below
+```csharp demo-tabs
 public class TextModifiersDemo : ViewBase
 {   
     public override object? Build()
@@ -82,7 +82,7 @@ public class TextModifiersDemo : ViewBase
 
 ### Article Layout
 
-```csharp demo-below
+```csharp demo-tabs
 public class ArticleDemo : ViewBase
 {   
     public override object? Build()
@@ -107,7 +107,7 @@ public class ArticleDemo : ViewBase
 
 ### Form Labels and Messages
 
-```csharp demo-below
+```csharp demo-tabs
 public class FormDemo : ViewBase
 {   
     public override object? Build()
@@ -126,7 +126,7 @@ public class FormDemo : ViewBase
 
 ### Code Documentation
 
-```csharp demo-below
+```csharp demo-tabs
 public class CodeDocDemo : ViewBase
 {   
     public override object? Build()
@@ -152,7 +152,7 @@ public class CodeDocDemo : ViewBase
 
 ### Status Messages
 
-```csharp demo-below
+```csharp demo-tabs
 public class StatusDemo : ViewBase
 {   
     public override object? Build()
