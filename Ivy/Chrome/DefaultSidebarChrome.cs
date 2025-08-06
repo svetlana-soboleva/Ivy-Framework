@@ -136,8 +136,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         {
             if (@event.Value is string appId)
             {
-                var cleanUrl = $"/{appId}";
-                client.OpenUrl(cleanUrl);
+                client.OpenUrl(new NavigateArgs(appId).GetUrl());
             }
         }
 
