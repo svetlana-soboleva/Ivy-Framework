@@ -12,17 +12,7 @@ prepare: |
 Here's a simple example of a tooltip on a button:
 
 ```csharp
-new Tooltip(new Button("Hover Me"), "Hello World!");
-```
-
-You can also add a tooltip using the extension method for cleaner code:
-
-```csharp
 new Button("Hover Me").WithTooltip("Hello World!");
-```
-
-```csharp demo-below
-new Button("Hover Me").WithTooltip("Hello World!")
 ```
 
 ## Common Use Cases
