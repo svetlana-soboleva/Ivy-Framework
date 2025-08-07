@@ -60,6 +60,10 @@
   color: var(--red);
 }
 
+.ͼc {
+  color: var(--cyan);
+}
+
 /* CodeMirror syntax highlighting - using CSS variables for theme support */
 .cm-token.cm-keyword {
   color: var(--purple) !important;
