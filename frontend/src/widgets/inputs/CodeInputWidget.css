@@ -47,6 +47,8 @@
   max-width: 100% !important;
 }
 
+/* These class names are super weird but we found them in html and they fixed the issue */
+
 .ͼb {
   color: var(--purple);
 }
