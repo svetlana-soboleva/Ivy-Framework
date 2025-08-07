@@ -62,7 +62,7 @@
 
 /* CodeMirror syntax highlighting - using CSS variables for theme support */
 .cm-token.cm-keyword {
-  color: var(--pink) !important;
+  color: var(--purple) !important;
 }
 
 .cm-token.cm-operator {
@@ -103,7 +103,7 @@
 }
 
 .cm-token.cm-attribute {
-  color: var(--blue) !important;
+  color: var(--cyan) !important;
 }
 
 .cm-token.cm-builtin {
