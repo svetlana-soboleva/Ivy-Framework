@@ -28,15 +28,15 @@ Use `Size.Px()` for precise pixel-based sizing:
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Box("100px wide")
-        .Width(Size.Px(100))
+    | new Box("150px wide")
+        .Width(Size.Px(150))
         .Height(Size.Px(50))
     | new Box("200px wide")
         .Width(Size.Px(200))
         .Height(Size.Px(50))
     | new Box("300px wide")
         .Width(Size.Px(300))
-        .Height(Size.Px(75))
+        .Height(Size.Px(50))
 ```
 
 Pixel sizing provides exact control over element dimensions. Each box has a fixed width in pixels and varying heights to demonstrate the precision of pixel-based sizing.
@@ -47,14 +47,14 @@ Use `Size.Units()` for framework-specific unit sizing:
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Box("15 units wide")
-        .Width(Size.Units(15))
+    | new Box("40 units wide")
+        .Width(Size.Units(40))
         .Height(Size.Units(20))
-    | new Box("20 units wide")
-        .Width(Size.Units(20))
+    | new Box("50 units wide")
+        .Width(Size.Units(50))
         .Height(Size.Units(20))
-    | new Box("30 units wide")
-        .Width(Size.Units(30))
+    | new Box("60 units wide")
+        .Width(Size.Units(60))
         .Height(Size.Units(20))
 ```
 
@@ -62,8 +62,7 @@ Framework units provide a consistent sizing system across the application. These
 
 ### Fractions
 
-Use `Size.Fraction()` for percentage-based sizing (0.0 to 1.0):
-
+Use `Size.Fraction()` for percentage-based sizing (0.0 to 1.0).
 
 Fractional sizing creates responsive layouts that adapt to available space. The boxes take up 25%, 50%, and 75% of the container width respectively.
 
@@ -82,20 +81,20 @@ Layout.Horizontal()
 
 ### Rem Units
 
-Use `Size.Rem()` for responsive sizing based on root font size:
+Use `Size.Rem()` for responsive sizing based on root font size.
 
 Rem units scale with the user's font size preferences, making layouts more accessible. Each box is sized relative to the root font size, maintaining proportional relationships.
 
 ```csharp demo-tabs
 Layout.Horizontal()
-    | new Box("4rem wide")
-        .Width(Size.Rem(4))
-        .Height(Size.Rem(4))
-    | new Box("6rem wide")
-        .Width(Size.Rem(6))
-        .Height(Size.Rem(4))
     | new Box("10rem wide")
         .Width(Size.Rem(10))
+        .Height(Size.Rem(4))
+    | new Box("15rem wide")
+        .Width(Size.Rem(15))
+        .Height(Size.Rem(4))
+    | new Box("20rem wide")
+        .Width(Size.Rem(20))
         .Height(Size.Rem(4))
 ```
 
@@ -193,20 +192,19 @@ Layout.Horizontal()
 
 ### Cards with Different Sizes
 
-
 This shows how cards can use different sizing strategies - one that fills the entire width, one that takes half the width, and one with a fixed width in framework units.
 
 ```csharp demo-tabs
 Layout.Vertical()
     | new Card("Full width card")
         .Width(Size.Full())
-        .Height(Size.Units(40))
+        .Height(Size.Units(20))
     | new Card("Half width card")
         .Width(Size.Fraction(0.5f))
-        .Height(Size.Units(40))
+        .Height(Size.Units(20))
     | new Card("Fixed width card")
         .Width(Size.Units(150))
-        .Height(Size.Units(40))
+        .Height(Size.Units(20))
 ```
 
 ## Size Constraints
@@ -261,7 +259,7 @@ This demonstrates a typical form layout with a full-width header, a horizontal r
 Layout.Vertical()
     | new Box("Full width form")
         .Width(Size.Full())
-        .Height(Size.Units(30))
+        .Height(Size.Units(20))
     | Layout.Horizontal()
         | new Box("Label")
             .Width(Size.Units(100))
@@ -282,16 +280,16 @@ This shows a dashboard grid layout where all cards take full width within their 
 Layout.Grid().Columns(2)
     | new Card("Metric 1")
         .Width(Size.Full())
-        .Height(Size.Units(60))
+        .Height(Size.Units(30))
     | new Card("Metric 2")
         .Width(Size.Full())
-        .Height(Size.Units(60))
+        .Height(Size.Units(30))
     | new Card("Chart")
         .Width(Size.Full())
-        .Height(Size.Units(100))
+        .Height(Size.Units(30))
     | new Card("Table")
         .Width(Size.Full())
-        .Height(Size.Units(100))
+        .Height(Size.Units(30))
 ```
 
 ### Responsive Sidebar
