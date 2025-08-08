@@ -1,6 +1,6 @@
 ﻿# Ivy Authentication
 
-The `ivy auth` commands allow you to add and configure authentication providers in your Ivy project. Ivy supports multiple authentication providers and automatically integrates them with your application.
+The `ivy auth` commands allow you to add and configure authentication providers in your Ivy project. Ivy supports several authentication providers and helps you to integrate them with your application.
 
 ## Supported Authentication Providers
 
@@ -135,7 +135,7 @@ Username=admin;Password=secure-password
 
 ## Security and Secrets Management
 
-Ivy automatically configures .NET User Secrets for secure authentication configuration:
+Ivy automatically configures .NET User Secrets for secure authentication configuration. To view configured secrets:
 
 ```terminal
 >dotnet user-secrets list
@@ -146,9 +146,10 @@ Ivy automatically configures .NET User Secrets for secure authentication configu
 You can also use environment variables for authentication configuration:
 
 ```text
-export Auth0__Domain="your-domain.auth0.com"
-export Auth0__ClientId="your-client-id"
-export Auth0__ClientSecret="your-client-secret"
+export AUTH0_DOMAIN="your-domain.auth0.com"
+export AUTH0_CLIENT_ID="your-client-id"
+export AUTH0_CLIENT_SECRET="your-client-secret"
+export AUTH0_AUDIENCE="https://your-domain.auth0.com/api/v2"
 ```
 
 ## Program.cs Integration
@@ -209,15 +210,6 @@ app.UseIvy();
 app.Run();
 ```
 
-## Multiple Authentication Providers
-
-You can configure multiple authentication providers in a single application:
-
-```terminal
->ivy auth add --provider Auth0
->ivy auth add --provider Basic
-```
-
 ## Authentication Flow
 
 ### OAuth2 Flow (Auth0, Supabase, Authelia)
@@ -235,28 +227,6 @@ You can configure multiple authentication providers in a single application:
 2. Browser prompts for username/password
 3. Credentials are validated against your configuration
 4. If valid, user is authenticated for the session
-
-## Authorization
-
-**Role-Based Authorization** - Configure roles in your authentication provider and use them in your application:
-
-```csharp
-[Authorize(Roles = "Admin")]
-public class AdminController : Controller
-{
-    // Admin-only endpoints
-}
-```
-
-**Policy-Based Authorization** - Create custom authorization policies:
-
-```csharp
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("PremiumUser", policy =>
-        policy.RequireClaim("subscription", "premium"));
-});
-```
 
 ## Troubleshooting
 
@@ -286,24 +256,17 @@ builder.Services.AddAuthorization(options =>
 >ivy auth add --provider Basic --connection-string YourConnectionString
 ```
 
-**Multiple Providers**
-
-```terminal
->ivy auth add --provider Auth0
->ivy auth add --provider Basic
-```
-
 ## Best Practices
 
 **Security** - Always use HTTPS in production, store sensitive configuration in user secrets or environment variables, regularly rotate client secrets, use strong passwords for Basic Auth, and implement proper session management.
 
 **Configuration** - Use descriptive names for your authentication providers, keep configuration separate from code, use environment-specific settings, and document your authentication setup.
 
-**Testing** - Test authentication flows in development, verify token validation works correctly, test authorization policies, and ensure logout functionality works properly.
+**Testing** - Test authentication flows in development, verify token validation works correctly, and ensure logout functionality works properly.
 
 ## Related Commands
 
 - `ivy init` - Initialize a new Ivy project
 - `ivy db add` - Add database connections
 - `ivy app create` - Create applications
-- `ivy deploy` - Deploy your application 
+- `ivy deploy` - Deploy your application
