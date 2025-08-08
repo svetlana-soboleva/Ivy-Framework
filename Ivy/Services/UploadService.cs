@@ -6,10 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ivy.Services;
 
+[ApiController]
+[Route("upload")]
 public class UploadController(AppSessionStore sessionStore) : Controller
 {
-    [Route("upload/{connectionId}/{uploadId}")]
-    public async Task<IActionResult> Upload(string connectionId, string uploadId, IFormFile file)
+    [HttpPost("{connectionId}/{uploadId}")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Upload([FromRoute] string connectionId, [FromRoute] string uploadId, [FromForm] IFormFile file)
     {
         if (string.IsNullOrEmpty(connectionId))
         {
@@ -28,7 +31,7 @@ public class UploadController(AppSessionStore sessionStore) : Controller
             var uploadService = session.AppServices.GetRequiredService<IUploadService>();
             return await uploadService.Upload(uploadId, file);
         }
-        throw new Exception($"Session for connectionId '{connectionId}' not found.");
+        return NotFound($"Session for connectionId '{connectionId}' not found.");
     }
 }
 
@@ -56,7 +59,19 @@ public class UploadService(string connectionId) : IUploadService, IDisposable
             return new BadRequestObjectResult($"Invalid or unknown uploadId: '{uploadId}'.");
         }
 
-        var (handler, contentType, fileName) = upload;
+        var (handler, expectedContentType, expectedFileName) = upload;
+
+        if (file == null || file.Length == 0)
+        {
+            return new BadRequestObjectResult("Empty file.");
+        }
+
+        // Optional sanity checks; do not block upload if mismatched, just basic validation could be enforced here
+        // If strict validation is desired, uncomment the checks below
+        // if (!string.IsNullOrWhiteSpace(expectedContentType) && !string.Equals(file.ContentType, expectedContentType, StringComparison.OrdinalIgnoreCase))
+        // {
+        //     return new BadRequestObjectResult($"Unexpected content type. Expected '{expectedContentType}', got '{file.ContentType}'.");
+        // }
 
         using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
@@ -69,6 +84,7 @@ public class UploadService(string connectionId) : IUploadService, IDisposable
 
     public void Dispose()
     {
+        _uploads.Clear();
     }
 }
 
