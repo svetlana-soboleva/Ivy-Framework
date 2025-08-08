@@ -351,7 +351,7 @@ public static class MarkdownConverter
             codeBuilder.AppendTab(3).AppendLine("| Tabs( ");
             codeBuilder.AppendTab(4).AppendLine($"new Tab(\"Demo\", {insertCode}),");
             AppendAsMultiLineStringIfNecessary(4, codeContent, codeBuilder, "new Tab(\"Code\", new Code(", $",{MapLanguageToEnum(language)}))");
-            codeBuilder.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 8, 0, 0).Variant(TabsVariant.Content).Border()");
+            codeBuilder.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 8, 0, 0).Variant(TabsVariant.Content)");
         }
         else if (arguments is "demo-below")
         {
