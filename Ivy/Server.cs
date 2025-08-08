@@ -349,14 +349,18 @@ public static class WebApplicationExtensions
     public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
     {
         var assembly = Assembly.GetExecutingAssembly()!;
-        var embeddedProvider = new EmbeddedFileProvider(
-            assembly,
-            $"{assembly.GetName().Name}"
-        );
+        var baseName = assembly.GetName().Name!;
+        var primaryNamespace = baseName;
+        var altNamespace = baseName + ".frontend.dist";
+
         app.MapGet("/", async context =>
         {
-            var resourceName = $"{assembly.GetName().Name}.index.html";
-            await using var stream = assembly.GetManifestResourceStream(resourceName);
+            Stream? stream = null;
+            foreach (var ns in new[] { primaryNamespace, altNamespace })
+            {
+                stream = assembly.GetManifestResourceStream($"{ns}.index.html");
+                if (stream != null) break;
+            }
             if (stream != null)
             {
                 using var reader = new StreamReader(stream);
@@ -399,7 +403,15 @@ public static class WebApplicationExtensions
             }
         });
 
-        app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
+        var providers = new IFileProvider[]
+        {
+            new EmbeddedFileProvider(assembly, primaryNamespace),
+            new EmbeddedFileProvider(assembly, altNamespace),
+        };
+        foreach (var provider in providers)
+        {
+            app.UseStaticFiles(GetStaticFileOptions("", provider, assembly));
+        }
 
         return app;
     }
