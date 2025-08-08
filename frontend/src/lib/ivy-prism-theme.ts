@@ -3,13 +3,13 @@ import { CSSProperties } from 'react';
 // Create a theme that uses CSS variables for dynamic theming
 const createIvyPrismTheme = (): Record<string, CSSProperties> => ({
   'code[class*="language-"]': {
-    fontFamily: '"IBM Plex Mono", monospace',
+    fontFamily: 'var(--font-mono)',
     fontSize: '1em',
     background: 'transparent',
     color: 'var(--foreground)',
   },
   'pre[class*="language-"]': {
-    fontFamily: '"IBM Plex Mono", monospace',
+    fontFamily: 'var(--font-mono)',
     fontSize: '1em',
     background: 'transparent',
     padding: '1em',
