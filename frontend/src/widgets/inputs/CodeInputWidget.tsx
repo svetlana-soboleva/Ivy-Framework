@@ -71,6 +71,8 @@ interface CodeInputWidgetProps {
 const languageExtensions = {
   Csharp: cpp,
   Javascript: javascript,
+  Typescript: () => javascript({ typescript: true }),
+  Tsx: () => javascript({ typescript: true, jsx: true }),
   Python: python,
   Sql: sql,
   Html: html,
