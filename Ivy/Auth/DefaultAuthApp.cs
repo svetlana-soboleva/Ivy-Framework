@@ -57,7 +57,7 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
         var auth = this.UseService<IAuthService>();
         var client = this.UseService<IClientProvider>();
 
-        var login = async () =>
+        async void Login()
         {
             try
             {
@@ -88,7 +88,7 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
          | user.ToTextInput().Disabled(loading.Value)
          | Text.Label("Password:")
          | password.ToPasswordInput().Disabled(loading.Value)
-         | new Button("Login").Width(Size.Full()).HandleClick(login.HandleError(this)).Loading(loading.Value).Disabled(loading.Value)
+         | new Button("Login").Width(Size.Full()).HandleClick(Login).Loading(loading.Value).Disabled(loading.Value)
          | result
          ;
     }
@@ -108,7 +108,7 @@ public class OAuthFlowView(AuthOption option, IState<string?> errorMessage) : Vi
             return new RedirectResult("/");
         });
 
-        var login = async () =>
+        async void Login()
         {
             try
             {
@@ -118,8 +118,8 @@ public class OAuthFlowView(AuthOption option, IState<string?> errorMessage) : Vi
             {
                 errorMessage.Set(e.Message);
             }
-        };
+        }
 
-        return new Button(option.Name).Secondary().Icon(option.Icon).Width(Size.Full()).HandleClick(login.HandleError(this));
+        return new Button(option.Name).Secondary().Icon(option.Icon).Width(Size.Full()).HandleClick(Login);
     }
 }

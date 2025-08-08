@@ -87,9 +87,9 @@ public class Server
         AppRepository.AddFactory(() => [appDescriptor]);
     }
 
-    public void AddAppsFromAssembly()
+    public void AddAppsFromAssembly(Assembly? assembly = null)
     {
-        AppRepository.AddFactory(AppHelpers.GetApps);
+        AppRepository.AddFactory(() => AppHelpers.GetApps(assembly));
     }
 
     public AppDescriptor GetApp(string id)
