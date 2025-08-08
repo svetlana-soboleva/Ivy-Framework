@@ -33,7 +33,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
     // Small delay to ensure any Suspense boundaries have resolved
     const timer = setTimeout(() => {
       setContentLoaded(true);
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -203,10 +203,10 @@ const TableOfContents = ({
               key={heading.id}
               href={`#${heading.id}`}
               className={cn(
-                'block text-sm py-1 hover:text-primary transition-colors',
+                'block text-sm py-1 hover:text-foreground transition-colors',
                 heading.level === 1 ? 'pl-0' : `pl-${(heading.level - 1) * 4}`,
                 activeId === heading.id
-                  ? 'text-primary'
+                  ? 'text-foreground'
                   : 'text-muted-foreground'
               )}
               onClick={e => {

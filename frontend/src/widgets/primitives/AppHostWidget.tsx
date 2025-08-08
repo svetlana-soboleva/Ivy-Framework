@@ -32,6 +32,15 @@ export const AppHostWidget: React.FC<AppHostWidgetProps> = ({
   const lastPageKey = useRef<string | null>(null);
   const currentPageKey = getPageKey(appId, appArgs, parentId);
 
+  // Listen for popstate (back/forward navigation)
+  useEffect(() => {
+    const onPopState = () => {
+      isPopNavigation.current = true;
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
   // Save scroll position before widgetTree changes (before navigation)
   useEffect(() => {
     return () => {
