@@ -12,7 +12,7 @@ public class TerminalApp : ViewBase
                | new Terminal()
                    .AddCommand("echo Hello, world!")
                    .AddOutput("Hello, world!")
-                   .Title("You first Ivy app!")
+                   .Title("Your first Ivy app!")
             ;
     }
 }
