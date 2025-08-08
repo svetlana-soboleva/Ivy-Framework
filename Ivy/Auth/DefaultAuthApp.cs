@@ -81,7 +81,8 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
             {
                 loading.Set(false);
             }
-        };
+        }
+        ;
 
         return Layout.Vertical()
          | Text.Label("User:")
