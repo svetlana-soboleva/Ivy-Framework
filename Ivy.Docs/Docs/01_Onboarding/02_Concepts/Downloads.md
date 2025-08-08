@@ -65,7 +65,7 @@ client.DownloadFile(
 
 Proper error handling is essential for downloads:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DownloadView : ViewBase
 {
         public override object? Build()
@@ -103,7 +103,7 @@ public class DownloadView : ViewBase
 
 ### CSV Export
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DataExportView : ViewBase
 {
         public override object? Build()
@@ -125,7 +125,7 @@ public class DataExportView : ViewBase
 
 ### Large File Download with Progress
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class LargeFileView : ViewBase
 {
     public override object? Build()

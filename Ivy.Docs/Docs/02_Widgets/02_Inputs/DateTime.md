@@ -6,7 +6,7 @@ The `DateTimeInput` widget provides a comprehensive date and time picker interfa
 
 Here's a simple example of a DateTimeInput that allows users to select a date and time:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BasicDateTimeUsageDemo : ViewBase
 {
     public override object? Build()
@@ -22,7 +22,6 @@ public class BasicDateTimeUsageDemo : ViewBase
 }    
 ```
 
-
 ## Variants
 
 `DateTimeInput` supports three variants to suit different use cases:
@@ -34,6 +33,7 @@ The Date variant provides a calendar picker for selecting dates only.
 ```csharp
 dateState.ToDateTimeInput().Variant(DateTimeInputs.Date)
 ```
+
 Instead of using `DateTimeInputs.Date` the function `ToDateInput` should generally be used.
 
 ### DateTime Variant
@@ -43,6 +43,7 @@ The DateTime variant combines a calendar picker with a time input field.
 ```csharp
 dateState.ToDateTimeInput().Variant(DateTimeInputs.DateTime)
 ```
+
 Instead of using `DateTimeInputs.DateTime` the function `ToDateTimeInput` should generally be used.
 
 ### Time Variant
@@ -52,11 +53,12 @@ The Time variant provides a time picker for selecting time only.
 ```csharp
 dateState.ToDateTimeInput().Variant(DateTimeInputs.Time)
 ```
+
 Instead of using `DateTimeInputs.Time` the function `ToTimeInput` should generally be used.  
 
-The following demo shows all of these in action. 
+The following demo shows all of these in action.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DateTimeVariantsDemo : ViewBase
 {    
     public override object? Build()
@@ -83,8 +85,6 @@ public class DateTimeVariantsDemo : ViewBase
     }    
 }                
 ```
-
-
 
 ## Supported State Types
 
@@ -113,10 +113,10 @@ return dateState.ToDateTimeInput().OnChange(onChangeHandler);
 
 ## Format
 
-`DateTimeInput` can be customized with various formats. So the captured value can be 
-expressed in any format as supported by .NET. 
+`DateTimeInput` can be customized with various formats. So the captured value can be
+expressed in any format as supported by .NET.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class FormatDemo : ViewBase
 {
      public override object? Build()
@@ -140,12 +140,12 @@ public class FormatDemo : ViewBase
 }    
 ```
 
-### Invalid 
+### Invalid
 
-To represent that something might be wrong with a date input the function `Invalid` 
-should be used. The following code shows a demonstration. 
+To represent that something might be wrong with a date input the function `Invalid`
+should be used. The following code shows a demonstration.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InvalidDateTimeDemo : ViewBase
 {
     public override object? Build()
@@ -162,9 +162,9 @@ public class InvalidDateTimeDemo : ViewBase
 
 ### Disabled
 
-To disable a `DateTimeInput` the `Disabled` function should be used. 
+To disable a `DateTimeInput` the `Disabled` function should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DisabledDateTimeDemo : ViewBase
 {
     public override object? Build()
@@ -177,11 +177,11 @@ public class DisabledDateTimeDemo : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.DateTimeInput" ExtensionTypes="Ivy.DateTimeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateTimeInput.cs"/> 
+<WidgetDocs Type="Ivy.DateTimeInput" ExtensionTypes="Ivy.DateTimeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateTimeInput.cs"/>
 
 ## Examples
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class LibraryBookReturnDemo : ViewBase
 {
    
@@ -217,4 +217,3 @@ public class LibraryBookReturnDemo : ViewBase
 }
 
 ```
-

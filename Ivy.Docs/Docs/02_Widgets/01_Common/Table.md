@@ -7,7 +7,7 @@ The `Table` widget is a layout container designed to render data in a tabular fo
 There is a recommended way to create tables from data arrays.
 The `ToTable()` extension method automatically converts collections into formatted tables.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class BasicRowTable : ViewBase
 {
     public class Product
@@ -50,7 +50,7 @@ public class BasicRowTable : ViewBase
 
 **Empty(new Card(""))** shows content when the table is empty.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CustomBuilderTable : ViewBase
 {
     public override object? Build()
@@ -78,7 +78,7 @@ public class CustomBuilderTable : ViewBase
 The `Clear()` method hides all columns, allowing you to selectively show only the columns you need.
 Use `Add()` to show specific columns in the order you want them to appear.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ColumnManagementTable : ViewBase
 {
     public override object? Build()
@@ -107,7 +107,7 @@ public class ColumnManagementTable : ViewBase
 The `Totals()` method supports custom aggregation functions.
 You can use LINQ methods like `Count()`, `Average()`, `Sum()`, `Max()`, and `Min()` to create sophisticated calculations for your data.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class AdvancedAggregationsTable : ViewBase
 {
     public override object? Build()
@@ -136,7 +136,7 @@ public class AdvancedAggregationsTable : ViewBase
 
 The `RemoveEmptyColumns()` method automatically hides columns that contain no data (empty strings, null values, or zero values). This is useful for dynamic data where some columns might be empty across all rows.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class EmptyColumnsTable : ViewBase
 {
     public override object? Build()
@@ -160,7 +160,7 @@ public class EmptyColumnsTable : ViewBase
 
 The `Reset()` method restores all column settings to their default values. This is useful when you want to start fresh with a new configuration or when building dynamic table configurations.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ResetTableExample : ViewBase
 {
     public override object? Build()
@@ -186,7 +186,7 @@ public class ResetTableExample : ViewBase
 
 It's also possible to create manual tables with headers and other methods using rows and cells:
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ManualTableDemo : ViewBase
 {
     public override object? Build()

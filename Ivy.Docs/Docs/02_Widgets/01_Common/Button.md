@@ -26,7 +26,7 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 
 > **Note:** Primary is the default variant applied to all buttons. You don't need to explicitly call `.Primary()` unless you want to be explicit in your code for clarity.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Horizontal()
     | new Button("Primary (Default)")
     | new Button("Primary (Explicit)").Primary()
@@ -42,7 +42,8 @@ Layout.Horizontal()
 ### Button States
 
 #### Disabled State
-```csharp demo-tabs
+
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(3)
     | new Button("Primary").Disabled()
     | new Button("Secondary").Secondary().Disabled()
@@ -50,7 +51,8 @@ Layout.Grid().Columns(3)
 ```
 
 #### Loading State
-```csharp demo-tabs
+
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(3)
     | new Button("Primary").Loading()
     | new Button("Secondary").Secondary().Loading()
@@ -59,7 +61,7 @@ Layout.Grid().Columns(3)
 
 ### Button Sizes
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(3)
     | new Button("Small").Small()
     | new Button("Default")
@@ -74,7 +76,7 @@ Layout.Grid().Columns(3)
 
 ### Border Radius
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(3)
     | new Button("None").BorderRadius(BorderRadius.None)
     | new Button("Rounded").BorderRadius(BorderRadius.Rounded)
@@ -108,7 +110,8 @@ Layout.Grid().Columns(4)
 ### Icons
 
 #### Icons on the Left
-```csharp demo-tabs
+
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(4)
     | new Button("Save").Icon(Icons.Save)
     | new Button("Download").Icon(Icons.Download)
@@ -125,7 +128,8 @@ Layout.Grid().Columns(4)
 ```
 
 #### Icons on the Right
-```csharp demo-tabs
+
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(4)
     | new Button("Next").Icon(Icons.ArrowRight, Align.Right)
     | new Button("Continue").Icon(Icons.ChevronRight, Align.Right)
@@ -143,7 +147,7 @@ Layout.Grid().Columns(4)
 
 ### Icon-Only Buttons
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(4)
     | new Button(null, icon: Icons.Plus)
     | new Button(null, icon: Icons.Pen, variant: ButtonVariant.Outline)

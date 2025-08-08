@@ -40,7 +40,7 @@ The `CodeInput` widget can be customized with different languages for syntax hig
 The following code shows how to use this variant to make the syntax highlighting work 
 for C#. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class CSharpLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -59,7 +59,7 @@ public class CSharpLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for Javascript.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class JavaScriptLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -78,7 +78,7 @@ public class JavaScriptLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for Python.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class PythonLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -97,7 +97,7 @@ public class PythonLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for SQL.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SqlLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -116,7 +116,7 @@ public class SqlLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for HTML.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class HtmlLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -135,7 +135,7 @@ public class HtmlLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for JSON.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class JsonLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -155,7 +155,7 @@ public class JsonLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for CSS.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CssLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -179,7 +179,7 @@ public class CssLanguageHighlightDemo : ViewBase
 The following code shows how to use this variant to make the syntax highlighting work
 for DBML.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class DbmlLanguageHighlightDemo : ViewBase 
 {
     public override object? Build()
@@ -214,7 +214,7 @@ There are several styles that can be applied to these code inputs.
 To mark a `CodeInput` as invalid because of the content, this style should be used. 
 The following code shows how to use it. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InvalidCodeDemo: ViewBase
 {
     public override object? Build()
@@ -232,7 +232,7 @@ public class InvalidCodeDemo: ViewBase
 To mark a `CodeInput` as disabled because of the content or for any other reason, this style
 should be used. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DisabledCodeDemo : ViewBase
 {
     public override object? Build()
@@ -250,7 +250,7 @@ public class DisabledCodeDemo : ViewBase
 
 You can handle events such as changes in the `CodeInput`: 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class CodeInputWithButton : ViewBase 
 {
     public override object? Build()
@@ -281,7 +281,7 @@ public class CodeInputWithButton : ViewBase
 
 ### DBML Editor
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DBMLEditorDemo : ViewBase
 {
     public override object? Build()

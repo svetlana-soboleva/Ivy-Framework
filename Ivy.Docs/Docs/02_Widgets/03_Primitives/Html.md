@@ -4,7 +4,7 @@ The `Html` widget allows you to render raw HTML content in your Ivy application.
 
 ## Basic Usage
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class BasicHtmlView : ViewBase
 {
     public override object? Build()
@@ -23,7 +23,7 @@ public class BasicHtmlView : ViewBase
 
 ### Text Formatting
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class TextFormattingView : ViewBase
 {
     public override object? Build()
@@ -44,15 +44,18 @@ public class TextFormattingView : ViewBase
 ```
 
 **Rendered Result:**
+
 > # Main Heading
+>
 > ## Subheading
+>
 > This paragraph contains **bold text**, *italic text*, and **bold using b tag**, plus *italic using i tag*.
-> 
+>
 > You can also use <span style="color: blue;">colored text</span> and <span style="text-decoration: underline;">underlined text</span>.
 
 ### Lists and Structure
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ListsView : ViewBase
 {
     public override object? Build()
@@ -91,17 +94,21 @@ public class ListsView : ViewBase
 ```
 
 **Rendered Result:**
+
 > ### Unordered List
+>
 > - First item
 > - Second item with **bold text**
 > - Third item with *italic text*
-> 
+>
 > ### Ordered List
+>
 > 1. Step one
 > 2. Step two
 > 3. Step three
-> 
+>
 > ### Nested Lists
+>
 > - Parent item
 >   - Child item 1
 >   - Child item 2
@@ -109,7 +116,7 @@ public class ListsView : ViewBase
 
 ### Links and Navigation
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class LinksView : ViewBase
 {
     public override object? Build()
@@ -128,12 +135,12 @@ public class LinksView : ViewBase
 
 **Rendered Result:**
 > Visit [Ivy Framework](https://github.com/Ivy-Interactive/Ivy-Framework) on GitHub.
-> 
+>
 > You can also link to internal sections or email addresses.
 
 ### Tables
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class TablesView : ViewBase
 {
     public override object? Build()
@@ -170,6 +177,7 @@ public class TablesView : ViewBase
 ```
 
 **Rendered Result:**
+>
 > | Feature | Status | Description |
 > |---------|--------|-------------|
 > | HTML Rendering | ✓ Supported | Safe HTML rendering with sanitization |
@@ -178,7 +186,7 @@ public class TablesView : ViewBase
 
 ## Complex Layout Example
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ComplexLayoutView : ViewBase
 {
     public override object? Build()
@@ -219,20 +227,24 @@ public class ComplexLayoutView : ViewBase
 ```
 
 **Rendered Result:**
+
 > # HTML Widget Demo
-> 
+>
 > <div style="background-color: var(--muted); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary);">
 >   <h2 style="color: var(--primary); margin-top: 0;">Product Features</h2>
 >   <p style="font-size: 16px; color: var(--muted-foreground);">Discover what makes our product special:</p>
->   
->   **Performance**: Lightning-fast rendering with optimized algorithms.
->   **Security**: Built-in HTML sanitization protects against XSS attacks.
->   
->   **Quick Stats**
->   - **Rendering Speed:** 99.9% faster
->   - **Memory Usage:** 50% less
->   - **Security Score:** A+
+>
+> **Performance**: Lightning-fast rendering with optimized algorithms.
+> **Security**: Built-in HTML sanitization protects against XSS attacks.
+>
+> **Quick Stats**
+>
+> - **Rendering Speed:** 99.9% faster
+> - **Memory Usage:** 50% less
+> - **Security Score:** A+
+>
 > </div>
+
 ```
 
 ## Security Features
@@ -277,9 +289,9 @@ public class SecurityDemoView : ViewBase
 
 **Rendered Result (after sanitization):**
 > Safe content
-> 
+>
 > Click me
-> 
+>
 > Blocked link
 
 ## Best Practices & Use Cases
@@ -287,6 +299,7 @@ public class SecurityDemoView : ViewBase
 ### Best Practices
 
 #### Keep It Simple
+
 ```csharp
 // Good: Simple, clear HTML
 var goodHtml = "<p>Welcome to our <strong>application</strong>!</p>";
@@ -296,6 +309,7 @@ var complexHtml = "<div><div><div><p>Deep nesting</p></div></div></div>";
 ```
 
 #### Use Inline Styles Sparingly
+
 ```csharp
 // Good: Minimal inline styling
 var styledHtml = "<p style='color: blue;'>Blue text</p>";
@@ -305,6 +319,7 @@ var classBasedHtml = "<p class='text-blue'>Blue text</p>";
 ```
 
 #### Validate External Content
+
 ```csharp
 public class ExternalContentView : ViewBase
 {
@@ -330,6 +345,7 @@ public class ExternalContentView : ViewBase
 ```
 
 #### Handle Long Content
+
 ```csharp
 public class LongContentView : ViewBase
 {
@@ -347,6 +363,7 @@ public class LongContentView : ViewBase
 ### Common Use Cases
 
 #### Rich Text from CMS
+
 ```csharp
 public class CMSContentView : ViewBase
 {
@@ -365,6 +382,7 @@ public class CMSContentView : ViewBase
 ```
 
 #### Documentation and Help Text
+
 ```csharp
 public class HelpContentView : ViewBase
 {
@@ -387,6 +405,7 @@ public class HelpContentView : ViewBase
 ```
 
 #### Formatted User Content
+
 ```csharp
 public class UserContentView : ViewBase
 {
@@ -416,6 +435,7 @@ public class UserContentView : ViewBase
 ## When to Use Html Widget
 
 **Use Html widget when:**
+
 - Displaying content from external sources (CMS, APIs)
 - Showing rich text with formatting
 - Rendering documentation or help content
@@ -423,9 +443,10 @@ public class UserContentView : ViewBase
 - Creating complex layouts with custom styling
 
 **Don't use Html widget when:**
+
 - You need interactive elements (use Button, Input, etc.)
 - You want to embed external content (use Iframe widget)
 - You need JavaScript functionality
 - Simple text formatting would suffice (use Text widget)
 
-<WidgetDocs Type="Ivy.Html" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Html.cs"/> 
+<WidgetDocs Type="Ivy.Html" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Html.cs"/>

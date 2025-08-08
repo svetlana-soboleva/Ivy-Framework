@@ -56,7 +56,7 @@ client.UploadFiles(async files => {
 
 ### Form Submission with Toast Feedback
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class FormSubmissionApp : ViewBase
 {
     public override object? Build()
@@ -89,7 +89,7 @@ public class FormSubmissionApp : ViewBase
 
 ### File Operations Simulation
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class FileOperationsApp : ViewBase
 {
     public override object? Build()
@@ -149,7 +149,7 @@ public class FileOperationsApp : ViewBase
 
 ### Navigation and URL Management
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class NavigationApp : ViewBase
 {
     public override object? Build()

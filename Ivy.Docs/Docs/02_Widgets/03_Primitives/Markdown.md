@@ -4,7 +4,7 @@ The `Markdown` widget renders Markdown content as formatted HTML with rich featu
 
 ## Basic Usage
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class BasicMarkdownView : ViewBase
 {
     public override object? Build()
@@ -445,4 +445,4 @@ public class ComprehensiveMarkdownView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Markdown" ExtensionTypes="Ivy.MarkdownExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Markdown.cs"/> 
+<WidgetDocs Type="Ivy.Markdown" ExtensionTypes="Ivy.MarkdownExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Markdown.cs"/>

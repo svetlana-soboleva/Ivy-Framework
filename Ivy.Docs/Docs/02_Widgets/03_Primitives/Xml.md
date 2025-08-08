@@ -2,7 +2,7 @@
 
 The `Xml` widget displays XML data in a formatted, syntax-highlighted view. It's useful for displaying configuration files, data feeds, and other XML-structured content.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class XmlConfigView : ViewBase
 {
     public override object? Build()
@@ -39,4 +39,4 @@ public class XmlConfigView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Xml" ExtensionTypes="Ivy.XmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Xml.cs"/> 
+<WidgetDocs Type="Ivy.Xml" ExtensionTypes="Ivy.XmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Xml.cs"/>

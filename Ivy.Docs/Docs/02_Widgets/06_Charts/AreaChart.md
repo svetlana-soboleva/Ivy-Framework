@@ -3,7 +3,7 @@
 `AreaChart`s display quantitative data over time. Multiple series can be stacked
 with different colors.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BasicAreaChart : ViewBase 
 {   
     public override object? Build()
@@ -29,17 +29,13 @@ public class BasicAreaChart : ViewBase
 }
 ```
 
-
-
-
-
 <WidgetDocs Type="Ivy.AreaChart" ExtensionTypes="Ivy.AreaChartExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Charts/AreaChart.cs"/>
 
 ## More Examples
 
 ### COVID-19 Cases and Deaths in numbers
 
-```csharp demo-below
+```csharp demo-below ivy-bg
     
 public class Covid19Demo : ViewBase
 {
@@ -77,7 +73,7 @@ and the opacity can be controlled using the function `FillOpacity`. In the follo
 `Fill` (Used to fill an area with a color) and `FillOpacity` are used to show area charts
 that obviously fall behind other ones to show that they are indeed present.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class ImmigrationToEurope : ViewBase
 {
     public override object? Build()
@@ -125,5 +121,3 @@ public class ImmigrationToEurope : ViewBase
     }
 }
 ```
-
-

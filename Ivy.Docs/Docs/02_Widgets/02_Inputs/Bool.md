@@ -6,7 +6,7 @@ The `BoolInput` widget provides a checkbox, switch and toggle for boolean (true/
 
 Here's a simple example of a `BoolInput` used as a checkbox:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -52,8 +52,7 @@ These values are useful in situations where boolean values can be either not set
 or set (`true` or `false`). These can be really handy to capture different answers from 
 questions in a survey. 
 
-```csharp demo-below
-
+```csharp demo-below ivy-bg
 public class NullableBoolDemo: ViewBase
 {
     public override object? Build()
@@ -80,7 +79,7 @@ There are three variants of `BoolInput`s. The following blocks show how to creat
 
 To make the bool input appear like a checkbox, this variant should be used. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -110,7 +109,7 @@ public class BoolInputDemo : ViewBase
 To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling 
 some settings values on and off.  
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -153,7 +152,7 @@ This is represented by `BoolInputs.Toggle`
 `ToToggleInput` extension function can be used to create such a `BoolInput.Toggle` variant. 
 The following is a small demo showing how such a control may be used. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SingleToggleDemo : ViewBase 
 {
     public override object? Build()
@@ -177,7 +176,7 @@ There are several extension functions that can be used to generate these boolean
 `BoolInputs.CheckBox` variant. `ToSwitchInput` creates a `BoolInputs.Switch` variant, and `ToToggleInput` creates 
 a `BoolInputs.Toggle` variant. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BoolInputVariants : ViewBase
 {
     public override object? Build()
@@ -197,7 +196,7 @@ public class BoolInputVariants : ViewBase
 `BoolInput`s have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`. 
 The following example shows how integers can be used to represent bool inputs. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BoolInputVariants2 : ViewBase
 {
     public override object? Build()
@@ -220,6 +219,7 @@ public class BoolInputVariants2 : ViewBase
     }
 }
 ```
+
 All values captured are integers; either 1 or 0.
 
 <WidgetDocs Type="Ivy.BoolInput" ExtensionTypes="Ivy.BoolInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/BoolInput.cs"/>
@@ -233,7 +233,7 @@ This is a set of few examples showing how to use `BoolInput`s in several situati
 
 The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DashboardToggle : ViewBase 
 {
     public override object? Build()
@@ -270,7 +270,7 @@ public class DashboardToggle : ViewBase
 The following example shows a demo of how `Switch` variant can be used in a possible situation where it makes sense
 to do so. 
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SimpleFlightBooking : ViewBase
 {
     public override object? Build()

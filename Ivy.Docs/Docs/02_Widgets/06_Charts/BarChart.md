@@ -3,7 +3,7 @@
 `BarChart`s compare values across categories. The sample below shows a stacked bar
 chart with two series; sales of Desktop and Mobile in the first quarter of a year.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 
 public class BarChartBasic : ViewBase 
 {    
@@ -25,6 +25,7 @@ public class BarChartBasic : ViewBase
     }
 }    
 ```
+
 Although it will be shown in this document how to draw bar charts using
 the `BarChart` type, the recommended way to easily draw Bar Charts is using `ToBarChart` function.
 
@@ -33,7 +34,7 @@ the `BarChart` type, the recommended way to easily draw Bar Charts is using `ToB
 There are two different color schemes supported; namely `Default` and `Rainbow`. The following
 demo shows how the rainbow color scheme works.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class RainbowBarChartBasic : ViewBase 
 {    
     
@@ -67,7 +68,7 @@ public class RainbowBarChartBasic : ViewBase
 
 Here instead of using a preset `ColorScheme`, a particular bar can also be filled using a custom color.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 
 public class RainbowBarChartBasic : ViewBase 
 {    
@@ -105,10 +106,7 @@ with a specific color. The `LegendType` function is used to configure the legend
 to use squares. Using the `Name` function, the name of a bar can be renamed. Like
 here is done for the `Blueberry` column.
 
-
-
-
-<WidgetDocs Type="Ivy.BarChart" ExtensionTypes="Ivy.BarChartExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Charts/BarChart.cs"/> 
+<WidgetDocs Type="Ivy.BarChart" ExtensionTypes="Ivy.BarChartExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Charts/BarChart.cs"/>
 
 ## More Examples
 
@@ -117,7 +115,7 @@ where TIOBE index is shown for some programming languages over the last five yea
 
 Changing the value of the year, changes the chart below.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class TiobeIndexDemo : ViewBase
 {
     public override object? Build()
@@ -241,5 +239,3 @@ public class TiobeIndexDemo : ViewBase
     }
 }
 ```
-
-

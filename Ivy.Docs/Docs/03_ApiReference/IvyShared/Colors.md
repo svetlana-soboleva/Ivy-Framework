@@ -23,6 +23,7 @@ The colors were selected following these principles:
 ## Theme Integration
 
 Colors automatically adapt to the current theme:
+
 - **Light theme**: Uses the base color values with dark foregrounds
 - **Dark theme**: Colors are adjusted for better visibility on dark backgrounds
 - **System theme**: Follows the user's system preference
@@ -31,7 +32,7 @@ Colors automatically adapt to the current theme:
 
 ### All Colors
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class AllColorsView : ViewBase
 {
     public override object? Build()
@@ -53,7 +54,7 @@ public class AllColorsView : ViewBase
 
 ### Neutral Colors
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class NeutralColorsView : ViewBase
 {
     public override object? Build()
@@ -75,7 +76,7 @@ public class NeutralColorsView : ViewBase
 
 ### Chromatic Colors
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ChromaticColorsView : ViewBase
 {
     public override object? Build()
@@ -101,7 +102,7 @@ public class ChromaticColorsView : ViewBase
 
 ### Semantic Colors
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class SemanticColorsView : ViewBase
 {
     public override object? Build()
@@ -124,9 +125,10 @@ public class SemanticColorsView : ViewBase
 ## Practical Examples
 
 ### Colors on Different Backgrounds
+
 This example demonstrates how colors appear on both light and dark backgrounds:
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ColorsOnBackgroundsView : ViewBase
 {
     public override object? Build()
@@ -167,7 +169,7 @@ public class ColorsOnBackgroundsView : ViewBase
 
 #### Status Indicators
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class StatusIndicatorsView : ViewBase
 {
     public override object? Build()
@@ -184,7 +186,7 @@ public class StatusIndicatorsView : ViewBase
 
 #### Button Colors
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ButtonColorsView : ViewBase
 {
     public override object? Build()

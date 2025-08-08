@@ -2,7 +2,7 @@
 
 The `Code` widget displays formatted code snippets with syntax highlighting. It supports multiple programming languages and features line numbers and copy buttons for better user experience.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CodeSamplesView : ViewBase
 {
     public override object? Build()
@@ -28,4 +28,4 @@ public class CodeSamplesView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Code" ExtensionTypes="Ivy.CodeExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Code.cs"/> 
+<WidgetDocs Type="Ivy.Code" ExtensionTypes="Ivy.CodeExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Code.cs"/>

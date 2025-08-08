@@ -8,7 +8,7 @@ This widget is rarely used directly. Instead, we use the helper class `Ivy.Views
 
 The Text helper provides various methods for different text styles and purposes:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class TextVariantsDemo : ViewBase
 {   
     public override object? Build()
@@ -40,7 +40,7 @@ public class TextVariantsDemo : ViewBase
 
 For displaying code and markup content:
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CodeVariantsDemo : ViewBase
 {   
     public override object? Build()
@@ -60,7 +60,7 @@ public class CodeVariantsDemo : ViewBase
 
 Text elements can be customized with various modifiers:
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class TextModifiersDemo : ViewBase
 {   
     public override object? Build()
@@ -82,7 +82,7 @@ public class TextModifiersDemo : ViewBase
 
 ### Article Layout
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ArticleDemo : ViewBase
 {   
     public override object? Build()
@@ -126,7 +126,7 @@ public class FormDemo : ViewBase
 
 ### Code Documentation
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CodeDocDemo : ViewBase
 {   
     public override object? Build()
@@ -152,7 +152,7 @@ public class CodeDocDemo : ViewBase
 
 ### Status Messages
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class StatusDemo : ViewBase
 {   
     public override object? Build()

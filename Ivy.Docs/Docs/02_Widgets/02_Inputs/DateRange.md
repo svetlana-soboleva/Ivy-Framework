@@ -22,9 +22,8 @@ public class BasicDateRangeDemo : ViewBase
 }        
 ```
 
-As can be seen, the starting and ending date of the date range can be extracted using the 
-`DateTimeRange.Value.Item1` and `DateTimeRange.Value.Item2` 
-
+As can be seen, the starting and ending date of the date range can be extracted using the
+`DateTimeRange.Value.Item1` and `DateTimeRange.Value.Item2`
 
 ## Supported Types
 
@@ -39,10 +38,10 @@ The `DateRangeInput`can be customized with various states:
 
 ### Disabled State
 
-To render a date time range in the disabled state the `Disabled` function 
-should be used. 
+To render a date time range in the disabled state the `Disabled` function
+should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DisabledDateRange : ViewBase
 {   
     public override object? Build()
@@ -59,7 +58,7 @@ public class DisabledDateRange : ViewBase
 To render a `DateTimeRange` in the invalid state the `Invalid` function
 should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InvalidDateRangeDemo : ViewBase 
 {    
     public override object? Build()
@@ -73,10 +72,10 @@ public class InvalidDateRangeDemo : ViewBase
 
 ### Nullable State
 
-Sometimes it is necessary to render a date time with possible nullable from and to dates. 
-The following demo shows how this can be done. 
+Sometimes it is necessary to render a date time with possible nullable from and to dates.
+The following demo shows how this can be done.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class NullableDateRangeDemo : ViewBase
 {
     public override object? Build()
@@ -90,8 +89,6 @@ public class NullableDateRangeDemo : ViewBase
 }
 ```
 
-
-
 ## Styling
 
 `DateRangeInput` can be customized with various styling options:
@@ -100,7 +97,7 @@ public class NullableDateRangeDemo : ViewBase
 
 A friendly placeholder text can be used to give users a clue about what the data range depicts.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DateRangePlaceHolderDemo : ViewBase 
 {   
     public override object? Build()
@@ -115,9 +112,9 @@ public class DateRangePlaceHolderDemo : ViewBase
 
 ### Format
 
-To change the format of selected dates the `Format` function needs to be used. 
+To change the format of selected dates the `Format` function needs to be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class FormatDateRangeDemo : ViewBase
 {
     public override object? Build()
@@ -131,14 +128,13 @@ public class FormatDateRangeDemo : ViewBase
 }        
 ```
 
-
 <WidgetDocs Type="Ivy.DateRangeInput" ExtensionTypes="Ivy.DateRangeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/DateRangeInput.cs"/>
 
 ## Examples
 
 ### Complete Example with All Features
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class DateRangeRealisticDemo : ViewBase
 {
     public override object? Build()
@@ -176,4 +172,4 @@ public class DateRangeRealisticDemo : ViewBase
                 | leaveRangeState.ToDateRangeInput().Invalid(invalidLeave.Value);
     }    
 }    
-``` 
+```

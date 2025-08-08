@@ -20,7 +20,7 @@ It's possible to create a dictionary where each object contains a name and an as
 
 `Avatars` can be used to showcase Teams like this.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class IvyTeamDemo : ViewBase
 {
     public override object? Build()
@@ -63,7 +63,7 @@ public class IvyTeamDemo : ViewBase
 
 Avatars can be integrated into other widgets, including cards, add buttons, and more.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class AvatarAsFoodIcon : ViewBase
 {
     public override object? Build()

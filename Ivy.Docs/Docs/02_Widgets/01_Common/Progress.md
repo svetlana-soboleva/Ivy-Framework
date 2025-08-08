@@ -49,7 +49,7 @@ The `Progress` widget supports different color variants to match your applicatio
 
 ### Primary (Default)
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class PrimaryProgressApp : ViewBase
 {
     public override object? Build() => new Progress(65);
@@ -58,7 +58,7 @@ public class PrimaryProgressApp : ViewBase
 
 ### Emerald Gradient
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class EmeraldProgressApp : ViewBase
 {
     public override object? Build() => new Progress(65).ColorVariant(Progress.ColorVariants.EmeraldGradient);
@@ -69,7 +69,7 @@ public class EmeraldProgressApp : ViewBase
 
 You can add a goal text to provide context about what the progress represents:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class GoalProgressApp : ViewBase
 {
     public override object? Build() => Layout.Vertical(
@@ -84,7 +84,7 @@ public class GoalProgressApp : ViewBase
 
 Here's a comprehensive interactive example that demonstrates progress tracking with increment/decrement controls:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InteractiveProgressApp : ViewBase
 {
     public override object? Build()
@@ -136,7 +136,7 @@ public class InteractiveProgressApp : ViewBase
 
 ### File Upload Progress
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class FileUploadProgressApp : ViewBase
 {
     public override object? Build()
@@ -154,7 +154,7 @@ public class FileUploadProgressApp : ViewBase
 
 ### Task Completion
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class TaskCompletionApp : ViewBase
 {
     public override object? Build()
@@ -176,7 +176,7 @@ public class TaskCompletionApp : ViewBase
 
 ### Loading States
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class LoadingStatesApp : ViewBase
 {
     public override object? Build()

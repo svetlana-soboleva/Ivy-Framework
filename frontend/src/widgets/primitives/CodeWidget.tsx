@@ -84,10 +84,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
       <div className="relative">
         {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
         <ScrollArea
-          className={cn(
-            'w-full h-full',
-            showBorder && 'border border-border rounded-md'
-          )}
+          className={cn('w-full h-full', showBorder && 'ivy-demo-surface')}
         >
           <SyntaxHighlighter
             language={mapLanguageToPrism(language)}

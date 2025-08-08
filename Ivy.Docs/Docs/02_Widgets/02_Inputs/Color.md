@@ -11,7 +11,7 @@ The `ColorInput` widget provides a color picker interface for selecting color va
 
 Here's a simple example of a `ColorInput` that updates a state with the selected color:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class ColorDemo : ViewBase
 {
     public override object? Build()
@@ -44,16 +44,15 @@ var colorInputFull = new ColorInput(
 
 ## Variants
 
-
 `ColorInput` has three variants. `ColorInputs.Text` variant should be used to let users enter color hex codes
-manually. `ColorInputs.TextAndPicker` variant should be used in most cases as it allows users to 
-select the color and copy the selected color in the textbox. This is also the default variant. 
+manually. `ColorInputs.TextAndPicker` variant should be used in most cases as it allows users to
+select the color and copy the selected color in the textbox. This is also the default variant.
 Sometimes, it may be necessary to just use the color picker. In such situations `ColorInputs.Picker`
-should be used. 
+should be used.
 
-The following code shows all these three variants in action. 
+The following code shows all these three variants in action.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class ColorDemo : ViewBase
 {
     public override object? Build()
@@ -84,15 +83,13 @@ public class ColorDemo : ViewBase
 }
 ```
 
-
-
 ## Event Handling
 
-ColorInput can handle change events using the `onChange` parameter. 
-The following demo shows how the `Picker` variant can be used with a code 
-block so that 
+ColorInput can handle change events using the `onChange` parameter.
+The following demo shows how the `Picker` variant can be used with a code
+block so that
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class ColorChangedDemo : ViewBase
 {
 
@@ -121,12 +118,11 @@ public class ColorChangedDemo : ViewBase
 
 `ColorInput` can be customized with various styling options, such as setting a placeholder or disabling the input.
 
-
 ### Disabled
 
 To render a disabled `ColorInput` the function `Disabled` should be used.  
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DisabledColorInput : ViewBase
 {
     public override object? Build()
@@ -138,12 +134,12 @@ public class DisabledColorInput : ViewBase
 }    
 ```
 
-### Invalid 
+### Invalid
 
-To represent that there is something wrong with a `ColorInput` the `Invalid` function 
-should be used. 
+To represent that there is something wrong with a `ColorInput` the `Invalid` function
+should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InvalidStyleDemo : ViewBase
 { 
     public override object? Build()
@@ -160,10 +156,10 @@ public class InvalidStyleDemo : ViewBase
 
 ## Examples
 
-The following example shows how `ColorPicker` control can be used in a developer tool setting that 
-generates CSS blocks. 
+The following example shows how `ColorPicker` control can be used in a developer tool setting that
+generates CSS blocks.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CSSColorDemo : ViewBase
 {
     public override object? Build()
@@ -205,7 +201,3 @@ public class CSSColorDemo : ViewBase
     }
 }
 ```
-
-
-
-

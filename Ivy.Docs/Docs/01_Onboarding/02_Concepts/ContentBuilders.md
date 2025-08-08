@@ -97,7 +97,7 @@ Ivy provides a `BuilderFactory` that offers convenient methods for creating comm
 
 Here's a simple example showing how different types of content are automatically formatted:
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ContentBuilderDemo : ViewBase
 {
     public override object? Build()

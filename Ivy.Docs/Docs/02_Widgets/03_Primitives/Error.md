@@ -2,7 +2,7 @@
 
 The `Error` widget provides a standardized way to display error states in your application. It's designed to communicate that something went wrong and optionally provide details and recovery options.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class DataLoadingView : ViewBase
 {
     public override object? Build()
@@ -51,4 +51,4 @@ public class DataLoadingView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Error" ExtensionTypes="Ivy.ErrorExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Error.cs"/> 
+<WidgetDocs Type="Ivy.Error" ExtensionTypes="Ivy.ErrorExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Error.cs"/>

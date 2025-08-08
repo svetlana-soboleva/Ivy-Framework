@@ -2,7 +2,7 @@
 
 The `Embed` widget allows you to incorporate external content such as videos, maps, or other web resources into your application. It creates a responsive container for embedded content.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ResourcesView : ViewBase
 {
     public override object? Build()
@@ -14,4 +14,4 @@ public class ResourcesView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Embed" ExtensionTypes="Ivy.EmbedExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Embed.cs"/> 
+<WidgetDocs Type="Ivy.Embed" ExtensionTypes="Ivy.EmbedExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Embed.cs"/>
