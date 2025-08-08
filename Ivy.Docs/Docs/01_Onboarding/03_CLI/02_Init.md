@@ -13,7 +13,6 @@ This command will:
 - Create a new Ivy project in the current directory
 - Set up the basic project structure
 - Generate necessary configuration files
-- Initialize Git repository (if not already present)
 
 ## Command Options
 

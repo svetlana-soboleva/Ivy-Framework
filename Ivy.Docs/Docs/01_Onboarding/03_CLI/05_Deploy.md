@@ -141,8 +141,8 @@ ENTRYPOINT ["dotnet", "YourProject.dll"]
 ConnectionStrings__MyDatabase="your-connection-string"
 
 # Authentication settings
-Auth0__Domain="your-auth0-domain"
-Auth0__ClientId="your-client-id"
+AUTH0_DOMAIN="your-auth0-domain"
+AUTH0_CLIENT_ID="your-client-id"
 
 # Application settings
 ASPNETCORE_ENVIRONMENT="Production"
@@ -253,4 +253,4 @@ For detailed information about each cloud provider:
 
 - **AWS**: [AWS Documentation](https://docs.aws.amazon.com/)
 - **Azure**: [Azure Documentation](https://docs.microsoft.com/azure/)
-- **GCP**: [Google Cloud Documentation](https://cloud.google.com/docs/) 
+- **GCP**: [Google Cloud Documentation](https://cloud.google.com/docs/)

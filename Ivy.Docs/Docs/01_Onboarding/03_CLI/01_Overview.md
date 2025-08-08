@@ -1,10 +1,7 @@
 ﻿# Ivy CLI - Overview
 
-Ivy is a powerful CLI tool designed to streamline the development of .NET applications with integrated database connectivity, authentication, and deployment capabilities.
+Ivy CLI is a powerful tool designed to streamline the development of Ivy applications. It provides:
 
-## What is Ivy?
-
-Ivy is a comprehensive development framework that provides:
 
 - **Database Integration**: Connect to multiple database providers (SQL Server, PostgreSQL, MySQL, SQLite, and more)
 - **Authentication**: Add authentication providers (Auth0, Supabase, Authelia, Basic Auth)
@@ -13,7 +10,7 @@ Ivy is a comprehensive development framework that provides:
 
 ## Quick Start
 
-Get started with Ivy in just a few commands:
+Get started with Ivy CLI in just a few commands:
 
 ```terminal
 >ivy init
