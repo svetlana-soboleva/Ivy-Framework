@@ -1,34 +1,10 @@
 ﻿# Colors
 
-Ivy provides a comprehensive set of predefined colors designed for modern applications, with full support for light and dark themes.
+Ivy provides predefined colors with light/dark theme support. 
 
-## Color System Overview
+The system includes neutral (Black, White, grayscale), chromatic (Red to Rose spectrum), and semantic (Primary, Secondary, Destructive) colors. 
 
-Ivy's color system is based on a carefully curated palette that provides:
-
-- **Neutral colors**: Black, White, and grayscale variations (Slate, Gray, Zinc, Neutral, Stone)
-- **Chromatic colors**: A full spectrum from Red to Rose, including popular hues like Blue, Green, Purple
-- **Semantic colors**: Primary, Secondary, and Destructive for consistent UI patterns
-- **Theme-aware variants**: Each color automatically adapts to light and dark modes
-
-## Color Selection Philosophy
-
-The colors were selected following these principles:
-
-1. **Accessibility**: All colors meet WCAG contrast requirements when paired with appropriate foreground colors
-2. **Consistency**: Colors follow a systematic approach with consistent saturation and luminosity levels
-3. **Flexibility**: Each color works well in both light and dark themes
-4. **Modern aesthetic**: The palette reflects contemporary design trends while remaining timeless
-
-## Theme Integration
-
-Colors automatically adapt to the current theme:
-
-- **Light theme**: Uses the base color values with dark foregrounds
-- **Dark theme**: Colors are adjusted for better visibility on dark backgrounds
-- **System theme**: Follows the user's system preference
-
-## Available Colors
+All colors meet WCAG accessibility standards and automatically adapt to light/dark themes.
 
 ### All Colors
 
