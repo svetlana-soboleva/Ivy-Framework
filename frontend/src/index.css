@@ -222,11 +222,12 @@
     --spacing: 0.27rem;
   }
   .dark {
-    --background: oklch(0.14 0 285.82);
+    /* Global dark background color per spec */
+    --background: #061109;
     --foreground: oklch(0.98 0 0);
-    --card: oklch(0.14 0 285.82);
+    --card: var(--background);
     --card-foreground: oklch(0.98 0 0);
-    --popover: oklch(0.14 0 285.82);
+    --popover: var(--background);
     --popover-foreground: oklch(0.98 0 0);
     --primary: #00cc92;
     --primary-foreground: oklch(0.21 0.01 285.88);
