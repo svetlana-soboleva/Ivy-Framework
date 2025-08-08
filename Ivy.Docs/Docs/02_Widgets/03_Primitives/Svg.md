@@ -2,7 +2,7 @@
 
 The `Svg` widget renders scalable vector graphics directly in your application. SVGs are resolution-independent and perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class SvgDashboardView : ViewBase
 {
     public override object? Build()
@@ -54,4 +54,4 @@ public class SvgDashboardView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/> 
+<WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/>

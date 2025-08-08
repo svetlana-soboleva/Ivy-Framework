@@ -27,6 +27,7 @@ interface BoxWidgetProps {
   width?: string;
   height?: string;
   contentAlign: Align;
+  className?: string;
 }
 
 export const BoxWidget: React.FC<BoxWidgetProps> = ({
@@ -40,24 +41,29 @@ export const BoxWidget: React.FC<BoxWidgetProps> = ({
   padding,
   margin,
   contentAlign,
+  className,
 }) => {
-  const styles = {
-    ...getBorderStyle(borderStyle),
-    ...getBorderThickness(borderThickness),
-    ...getBorderRadius(borderRadius),
+  const isIvyDemoSurface = className?.includes('ivy-demo-surface');
+
+  const styles: React.CSSProperties = {
+    // Layout and spacing should always apply
     ...getPadding(padding),
     ...getMargin(margin),
     ...getAlign('Vertical', contentAlign),
     ...getWidth(width),
     ...getHeight(height),
-    ...getColor(color, 'backgroundColor', 'background'),
-    ...getColor(color, 'borderColor', 'foreground'),
-    ...getColor(color, 'color', 'foreground'),
+    // Visual styling comes from props unless ivy-demo-surface is used
+    ...(!isIvyDemoSurface && getBorderStyle(borderStyle)),
+    ...(!isIvyDemoSurface && getBorderThickness(borderThickness)),
+    ...(!isIvyDemoSurface && getBorderRadius(borderRadius)),
+    ...(!isIvyDemoSurface && getColor(color, 'backgroundColor', 'background')),
+    ...(!isIvyDemoSurface && getColor(color, 'borderColor', 'foreground')),
+    ...(!isIvyDemoSurface && getColor(color, 'color', 'foreground')),
   };
 
   return (
     <>
-      <div style={styles} className={cn('font-mono', 'font-bold')}>
+      <div style={styles} className={cn(className)}>
         {children}
       </div>
     </>

@@ -41,6 +41,10 @@
     --sidebar-accent-foreground: oklch(0.33 0 0);
     --sidebar-border: oklch(0.94 0 0);
     --sidebar-ring: oklch(0.77 0 0);
+
+    /* Docs specific colors */
+    --docs-black: #061109;
+    --docs-surface: #061d13;
     /* Custom color palette with variants */
     --black: #000000;
     --black-foreground: #ffffff;
@@ -218,11 +222,12 @@
     --spacing: 0.27rem;
   }
   .dark {
-    --background: oklch(0.14 0 285.82);
+    /* Global dark background color per spec */
+    --background: #061109;
     --foreground: oklch(0.98 0 0);
-    --card: oklch(0.14 0 285.82);
+    --card: var(--background);
     --card-foreground: oklch(0.98 0 0);
-    --popover: oklch(0.14 0 285.82);
+    --popover: var(--background);
     --popover-foreground: oklch(0.98 0 0);
     --primary: #00cc92;
     --primary-foreground: oklch(0.21 0.01 285.88);
@@ -250,6 +255,10 @@
     --sidebar-accent-foreground: oklch(0.97 0 286.38);
     --sidebar-border: oklch(0.27 0.01 286.03);
     --sidebar-ring: oklch(0.87 0.01 286.29);
+
+    /* Keep docs palette consistent in dark mode */
+    --docs-black: #061109;
+    --docs-surface: #061d13;
     --font-sans:
       'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif,
       'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -682,6 +691,19 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Docs demo/code surface */
+.ivy-demo-surface {
+  background-color: var(--docs-surface);
+  border: 1px solid var(--docs-black);
+  border-radius: var(--radius);
+}
+
+/* Light-mode override for demo/code surface */
+:root:not(.dark) .ivy-demo-surface {
+  background-color: #f4f6f6;
+  border-color: var(--border);
 }
 
 #root {

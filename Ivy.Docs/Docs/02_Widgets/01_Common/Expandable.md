@@ -5,7 +5,8 @@ The `Expandable` widget allows you to hide and show content interactively, provi
 ## Basic Usage
 
 Here's a simple example of an expandable widget.
-```csharp demo-below
+
+```csharp demo-below ivy-bg
 new Expandable("Title", "Hidden Content")
 ```
 

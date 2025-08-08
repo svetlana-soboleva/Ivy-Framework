@@ -2,7 +2,7 @@
 
 `Box`es are versatile container elements with customizable borders, colors, and padding. They're useful for visually grouping related content or creating distinct sections in your UI.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class StatusDashboardView : ViewBase
 {
     public override object? Build()
@@ -23,4 +23,4 @@ public class StatusDashboardView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Box" ExtensionTypes="Ivy.BoxExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Box.cs"/> 
+<WidgetDocs Type="Ivy.Box" ExtensionTypes="Ivy.BoxExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Box.cs"/>

@@ -2,7 +2,7 @@
 
 The `Separator` widget creates a visual divider between content sections. It helps organize information and improve readability by clearly demarcating different parts of your interface.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ProfileDetailView : ViewBase
 {
     public override object? Build()
@@ -68,4 +68,4 @@ public class ProfileDetailView : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Separator" ExtensionTypes="Ivy.SeparatorExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Separator.cs"/> 
+<WidgetDocs Type="Ivy.Separator" ExtensionTypes="Ivy.SeparatorExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Separator.cs"/>

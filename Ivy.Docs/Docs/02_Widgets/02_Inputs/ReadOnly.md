@@ -6,7 +6,7 @@ The `ReadOnlyInput` widget displays data in an input-like format that cannot be 
 
 Here's a simple example of a `ReadOnlyInput` displaying a value:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class ReadOnlyDemo : ViewBase
 {    
     public override object? Build()
@@ -43,4 +43,4 @@ var readOnlyInput = new ReadOnlyInput<string>("ReadOnly Text")
     .ShowCopyButton(true);
 ```
 
-<WidgetDocs Type="Ivy.ReadOnlyInput" ExtensionTypes="Ivy.ReadOnlyInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ReadOnlyInput.cs"/> 
+<WidgetDocs Type="Ivy.ReadOnlyInput" ExtensionTypes="Ivy.ReadOnlyInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ReadOnlyInput.cs"/>

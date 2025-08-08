@@ -1,6 +1,6 @@
 # SelectInput
 
-The `SelectInput` widget provides a dropdown menu for selecting items from a predefined list of options. It supports single 
+The `SelectInput` widget provides a dropdown menu for selecting items from a predefined list of options. It supports single
 and multiple selections, option grouping, and custom rendering of option items.
 
 ## Basic Usage
@@ -26,18 +26,17 @@ public class SelectColorDemo : ViewBase
 }    
 ```
 
-
 ## Variants
 
 `SelectInput` supports several variants
 
-### Select 
+### Select
 
 Using this variant `SelectInputs.Select`, the options can be rendered as a list of items. The following shows an example usage
 of this variant. This is the default variant. This should be used when only one item is expected
 to be selected from the inputs.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SelectVariantDemo : ViewBase
 {
     public override object? Build()
@@ -52,11 +51,11 @@ public class SelectVariantDemo : ViewBase
 }
 ```
 
-### List 
+### List
 
 If it is required to render the select options as checkboxes, then this variant `SelectInputs.List` should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 // Option 1: Single Select (probably what you want)
 public class SelectVariantDemoSingleSelect : ViewBase
 {
@@ -72,13 +71,12 @@ public class SelectVariantDemoSingleSelect : ViewBase
 }
 ```
 
-### Toggle 
+### Toggle
 
-Sometimes it is visually useful to show different options in their own boxes so that those can be toggled. 
-The following example shows how to use it. 
+Sometimes it is visually useful to show different options in their own boxes so that those can be toggled.
+The following example shows how to use it.
 
-
-```csharp demo-below    
+```csharp demo-below ivy-bg
 public class MealComboDemo : ViewBase
 {
         private static readonly Dictionary<string, decimal> BurgerPrices = new()
@@ -140,14 +138,14 @@ public class MealComboDemo : ViewBase
 
 ## Multiple Selections
 
-Multiple selection is implicit when the state to receive the result is a collection instead of a 
-single element. The following example shows this in action. 
+Multiple selection is implicit when the state to receive the result is a collection instead of a
+single element. The following example shows this in action.
 
-### Multiple selection in List variant 
+### Multiple selection in List variant
 
-The following example shows how a `SelectInputs.List` allows multiple selection. 
+The following example shows how a `SelectInputs.List` allows multiple selection.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SelectMultiVariantDemo : ViewBase
 {
     public override object? Build()
@@ -166,7 +164,8 @@ public class SelectMultiVariantDemo : ViewBase
 ### Multiple selection in Toggle variant
 
 The following example shows how a `SelectInputs.Toggle` allows multiple selection.
-```csharp demo-below
+
+```csharp demo-below ivy-bg
 public class SelectMultiVariantDemo : ViewBase
 {
     public override object? Build()
@@ -186,7 +185,7 @@ public class SelectMultiVariantDemo : ViewBase
 
 Handle change events using the `onChange` parameter:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class SelectVariantDemoSingleSelect : ViewBase
 {
     public override object? Build()
@@ -232,23 +231,21 @@ public class SelectVariantDemoSingleSelect : ViewBase
 }
 ```
 
-
 ## Styling
 
 Customize the `SelectInput` with various styling options:
 
 ### Invalid
 
-A `SelectInput` can be rendered as invalid using the `Invalid` function. 
+A `SelectInput` can be rendered as invalid using the `Invalid` function.
 
 ### Disabled
 
-A `SelectInput` can be rendered as disabled using the `Disabled` function. 
+A `SelectInput` can be rendered as disabled using the `Disabled` function.
 
 The following code shows how to use these functions and how it will render
 
-
-```csharp demo-below
+```csharp demo-below ivy-bg
 
 public class SimpleSelectDemo : ViewBase
 {
@@ -278,9 +275,6 @@ public class SimpleSelectDemo : ViewBase
 }
 ```
 
-
-
-
 <WidgetDocs Type="Ivy.SelectInput" ExtensionTypes="Ivy.SelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/SelectInput.cs"/>
 
 ## Examples
@@ -290,7 +284,7 @@ public class SimpleSelectDemo : ViewBase
 The following demo shows how different condiment options for different coffees can be shown possibly
 in a software designed for a coffee shop.  
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class CoffeeShopDemo: ViewBase
 {
     // Coffee varieties and their typical accompaniments
@@ -389,4 +383,3 @@ public class CoffeeShopDemo: ViewBase
     }
 }
 ```
-

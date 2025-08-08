@@ -11,7 +11,7 @@ The `FeedbackInput` widget provides a specialized input for collecting user feed
 
 Here's a simple example of a `FeedbackInput` with a default variant:
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class BasicFeedbackDemo : ViewBase
 {    
     public override object? Build()
@@ -38,11 +38,10 @@ public class BasicFeedbackDemo : ViewBase
 `FeedbackInput`s come in several variants to suit different use cases:
  For star style feedback ( 1 star to 5 stars) the variant `FeedbackInputs.Stars` should be used.
  For binary style feedback ( yes, no, liked/disliked, recommended/not-recommended) type feedback
- the variant `FeedbackInputs.Thumbs` should be used. `FeedbackInputs.Emojis` should be used 
- for collecting sentiment analysis feedbacks about anything. 
+ the variant `FeedbackInputs.Thumbs` should be used. `FeedbackInputs.Emojis` should be used
+ for collecting sentiment analysis feedbacks about anything.
 
-
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class FeedbackDemo : ViewBase
 {
     public override object? Build()
@@ -68,9 +67,9 @@ public class FeedbackDemo : ViewBase
 
 ## Event Handling
 
-The following example shows how change events can be handled for `FeedbackInput`s. 
+The following example shows how change events can be handled for `FeedbackInput`s.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class FeedbackHandling: ViewBase
 {    
     public override object? Build()
@@ -96,11 +95,11 @@ public class FeedbackHandling: ViewBase
 
 `FeedbackInput`s can be customized with various styling options.
 
-### Disabled 
+### Disabled
 
-To render a `FeedbackInput` in disabled state, this function `Disabled` should be used. 
+To render a `FeedbackInput` in disabled state, this function `Disabled` should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class DisabledFeedbackDemo : ViewBase
 {
     public override object? Build()
@@ -118,7 +117,7 @@ public class DisabledFeedbackDemo : ViewBase
 
 To render a `FeedbackInput` in invalid (or error) state, the function `Invalid` should be used.
 
-```csharp demo-below
+```csharp demo-below ivy-bg
 public class InvalidFeedbackDemo : ViewBase
 {
     public override object? Build()
@@ -133,4 +132,3 @@ public class InvalidFeedbackDemo : ViewBase
 ```
 
 <WidgetDocs Type="Ivy.FeedbackInput" ExtensionTypes="Ivy.FeedbackInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/FeedbackInput.cs"/>
-

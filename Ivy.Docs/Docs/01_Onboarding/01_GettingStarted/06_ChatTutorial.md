@@ -20,7 +20,8 @@ Let's create a new chat application that helps users find appropriate Lucide ico
 First, let's create the basic structure:
 
 ```csharp
-[App(icon: Icons.Sparkles)]
+[App(icon: Icons.Sparkles)
+]
 public class LucideIconAgentApp : SampleBase
 {
     public LucideIconAgentApp() : base(Align.TopRight)

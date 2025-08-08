@@ -2,7 +2,7 @@
 
 The `Json` widget displays JSON data in a formatted, syntax-highlighted view. It's useful for debugging, data visualization, and displaying API responses.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 public class ApiResponseViewer : ViewBase
 {
     public override object? Build()
@@ -69,4 +69,4 @@ public class ApiResponseViewer : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Json" ExtensionTypes="Ivy.JsonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Json.cs"/> 
+<WidgetDocs Type="Ivy.Json" ExtensionTypes="Ivy.JsonExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Json.cs"/>
