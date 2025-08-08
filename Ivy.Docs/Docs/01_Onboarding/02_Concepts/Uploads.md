@@ -5,6 +5,7 @@ Uploads in Ivy provide a robust system for handling file uploads in your applica
 ## Overview
 
 The upload system in Ivy supports:
+
 - Single and multiple file uploads
 - Drag and drop interfaces
 - Progress tracking
@@ -17,39 +18,47 @@ The upload system in Ivy supports:
 Here's a simple example of handling file uploads:
 
 ```csharp
-var client = this.UseService<IClientProvider>();
-client.UploadFiles(async files => {
-    foreach (var file in files)
-    {
-        await ProcessFile(file);
-    }
-});
+var uploadUrl = this.UseUpload(
+    async fileBytes => {
+        // Process uploaded file bytes
+        // For example: save to database, process image, etc.
+        Console.WriteLine($"Received {fileBytes.Length} bytes");
+    },
+    "application/octet-stream",
+    "uploaded-file"
+);
 ```
 
 ## File Input Component
 
 The most common way to handle uploads is using the FileInput component:
 
-```csharp
+```csharp demo-below
 public class UploadView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var isUploading = UseState(false);
-
-        return new FileInput(
-            "Choose Files",
-            multiple: true,
-            accept: ".pdf,.doc,.docx",
-            onChange: async files => {
+        var isUploading = UseState(() => false);
+        var files = UseState<FileInput?>(() => null);
+        var uploadUrl = this.UseUpload(
+            async fileBytes => {
                 isUploading.Set(true);
                 try {
-                    await client.UploadFilesAsync(files);
+                    // Process uploaded file bytes
+                    Console.WriteLine($"Received {fileBytes.Length} bytes");
                 } finally {
                     isUploading.Set(false);
                 }
-            }
+            },
+            "application/octet-stream",
+            "uploaded-file"
+        );
+
+        return Layout.Vertical(
+            uploadUrl.Value != null
+                ? new TextBlock($"Upload URL: {uploadUrl.Value}")
+                : null,
+            files.ToFileInput("Choose Files").Accept(".pdf,.doc,.docx")
         );
     }
 }
@@ -59,64 +68,35 @@ public class UploadView : ViewBase
 
 Track upload progress for better user feedback:
 
-```csharp
+```csharp demo-below
 public class UploadWithProgressView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var progress = UseState(0.0);
-        var isUploading = UseState(false);
+        var progress = UseState(() => 0);
+        var isUploading = UseState(() => false);
+        var files = UseState<FileInput?>(() => null);
+        var uploadUrl = this.UseUpload(
+            async fileBytes => {
+                isUploading.Set(true);
+                try {
+                    // Process uploaded file bytes
+                    Console.WriteLine($"Received {fileBytes.Length} bytes");
+                } finally {
+                    isUploading.Set(false);
+                    progress.Set(0);
+                }
+            },
+            "application/octet-stream",
+            "uploaded-file"
+        );
 
         return Layout.Vertical(
             isUploading.Value
-                ? new ProgressBar(progress.Value)
+                ? new Progress(progress.Value)
                 : null,
-            new FileInput(
-                "Upload Files",
-                onChange: async files => {
-                    isUploading.Set(true);
-                    try {
-                        await client.UploadFilesAsync(
-                            files,
-                            onProgress: p => progress.Set(p)
-                        );
-                    } finally {
-                        isUploading.Set(false);
-                        progress.Set(0.0);
-                    }
-                }
-            )
+            files.ToFileInput("Upload Files")
         );
-    }
-}
-```
-
-## Drag and Drop
-
-Ivy provides built-in support for drag and drop file uploads:
-
-```csharp
-public class DragDropView : ViewBase
-{
-    public override object? Build()
-    {
-        var client = this.UseService<IClientProvider>();
-        var isDragging = UseState(false);
-
-        return new DragDrop(
-            onDragEnter: _ => isDragging.Set(true),
-            onDragLeave: _ => isDragging.Set(false),
-            onDrop: async files => {
-                isDragging.Set(false);
-                await client.UploadFilesAsync(files);
-            }
-        )
-        | new TextBlock(
-            isDragging.Value
-                ? "Drop files here"
-                : "Drag files here or click to upload"
-          );
     }
 }
 ```
@@ -125,33 +105,33 @@ public class DragDropView : ViewBase
 
 Validate files before upload:
 
-```csharp
+```csharp demo-below
 public class ValidatedUploadView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var error = UseState<string?>(null);
+        var error = UseState<string?>(() => null);
+        var files = UseState<FileInput?>(() => null);
+        var uploadUrl = this.UseUpload(
+            async fileBytes => {
+                if (fileBytes.Length > 5 * 1024 * 1024) // 5MB limit
+                {
+                    error.Set("File size must be less than 5MB");
+                    return;
+                }
+                error.Set((string?)null);
+                // Process uploaded file bytes
+                Console.WriteLine($"Received {fileBytes.Length} bytes");
+            },
+            "image/jpeg",
+            "uploaded-image"
+        );
 
         return Layout.Vertical(
             error.Value != null
-                ? new Alert(error.Value, variant: AlertVariant.Error)
+                ? new Callout(error.Value, variant: CalloutVariant.Error)
                 : null,
-            new FileInput(
-                "Upload Image",
-                accept: ".jpg,.jpeg,.png",
-                onChange: async files => {
-                    foreach (var file in files)
-                    {
-                        if (file.Size > 5 * 1024 * 1024) // 5MB limit
-                        {
-                            error.Set("File size must be less than 5MB");
-                            return;
-                        }
-                    }
-                    await client.UploadFilesAsync(files);
-                }
-            )
+            files.ToFileInput("Upload Image").Accept(".jpg,.jpeg,.png")
         );
     }
 }
@@ -170,35 +150,35 @@ public class ValidatedUploadView : ViewBase
 
 ### Image Upload with Preview
 
-```csharp
+```csharp demo-below
 public class ImageUploadView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var preview = UseState<string?>(null);
-        var isUploading = UseState(false);
+        var preview = UseState<string?>(() => null);
+        var isUploading = UseState(() => false);
+        var files = UseState<FileInput?>(() => null);
+        var uploadUrl = this.UseUpload(
+            async fileBytes => {
+                // Create preview URL from uploaded bytes
+                preview.Set($"data:image/jpeg;base64,{Convert.ToBase64String(fileBytes)}");
+                isUploading.Set(true);
+                try {
+                    // Process uploaded file bytes
+                    Console.WriteLine($"Received {fileBytes.Length} bytes");
+                } finally {
+                    isUploading.Set(false);
+                }
+            },
+            "image/jpeg",
+            "uploaded-image"
+        );
 
         return Layout.Vertical(
             preview.Value != null
                 ? new Image(preview.Value)
                 : null,
-            new FileInput(
-                "Upload Image",
-                accept: "image/*",
-                onChange: async files => {
-                    if (files.Length == 0) return;
-                    
-                    isUploading.Set(true);
-                    try {
-                        var file = files[0];
-                        preview.Set(URL.CreateObjectURL(file));
-                        await client.UploadFilesAsync(files);
-                    } finally {
-                        isUploading.Set(false);
-                    }
-                }
-            )
+            files.ToFileInput("Upload Image").Accept("image/*")
         );
     }
 }
@@ -206,34 +186,34 @@ public class ImageUploadView : ViewBase
 
 ### Multiple File Upload with List
 
-```csharp
+```csharp demo-below
 public class MultiFileUploadView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        var files = UseState(new List<FileInfo>());
-        var isUploading = UseState(false);
+        var files = UseState(() => new List<FileInput>());
+        var isUploading = UseState(() => false);
+        var newFiles = UseState<IEnumerable<FileInput>?>(() => null);
+        var uploadUrl = this.UseUpload(
+            async fileBytes => {
+                isUploading.Set(true);
+                try {
+                    // Process uploaded file bytes
+                    Console.WriteLine($"Received {fileBytes.Length} bytes");
+                } finally {
+                    isUploading.Set(false);
+                }
+            },
+            "application/octet-stream",
+            "uploaded-files"
+        );
 
         return Layout.Vertical(
-            new FileInput(
-                "Upload Files",
-                multiple: true,
-                onChange: async newFiles => {
-                    isUploading.Set(true);
-                    try {
-                        files.Set(files.Value.Concat(newFiles).ToList());
-                        await client.UploadFilesAsync(newFiles);
-                    } finally {
-                        isUploading.Set(false);
-                    }
-                }
-            ),
-            new ListView(
+            newFiles.ToFileInput("Upload Files"),
+            new List(
                 files.Value.Select(f => new TextBlock(f.Name))
             )
         );
     }
 }
 ```
-
