@@ -65,6 +65,12 @@
 .ͼc {
   color: var(--cyan);
 }
+.ͼg {
+  color: var(--cyan);
+}
+.ͼf {
+  color: var(--red);
+}
 
 /* CodeMirror syntax highlighting - using CSS variables for theme support */
 .cm-token.cm-keyword {
