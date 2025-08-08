@@ -409,17 +409,9 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    private static Stream? TryOpenIndexHtml(Assembly assembly, params string[] namespaces)
+    private static Stream? TryOpenIndexHtml(Assembly assembly, string resourceNamespace)
     {
-        foreach (var ns in namespaces)
-        {
-            var stream = assembly.GetManifestResourceStream($"{ns}.index.html");
-            if (stream != null)
-            {
-                return stream;
-            }
-        }
-        return null;
+        return assembly.GetManifestResourceStream($"{resourceNamespace}.index.html");
     }
 
     public static WebApplication UseAssets(this WebApplication app, string folder)
