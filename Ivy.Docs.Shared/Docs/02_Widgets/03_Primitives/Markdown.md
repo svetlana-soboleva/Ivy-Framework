@@ -1,8 +1,10 @@
 # Markdown
 
-The `Markdown` widget renders Markdown content as formatted HTML with rich features including syntax highlighting, math support, tables, images, and interactive link handling. It supports standard Markdown, GitHub Flavored Markdown (GFM), and several advanced features.
+The `Markdown` widget renders Markdown content as formatted HTML with syntax highlighting, math support, tables, images, and interactive link handling.
 
 ## Basic Usage
+
+The Markdown widget supports standard markdown syntax including text formatting, lists, links, and blockquotes. This example demonstrates the most commonly used features for basic content creation.
 
 ```csharp demo-tabs ivy-bg
 public class BasicMarkdownView : ViewBase
@@ -11,29 +13,16 @@ public class BasicMarkdownView : ViewBase
     {
         var markdownContent = 
             """
-            # Hello World
+            Hello World
             
             This is **bold** and *italic* text with `inline code`.
             
-            ## Lists
-            
-            - Unordered list item 1
-            - Unordered list item 2
-              - Nested item
-            
-            1. Ordered list item 1
-            2. Ordered list item 2
-            
-            ## Links and Images
+            - Unordered list item
+            - [x] Task list item
             
             [Link to Google](https://www.google.com)
             
-            ![Cat Image](https://placecats.com/300/200)
-            
-            ## Blockquotes
-            
-            > This is a blockquote with some **bold** text.
-            > It can span multiple lines.
+            > This is a blockquote with **bold** text.
             """;
             
         return new Markdown(markdownContent);
@@ -41,27 +30,22 @@ public class BasicMarkdownView : ViewBase
 }
 ```
 
-## Advanced Features
+## Tables
 
-### Tables
+Tables in Markdown provide a structured way to display data in rows and columns. They support alignment, headers, and can be easily formatted for better readability.
 
-```csharp demo-tabs
-public class TableMarkdownView : ViewBase
+```csharp demo-tabs ivy-bg
+public class TablesMarkdownView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
-            ## Feature Comparison
-            
             | Feature        | Basic | Premium | Enterprise |
             |----------------|-------|---------|------------|
             | Users          | 1     | 10      | Unlimited  |
             | Storage        | 1GB   | 100GB   | 1TB        |
             | Support        | Email | Phone   | 24/7       |
-            | Custom Themes  | ❌    | ✅      | ✅         |
-            | API Access    | ❌    | ✅      | ✅         |
-            | Analytics      | ❌    | ❌      | ✅         |
             """;
             
         return new Markdown(markdownContent);
@@ -69,87 +53,23 @@ public class TableMarkdownView : ViewBase
 }
 ```
 
-### Task Lists
+## Code Blocks
 
-```csharp demo-tabs
-public class TaskListView : ViewBase
+Code blocks support syntax highlighting for various programming languages and can be used for displaying code examples, configuration files, or any formatted text. The language is automatically detected based on the code fence specification.
+
+```csharp demo-tabs ivy-bg
+public class CodeBlocksMarkdownView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
-            ## Project Tasks
-            
-            - [x] Set up project structure
-            - [x] Create basic components
-            - [ ] Add authentication
-            - [ ] Implement user dashboard
-            - [ ] Write tests
-            - [ ] Deploy to production
-            
-            ## Shopping List
-            
-            - [x] Milk
-            - [x] Bread
-            - [ ] Eggs
-            - [ ] Cheese
-            """;
-            
-        return new Markdown(markdownContent);
-    }
-}
-```
-
-### Code Blocks with Syntax Highlighting
-
-```csharp demo-tabs
-public class CodeMarkdownView : ViewBase
-{
-    public override object? Build()
-    {
-        var markdownContent = 
-            """
-            ## Code Examples
-            
-            ### C# Example
-            
             ```csharp
             public class Example
             {
-                public void Demo()
-                {
-                    Console.WriteLine("Hello, World!");
-                    var numbers = new[] { 1, 2, 3, 4, 5 };
-                    var sum = numbers.Sum();
-                }
+                public void Demo() => Console.WriteLine("Hello, World!");
             }
             ```
-            
-            ### JavaScript Example
-            
-            ```javascript
-            const greeting = 'Hello, World!';
-            console.log(greeting);
-            
-            const numbers = [1, 2, 3, 4, 5];
-            const sum = numbers.reduce((a, b) => a + b, 0);
-            ```
-            
-            ### Diff Example
-            
-            ```diff
-            - const oldValue = 'old';
-            + const newValue = 'new';
-            
-            - function oldFunction() {
-            -     return 'old';
-            - }
-            + function newFunction() {
-            +     return 'new';
-            + }
-            ```
-            
-            Inline code: `const x = 10;`
             """;
             
         return new Markdown(markdownContent);
@@ -157,35 +77,48 @@ public class CodeMarkdownView : ViewBase
 }
 ```
 
-### Mermaid Diagrams
+## Math
 
-The `Markdown` widget supports Mermaid diagrams for creating various types of visual diagrams directly in your markdown content. 
+Mathematical expressions can be rendered using KaTeX, supporting both inline math with single dollar signs and block math with double dollar signs. This feature is perfect for technical documentation and educational content.
 
-Mermaid diagrams supports multiple diagram types including flowcharts, sequence diagrams, class diagrams, and more. 
-
-More about usage of Mermaid diagrams:
-
-```csharp demo-tabs
-public class MermaidDiagramsView : ViewBase
+```csharp demo-tabs ivy-bg
+public class MathMarkdownView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
+            Inline: $E = mc^2$
             
-            ### Sequence Diagram
+            $$
+            \int_a^b f(x) dx = F(b) - F(a)
+            $$
+            """;
             
+        return new Markdown(markdownContent);
+    }
+}
+```
+
+## Mermaid Diagrams
+
+Mermaid diagrams allow you to create various types of visual diagrams directly in markdown content. Supported diagram types include flowcharts, sequence diagrams, class diagrams, and more for visualizing complex processes and relationships.
+
+```csharp demo-tabs ivy-bg
+public class MermaidView : ViewBase
+{
+    public override object? Build()
+    {
+        var markdownContent = 
+            """
             ```mermaid
             sequenceDiagram
                 participant U as User
                 participant F as Frontend
                 participant B as Backend
-                participant D as Database
                 
                 U->>F: Navigate to page
                 F->>B: GET /api/data
-                B->>D: Query database
-                D-->>B: Return result
                 B-->>F: JSON response
                 F-->>U: Render UI
             ```
@@ -196,54 +129,22 @@ public class MermaidDiagramsView : ViewBase
 }
 ```
 
-### Math Support
+## Emojis
 
-The `Markdown` widget supports KaTeX for rendering mathematical expressions both inline and as blocks.
+Emoji support enhances content with visual elements and expressions. You can use standard emoji shortcodes to add personality and visual appeal to your markdown content.
 
-```csharp demo-tabs
-public class MathMarkdownView : ViewBase
+```csharp demo-tabs ivy-bg
+public class EmojiView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
-            ## Mathematical Expressions
+            Express yourself! :smile: :heart: :star: :rocket:
             
-            ### Inline Math
-            
-            The famous equation is $E = mc^2$, and the quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
-            
-            ### Block Math
-            
-            The fundamental theorem of calculus:
-            
-            $$
-            \int_a^b f(x) dx = F(b) - F(a)
-            $$
-            
-            Matrix representation:
-            
-            $$
-            \begin{pmatrix}
-            a & b \\
-            c & d
-            \end{pmatrix}
-            \begin{pmatrix}
-            x \\
-            y
-            \end{pmatrix}
-            =
-            \begin{pmatrix}
-            ax + by \\
-            cx + dy
-            \end{pmatrix}
-            $$
-            
-            ### Code Block Math
-            
-            ```math
-            \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
-            ```
+            **People:** :smile: :wink: :heart_eyes: :thumbsup:
+            **Nature:** :sunny: :cloud: :zap: :snowflake:
+            **Objects:** :computer: :phone: :bulb: :gear:
             """;
             
         return new Markdown(markdownContent);
@@ -251,235 +152,87 @@ public class MathMarkdownView : ViewBase
 }
 ```
 
-### Emojis
+## HTML Support and Link Handling
 
-```csharp demo-tabs
-public class EmojiMarkdownView : ViewBase
+The Markdown widget supports HTML tags for advanced formatting and provides interactive link handling through the OnLinkClick event. This allows for custom navigation logic and enhanced user interactions.
+
+```csharp demo-tabs ivy-bg
+public class HtmlAndLinksView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
-            ## Emoji Support
-            
-            Express yourself with emojis! :smile: :heart: :star: :+1: :rocket:
-            
-            ### Categories
-            
-            **People:** :smile: :wink: :heart_eyes: :thumbsup: :clap: :wave:
-            
-            **Nature:** :sunny: :cloud: :zap: :snowflake: :fire: :ocean:
-            
-            **Objects:** :computer: :phone: :bulb: :gear: :key: :lock:
-            
-            **Symbols:** :white_check_mark: :x: :warning: :information_source: :question:
-            
-            **Fun:** :pizza: :coffee: :beer: :cake: :gift: :tada:
-            """;
-            
-        return new Markdown(markdownContent);
-    }
-}
-```
-
-### HTML Support
-
-```csharp demo-tabs
-public class HtmlMarkdownView : ViewBase
-{
-    public override object? Build()
-    {
-        var markdownContent = 
-            """
-            ## HTML Integration
-            
-            Markdown supports HTML tags for advanced formatting:
-            
-            This is <sub>subscript</sub> and <sup>superscript</sup> text.
-            
             <details>
                 <summary>Click to expand</summary>
-                Hidden content that can be revealed by clicking the summary.
-                
-                - You can include **markdown** inside HTML tags
-                - Lists work too
-                - And `code` formatting
+                Hidden content with **markdown** support.
             </details>
-            
-            <details>
-                <summary>Another collapsible section</summary>
-                
-                ```csharp
-                public class HiddenCode
-                {
-                    public void Example() => Console.WriteLine("Hidden!");
-                }
-                ```
-            </details>
-            
-            You can also use HTML for <mark>highlighting</mark> and <del>strikethrough</del> text.
-            """;
-            
-        return new Markdown(markdownContent);
-    }
-}
-```
-
-## Link Handling
-
-The `Markdown` widget provides interactive link handling through the `OnLinkClick` event.
-
-```csharp demo-tabs
-public class LinkHandlingView : ViewBase
-{
-    public override object? Build()
-    {
-        var markdownContent = 
-            """
-            ## Interactive Links
-            
-            Click these links to see custom handling:
             
             - [Navigate to Home](/home)
-            - [Open Settings](/settings)
-            - [View Profile](/profile)
             - [External Link](https://example.com)
-            
-            Internal links are handled by the OnLinkClick event, while external links open in new tabs.
             """;
             
-        return new Markdown(markdownContent)
-            .HandleLinkClick(url =>
+        Action<string> handleLink = url =>
+        {
+            if (url.StartsWith("/"))
             {
-                // Handle internal navigation
-                if (url.StartsWith("/"))
-                {
-                    // Navigate to internal route
-                    Console.WriteLine($"Navigating to: {url}");
-                }
-                else
-                {
-                    // Handle external links
-                    Console.WriteLine($"Opening external link: {url}");
-                }
-            });
+                Console.WriteLine($"Navigating to: {url}");
+            }
+            else
+            {
+                Console.WriteLine($"Opening external link: {url}");
+            }
+        };
+            
+        return new Markdown(markdownContent)
+            .HandleLinkClick(handleLink);
     }
 }
 ```
 
-## Comprehensive Example
+## Complete Example
 
-```csharp demo-tabs
+This comprehensive example showcases multiple Markdown features working together in a single widget. It demonstrates how different elements can be combined to create rich, interactive content with proper link handling.
+
+```csharp demo-tabs ivy-bg
 public class ComprehensiveMarkdownView : ViewBase
 {
     public override object? Build()
     {
         var markdownContent = 
             """
-            # The Complete Markdown Guide
+            **Bold text** and *italic text* with `inline code`
             
-            This document showcases all the features available in the Ivy Markdown widget.
-            
-            ## Text Formatting
-            
-            **Bold text** and *italic text* and ***bold italic text***
-            
-            ~~Strikethrough text~~ and `inline code`
-            
-            ## Lists and Tasks
-            
-            ### Unordered Lists
             - Item 1
-            - Item 2
-              - Nested item
-              - Another nested item
-            
-            ### Ordered Lists
-            1. First item
-            2. Second item
-            3. Third item
-            
-            ### Task Lists
             - [x] Completed task
             - [ ] Pending task
-            - [ ] Another pending task
-            
-            ## Links and Images
-            
-            [Internal link](/dashboard) | [External link](https://github.com)
-            
-            ![Sample Image](https://placecats.com/400/300)
-            
-            ## Code and Math
-            
-            Inline equation: $f(x) = x^2 + 2x + 1$
-            
-            Block equation:
-            $$
-            \sum_{i=1}^n i = \frac{n(n+1)}{2}
-            $$
             
             ```csharp
-            public class MarkdownExample
+            public class Example
             {
-                public void ShowFeatures()
-                {
-                    var markdown = new Markdown("# Hello World");
-                    Console.WriteLine("Markdown rendered!");
-                }
+                public void ShowFeatures() => Console.WriteLine("Markdown!");
             }
             ```
             
-            ## Tables
+            Inline equation: $f(x) = x^2 + 2x + 1$
             
-            | Language | Type       | Performance | Learning Curve |
-            |----------|------------|-------------|----------------|
-            | C#       | Compiled   | High        | Moderate       |
-            | Python   | Interpreted| Moderate    | Easy           |
-            | Rust     | Compiled   | Very High   | Steep          |
-            | Go       | Compiled   | High        | Easy           |
+            | Language | Type       | Performance |
+            |----------|------------|-------------|
+            | C#       | Compiled   | High        |
+            | Python   | Interpreted| Moderate    |
             
-            ## Blockquotes
-            
-            > "The best way to predict the future is to create it."
-            > 
-            > — Peter Drucker
-            
-            ## Emojis and Fun
+            ```mermaid
+            graph LR
+                A[Start] --> B[Process] --> C[End]
+            ```
             
             Made with :heart: using Ivy Framework :rocket:
-            
-            Status: :white_check_mark: Complete | :warning: In Progress | :x: Failed
-            
-            ## HTML Elements
-            
-            <details>
-                <summary>Advanced Configuration</summary>
-                
-                ```json
-                {
-                    "theme": "dark",
-                    "syntax": "csharp",
-                    "math": true,
-                    "emoji": true
-                }
-                ```
-            </details>
-            
-            ---
-            
-            *This documentation was generated using the Ivy Markdown widget.*
             """;
             
+        Action<string> handleLink = url => Console.WriteLine($"Navigate to: {url}");
+            
         return new Markdown(markdownContent)
-            .HandleLinkClick(url =>
-            {
-                if (url.StartsWith("/"))
-                {
-                    // Handle internal navigation
-                    Console.WriteLine($"Navigate to: {url}");
-                }
-            });
+            .HandleLinkClick(handleLink);
     }
 }
 ```
