@@ -6,7 +6,9 @@ Messages are supplied as `ChatMessage` objects and new messages are sent through
 
 ## Basic Chat
 
-A simple chat with an echo bot that repeats user messages:
+A simple chat with an echo bot that repeats user messages.
+
+This demonstrates the fundamental usage of the Chat widget with basic message handling and state management.
 
 ```csharp demo-tabs ivy-bg
 public class BasicChatDemo : ViewBase
@@ -26,14 +28,16 @@ public class BasicChatDemo : ViewBase
 
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
 
 ## AI Assistant with Loading States
 
-A chat that simulates AI processing with loading indicators:
+A chat that simulates AI processing with loading indicators.
+
+This example shows how to implement async message handling, display loading states using ChatStatus, and manage message updates during processing.
 
 ```csharp demo-tabs ivy-bg
 public class LoadingChatDemo : ViewBase
@@ -63,14 +67,16 @@ public class LoadingChatDemo : ViewBase
 
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
 
 ## Interactive Chat with Rich Content
 
-A chat that responds with interactive elements like buttons and cards:
+A chat that responds with interactive elements like buttons and cards. 
+
+This demonstrates how to return complex UI components as chat responses, creating dynamic and engaging conversations with rich media content.
 
 ```csharp demo-tabs ivy-bg
 public class InteractiveChatDemo : ViewBase
@@ -108,14 +114,16 @@ public class InteractiveChatDemo : ViewBase
 
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
 
 ## Error Handling Chat
 
-A chat that demonstrates error handling and different message types:
+A chat that demonstrates error handling and different message types. 
+
+This example shows how to use the Error widget for different message severities and how to integrate ChatStatus for loading indicators within chat conversations.
 
 ```csharp demo-tabs ivy-bg
 public class ErrorHandlingChatDemo : ViewBase
@@ -149,14 +157,16 @@ public class ErrorHandlingChatDemo : ViewBase
 
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
 
 ## Advanced Chat with Commands
 
-A sophisticated chat that responds to specific commands with different content types:
+A sophisticated chat that responds to specific commands with different content types.
+
+This example showcasing the full range of Ivy widgets that can be embedded in chat responses.
 
 ```csharp demo-tabs ivy-bg
 public class AdvancedChatDemo : ViewBase
@@ -200,8 +210,19 @@ public class AdvancedChatDemo : ViewBase
                     | new SelectInput<string>(new[] { new Option<string>("Low", "Low"), new Option<string>("Medium", "Medium"), new Option<string>("High", "High") })
                     | new Button("Create Project").Variant(ButtonVariant.Primary),
                 
-                "show chart" => new LineChart(new[] { 10, 20, 15, 25, 30, 35, 40 }, "data", "months")
-                    .Height(Size.Units(200)),
+                "show chart" => new LineChart(
+                    new[] { 
+                        new { Month = "Jan", Value = 10 },
+                        new { Month = "Feb", Value = 20 },
+                        new { Month = "Mar", Value = 15 },
+                        new { Month = "Apr", Value = 25 },
+                        new { Month = "May", Value = 30 },
+                        new { Month = "Jun", Value = 35 },
+                        new { Month = "Jul", Value = 40 }
+                    }, 
+                    "Value", 
+                    "Month"
+                ).Height(Size.Units(50)),
                 
                 "table data" => new Table(
                     new TableRow(new TableCell("Name"), new TableCell("Age"), new TableCell("Role")).IsHeader(),
@@ -217,14 +238,16 @@ public class AdvancedChatDemo : ViewBase
 
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
 
 ## Chat with Custom Placeholder
 
-Customize the input placeholder text:
+Customize the input placeholder text. 
+
+This example shows how to use the Placeholder extension method to provide custom guidance text for users, improving the user experience by making it clear what type of input is expected.
 
 ```csharp demo-tabs ivy-bg
 public class CustomPlaceholderDemo : ViewBase
@@ -245,7 +268,7 @@ public class CustomPlaceholderDemo : ViewBase
         return new Chat(messages.Value.ToArray(), OnSendMessage)
             .Placeholder("Type your message here...")
             .Width(Size.Full().Max(400))
-            .Height(Size.Units(300));
+            .Height(Size.Auto());
     }
 }
 ```
