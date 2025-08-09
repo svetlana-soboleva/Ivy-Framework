@@ -121,6 +121,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
 
         // Render the diagram
         const { svg } = await mermaid.render(id, content.trim());
+        logger.debug('Mermaid rendered', { svg });
 
         if (mounted && elementRef.current) {
           elementRef.current.innerHTML = svg;
