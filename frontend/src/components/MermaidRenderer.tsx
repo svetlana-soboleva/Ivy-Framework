@@ -62,10 +62,21 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
       attributeFilter: ['class'],
     });
 
+    // Track cleanup to prevent double cleanup during rapid theme changes
+    let cleanedUp = false;
+    const currentTimeout = renderTimeoutRef.current;
+
     return () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+
       observer.disconnect();
-      if (renderTimeoutRef.current) {
-        clearTimeout(renderTimeoutRef.current);
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
+      }
+      // Clear the ref if it still points to our timeout
+      if (renderTimeoutRef.current === currentTimeout) {
+        renderTimeoutRef.current = null;
       }
     };
   }, [detectTheme, debouncedRender]);
