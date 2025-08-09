@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import ErrorBoundary from './ErrorBoundary';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -22,6 +23,9 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 const SyntaxHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(mod => ({ default: mod.Prism }))
 );
+
+// Import MermaidRenderer component
+const MermaidRenderer = lazy(() => import('./MermaidRenderer'));
 
 interface MarkdownRendererProps {
   content: string;
@@ -75,20 +79,43 @@ const CodeBlock = memo(
     className,
     children,
     hasCodeBlocks,
+    hasMermaid,
   }: {
     className?: string;
     children: React.ReactNode;
     inline?: boolean;
     hasCodeBlocks: boolean;
+    hasMermaid: boolean;
   }) => {
     const match = /language-(\w+)/.exec(className || '');
     const content = String(children).replace(/\n$/, '');
     const isTerminal = match && match[1] === 'terminal';
+    const isMermaid = match && match[1] === 'mermaid';
 
     // Create dynamic theme that adapts to current CSS variables
     const dynamicTheme = useMemo(() => createPrismTheme(), []);
 
     if (match && hasCodeBlocks) {
+      // Handle Mermaid diagrams
+      if (isMermaid && hasMermaid) {
+        return (
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="rounded-md border bg-background p-4">
+                  <div className="flex items-center justify-center p-8 text-muted-foreground">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                    <span className="ml-2 text-sm">Loading Mermaid...</span>
+                  </div>
+                </div>
+              }
+            >
+              <MermaidRenderer content={content} />
+            </Suspense>
+          </ErrorBoundary>
+        );
+      }
+
       if (isTerminal) {
         // Handle terminal blocks with prompt styling
         const lines = content.split('\n').filter(line => line.trim());
@@ -158,6 +185,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     () => ({
       hasMath: hasContentFeature(content, /(\$|\\\(|\\\[|\\begin\{)/),
       hasCodeBlocks: hasContentFeature(content, /```/),
+      hasMermaid: hasContentFeature(content, /```mermaid/),
     }),
     [content]
   );
@@ -285,7 +313,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     []
   );
 
-  // Memoize code component separately (depends on contentFeatures.hasCodeBlocks)
+  // Memoize code component separately (depends on contentFeatures.hasCodeBlocks and hasMermaid)
   const codeComponent = useMemo(
     () => ({
       code: memo((props: React.ComponentProps<'code'>) => (
@@ -293,10 +321,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           className={props.className}
           children={props.children || ''}
           hasCodeBlocks={contentFeatures.hasCodeBlocks}
+          hasMermaid={contentFeatures.hasMermaid}
         />
       )),
     }),
-    [contentFeatures.hasCodeBlocks]
+    [contentFeatures.hasCodeBlocks, contentFeatures.hasMermaid]
   );
 
   // Memoize link component separately (depends on handleLinkClick)
