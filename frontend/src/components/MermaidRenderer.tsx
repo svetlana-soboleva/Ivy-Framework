@@ -1,5 +1,6 @@
-import React, { memo, useRef, useState, useEffect } from 'react';
+import { memo, useRef, useState, useEffect } from 'react';
 import CopyToClipboardButton from './CopyToClipboardButton';
+import { logger } from '@/lib/logger';
 
 interface MermaidRendererProps {
   content: string;
@@ -50,6 +51,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
           },
           fontFamily: 'inherit',
           securityLevel: 'strict', // Prevent script injection
+          suppressErrorRendering: true, // Prevent Mermaid from adding error divs to the page
         });
 
         // Generate unique ID for this diagram
@@ -66,7 +68,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
           setIsLoading(false);
         }
       } catch (err) {
-        console.error('Mermaid rendering error:', err);
+        logger.error('Mermaid rendering error:', err);
         if (mounted) {
           setError(
             err instanceof Error ? err.message : 'Failed to render diagram'
@@ -85,10 +87,10 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
 
   if (error) {
     return (
-      <div className="rounded-md border border-destructive bg-destructive/10 p-4">
-        <div className="flex items-center gap-2 text-destructive text-sm font-medium mb-2">
+      <div className="rounded-md border border-destructive bg-destructive/10 p-3">
+        <div className="flex items-center gap-2 text-destructive text-sm font-medium">
           <svg
-            className="h-4 w-4"
+            className="h-4 w-4 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
@@ -100,17 +102,8 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
               d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
             />
           </svg>
-          Mermaid Error
+          <span>Invalid Mermaid diagram syntax</span>
         </div>
-        <div className="text-sm text-muted-foreground">{error}</div>
-        <details className="mt-2">
-          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-            Show diagram source
-          </summary>
-          <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-x-auto">
-            {content}
-          </pre>
-        </details>
       </div>
     );
   }
