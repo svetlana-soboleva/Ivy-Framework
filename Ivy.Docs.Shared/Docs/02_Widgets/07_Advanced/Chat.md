@@ -1,6 +1,6 @@
 # Chat
 
-The `Chat` widget renders a conversation between a user and an assistant. 
+The `Chat` widget renders a conversation between a user and an assistant.
 
 Messages are supplied as `ChatMessage` objects and new messages are sent through the `OnSendMessage` event.
 
@@ -74,7 +74,7 @@ public class LoadingChatDemo : ViewBase
 
 ## Interactive Chat with Rich Content
 
-A chat that responds with interactive elements like buttons and cards. 
+A chat that responds with interactive elements like buttons and cards.
 
 This demonstrates how to return complex UI components as chat responses, creating dynamic and engaging conversations with rich media content.
 
@@ -121,7 +121,7 @@ public class InteractiveChatDemo : ViewBase
 
 ## Error Handling Chat
 
-A chat that demonstrates error handling and different message types. 
+A chat that demonstrates error handling and different message types.
 
 This example shows how to use the Error widget for different message severities and how to integrate ChatStatus for loading indicators within chat conversations.
 
@@ -245,7 +245,7 @@ public class AdvancedChatDemo : ViewBase
 
 ## Chat with Custom Placeholder
 
-Customize the input placeholder text. 
+Customize the input placeholder text.
 
 This example shows how to use the Placeholder extension method to provide custom guidance text for users, improving the user experience by making it clear what type of input is expected.
 
