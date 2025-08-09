@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import ErrorBoundary from './ErrorBoundary';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkGemoji from 'remark-gemoji';
@@ -98,18 +99,20 @@ const CodeBlock = memo(
       // Handle Mermaid diagrams
       if (isMermaid && hasMermaid) {
         return (
-          <Suspense
-            fallback={
-              <div className="rounded-md border bg-background p-4">
-                <div className="flex items-center justify-center p-8 text-muted-foreground">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                  <span className="ml-2 text-sm">Loading Mermaid...</span>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="rounded-md border bg-background p-4">
+                  <div className="flex items-center justify-center p-8 text-muted-foreground">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                    <span className="ml-2 text-sm">Loading Mermaid...</span>
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            <MermaidRenderer content={content} />
-          </Suspense>
+              }
+            >
+              <MermaidRenderer content={content} />
+            </Suspense>
+          </ErrorBoundary>
         );
       }
 
