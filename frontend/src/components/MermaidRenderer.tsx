@@ -209,7 +209,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
         });
 
         // Generate unique ID for this diagram
-        const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+        const id = `mermaid-${crypto.randomUUID()}`;
 
         // Clear the element first
         elementRef.current.innerHTML = '';
