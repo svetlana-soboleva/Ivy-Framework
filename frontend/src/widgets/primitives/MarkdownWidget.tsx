@@ -1,6 +1,6 @@
 import { useEventHandler } from '@/components/EventHandlerContext';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 interface MarkdownWidgetProps {
   id: string;
@@ -9,13 +9,13 @@ interface MarkdownWidgetProps {
 
 const MarkdownWidget: React.FC<MarkdownWidgetProps> = ({ id, content }) => {
   const eventHandler = useEventHandler();
-  return (
-    <MarkdownRenderer
-      content={content}
-      key={id}
-      onLinkClick={href => eventHandler('OnLinkClick', id, [href])}
-    />
+
+  const handleLinkClick = useCallback(
+    (href: string) => eventHandler('OnLinkClick', id, [href]),
+    [eventHandler, id]
   );
+
+  return <MarkdownRenderer content={content} onLinkClick={handleLinkClick} />;
 };
 
-export default MarkdownWidget;
+export default React.memo(MarkdownWidget);
