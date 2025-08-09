@@ -2,286 +2,238 @@
 prepare: |
   var client = this.UseService<IClientProvider>();
 ---
-
 # CodeInput
-
 The `CodeInput` widget provides a specialized text input field for entering and editing code with syntax highlighting. 
 It supports various programming languages and offers features like line numbers and code formatting.
 
-## Basic Usage
+## Supported Languages
 
-Here's a simple example of a `CodeInput` widget:
-
-```csharp
-public class JSCodeDemo: ViewBase
-{
-    public override object? Build()
-    {
-        var code = """
-                function helloWorld() {
-                    console.log('Hello, world!');
-                }
-                """;
-
-        var codeState = UseState(code);
-        return Layout.Horizontal() 
-                | codeState.ToCodeInput().Language(Languages.Javascript);
-    }
-}        
-```
-
-
-## Variants
-
-The `CodeInput` widget can be customized with different languages for syntax highlighting:
-
-### Languages.Csharp variant 
-
-The following code shows how to use this variant to make the syntax highlighting work 
-for C#. 
-
-```csharp demo-below ivy-bg
-public class CSharpLanguageHighlightDemo : ViewBase 
+```csharp demo-tabs ivy-bg
+public class CSharpDemo : ViewBase
 {
     public override object? Build()
     {    
-        var csCode = UseState("Console.WriteLine(\"Hello World!\");");
+        var csCode = UseState("using System;\n\npublic class Program\n{\n    static void Main()\n    {\n        Console.WriteLine(\"Hello, World!\");\n    }\n}");
         return Layout.Vertical()
                     | Text.H3("C#")
-                    | Text.Html("<i>Enter C# code below!</i>") 
-                    | csCode.ToCodeInput().Language(Languages.Csharp);
+                    | csCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Csharp);
     }
 }
 ```
 
-### Languages.JavaScript variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for Javascript.
-
-```csharp demo-below ivy-bg
-public class JavaScriptLanguageHighlightDemo : ViewBase 
+```csharp demo-tabs ivy-bg
+public class JavaScriptDemo : ViewBase 
 {
     public override object? Build()
     {    
-        var jsCode = UseState("console.log('hello world!');");
+        var jsCode = UseState("function greet(name) {\n  console.log(`Hello, ${name}!`);\n}\ngreet('World');");
         return Layout.Vertical()
                     | Text.H3("JavaScript")
-                    | Text.Html("<i>Enter JavaScript code below!</i>") 
-                    | jsCode.ToCodeInput().Language(Languages.Javascript);
+                    | jsCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Javascript);
     }
 }
 ```
 
-### Languages.Python variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for Python.
-
-```csharp demo-below ivy-bg
-public class PythonLanguageHighlightDemo : ViewBase 
+```csharp demo-tabs ivy-bg
+public class PythonDemo : ViewBase 
 {
     public override object? Build()
     {    
-        var pyCode = UseState("print('hello world!')");
+        var pyCode = UseState("def greet(name):\n    print(f'Hello, {name}!')\n\ngreet('World')");
         return Layout.Vertical()
                     | Text.H3("Python")
-                    | Text.Html("<i>Enter Python code below!</i>") 
-                    | pyCode.ToCodeInput().Language(Languages.Python);
+                    | pyCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Python);
     }
 }
 ```
 
-### Languages.Sql variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for SQL.
-
-```csharp demo-below ivy-bg
-public class SqlLanguageHighlightDemo : ViewBase 
+```csharp demo-tabs ivy-bg
+public class SqlDemo : ViewBase 
 {
     public override object? Build()
     {    
-        var sqlCode = UseState("select * from employees;");
+        var sqlCode = UseState("SELECT u.name, u.email, p.title\nFROM users u\nJOIN posts p ON u.id = p.user_id\nWHERE u.active = true\nORDER BY p.created_at DESC;");
         return Layout.Vertical()
-                    | Text.H3("Sql")
-                    | Text.Html("<i>Enter SQL code below!</i>") 
-                    | sqlCode.ToCodeInput().Language(Languages.Sql);
+                    | Text.H3("SQL")
+                    | sqlCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Sql);
     }
 }
 ```
 
-### Languages.Html variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for HTML.
-
-```csharp demo-below ivy-bg
-public class HtmlLanguageHighlightDemo : ViewBase 
+```csharp demo-tabs ivy-bg
+public class HtmlDemo : ViewBase 
 {
     public override object? Build()
     {    
-        var htmlCode = UseState("<html><body><h1>Hello World!</h1></body></html>");
+        var htmlCode = UseState("<html>\n<body>\n  <h1>Hello World!</h1>\n</body>\n</html>");
         return Layout.Vertical()
                     | Text.H3("HTML")
-                    | Text.Html("<i>Enter HTML code below!</i>") 
-                    | htmlCode.ToCodeInput().Language(Languages.Html);
+                    | htmlCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Html);
     }
 }
 ```
 
-### Languages.Json variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for JSON.
-
 ```csharp demo-tabs ivy-bg
-public class JsonLanguageHighlightDemo : ViewBase 
+public class CssDemo : ViewBase 
 {
     public override object? Build()
     {    
-        var jsonCode = UseState(@"{ ""name"" : ""Ivy"", ""version"" : ""1.0.0""}");
-        return Layout.Vertical()
-                    | Text.H3("JSON")
-                    | Text.Html("<i>Enter JSON below!</i>") 
-                    | jsonCode.ToCodeInput().Language(Languages.Json);
-    }
-}
-```
-
-
-### Languages.Css variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for CSS.
-
-```csharp demo-tabs ivy-bg
-public class CssLanguageHighlightDemo : ViewBase 
-{
-    public override object? Build()
-    {    
-        var cssCode = UseState(@"<style>
-                                p {
-                                  text-align: center;
-                                  color: red;
-                                } 
-                                </style>");
+        var cssCode = UseState("body {\n  font-family: Arial, sans-serif;\n  color: #333;\n}");
         return Layout.Vertical()
                     | Text.H3("CSS")
-                    | Text.Html("<i>Enter CSS below!</i>") 
-                    | cssCode.ToCodeInput().Language(Languages.Css);
+                    | cssCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Css);
     }
 }
 ```
 
-### Languages.Dbml variant
-
-The following code shows how to use this variant to make the syntax highlighting work
-for DBML.
+```csharp demo-tabs ivy-bg
+public class JsonDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+        var jsonCode = UseState("{\n  \"name\": \"Ivy\",\n  \"version\": \"1.0.0\",\n  \"features\": [\"syntax highlighting\", \"auto-complete\"],\n  \"config\": {\n    \"theme\": \"dark\",\n    \"fontSize\": 14\n  }\n}");
+        return Layout.Vertical()
+                    | Text.H3("JSON")
+                    | jsonCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Json);
+    }
+}
+```
 
 ```csharp demo-tabs ivy-bg
-public class DbmlLanguageHighlightDemo : ViewBase 
+public class DbmlDemo : ViewBase 
 {
     public override object? Build()
     {    
          var dbmlCode = UseState(
-            @"Table users {
-                    id integer [primary key]
-                    username varchar
-                    role varchar
-                    created_at timestamp
-                }
-              Table posts {
-                id integer [primary key]
-                title varchar
-                body text
-                user_id integer
-                created_at timestamp
-            }");
+            "Table users {\n  id integer [primary key]\n  username varchar\n  role varchar\n  created_at timestamp\n}");
          return Layout.Vertical()
                     | Text.H3("DBML")
-                    | Text.Html("<i>Enter DBML below!</i>") 
-                    | dbmlCode.ToCodeInput().Language(Languages.Dbml);
+                    | dbmlCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Dbml);
     }
 }
 ```
 
+```csharp demo-tabs ivy-bg
+public class TypeScriptDemo : ViewBase 
+{
+    public override object? Build()
+    {    
+        var tsCode = UseState("interface User {\n  name: string;\n  age: number;\n}\n\nconst user: User = { name: 'John', age: 30 };");
+        return Layout.Vertical()
+                    | Text.H3("TypeScript")
+                    | tsCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Typescript);
+    }
+}
+```
 
-## Styling 
-There are several styles that can be applied to these code inputs. 
+## Styling Options
 
-### Invalid 
-To mark a `CodeInput` as invalid because of the content, this style should be used. 
-The following code shows how to use it. 
+### Invalid State
+The `Invalid` state provides visual feedback when code contains syntax errors or validation issues. It displays an error message and typically shows a red border to indicate problems.
 
-```csharp demo-below ivy-bg
+Mark a `CodeInput` as invalid when content has syntax errors:
+
+```csharp demo-tabs ivy-bg
 public class InvalidCodeDemo: ViewBase
 {
     public override object? Build()
     {
-        var jsCode = UseState("console.log('hello world!';");
-        return  Layout.Grid().Columns(2) 
-                | Text.H4("Incomplete JavaScript code") 
-                | jsCode.ToCodeInput().Language(Languages.Javascript)
-                .Invalid("Missing closing (')') brace!");
+        var jsCode = UseState("function greet(name) {\n    console.log('Hello, ' + name);\n    return 'Welcome ' + name;\n}");
+        return Layout.Vertical()
+                | jsCode.ToCodeInput()
+                    .Width(Size.Auto())
+                    .Height(Size.Auto())
+                    .Language(Languages.Javascript)
+                    .Invalid("Missing closing parenthesis!");
     }
 }
 ```
 
-### Disabled 
-To mark a `CodeInput` as disabled because of the content or for any other reason, this style
-should be used. 
+### Disabled State
+The `Disabled` state prevents editing while allowing users to view the code. It's useful for displaying read-only examples or temporarily preventing modifications.
 
-```csharp demo-below ivy-bg
+Disable a `CodeInput` when needed:
+
+```csharp demo-tabs
 public class DisabledCodeDemo : ViewBase
 {
     public override object? Build()
     {
-        var disabledCode = UseState("print('hello world!')");
-        return Layout.Grid().Columns(2)
-            | Text.H4("Disabled Python code")
-            | disabledCode.ToCodeInput().Disabled();
+        var disabledCode = UseState("def calculate_fibonacci(n):\n    if n <= 1:\n        return n\n    return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)\n\nresult = calculate_fibonacci(10)");
+        return Layout.Vertical()
+            | disabledCode.ToCodeInput()
+                .Width(Size.Auto())
+                .Height(Size.Auto())
+                .Language(Languages.Python)
+                .Disabled();
     }
 }
 ```
 
-
 ## Event Handling
 
-You can handle events such as changes in the `CodeInput`: 
+Event handling enables you to respond to code changes and validate input in real-time. This allows for dynamic behavior like live validation and conditional UI updates.
 
-```csharp demo-below ivy-bg
-public class CodeInputWithButton : ViewBase 
+Handle code changes and validation:
+
+```csharp demo-tabs ivy-bg
+public class CodeInputWithValidation : ViewBase 
 {
     public override object? Build()
     {        
         var codeState = UseState("");
+        var isValid = !string.IsNullOrWhiteSpace(codeState.Value);
         
         return Layout.Vertical()
             | Text.Label("Enter Code:")
             | codeState.ToCodeInput()
-                    .Width(200)
-                    .Height(100)
+                    .Width(Size.Auto())
+                    .Height(Size.Auto())
                     .Placeholder("Enter your code here...")
-            
-            | new Button("Execute Code")
-                .Disabled(string.IsNullOrWhiteSpace(codeState.Value))
-            | Text.Small(string.IsNullOrWhiteSpace(codeState.Value) 
-                ? "Enter code to enable the button" 
-                : "Ready to execute!");
+                    .Language(Languages.Javascript)
+                                | new Button("Execute Code")
+                .Disabled(!isValid)
+            | Text.Small(isValid 
+                ? "Ready to execute!" 
+                : "Enter code to enable the button");
     }
 }
-
 ```
-
 
 <WidgetDocs Type="Ivy.CodeInput" ExtensionTypes="Ivy.CodeInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/CodeInput.cs"/>
 
-## Examples
+## Advanced Example
 
-### DBML Editor
+### DBML Editor with Live Preview
 
-```csharp demo-below ivy-bg
+```csharp demo-tabs
 public class DBMLEditorDemo : ViewBase
 {
     public override object? Build()
@@ -294,9 +246,11 @@ public class DBMLEditorDemo : ViewBase
                     }";
         var dbml = this.UseState(sampleDbml);
         return Layout.Horizontal().RemoveParentPadding().Height(Size.Screen())
-                | dbml.ToCodeInput().Width(90).Height(Size.Full()).Language(Languages.Dbml)
+                | dbml.ToCodeInput()
+                    .Width(Size.Units(50))
+                    .Height(Size.Auto())
+                    .Language(Languages.Dbml)
                 | new DbmlCanvas(dbml.Value).Width(Size.Grow());
    }
 }
-
-``` 
+```
