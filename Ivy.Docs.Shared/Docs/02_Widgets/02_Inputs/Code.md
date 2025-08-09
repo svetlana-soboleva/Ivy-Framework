@@ -233,7 +233,7 @@ public class CodeInputWithValidation : ViewBase
 
 ### DBML Editor with Live Preview
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs
 public class DBMLEditorDemo : ViewBase
 {
     public override object? Build()
@@ -246,9 +246,8 @@ public class DBMLEditorDemo : ViewBase
                     }";
         var dbml = this.UseState(sampleDbml);
         return Layout.Horizontal().RemoveParentPadding().Height(Size.Screen())
-                | dbml.ToCodeInput().Width(90).Height(Size.Full()).Language(Languages.Dbml)
                 | dbml.ToCodeInput()
-                    .Width(Size.Auto())
+                    .Width(Size.Units(50))
                     .Height(Size.Auto())
                     .Language(Languages.Dbml)
                 | new DbmlCanvas(dbml.Value).Width(Size.Grow());
