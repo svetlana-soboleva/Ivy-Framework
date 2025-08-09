@@ -210,7 +210,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     [onLinkClick]
   );
 
-  const components = useMemo(
+  // Memoize static components separately (they don't need handleLinkClick)
+  const staticComponents = useMemo(
     () => ({
       h1: memo(({ children }: { children: React.ReactNode }) => (
         <h1 className={textBlockClassMap.h1}>{children}</h1>
@@ -242,43 +243,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       em: memo(({ children }: { children: React.ReactNode }) => (
         <em className={textBlockClassMap.em}>{children}</em>
       )),
-      code: memo((props: React.ComponentProps<'code'>) => (
-        <CodeBlock
-          className={props.className}
-          children={props.children || ''}
-          hasCodeBlocks={contentFeatures.hasCodeBlocks}
-          hasMermaid={contentFeatures.hasMermaid}
-        />
-      )),
 
       // Pre tag (for code blocks)
       pre: memo(({ children }: { children: React.ReactNode }) => (
         <>{children}</>
       )),
-
-      // Links with memoized click handler
-      a: memo(
-        ({
-          children,
-          href,
-          ...props
-        }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-          const isExternalLink = href?.match(/^(https?:\/\/|mailto:|tel:)/i);
-
-          return (
-            <a
-              {...props}
-              className="text-primary underline brightness-90 hover:brightness-100"
-              href={href || '#'}
-              target={isExternalLink ? '_blank' : undefined}
-              rel={isExternalLink ? 'noopener noreferrer' : undefined}
-              onClick={e => href && handleLinkClick(href, e)}
-            >
-              {children}
-            </a>
-          );
-        }
-      ),
 
       // Blockquotes
       blockquote: memo(
@@ -338,7 +307,59 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           prevProps.src === nextProps.src && prevProps.alt === nextProps.alt
       ),
     }),
-    [contentFeatures.hasCodeBlocks, contentFeatures.hasMermaid, handleLinkClick]
+    []
+  );
+
+  // Memoize code component separately (depends on contentFeatures.hasCodeBlocks)
+  const codeComponent = useMemo(
+    () => ({
+      code: memo((props: React.ComponentProps<'code'>) => (
+        <CodeBlock
+          className={props.className}
+          children={props.children || ''}
+          hasCodeBlocks={contentFeatures.hasCodeBlocks}
+        />
+      )),
+    }),
+    [contentFeatures.hasCodeBlocks]
+  );
+
+  // Memoize link component separately (depends on handleLinkClick)
+  const linkComponent = useMemo(
+    () => ({
+      a: memo(
+        ({
+          children,
+          href,
+          ...props
+        }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+          const isExternalLink = href?.match(/^(https?:\/\/|mailto:|tel:)/i);
+
+          return (
+            <a
+              {...props}
+              className="text-primary underline brightness-90 hover:brightness-100"
+              href={href || '#'}
+              target={isExternalLink ? '_blank' : undefined}
+              rel={isExternalLink ? 'noopener noreferrer' : undefined}
+              onClick={e => href && handleLinkClick(href, e)}
+            >
+              {children}
+            </a>
+          );
+        }
+      ),
+    }),
+    [handleLinkClick]
+  );
+
+  const components = useMemo(
+    () => ({
+      ...staticComponents,
+      ...codeComponent,
+      ...linkComponent,
+    }),
+    [staticComponents, codeComponent, linkComponent]
   );
 
   const urlTransform = useCallback((url: string) => {
