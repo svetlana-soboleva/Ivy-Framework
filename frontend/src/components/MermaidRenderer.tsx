@@ -35,7 +35,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
           themeVariables: {
             // Convert CSS custom properties to actual color values
             primaryColor: getCSSVariable('--primary'),
-            primaryTextColor: getCSSVariable('--primary-foreground'),
+            primaryTextColor: getCSSVariable('--foreground'),
             primaryBorderColor: getCSSVariable('--border'),
             lineColor: getCSSVariable('--border'),
             sectionBkgColor: getCSSVariable('--muted'),
