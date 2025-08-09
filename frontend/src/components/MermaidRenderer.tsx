@@ -1,4 +1,4 @@
-import { memo, useRef, useState, useEffect } from 'react';
+import { memo, useRef, useState, useEffect, useCallback } from 'react';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import { logger } from '@/lib/logger';
 
@@ -10,6 +10,61 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const themeRef = useRef(theme);
+
+  // Function to detect current theme
+  const detectTheme = useCallback(() => {
+    const isDark = document.documentElement.classList.contains('dark');
+    return isDark ? 'dark' : 'light';
+  }, []);
+
+  useEffect(() => {
+    // Set initial theme
+    const currentTheme = detectTheme();
+    setTheme(currentTheme);
+    themeRef.current = currentTheme;
+
+    // Create a mutation observer to watch for theme changes
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          const newTheme = detectTheme();
+          if (newTheme !== themeRef.current) {
+            setTheme(newTheme);
+            themeRef.current = newTheme;
+          }
+        }
+      });
+    });
+
+    // Start observing the document element for class changes
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    // Also listen for storage events (in case theme is stored in localStorage)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'theme' || e.key === 'color-scheme') {
+        const newTheme = detectTheme();
+        if (newTheme !== themeRef.current) {
+          setTheme(newTheme);
+          themeRef.current = newTheme;
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [detectTheme]);
 
   useEffect(() => {
     let mounted = true;
@@ -34,9 +89,9 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
           startOnLoad: false,
           theme: 'base',
           themeVariables: {
-            // Convert CSS custom properties to actual color values
+            // Use hex colors from index.css CSS variables
             primaryColor: getCSSVariable('--primary'),
-            primaryTextColor: getCSSVariable('--foreground'),
+            primaryTextColor: getCSSVariable('--primary-foreground'),
             primaryBorderColor: getCSSVariable('--border'),
             lineColor: getCSSVariable('--border'),
             sectionBkgColor: getCSSVariable('--muted'),
@@ -83,7 +138,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
     return () => {
       mounted = false;
     };
-  }, [content]);
+  }, [content, theme]); // Add theme as a dependency
 
   if (error) {
     return (
