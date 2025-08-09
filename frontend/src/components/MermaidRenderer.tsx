@@ -205,6 +205,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
           },
           fontFamily: 'inherit',
           securityLevel: 'strict', // Prevent script injection
+          htmlLabels: false, // Prevent HTML injection in diagram labels
           suppressErrorRendering: true, // Prevent Mermaid from adding error divs to the page
         });
 
