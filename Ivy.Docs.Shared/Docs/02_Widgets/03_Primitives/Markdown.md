@@ -157,6 +157,45 @@ public class CodeMarkdownView : ViewBase
 }
 ```
 
+### Mermaid Diagrams
+
+The `Markdown` widget supports Mermaid diagrams for creating various types of visual diagrams directly in your markdown content. 
+
+Mermaid diagrams supports multiple diagram types including flowcharts, sequence diagrams, class diagrams, and more. 
+
+More about usage of Mermaid diagrams:
+
+```csharp demo-tabs
+public class MermaidDiagramsView : ViewBase
+{
+    public override object? Build()
+    {
+        var markdownContent = 
+            """
+            
+            ### Sequence Diagram
+            
+            ```mermaid
+            sequenceDiagram
+                participant U as User
+                participant F as Frontend
+                participant B as Backend
+                participant D as Database
+                
+                U->>F: Navigate to page
+                F->>B: GET /api/data
+                B->>D: Query database
+                D-->>B: Return result
+                B-->>F: JSON response
+                F-->>U: Render UI
+            ```
+            """;
+            
+        return new Markdown(markdownContent);
+    }
+}
+```
+
 ### Math Support
 
 The `Markdown` widget supports KaTeX for rendering mathematical expressions both inline and as blocks.
