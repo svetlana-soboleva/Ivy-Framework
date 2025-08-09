@@ -81,7 +81,7 @@ public class MermaidMarkdownRequirementsApp : SampleBase
                 """"
                 ## Acceptance Criteria
 
-                * ```mermaid code fences render as diagrams in:
+                * mermaid code fences render as diagrams in:
                   - Widgets using `Markdown` (runtime content)
                   - Docs pages generated via `Ivy.Docs.Tools` (Markdown converted to `Article` and `Markdown` widgets)
                 * Theme matches Ivy dark/light mode and text sizing.
