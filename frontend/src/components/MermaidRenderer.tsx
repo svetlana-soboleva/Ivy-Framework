@@ -10,20 +10,36 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const themeRef = useRef(theme);
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
+  const themeRef = useRef<'light' | 'dark'>('light');
+  const renderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Function to detect current theme
   const detectTheme = useCallback(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    return isDark ? 'dark' : 'light';
+    return document.documentElement.classList.contains('dark')
+      ? 'dark'
+      : 'light';
+  }, []);
+
+  // Debounced render function
+  const debouncedRender = useCallback((theme: 'light' | 'dark') => {
+    if (renderTimeoutRef.current) {
+      clearTimeout(renderTimeoutRef.current);
+    }
+
+    renderTimeoutRef.current = setTimeout(() => {
+      if (theme !== themeRef.current) {
+        setCurrentTheme(theme);
+        themeRef.current = theme;
+      }
+    }, 100); // Small delay to avoid excessive re-renders
   }, []);
 
   useEffect(() => {
     // Set initial theme
-    const currentTheme = detectTheme();
-    setTheme(currentTheme);
-    themeRef.current = currentTheme;
+    const initialTheme = detectTheme();
+    setCurrentTheme(initialTheme);
+    themeRef.current = initialTheme;
 
     // Create a mutation observer to watch for theme changes
     const observer = new MutationObserver(mutations => {
@@ -34,8 +50,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
         ) {
           const newTheme = detectTheme();
           if (newTheme !== themeRef.current) {
-            setTheme(newTheme);
-            themeRef.current = newTheme;
+            debouncedRender(newTheme);
           }
         }
       });
@@ -47,24 +62,13 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
       attributeFilter: ['class'],
     });
 
-    // Also listen for storage events (in case theme is stored in localStorage)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme' || e.key === 'color-scheme') {
-        const newTheme = detectTheme();
-        if (newTheme !== themeRef.current) {
-          setTheme(newTheme);
-          themeRef.current = newTheme;
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
     return () => {
       observer.disconnect();
-      window.removeEventListener('storage', handleStorageChange);
+      if (renderTimeoutRef.current) {
+        clearTimeout(renderTimeoutRef.current);
+      }
     };
-  }, [detectTheme]);
+  }, [detectTheme, debouncedRender]);
 
   useEffect(() => {
     let mounted = true;
@@ -138,7 +142,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
     return () => {
       mounted = false;
     };
-  }, [content, theme]); // Add theme as a dependency
+  }, [content, currentTheme]); // Re-render when content or theme changes
 
   if (error) {
     return (
