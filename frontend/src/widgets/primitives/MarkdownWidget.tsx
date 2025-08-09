@@ -15,7 +15,13 @@ const MarkdownWidget: React.FC<MarkdownWidgetProps> = ({ id, content }) => {
     [eventHandler, id]
   );
 
-  return <MarkdownRenderer content={content} onLinkClick={handleLinkClick} />;
+  return (
+    <MarkdownRenderer
+      key={id}
+      content={content}
+      onLinkClick={handleLinkClick}
+    />
+  );
 };
 
 export default React.memo(MarkdownWidget);
