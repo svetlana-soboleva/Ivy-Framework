@@ -5,6 +5,89 @@ interface MermaidRendererProps {
   content: string;
 }
 
+// Utility function to convert oklch colors to hex
+const convertOklchToHex = (oklchValue: string): string => {
+  // If it's already a hex color, return it
+  if (oklchValue.startsWith('#')) {
+    return oklchValue;
+  }
+
+  // If it's already an hsl color, return it
+  if (oklchValue.startsWith('hsl(')) {
+    return oklchValue;
+  }
+
+  // If it's already an rgb color, return it
+  if (oklchValue.startsWith('rgb(')) {
+    return oklchValue;
+  }
+
+  // If it's an oklch color, we need to convert it
+  if (oklchValue.startsWith('oklch(')) {
+    try {
+      // Create a temporary element to use the browser's color conversion
+      const tempElement = document.createElement('div');
+      tempElement.style.color = oklchValue;
+      document.body.appendChild(tempElement);
+
+      // Get the computed color (browser will convert oklch to rgb)
+      const computedColor = getComputedStyle(tempElement).color;
+      document.body.removeChild(tempElement);
+
+      // Convert rgb to hex
+      const rgbMatch = computedColor.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
+      );
+      if (rgbMatch) {
+        const r = parseInt(rgbMatch[1]);
+        const g = parseInt(rgbMatch[2]);
+        const b = parseInt(rgbMatch[3]);
+        return `#${r.toString(16).padStart(2, '0')}${g
+          .toString(16)
+          .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+      }
+    } catch (error) {
+      console.warn('Failed to convert oklch color:', oklchValue, error);
+    }
+  }
+
+  // If the value is empty or invalid, return a default color
+  if (!oklchValue || oklchValue.trim() === '') {
+    return '#000000';
+  }
+
+  // Try to parse as a named color or other format
+  try {
+    // Create a temporary element to test if it's a valid color
+    const tempElement = document.createElement('div');
+    tempElement.style.color = oklchValue;
+    document.body.appendChild(tempElement);
+
+    const computedColor = getComputedStyle(tempElement).color;
+    document.body.removeChild(tempElement);
+
+    // If the computed color is different from the input, it's a valid color
+    if (computedColor !== 'rgba(0, 0, 0, 0)' && computedColor !== '') {
+      const rgbMatch = computedColor.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
+      );
+      if (rgbMatch) {
+        const r = parseInt(rgbMatch[1]);
+        const g = parseInt(rgbMatch[2]);
+        const b = parseInt(rgbMatch[3]);
+        return `#${r.toString(16).padStart(2, '0')}${g
+          .toString(16)
+          .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to parse color:', oklchValue, error);
+  }
+
+  // Fallback to a default color if conversion fails
+  return '#000000';
+};
+
 const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,8 +110,8 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
         const computedStyle = getComputedStyle(document.documentElement);
         const getCSSVariable = (variable: string) => {
           const value = computedStyle.getPropertyValue(variable).trim();
-          // If it's already an HSL value, return it, otherwise wrap in hsl()
-          return value.includes('hsl') ? value : `hsl(${value})`;
+          // Convert oklch colors to hex format that Mermaid can understand
+          return convertOklchToHex(value);
         };
 
         // Initialize mermaid with theme-aware configuration
