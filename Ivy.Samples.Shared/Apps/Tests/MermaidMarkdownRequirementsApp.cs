@@ -38,6 +38,14 @@ public class MermaidMarkdownRequirementsApp : SampleBase
             )
             | new Markdown(
                 """"
+                ```csharp demo-below ivy-bg
+                class Diagram {
+                }
+                ```
+                """"
+            )
+            | new Markdown(
+                """"
                 ## User Stories
 
                 1. As a docs reader, I can see Mermaid diagrams rendered in documentation pages.

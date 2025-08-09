@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
+    --background: #f4f6f6;
     --foreground: oklch(0 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.26 0 0);
