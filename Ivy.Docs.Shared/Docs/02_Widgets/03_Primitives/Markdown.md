@@ -104,6 +104,8 @@ public class MathMarkdownView : ViewBase
 
 Mermaid diagrams allow you to create various types of visual diagrams directly in markdown content. Supported diagram types include flowcharts, sequence diagrams, class diagrams, and more for visualizing complex processes and relationships.
 
+For more information on how to use Mermaid, [follow this link](https://mermaid.js.org/):
+
 ```csharp demo-tabs ivy-bg
 public class MermaidView : ViewBase
 {
