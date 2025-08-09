@@ -23,25 +23,33 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
         // Dynamically import mermaid
         const mermaid = (await import('mermaid')).default;
 
+        // Get computed CSS variables to use as actual color values
+        const computedStyle = getComputedStyle(document.documentElement);
+        const getCSSVariable = (variable: string) => {
+          const value = computedStyle.getPropertyValue(variable).trim();
+          // If it's already an HSL value, return it, otherwise wrap in hsl()
+          return value.includes('hsl') ? value : `hsl(${value})`;
+        };
+
         // Initialize mermaid with theme-aware configuration
         mermaid.initialize({
           startOnLoad: false,
           theme: 'base',
           themeVariables: {
-            // Use CSS custom properties for theme integration
-            primaryColor: 'hsl(var(--primary))',
-            primaryTextColor: 'hsl(var(--primary-foreground))',
-            primaryBorderColor: 'hsl(var(--border))',
-            lineColor: 'hsl(var(--border))',
-            sectionBkgColor: 'hsl(var(--muted))',
-            altSectionBkgColor: 'hsl(var(--background))',
-            gridColor: 'hsl(var(--border))',
-            secondaryColor: 'hsl(var(--secondary))',
-            tertiaryColor: 'hsl(var(--muted))',
-            background: 'hsl(var(--background))',
-            mainBkg: 'hsl(var(--background))',
-            secondBkg: 'hsl(var(--muted))',
-            tertiaryBkg: 'hsl(var(--accent))',
+            // Convert CSS custom properties to actual color values
+            primaryColor: getCSSVariable('--primary'),
+            primaryTextColor: getCSSVariable('--primary-foreground'),
+            primaryBorderColor: getCSSVariable('--border'),
+            lineColor: getCSSVariable('--border'),
+            sectionBkgColor: getCSSVariable('--muted'),
+            altSectionBkgColor: getCSSVariable('--background'),
+            gridColor: getCSSVariable('--border'),
+            secondaryColor: getCSSVariable('--secondary'),
+            tertiaryColor: getCSSVariable('--muted'),
+            background: getCSSVariable('--background'),
+            mainBkg: getCSSVariable('--background'),
+            secondBkg: getCSSVariable('--muted'),
+            tertiaryBkg: getCSSVariable('--accent'),
           },
           fontFamily: 'inherit',
           securityLevel: 'strict', // Prevent script injection
