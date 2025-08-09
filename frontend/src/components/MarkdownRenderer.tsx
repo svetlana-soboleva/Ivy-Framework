@@ -310,7 +310,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     []
   );
 
-  // Memoize code component separately (depends on contentFeatures.hasCodeBlocks)
+  // Memoize code component separately (depends on contentFeatures.hasCodeBlocks and hasMermaid)
   const codeComponent = useMemo(
     () => ({
       code: memo((props: React.ComponentProps<'code'>) => (
@@ -318,10 +318,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           className={props.className}
           children={props.children || ''}
           hasCodeBlocks={contentFeatures.hasCodeBlocks}
+          hasMermaid={contentFeatures.hasMermaid}
         />
       )),
     }),
-    [contentFeatures.hasCodeBlocks]
+    [contentFeatures.hasCodeBlocks, contentFeatures.hasMermaid]
   );
 
   // Memoize link component separately (depends on handleLinkClick)
