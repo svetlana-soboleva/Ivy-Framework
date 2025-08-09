@@ -204,7 +204,7 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
             tertiaryBkg: getCSSVariable('--accent'),
           },
           fontFamily: 'inherit',
-          securityLevel: 'strict', // Prevent script injection
+          securityLevel: 'secure', // Use the most secure level to prevent all script and HTML injection
           htmlLabels: false, // Prevent HTML injection in diagram labels
           suppressErrorRendering: true, // Prevent Mermaid from adding error divs to the page
         });
