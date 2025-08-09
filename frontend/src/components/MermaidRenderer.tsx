@@ -6,6 +6,90 @@ interface MermaidRendererProps {
   content: string;
 }
 
+/**
+ * Sanitize SVG content to prevent XSS attacks
+ * Removes dangerous elements and attributes that could execute scripts
+ */
+const sanitizeSvg = (svg: string): string => {
+  // Create a temporary DOM element to parse the SVG
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svg, 'image/svg+xml');
+
+  // Check for parser errors
+  const parserError = doc.querySelector('parsererror');
+  if (parserError) {
+    logger.warn('SVG parsing error, falling back to empty content');
+    return '<svg></svg>';
+  }
+
+  const svgElement = doc.documentElement;
+
+  // Remove potentially dangerous elements
+  const dangerousElements = [
+    'script',
+    'object',
+    'embed',
+    'link',
+    'meta',
+    'iframe',
+    'frame',
+    'frameset',
+    'form',
+    'input',
+    'button',
+    'textarea',
+    'select',
+  ];
+
+  dangerousElements.forEach(tagName => {
+    const elements = svgElement.querySelectorAll(tagName);
+    elements.forEach(el => el.remove());
+  });
+
+  // Remove event handlers and dangerous attributes
+  const walker = document.createTreeWalker(
+    svgElement,
+    NodeFilter.SHOW_ELEMENT,
+    null
+  );
+
+  const attributesToRemove = [
+    'onload',
+    'onerror',
+    'onclick',
+    'onmouseover',
+    'onfocus',
+    'onblur',
+    'onchange',
+    'onsubmit',
+    'onreset',
+    'onselect',
+    'onunload',
+    'href',
+    'xlink:href', // Remove links that could navigate away
+  ];
+
+  let node;
+  while ((node = walker.nextNode())) {
+    const element = node as Element;
+    attributesToRemove.forEach(attr => {
+      if (element.hasAttribute(attr)) {
+        element.removeAttribute(attr);
+      }
+    });
+
+    // Remove any attribute that starts with 'on' (event handlers)
+    const attributes = Array.from(element.attributes);
+    attributes.forEach(attr => {
+      if (attr.name.toLowerCase().startsWith('on')) {
+        element.removeAttribute(attr.name);
+      }
+    });
+  }
+
+  return new XMLSerializer().serializeToString(svgElement);
+};
+
 const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -135,7 +219,9 @@ const MermaidRenderer = memo(({ content }: MermaidRendererProps) => {
         logger.debug('Mermaid rendered', { svg });
 
         if (mounted && elementRef.current) {
-          elementRef.current.innerHTML = svg;
+          // Sanitize SVG content before setting innerHTML
+          const sanitizedSvg = sanitizeSvg(svg);
+          elementRef.current.innerHTML = sanitizedSvg;
           setIsLoading(false);
         }
       } catch (err) {
