@@ -27,18 +27,47 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
   const eventHandler = useEventHandler();
   const articleRef = useRef<HTMLElement>(null);
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const [showTocContent, setShowTocContent] = useState(false);
 
-  // Extract headings immediately after content is rendered (but before the 1s delay)
+  // Extract headings and manage loading state timing
   useEffect(() => {
-    if (!showToc || !articleRef.current) return;
+    if (!showToc) {
+      setTocItems([]);
+      setShowTocContent(false);
+      return;
+    }
+
+    // Reset states when starting fresh
+    setTocItems([]);
+    setShowTocContent(false);
+
+    const startTime = Date.now();
+    const minLoadingTime = 500; // 0.5 seconds minimum loading time
+
+    let retryCount = 0;
+    const maxRetries = 50; // Try for up to 5 seconds (50 * 100ms)
 
     const extractHeadings = () => {
       const articleElement = articleRef.current;
-      if (!articleElement) return;
+      if (!articleElement) {
+        // If article ref is not available yet, try again after a short delay
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(extractHeadings, 100);
+        }
+        return;
+      }
 
       const elements = Array.from(
         articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
       );
+
+      // If no headings found but content might still be loading, retry
+      if (elements.length === 0 && retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(extractHeadings, 100);
+        return;
+      }
 
       const items = elements.map(element => {
         // Generate ID if doesn't exist
@@ -58,9 +87,18 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
       });
 
       setTocItems(items);
+
+      // Calculate remaining time to show loading for minimum duration
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+      // Show TOC content after minimum loading time has passed
+      setTimeout(() => {
+        setShowTocContent(true);
+      }, remainingTime);
     };
 
-    // Small delay to ensure content is rendered, but much shorter than before
+    // Small delay to ensure content is rendered
     const timer = setTimeout(extractHeadings, 50);
     return () => clearTimeout(timer);
   }, [showToc, children]);
@@ -132,7 +170,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         </article>
         {showToc && (
           <div className="hidden lg:block w-64">
-            {tocItems.length > 0 ? (
+            {showTocContent && tocItems.length > 0 ? (
               <TableOfContents
                 className="sticky top-8"
                 articleRef={articleRef}
