@@ -29,13 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Single canonical frontend resource root: Ivy.index.html and Ivy.assets/** -->
-    <EmbeddedResource Include="../frontend/dist/index.html">
-      <Link>index.html</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="../frontend/dist/assets/**/*">
-      <Link>assets/%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </EmbeddedResource>
+    <EmbeddedResource Include="../frontend/dist/**/*" />
     <EmbeddedResource Update="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
