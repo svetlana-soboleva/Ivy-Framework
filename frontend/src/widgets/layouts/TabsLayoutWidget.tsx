@@ -266,7 +266,7 @@ export const TabsLayoutWidget = ({
     tempContainer.style.position = 'absolute';
     tempContainer.style.visibility = 'hidden';
     tempContainer.style.whiteSpace = 'nowrap';
-    tempContainer.style.fontSize = '14px'; // Match the tab font size
+    tempContainer.style.fontSize = '16px'; // Match the tab font size
     tempContainer.style.fontWeight = '500'; // Match the tab font weight
     tempContainer.style.padding = '8px 12px'; // Match the tab padding
     tempContainer.style.border = '1px solid transparent'; // Match the tab border
@@ -309,7 +309,7 @@ export const TabsLayoutWidget = ({
           badgeSpan.textContent = badge;
           badgeSpan.style.marginLeft = '8px';
           badgeSpan.style.padding = '2px 6px';
-          badgeSpan.style.fontSize = '12px';
+          badgeSpan.style.fontSize = '16px';
           badgeSpan.style.borderRadius = '4px';
           badgeSpan.style.backgroundColor = 'var(--accent)';
           tempTab.appendChild(badgeSpan);
