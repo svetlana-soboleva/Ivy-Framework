@@ -154,7 +154,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   'data-testid': dataTestId,
 }) => {
   const [open, setOpen] = useState(false);
-  const date = value ? new Date(value) : undefined;
+  const date = useMemo(() => (value ? new Date(value) : undefined), [value]);
   const showClear = nullable && !disabled && value != null && value !== '';
 
   const handleClear = (e?: React.MouseEvent) => {
