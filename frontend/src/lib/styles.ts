@@ -28,7 +28,11 @@ const _getWantedWidth = (width?: string): React.CSSProperties => {
     case 'rem':
       return { width: `${value}rem` };
     case 'fraction':
-      return { width: `${parseFloat(value) * 100}%` };
+      return {
+        flexBasis: `${parseFloat(value) * 100}%`,
+        flexShrink: 0,
+        flexGrow: 0,
+      };
     case 'full':
       return { width: '100%' };
     case 'fit':
@@ -62,7 +66,9 @@ const _getMinWidth = (width?: string): React.CSSProperties => {
     case 'rem':
       return { minWidth: `${value}rem` };
     case 'fraction':
-      return { minWidth: `${parseFloat(value) * 100}%` };
+      return {
+        minWidth: `${parseFloat(value) * 100}%`,
+      };
     case 'full':
       return { minWidth: '100%' };
     case 'fit':
@@ -92,7 +98,9 @@ const _getMaxWidth = (width?: string): React.CSSProperties => {
     case 'rem':
       return { maxWidth: `${value}rem` };
     case 'fraction':
-      return { maxWidth: `${parseFloat(value) * 100}%` };
+      return {
+        maxWidth: `${parseFloat(value) * 100}%`,
+      };
     case 'full':
       return { maxWidth: '100%' };
     case 'fit':
@@ -383,6 +391,17 @@ export const getAlign = (
   };
 
   styles.flexDirection = orientation === 'Horizontal' ? 'row' : 'column';
+
+  // Ensure horizontal layouts don't wrap and can properly distribute space
+  if (orientation === 'Horizontal') {
+    styles.flexWrap = 'nowrap';
+    styles.width = '100%';
+    styles.minWidth = '100%';
+    // Default to flex-start for horizontal layouts so fractional widths work properly
+    if (!align) {
+      styles.justifyContent = 'flex-start';
+    }
+  }
 
   if (orientation === 'Horizontal') {
     // Horizontal layout alignment
