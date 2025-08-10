@@ -25,18 +25,45 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
   showToc,
 }) => {
   const eventHandler = useEventHandler();
-  const [contentLoaded, setContentLoaded] = useState(false);
   const articleRef = useRef<HTMLElement>(null);
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
 
-  // Set content as loaded after initial render
+  // Extract headings immediately after content is rendered (but before the 1s delay)
   useEffect(() => {
-    // Small delay to ensure any Suspense boundaries have resolved
-    const timer = setTimeout(() => {
-      setContentLoaded(true);
-    }, 1000);
+    if (!showToc || !articleRef.current) return;
 
+    const extractHeadings = () => {
+      const articleElement = articleRef.current;
+      if (!articleElement) return;
+
+      const elements = Array.from(
+        articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
+      );
+
+      const items = elements.map(element => {
+        // Generate ID if doesn't exist
+        if (!element.id) {
+          element.id =
+            element.textContent
+              ?.toLowerCase()
+              .replace(/\s+/g, '-')
+              .replace(/[^\w-]/g, '') ?? '';
+        }
+
+        return {
+          id: element.id,
+          text: element.textContent ?? '',
+          level: parseInt(element.tagName[1]),
+        };
+      });
+
+      setTocItems(items);
+    };
+
+    // Small delay to ensure content is rendered, but much shorter than before
+    const timer = setTimeout(extractHeadings, 50);
     return () => clearTimeout(timer);
-  }, []);
+  }, [showToc, children]);
 
   return (
     <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8 ">
@@ -105,13 +132,14 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         </article>
         {showToc && (
           <div className="hidden lg:block w-64">
-            {contentLoaded ? (
+            {tocItems.length > 0 ? (
               <TableOfContents
                 className="sticky top-8"
                 articleRef={articleRef}
+                tocItems={tocItems}
               />
             ) : (
-              <div className="sticky top-8 w-64 relative">
+              <div className="sticky top-8 w-64">
                 <div className="text-body mb-4">Table of Contents</div>
                 <ScrollArea>
                   <div className="space-y-2">
@@ -121,8 +149,6 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
                     <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
                     <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
                     <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
                   </div>
                 </ScrollArea>
               </div>
@@ -139,43 +165,26 @@ type TocItem = {
   text: string;
   level: number;
 };
-
 const TableOfContents = ({
   className,
   articleRef,
+  tocItems,
 }: {
   className?: string;
   articleRef: React.RefObject<HTMLElement | null>;
+  tocItems: TocItem[];
 }) => {
-  const [headings, setHeadings] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
-    if (!articleRef.current) return;
+    if (!articleRef.current || tocItems.length === 0) return;
 
     const articleElement = articleRef.current;
+
+    // Find all heading elements in the DOM
     const elements = Array.from(
       articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
     );
-
-    const items = elements.map(element => {
-      // Generate ID if doesn't exist
-      if (!element.id) {
-        element.id =
-          element.textContent
-            ?.toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]/g, '') ?? '';
-      }
-
-      return {
-        id: element.id,
-        text: element.textContent ?? '',
-        level: parseInt(element.tagName[1]),
-      };
-    });
-
-    setHeadings(items);
 
     const observer = new IntersectionObserver(
       entries => {
@@ -191,14 +200,14 @@ const TableOfContents = ({
     elements.forEach(element => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [articleRef]);
+  }, [articleRef, tocItems]);
 
   return (
     <div className={cn('w-64 relative', className)}>
       <div className="text-body mb-4">Table of Contents</div>
       <ScrollArea>
         <nav className="relative">
-          {headings.map(heading => (
+          {tocItems.map(heading => (
             <a
               key={heading.id}
               href={`#${heading.id}`}
