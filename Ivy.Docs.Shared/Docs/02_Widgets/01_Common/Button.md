@@ -28,8 +28,7 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 
 ```csharp demo-tabs ivy-bg
 Layout.Horizontal()
-    | new Button("Primary (Default)")
-    | new Button("Primary (Explicit)").Primary()
+    | new Button("Primary")
     | new Button("Destructive").Destructive()
     | new Button("Secondary").Secondary()
     | new Button("Outline").Outline()
