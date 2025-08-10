@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/Icon';
 import { cn, getIvyHost, camelCase } from '@/lib/utils';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import withTooltip from '@/hoc/withTooltip';
 import { Loader2 } from 'lucide-react';
 import {
@@ -100,7 +100,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       return;
     }
     eventHandler('OnClick', id, []);
-  }, [id, disabled, url]);
+  }, [id, disabled, url, eventHandler]);
 
   const hasChildren = !!children;
 

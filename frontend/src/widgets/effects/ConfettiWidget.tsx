@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 
 interface ConfettiWidgetProps {
@@ -16,15 +16,18 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
     path: 'M47 0H0V47.0222C25.9234 47.0222 47 25.9801 47 0Z',
   });
 
-  const triggerConfetti = (x: number, y: number) => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { x, y },
-      shapes: [quadrant],
-      colors: ['#00CC92', '#0D4A2F'],
-    });
-  };
+  const triggerConfetti = useCallback(
+    (x: number, y: number) => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x, y },
+        shapes: [quadrant],
+        colors: ['#00CC92', '#0D4A2F'],
+      });
+    },
+    [quadrant]
+  );
 
   const handleClick = (e: React.MouseEvent) => {
     if (trigger !== 'Click') return;
@@ -49,7 +52,7 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
       const y = (rect.top + rect.height / 2) / window.innerHeight;
       triggerConfetti(x, y);
     }
-  }, [trigger]);
+  }, [trigger, triggerConfetti]);
 
   return (
     <div ref={elementRef} onClick={handleClick} onMouseEnter={handleMouseEnter}>

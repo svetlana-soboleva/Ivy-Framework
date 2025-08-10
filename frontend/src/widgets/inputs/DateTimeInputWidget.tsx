@@ -11,7 +11,7 @@ import {
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Clock, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 
@@ -154,7 +154,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
   'data-testid': dataTestId,
 }) => {
   const [open, setOpen] = useState(false);
-  const date = value ? new Date(value) : undefined;
+  const date = useMemo(() => (value ? new Date(value) : undefined), [value]);
   const showClear = nullable && !disabled && value != null && value !== '';
 
   const handleClear = (e?: React.MouseEvent) => {

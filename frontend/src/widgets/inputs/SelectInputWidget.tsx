@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  useEventHandler,
-  EventHandler,
-} from '@/components/EventHandlerContext';
+import { useEventHandler, EventHandler } from '@/components/event-handler';
 import {
   Select,
   SelectContent,
@@ -13,7 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { InvalidIcon } from '@/components/InvalidIcon';
@@ -26,12 +22,13 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import { X } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
 import {
   MultipleSelector,
   Option as MultiSelectOption,
 } from '@/components/ui/multiselect';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle';
 
 export type NullableSelectValue =
   | string
@@ -457,15 +454,19 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
   );
-  let selectedValues: (string | number)[] = [];
-  if (Array.isArray(value)) {
-    selectedValues = value;
-  } else if (value != null && value.toString().trim() !== '') {
-    selectedValues = value
-      .toString()
-      .split(separator)
-      .map(v => v.trim());
-  }
+
+  const selectedValues = useMemo(() => {
+    let values: (string | number)[] = [];
+    if (Array.isArray(value)) {
+      values = value;
+    } else if (value != null && value.toString().trim() !== '') {
+      values = value
+        .toString()
+        .split(separator)
+        .map(v => v.trim());
+    }
+    return values;
+  }, [value, separator]);
   const handleCheckboxChange = useCallback(
     (optionValue: string | number, checked: boolean) => {
       logger.debug('Select input checkbox change', {

@@ -84,7 +84,9 @@ export const widgetMap = {
   'Ivy.AsyncSelectInput': Inputs.AsyncSelectInputWidget,
   'Ivy.DateRangeInput': Inputs.DateRangeInputWidget,
   'Ivy.FileInput': Inputs.FileInputWidget,
-  'Ivy.CodeInput': React.lazy(() => import('@/widgets/inputs/CodeInputWidget')),
+  'Ivy.CodeInput': React.lazy(
+    () => import('@/widgets/inputs/code/CodeInputWidget')
+  ),
 
   // Forms
   'Ivy.Form': Forms.FormWidget,

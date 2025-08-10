@@ -25,7 +25,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, X } from 'lucide-react';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { Badge } from '@/components/ui/badge';
 import { RotateCw } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';

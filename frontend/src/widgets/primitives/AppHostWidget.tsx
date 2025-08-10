@@ -1,8 +1,8 @@
 import ErrorBoundary from '@/components/ErrorBoundary';
-import { EventHandlerProvider } from '@/components/EventHandlerContext';
 import React, { useLayoutEffect, useRef } from 'react';
 import { loadingState, renderWidgetTree } from '../WidgetRenderer';
 import { useBackend } from '@/hooks/use-backend';
+import { EventHandlerProvider } from '@/components/event-handler';
 
 interface AppHostWidgetProps {
   id: string;

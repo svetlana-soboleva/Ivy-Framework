@@ -6,9 +6,9 @@ import { showError } from '@/hooks/use-error-sheet';
 import { getIvyHost, getMachineId } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
-import { setThemeGlobal } from '@/components/ThemeProvider';
 import { cloneDeep } from 'lodash';
 import { ToastAction } from '@/components/ui/toast';
+import { setThemeGlobal } from '@/components/theme-provider';
 
 type UpdateMessage = Array<{
   viewId: string;
@@ -121,7 +121,7 @@ export const useBackend = (
       }
       logger.debug(`[${connectionId}]`, xml);
     }
-  }, [widgetTree]);
+  }, [widgetTree, connectionId]);
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     setWidgetTree(message.widgets);
@@ -308,6 +308,8 @@ export const useBackend = (
     handleSetJwt,
     handleSetTheme,
     handleError,
+    appId,
+    parentId,
   ]);
 
   const eventHandler: WidgetEventHandlerType = useCallback(
@@ -324,7 +326,7 @@ export const useBackend = (
         logger.error('SignalR Error when sending event:', err);
       });
     },
-    [connection]
+    [connection, connectionId]
   );
 
   return {

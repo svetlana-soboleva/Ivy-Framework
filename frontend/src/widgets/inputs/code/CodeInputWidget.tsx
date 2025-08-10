@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { python } from '@codemirror/lang-python';
@@ -6,54 +12,14 @@ import { sql } from '@codemirror/lang-sql';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { json } from '@codemirror/lang-json';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import './CodeInputWidget.css';
-import { StreamLanguage } from '@codemirror/language';
 import { cpp } from '@codemirror/lang-cpp';
-
-const dbmlMode = {
-  startState: () => ({}),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any,
-  token: (stream: any) => {
-    if (stream.match(/\/\//)) {
-      stream.skipToEnd();
-      return 'comment';
-    }
-
-    if (stream.match(/"(.*?)"/) || stream.match(/'(.*?)'/)) {
-      return 'string';
-    }
-
-    if (stream.match(/\b(Table|Ref|Enum|Project|TableGroup|Note)\b/i)) {
-      return 'keyword';
-    }
-
-    if (stream.match(/\b(int|uuid|varchar|boolean|text|datetime)\b/i)) {
-      return 'typeName';
-    }
-
-    if (stream.match(/\b(primary key|not null|unique|increment)\b/i)) {
-      return 'attribute';
-    }
-
-    if (stream.match(/[{}[\](),;]/)) {
-      return 'bracket';
-    }
-
-    if (stream.match(/[a-zA-Z_][\w-]*/)) {
-      return 'variableName';
-    }
-
-    stream.next();
-    return null;
-  },
-};
-
-export const dbml = () => StreamLanguage.define(dbmlMode);
+import { dbml } from './dbml-language';
 
 interface CodeInputWidgetProps {
   id: string;
@@ -96,10 +62,14 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
   const eventHandler = useEventHandler();
   const [localValue, setLocalValue] = useState(value || '');
   const [isFocused, setIsFocused] = useState(false);
+  const localValueRef = useRef(localValue);
+
+  // Keep ref in sync with state
+  localValueRef.current = localValue;
 
   // Update local value when server value changes and control is not focused
   useEffect(() => {
-    if (!isFocused && value !== localValue) {
+    if (!isFocused && value !== localValueRef.current) {
       setLocalValue(value || '');
     }
   }, [value, isFocused]);
