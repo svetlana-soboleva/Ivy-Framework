@@ -10,10 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@/components/ui/toggle/toggle-group';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { InvalidIcon } from '@/components/InvalidIcon';
@@ -32,6 +28,7 @@ import {
   MultipleSelector,
   Option as MultiSelectOption,
 } from '@/components/ui/multiselect';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle';
 
 export type NullableSelectValue =
   | string
