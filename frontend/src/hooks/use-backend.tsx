@@ -6,9 +6,9 @@ import { showError } from '@/hooks/use-error-sheet';
 import { getIvyHost, getMachineId } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { applyPatch, Operation } from 'fast-json-patch';
-import { setThemeGlobal } from '@/components/ThemeProvider';
 import { cloneDeep } from 'lodash';
 import { ToastAction } from '@/components/ui/toast';
+import { setThemeGlobal } from '@/components/theme-provider';
 
 type UpdateMessage = Array<{
   viewId: string;
