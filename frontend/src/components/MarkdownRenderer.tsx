@@ -127,7 +127,7 @@ const CodeBlock = memo(
               <CopyToClipboardButton textToCopy={cleanContent} />
             </div>
             <ScrollArea className="w-full ivy-demo-surface">
-              <pre className="p-4 bg-muted rounded-md font-mono text-body">
+              <pre className="p-4 bg-muted rounded-md font-mono text-sm">
                 {lines.map((line, index) => (
                   <div key={index} className="flex">
                     <span className="text-muted-foreground select-none pointer-events-none mr-2">
@@ -147,7 +147,9 @@ const CodeBlock = memo(
         <Suspense
           fallback={
             <ScrollArea className="w-full border border-border rounded-md">
-              <pre className="p-4 bg-muted rounded-md">{content}</pre>
+              <pre className="p-4 bg-muted rounded-md font-mono text-sm">
+                {content}
+              </pre>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
           }

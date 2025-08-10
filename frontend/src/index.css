@@ -1,5 +1,71 @@
 @import 'tailwindcss';
 
+/* Geist Sans Font Family */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono Font Family */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-scheme: light;
 }
@@ -152,16 +218,10 @@
     --destructive-light: #efc5c9;
     --destructive-dark: #5d3235;
 
-    /* Typography System - Geist Variable Font Family */
-    --font-sans:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --font-serif:
-      'Geist Variable', 'Geist Sans', ui-serif, Georgia, Cambria,
-      'Times New Roman', Times, serif;
-    --font-mono:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    /* Typography System - Geist Only */
+    --font-sans: 'Geist';
+    --font-serif: 'Geist';
+    --font-mono: 'Geist Mono';
 
     /* Typography Sizes from the images */
     --font-size-60: 60px;
@@ -255,15 +315,9 @@
     /* Keep docs palette consistent in dark mode */
     --docs-black: #061109;
     --docs-surface: #061d13;
-    --font-sans:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --font-serif:
-      'Geist Variable', 'Geist Sans', ui-serif, Georgia, Cambria,
-      'Times New Roman', Times, serif;
-    --font-mono:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-sans: 'Geist';
+    --font-serif: 'Geist';
+    --font-mono: 'Geist Mono';
     --radius: 0.5rem;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -369,7 +423,7 @@
   }
   body {
     letter-spacing: var(--tracking-normal);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
   }
 
   /* Ensure sidebar icons and logo use primary brand color */
@@ -382,98 +436,87 @@
   }
 }
 
-/* Typography System Classes */
+/* shadcn/ui Typography System */
 @layer utilities {
-  /* Display Typography - Large Headlines (Medium weight for headers) */
-  .text-display-60 {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 60px;
-    line-height: 60px;
-    letter-spacing: -5%;
+  /* shadcn h1 - Large headings */
+  .typography-h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight;
   }
 
-  .text-display-40 {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 41px;
-    letter-spacing: -4%;
+  /* shadcn h2 - Section headings */
+  .typography-h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
   }
 
-  .text-display-30 {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 32px;
-    letter-spacing: -3%;
+  /* shadcn h3 - Subsection headings */
+  .typography-h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
 
-  .text-display-25 {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 25px;
-    line-height: 27px;
-    letter-spacing: -2%;
+  /* shadcn h4 - Minor headings */
+  .typography-h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
 
-  /* Lead Typography - Prominent Text (Medium weight for lead text) */
-  .text-lead {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    letter-spacing: -2%;
+  /* shadcn p - Body text */
+  .typography-p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
   }
 
-  .text-semi-lead {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 24px;
-    letter-spacing: 0%;
+  /* shadcn blockquote */
+  .typography-blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
   }
 
-  /* Body Typography - Main Content (Regular weight for body text) */
-  .text-large-body {
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 1%;
+  /* shadcn table */
+  .typography-table {
+    @apply w-full;
   }
 
-  .text-body {
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 2%;
+  .typography-table thead {
+    @apply [&_tr]:border-b;
   }
 
-  /* Label Typography - UI Elements (Regular weight for labels) */
-  .text-descriptive {
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 4%;
+  .typography-table tbody {
+    @apply [&_tr:last-child]:border-0;
   }
 
-  .text-large-label {
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 8%;
+  .typography-table th {
+    @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
   }
 
-  .text-small-label {
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 14%;
+  .typography-table td {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  /* shadcn list */
+  .typography-list {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  /* shadcn inline code */
+  .typography-inline-code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  /* shadcn lead */
+  .typography-lead {
+    @apply text-xl text-muted-foreground;
+  }
+
+  /* shadcn large */
+  .typography-large {
+    @apply text-lg font-semibold;
+  }
+
+  /* shadcn small */
+  .typography-small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* shadcn muted */
+  .typography-muted {
+    @apply text-sm text-muted-foreground;
   }
 
   /* Badge-specific typography classes that don't interfere with colors */
