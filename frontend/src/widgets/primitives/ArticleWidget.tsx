@@ -47,6 +47,8 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
     setTocItems([]);
     setIsLoading(true);
 
+    const startTime = Date.now();
+    const minLoadingTime = 500; // 0.5 seconds minimum loading time for smooth transition
     let retryCount = 0;
     const maxRetries = 15; // Try for up to 1.5 seconds (15 * 100ms)
 
@@ -58,7 +60,12 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
           retryCount++;
           timeoutRef.current = setTimeout(extractHeadings, 100);
         } else {
-          setIsLoading(false); // Stop loading if max retries reached
+          // Stop loading if max retries reached, respecting minimum loading time
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+          timeoutRef.current = setTimeout(() => {
+            setIsLoading(false);
+          }, remainingTime);
         }
         return;
       }
@@ -92,7 +99,15 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
       });
 
       setTocItems(items);
-      setIsLoading(false);
+
+      // Calculate remaining time to show loading for minimum duration
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+      // Show TOC content after minimum loading time has passed
+      timeoutRef.current = setTimeout(() => {
+        setIsLoading(false);
+      }, remainingTime);
     };
 
     // Small delay to ensure content is rendered
