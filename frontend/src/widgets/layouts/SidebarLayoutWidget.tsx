@@ -17,7 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { useFocusable } from '@/hooks/use-focus-management';
-import { sidebarMenuRef } from './sidebar-refs';
+import { sidebarMenuRef } from './sidebar';
 
 interface SidebarLayoutWidgetProps {
   slots?: {

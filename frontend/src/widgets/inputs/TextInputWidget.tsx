@@ -14,7 +14,7 @@ import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { useFocusable } from '@/hooks/use-focus-management';
 import { useEventHandler } from '@/components/EventHandlerContext';
-import { sidebarMenuRef } from '../layouts/SidebarLayoutWidget';
+import { sidebarMenuRef } from '../layouts/sidebar';
 
 interface TextInputWidgetProps {
   id: string;
