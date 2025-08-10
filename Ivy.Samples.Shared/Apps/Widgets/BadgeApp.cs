@@ -38,8 +38,8 @@ public class BadgeApp : SampleBase
                   // Small
                   | Variants.Select(variant => new Badge("Small", variant: variant).Small()).ToArray()
 
-                  // Default
-                  | Variants.Select(variant => new Badge("Default", variant: variant)).ToArray()
+                  // Medium
+                  | Variants.Select(variant => new Badge("Medium", variant: variant)).ToArray()
 
                   // Large
                   | Variants.Select(variant => new Badge("Large", variant: variant).Large()).ToArray()

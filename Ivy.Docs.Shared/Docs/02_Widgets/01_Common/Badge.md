@@ -48,16 +48,16 @@ Badges support different sizes to match your design requirements.
 ```csharp demo-tabs ivy-bg
 Layout.Grid().Columns(4)
     | new Badge("Small").Small()
-    | new Badge("Primary")
+    | new Badge("Medium")
     | new Badge("Large").Large()
     | new Badge("Small").Secondary().Small()
-    | new Badge("Secondary").Secondary()
+    | new Badge("Medium").Secondary()
     | new Badge("Large").Secondary().Large()
     | new Badge("Small").Destructive().Small()
-    | new Badge("Destructive").Destructive()
+    | new Badge("Medium").Destructive()
     | new Badge("Large").Destructive().Large()
     | new Badge("Small").Outline().Small()
-    | new Badge("Outline").Outline()
+    | new Badge("Medium").Outline()
     | new Badge("Large").Outline().Large()
 ```
 

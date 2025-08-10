@@ -63,8 +63,8 @@ public class ButtonApp() : SampleBase
                   // Small
                   | Variants.Select(variant => new Button("Small", eventHandler, variant: variant).Small()).ToArray()
 
-                  // Default
-                  | Variants.Select(variant => new Button("Default", eventHandler, variant: variant)).ToArray()
+                  // Medium
+                  | Variants.Select(variant => new Button("Medium", eventHandler, variant: variant)).ToArray()
 
                   // Large
                   | Variants.Select(variant => new Button("Large", eventHandler, variant: variant).Large()).ToArray()
