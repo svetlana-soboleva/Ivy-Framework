@@ -100,7 +100,7 @@ export const ButtonWidget: React.FC<ButtonWidgetProps> = ({
       return;
     }
     eventHandler('OnClick', id, []);
-  }, [id, disabled, url]);
+  }, [id, disabled, url, eventHandler]);
 
   const hasChildren = !!children;
 
