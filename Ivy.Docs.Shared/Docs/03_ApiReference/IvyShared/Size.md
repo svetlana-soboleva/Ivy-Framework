@@ -68,14 +68,14 @@ Fractional sizing creates responsive layouts that adapt to available space. The 
 
 ```csharp demo-tabs ivy-bg
 Layout.Horizontal()
-    | new Box("25%")
-        .Width(Size.Fraction(0.25f))
+    | new Box("20%")
+        .Width(Size.Fraction(0.20f))
+        .Height(Size.Fraction(0.25f))
+    | new Box("30%")
+        .Width(Size.Fraction(0.30f))
         .Height(Size.Fraction(0.25f))
     | new Box("50%")
-        .Width(Size.Fraction(0.5f))
-        .Height(Size.Fraction(0.25f))
-    | new Box("75%")
-        .Width(Size.Fraction(0.75f))
+        .Width(Size.Fraction(0.50f))
         .Height(Size.Fraction(0.25f))
 ```
 
@@ -161,10 +161,10 @@ Layout.Horizontal()
 This creates a responsive 3-column grid where each column takes exactly one-third of the available width, automatically adjusting to different screen sizes.
 
 ```csharp demo-tabs ivy-bg
-Layout.Grid().Columns(3)
+Layout.Horizontal()
     | new Box("1/3")
         .Width(Size.Fraction(1/3f))
-        .Height(Size.Units(30))
+        .Height(Size.Units(30)) 
     | new Box("1/3")
         .Width(Size.Fraction(1/3f))
         .Height(Size.Units(30))
