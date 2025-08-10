@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Assets/**/*" />
-    <EmbeddedResource Include="../frontend/dist/**/*" />
   </ItemGroup>
   
   <ItemGroup>
