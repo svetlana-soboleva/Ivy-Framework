@@ -349,12 +349,14 @@ public static class WebApplicationExtensions
     public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
     {
         var assembly = Assembly.GetExecutingAssembly()!;
-        var baseName = assembly.GetName().Name!;
-        var primaryNamespace = baseName;
-
+        var embeddedProvider = new EmbeddedFileProvider(
+            assembly,
+            $"{assembly.GetName().Name}"
+        );
         app.MapGet("/", async context =>
         {
-            using var stream = TryOpenIndexHtml(assembly, primaryNamespace);
+            var resourceName = $"{assembly.GetName().Name}.index.html";
+            await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
             {
                 using var reader = new StreamReader(stream);
@@ -394,24 +396,12 @@ public static class WebApplicationExtensions
                 context.Response.ContentType = "text/html";
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);
-                return;
             }
-
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await context.Response.WriteAsync("index.html not found in embedded resources.");
         });
 
-        var compositeProvider = new CompositeFileProvider(
-            new EmbeddedFileProvider(assembly, primaryNamespace)
-        );
-        app.UseStaticFiles(GetStaticFileOptions("", compositeProvider, assembly));
+        app.UseStaticFiles(GetStaticFileOptions("", embeddedProvider, assembly));
 
         return app;
-    }
-
-    private static Stream? TryOpenIndexHtml(Assembly assembly, string resourceNamespace)
-    {
-        return assembly.GetManifestResourceStream($"{resourceNamespace}.index.html");
     }
 
     public static WebApplication UseAssets(this WebApplication app, string folder)
