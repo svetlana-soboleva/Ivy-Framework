@@ -4,12 +4,12 @@ import { useBackend } from '@/hooks/use-backend';
 import { Toaster } from '@/components/ui/toaster';
 import { ErrorSheet } from '@/components/ErrorSheet';
 import ErrorBoundary from './ErrorBoundary';
-import { EventHandlerProvider } from './EventHandlerContext';
 import MadeWithIvy from './MadeWithIvy';
-import { ThemeProvider } from './ThemeProvider';
 import { getAppArgs, getAppId, getParentId } from '@/lib/utils';
 import { hasLicensedFeature } from '@/lib/license';
 import { ConnectionModal } from './ConnectionModal';
+import { ThemeProvider } from './theme-provider';
+import { EventHandlerProvider } from './event-handler';
 
 export function App() {
   const appId = getAppId();
