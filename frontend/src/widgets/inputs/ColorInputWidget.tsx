@@ -4,6 +4,7 @@ import { inputStyles } from '@/lib/styles';
 import { Input } from '@/components/ui/input';
 import { X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
 interface ColorInputWidgetProps {
   id: string;
@@ -107,6 +108,11 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
     return undefined;
   };
 
+  /**
+   * Converts various color formats to hex.
+   * Supported formats: hex (#rrggbb), rgb(), named colors
+   * Unsupported formats: oklch() - returns fallback color (#000000)
+   */
   const convertToHex = (colorValue: string): string => {
     if (!colorValue) return '';
     if (colorValue.startsWith('#')) {
@@ -119,9 +125,11 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       const b = parseInt(rgbMatch[3]);
       return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
-    // OKLCH format is not supported
-    if (colorValue.includes('oklch(')) {
-      return colorValue; // Return original value unchanged
+    // More comprehensive OKLCH detection
+    const isOklch = /^oklch\s*\(/i.test(colorValue.trim());
+    if (isOklch) {
+      logger.warn(`OKLCH color format not supported: ${colorValue}`);
+      return '#000000'; // Default fallback
     }
     // Use theme color if available
     const lowerValue = colorValue.toLowerCase();
