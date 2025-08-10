@@ -436,98 +436,87 @@
   }
 }
 
-/* Typography System Classes */
+/* shadcn/ui Typography System */
 @layer utilities {
-  /* Display Typography - Large Headlines (Medium weight for headers) */
-  .text-display-60 {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 60px;
-    line-height: 60px;
-    letter-spacing: -5%;
+  /* shadcn h1 - Large headings */
+  .typography-h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight;
   }
 
-  .text-display-40 {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 41px;
-    letter-spacing: -4%;
+  /* shadcn h2 - Section headings */
+  .typography-h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
   }
 
-  .text-display-30 {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 32px;
-    letter-spacing: -3%;
+  /* shadcn h3 - Subsection headings */
+  .typography-h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
 
-  .text-display-25 {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 25px;
-    line-height: 27px;
-    letter-spacing: -2%;
+  /* shadcn h4 - Minor headings */
+  .typography-h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
 
-  /* Lead Typography - Prominent Text (Medium weight for lead text) */
-  .text-lead {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    letter-spacing: -2%;
+  /* shadcn p - Body text */
+  .typography-p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
   }
 
-  .text-semi-lead {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 24px;
-    letter-spacing: 0%;
+  /* shadcn blockquote */
+  .typography-blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
   }
 
-  /* Body Typography - Main Content (Regular weight for body text) */
-  .text-large-body {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 1%;
+  /* shadcn table */
+  .typography-table {
+    @apply w-full;
   }
 
-  .text-body {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 2%;
+  .typography-table thead {
+    @apply [&_tr]:border-b;
   }
 
-  /* Label Typography - UI Elements (Regular weight for labels) */
-  .text-descriptive {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 4%;
+  .typography-table tbody {
+    @apply [&_tr:last-child]:border-0;
   }
 
-  .text-large-label {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 8%;
+  .typography-table th {
+    @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
   }
 
-  .text-small-label {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 18px;
-    letter-spacing: 14%;
+  .typography-table td {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  /* shadcn list */
+  .typography-list {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  /* shadcn inline code */
+  .typography-inline-code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  /* shadcn lead */
+  .typography-lead {
+    @apply text-xl text-muted-foreground;
+  }
+
+  /* shadcn large */
+  .typography-large {
+    @apply text-lg font-semibold;
+  }
+
+  /* shadcn small */
+  .typography-small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* shadcn muted */
+  .typography-muted {
+    @apply text-sm text-muted-foreground;
   }
 
   /* Badge-specific typography classes that don't interfere with colors */
