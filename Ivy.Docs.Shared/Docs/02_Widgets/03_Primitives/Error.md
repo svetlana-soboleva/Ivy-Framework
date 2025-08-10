@@ -34,7 +34,7 @@ public class DataLoadingView : ViewBase
         
         // Initial load
         UseEffect(() => {
-            LoadData();
+            _ = LoadData();
         }, []);
         
         return Layout.Vertical()

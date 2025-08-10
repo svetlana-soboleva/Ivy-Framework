@@ -78,11 +78,13 @@ public class FeedbackHandling: ViewBase
         var exclamation = UseState("");
         exclamation.Set(feedbackState.Value switch
         {
+            0 => "No rating yet",
             1 => "Seriously?",
             2 => "Oh! is it that bad?",
             3 => "Ah! you almost liked it!",
             4 => "Cool! Tell me more!",
-            5 => "WOW! Would you recommend it?"
+            5 => "WOW! Would you recommend it?",
+            _ => "Invalid rating"
         });
         return Layout.Vertical() 
                 | new FeedbackInput<int>(feedbackState)

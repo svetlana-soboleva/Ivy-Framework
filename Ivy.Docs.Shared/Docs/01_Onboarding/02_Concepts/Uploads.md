@@ -19,7 +19,7 @@ Here's a simple example of handling file uploads:
 
 ```csharp
 var uploadUrl = this.UseUpload(
-    async fileBytes => {
+    fileBytes => {
         // Process uploaded file bytes
         // For example: save to database, process image, etc.
         Console.WriteLine($"Received {fileBytes.Length} bytes");
@@ -41,7 +41,7 @@ public class UploadView : ViewBase
         var isUploading = UseState(() => false);
         var files = UseState<FileInput?>(() => null);
         var uploadUrl = this.UseUpload(
-            async fileBytes => {
+            fileBytes => {
                 isUploading.Set(true);
                 try {
                     // Process uploaded file bytes
@@ -77,7 +77,7 @@ public class UploadWithProgressView : ViewBase
         var isUploading = UseState(() => false);
         var files = UseState<FileInput?>(() => null);
         var uploadUrl = this.UseUpload(
-            async fileBytes => {
+            fileBytes => {
                 isUploading.Set(true);
                 try {
                     // Process uploaded file bytes
@@ -113,7 +113,7 @@ public class ValidatedUploadView : ViewBase
         var error = UseState<string?>(() => null);
         var files = UseState<FileInput?>(() => null);
         var uploadUrl = this.UseUpload(
-            async fileBytes => {
+            fileBytes => {
                 if (fileBytes.Length > 5 * 1024 * 1024) // 5MB limit
                 {
                     error.Set("File size must be less than 5MB");
@@ -159,7 +159,7 @@ public class ImageUploadView : ViewBase
         var isUploading = UseState(() => false);
         var files = UseState<FileInput?>(() => null);
         var uploadUrl = this.UseUpload(
-            async fileBytes => {
+            fileBytes => {
                 // Create preview URL from uploaded bytes
                 preview.Set($"data:image/jpeg;base64,{Convert.ToBase64String(fileBytes)}");
                 isUploading.Set(true);
@@ -195,7 +195,7 @@ public class MultiFileUploadView : ViewBase
         var isUploading = UseState(() => false);
         var newFiles = UseState<IEnumerable<FileInput>?>(() => null);
         var uploadUrl = this.UseUpload(
-            async fileBytes => {
+            fileBytes => {
                 isUploading.Set(true);
                 try {
                     // Process uploaded file bytes
