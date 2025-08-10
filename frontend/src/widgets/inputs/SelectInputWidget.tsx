@@ -26,7 +26,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import { X } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
 import {
   MultipleSelector,
@@ -457,15 +457,19 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
   );
-  let selectedValues: (string | number)[] = [];
-  if (Array.isArray(value)) {
-    selectedValues = value;
-  } else if (value != null && value.toString().trim() !== '') {
-    selectedValues = value
-      .toString()
-      .split(separator)
-      .map(v => v.trim());
-  }
+
+  const selectedValues = useMemo(() => {
+    let values: (string | number)[] = [];
+    if (Array.isArray(value)) {
+      values = value;
+    } else if (value != null && value.toString().trim() !== '') {
+      values = value
+        .toString()
+        .split(separator)
+        .map(v => v.trim());
+    }
+    return values;
+  }, [value, separator]);
   const handleCheckboxChange = useCallback(
     (optionValue: string | number, checked: boolean) => {
       logger.debug('Select input checkbox change', {
