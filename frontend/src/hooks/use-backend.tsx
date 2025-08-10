@@ -121,7 +121,7 @@ export const useBackend = (
       }
       logger.debug(`[${connectionId}]`, xml);
     }
-  }, [widgetTree]);
+  }, [widgetTree, connectionId]);
 
   const handleRefreshMessage = useCallback((message: RefreshMessage) => {
     setWidgetTree(message.widgets);
@@ -308,6 +308,8 @@ export const useBackend = (
     handleSetJwt,
     handleSetTheme,
     handleError,
+    appId,
+    parentId,
   ]);
 
   const eventHandler: WidgetEventHandlerType = useCallback(
@@ -324,7 +326,7 @@ export const useBackend = (
         logger.error('SignalR Error when sending event:', err);
       });
     },
-    [connection]
+    [connection, connectionId]
   );
 
   return {
