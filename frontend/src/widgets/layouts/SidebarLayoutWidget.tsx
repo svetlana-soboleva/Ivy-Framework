@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 
 import Icon from '@/components/Icon';
-import { useEventHandler } from '@/components/EventHandlerContext';
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,6 +17,7 @@ import { ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { useFocusable } from '@/hooks/use-focus-management';
 import { sidebarMenuRef } from './sidebar';
+import { useEventHandler } from '@/components/event-handler';
 
 interface SidebarLayoutWidgetProps {
   slots?: {
