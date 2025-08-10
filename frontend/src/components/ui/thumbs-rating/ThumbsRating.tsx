@@ -1,12 +1,7 @@
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { InvalidIcon } from '@/components/InvalidIcon';
-
-export enum ThumbsEnum {
-  Down = 1,
-  Up = 2,
-  None = 0,
-}
+import { ThumbsEnum } from './types';
 
 interface ThumbsRatingProps {
   value?: number;
@@ -106,4 +101,4 @@ const ThumbsRating = ({
   );
 };
 
-export default ThumbsRating;
+export { ThumbsRating };
