@@ -27,25 +27,28 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
   const eventHandler = useEventHandler();
   const articleRef = useRef<HTMLElement>(null);
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
-  const [showTocContent, setShowTocContent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Extract headings and manage loading state timing
+  // Extract headings and manage loading state
   useEffect(() => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     if (!showToc) {
       setTocItems([]);
-      setShowTocContent(false);
+      setIsLoading(false);
       return;
     }
 
     // Reset states when starting fresh
     setTocItems([]);
-    setShowTocContent(false);
-
-    const startTime = Date.now();
-    const minLoadingTime = 500; // 0.5 seconds minimum loading time
+    setIsLoading(true);
 
     let retryCount = 0;
-    const maxRetries = 50; // Try for up to 5 seconds (50 * 100ms)
+    const maxRetries = 15; // Try for up to 1.5 seconds (15 * 100ms)
 
     const extractHeadings = () => {
       const articleElement = articleRef.current;
@@ -53,7 +56,9 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         // If article ref is not available yet, try again after a short delay
         if (retryCount < maxRetries) {
           retryCount++;
-          setTimeout(extractHeadings, 100);
+          timeoutRef.current = setTimeout(extractHeadings, 100);
+        } else {
+          setIsLoading(false); // Stop loading if max retries reached
         }
         return;
       }
@@ -65,7 +70,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
       // If no headings found but content might still be loading, retry
       if (elements.length === 0 && retryCount < maxRetries) {
         retryCount++;
-        setTimeout(extractHeadings, 100);
+        timeoutRef.current = setTimeout(extractHeadings, 100);
         return;
       }
 
@@ -87,20 +92,18 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
       });
 
       setTocItems(items);
-
-      // Calculate remaining time to show loading for minimum duration
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
-
-      // Show TOC content after minimum loading time has passed
-      setTimeout(() => {
-        setShowTocContent(true);
-      }, remainingTime);
+      setIsLoading(false);
     };
 
     // Small delay to ensure content is rendered
-    const timer = setTimeout(extractHeadings, 50);
-    return () => clearTimeout(timer);
+    timeoutRef.current = setTimeout(extractHeadings, 50);
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [showToc, children]);
 
   return (
@@ -170,13 +173,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         </article>
         {showToc && (
           <div className="hidden lg:block w-64">
-            {showTocContent && tocItems.length > 0 ? (
-              <TableOfContents
-                className="sticky top-8"
-                articleRef={articleRef}
-                tocItems={tocItems}
-              />
-            ) : (
+            {isLoading ? (
               <div className="sticky top-8 w-64">
                 <div className="text-body mb-4">Table of Contents</div>
                 <ScrollArea>
@@ -189,6 +186,19 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
                     <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
                   </div>
                 </ScrollArea>
+              </div>
+            ) : tocItems.length > 0 ? (
+              <TableOfContents
+                className="sticky top-8"
+                articleRef={articleRef}
+                tocItems={tocItems}
+              />
+            ) : (
+              <div className="sticky top-8 w-64">
+                <div className="text-body mb-4">Table of Contents</div>
+                <div className="text-sm text-muted-foreground">
+                  No headings found
+                </div>
               </div>
             )}
           </div>
