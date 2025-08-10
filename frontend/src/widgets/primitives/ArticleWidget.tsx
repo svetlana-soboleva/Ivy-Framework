@@ -25,18 +25,101 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
   showToc,
 }) => {
   const eventHandler = useEventHandler();
-  const [contentLoaded, setContentLoaded] = useState(false);
   const articleRef = useRef<HTMLElement>(null);
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Set content as loaded after initial render
+  // Extract headings and manage loading state
   useEffect(() => {
-    // Small delay to ensure any Suspense boundaries have resolved
-    const timer = setTimeout(() => {
-      setContentLoaded(true);
-    }, 1000);
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
 
-    return () => clearTimeout(timer);
-  }, []);
+    if (!showToc) {
+      setTocItems([]);
+      setIsLoading(false);
+      return;
+    }
+
+    // Reset states when starting fresh
+    setTocItems([]);
+    setIsLoading(true);
+
+    const startTime = Date.now();
+    const minLoadingTime = 500; // 0.5 seconds minimum loading time for smooth transition
+    let retryCount = 0;
+    const maxRetries = 15; // Try for up to 1.5 seconds (15 * 100ms)
+
+    const extractHeadings = () => {
+      const articleElement = articleRef.current;
+      if (!articleElement) {
+        // If article ref is not available yet, try again after a short delay
+        if (retryCount < maxRetries) {
+          retryCount++;
+          timeoutRef.current = setTimeout(extractHeadings, 100);
+        } else {
+          // Stop loading if max retries reached, respecting minimum loading time
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+          timeoutRef.current = setTimeout(() => {
+            setIsLoading(false);
+          }, remainingTime);
+        }
+        return;
+      }
+
+      const elements = Array.from(
+        articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
+      );
+
+      // If no headings found but content might still be loading, retry
+      if (elements.length === 0 && retryCount < maxRetries) {
+        retryCount++;
+        timeoutRef.current = setTimeout(extractHeadings, 100);
+        return;
+      }
+
+      const items = elements.map(element => {
+        // Generate ID if doesn't exist
+        if (!element.id) {
+          element.id =
+            element.textContent
+              ?.toLowerCase()
+              .replace(/\s+/g, '-')
+              .replace(/[^\w-]/g, '') ?? '';
+        }
+
+        return {
+          id: element.id,
+          text: element.textContent ?? '',
+          level: parseInt(element.tagName[1]),
+        };
+      });
+
+      setTocItems(items);
+
+      // Calculate remaining time to show loading for minimum duration
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+      // Show TOC content after minimum loading time has passed
+      timeoutRef.current = setTimeout(() => {
+        setIsLoading(false);
+      }, remainingTime);
+    };
+
+    // Small delay to ensure content is rendered
+    timeoutRef.current = setTimeout(extractHeadings, 50);
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [showToc, children]);
 
   return (
     <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8 ">
@@ -105,13 +188,8 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         </article>
         {showToc && (
           <div className="hidden lg:block w-64">
-            {contentLoaded ? (
-              <TableOfContents
-                className="sticky top-8"
-                articleRef={articleRef}
-              />
-            ) : (
-              <div className="sticky top-8 w-64 relative">
+            {isLoading ? (
+              <div className="sticky top-8 w-64">
                 <div className="text-body mb-4">Table of Contents</div>
                 <ScrollArea>
                   <div className="space-y-2">
@@ -121,10 +199,21 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
                     <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
                     <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
                     <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
                   </div>
                 </ScrollArea>
+              </div>
+            ) : tocItems.length > 0 ? (
+              <TableOfContents
+                className="sticky top-8"
+                articleRef={articleRef}
+                tocItems={tocItems}
+              />
+            ) : (
+              <div className="sticky top-8 w-64">
+                <div className="text-body mb-4">Table of Contents</div>
+                <div className="text-sm text-muted-foreground">
+                  No headings found
+                </div>
               </div>
             )}
           </div>
@@ -139,43 +228,26 @@ type TocItem = {
   text: string;
   level: number;
 };
-
 const TableOfContents = ({
   className,
   articleRef,
+  tocItems,
 }: {
   className?: string;
   articleRef: React.RefObject<HTMLElement | null>;
+  tocItems: TocItem[];
 }) => {
-  const [headings, setHeadings] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
-    if (!articleRef.current) return;
+    if (!articleRef.current || tocItems.length === 0) return;
 
     const articleElement = articleRef.current;
+
+    // Find all heading elements in the DOM
     const elements = Array.from(
       articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
     );
-
-    const items = elements.map(element => {
-      // Generate ID if doesn't exist
-      if (!element.id) {
-        element.id =
-          element.textContent
-            ?.toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]/g, '') ?? '';
-      }
-
-      return {
-        id: element.id,
-        text: element.textContent ?? '',
-        level: parseInt(element.tagName[1]),
-      };
-    });
-
-    setHeadings(items);
 
     const observer = new IntersectionObserver(
       entries => {
@@ -191,14 +263,14 @@ const TableOfContents = ({
     elements.forEach(element => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [articleRef]);
+  }, [articleRef, tocItems]);
 
   return (
     <div className={cn('w-64 relative', className)}>
       <div className="text-body mb-4">Table of Contents</div>
       <ScrollArea>
         <nav className="relative">
-          {headings.map(heading => (
+          {tocItems.map(heading => (
             <a
               key={heading.id}
               href={`#${heading.id}`}
