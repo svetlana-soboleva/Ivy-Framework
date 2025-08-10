@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import Icon from '@/components/Icon';
 import { Badge } from '@/components/ui/badge';
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

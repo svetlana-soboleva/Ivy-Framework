@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { X, RotateCw } from 'lucide-react';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getWidth } from '@/lib/styles';
 

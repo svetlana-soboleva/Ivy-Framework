@@ -1,4 +1,4 @@
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { cn } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { inputStyles } from '@/lib/styles';

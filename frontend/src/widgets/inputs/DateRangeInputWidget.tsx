@@ -21,7 +21,7 @@ import {
   format as formatDate,
   isValid,
 } from 'date-fns';
-import { useEventHandler } from '@/components/EventHandlerContext';
+import { useEventHandler } from '@/components/event-handler';
 import { InvalidIcon } from '@/components/InvalidIcon';
 
 interface DateRangeInputWidgetProps {

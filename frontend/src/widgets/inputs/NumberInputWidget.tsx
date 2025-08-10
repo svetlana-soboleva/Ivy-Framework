@@ -1,8 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import {
-  useEventHandler,
-  EventHandler,
-} from '@/components/EventHandlerContext';
+import { useEventHandler, EventHandler } from '@/components/event-handler';
 import NumberInput from '@/components/NumberInput';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';

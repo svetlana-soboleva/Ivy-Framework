@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  useEventHandler,
-  EventHandler,
-} from '@/components/EventHandlerContext';
+import { useEventHandler, EventHandler } from '@/components/event-handler';
 import {
   Select,
   SelectContent,
