@@ -1,5 +1,71 @@
 @import 'tailwindcss';
 
+/* Geist Sans Font Family */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist/webfonts/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono Font Family */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono/webfonts/GeistMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-scheme: light;
 }
@@ -152,16 +218,10 @@
     --destructive-light: #efc5c9;
     --destructive-dark: #5d3235;
 
-    /* Typography System - Geist Variable Font Family */
-    --font-sans:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --font-serif:
-      'Geist Variable', 'Geist Sans', ui-serif, Georgia, Cambria,
-      'Times New Roman', Times, serif;
-    --font-mono:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    /* Typography System - Geist Only */
+    --font-sans: 'Geist';
+    --font-serif: 'Geist';
+    --font-mono: 'Geist Mono';
 
     /* Typography Sizes from the images */
     --font-size-60: 60px;
@@ -255,15 +315,9 @@
     /* Keep docs palette consistent in dark mode */
     --docs-black: #061109;
     --docs-surface: #061d13;
-    --font-sans:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --font-serif:
-      'Geist Variable', 'Geist Sans', ui-serif, Georgia, Cambria,
-      'Times New Roman', Times, serif;
-    --font-mono:
-      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
-      Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-sans: 'Geist';
+    --font-serif: 'Geist';
+    --font-mono: 'Geist Mono';
     --radius: 0.5rem;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -369,7 +423,7 @@
   }
   body {
     letter-spacing: var(--tracking-normal);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
   }
 
   /* Ensure sidebar icons and logo use primary brand color */
@@ -386,7 +440,7 @@
 @layer utilities {
   /* Display Typography - Large Headlines (Medium weight for headers) */
   .text-display-60 {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 60px;
     line-height: 60px;
@@ -394,7 +448,7 @@
   }
 
   .text-display-40 {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 40px;
     line-height: 41px;
@@ -402,7 +456,7 @@
   }
 
   .text-display-30 {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 30px;
     line-height: 32px;
@@ -410,7 +464,7 @@
   }
 
   .text-display-25 {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 25px;
     line-height: 27px;
@@ -419,7 +473,7 @@
 
   /* Lead Typography - Prominent Text (Medium weight for lead text) */
   .text-lead {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
@@ -427,7 +481,7 @@
   }
 
   .text-semi-lead {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 15px;
     line-height: 24px;
@@ -436,7 +490,7 @@
 
   /* Body Typography - Main Content (Regular weight for body text) */
   .text-large-body {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
@@ -444,7 +498,7 @@
   }
 
   .text-body {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
@@ -453,7 +507,7 @@
 
   /* Label Typography - UI Elements (Regular weight for labels) */
   .text-descriptive {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
@@ -461,7 +515,7 @@
   }
 
   .text-large-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
@@ -469,7 +523,7 @@
   }
 
   .text-small-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
