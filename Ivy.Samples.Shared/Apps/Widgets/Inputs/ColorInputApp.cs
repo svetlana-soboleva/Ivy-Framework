@@ -112,7 +112,6 @@ public class ColorInputApp : SampleBase
     {
         var hexState = UseState("#ff0000");
         var rgbState = UseState("rgb(255, 0, 0)");
-        var oklchState = UseState("oklch(0.5, 0.2, 240)");
         var enumState = UseState(Colors.Red);
 
         return Layout.Grid().Columns(4)
@@ -130,11 +129,6 @@ public class ColorInputApp : SampleBase
                | rgbState.ToColorInput()
                | Text.InlineCode(rgbState.Value)
                | Text.InlineCode(ConvertToHex(rgbState.Value))
-
-               | Text.InlineCode("OKLCH")
-               | oklchState.ToColorInput()
-               | Text.InlineCode(oklchState.Value)
-               | Text.InlineCode(ConvertToHex(oklchState.Value))
 
                | Text.InlineCode("Enum")
                | enumState.ToColorInput()
