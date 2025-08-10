@@ -20,7 +20,7 @@ public static class DocsServer
                 | new IvyLogo()
                 | Text.Muted($"Version {version}")
             )
-            .DefaultApp<Ivy.Docs.Shared.Apps.Onboarding.GettingStarted.IntroductionApp>()
+            .DefaultApp<Apps.Onboarding.GettingStarted.IntroductionApp>()
             .UsePages();
         server.UseChrome(() => new DefaultSidebarChrome(chromeSettings));
 

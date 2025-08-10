@@ -23,7 +23,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Ivy;
 
-public class ServerArgs
+public record ServerArgs
 {
     public const int DefaultPort = 5010;
     public int Port { get; set; } = DefaultPort;
@@ -35,6 +35,7 @@ public class ServerArgs
     public bool Silent { get; set; } = false;
     public string? MetaTitle { get; set; } = null;
     public string? MetaDescription { get; set; } = null;
+    public Assembly? AssetAssembly { get; set; } = null;
 }
 
 public class Server
@@ -42,7 +43,7 @@ public class Server
     private IContentBuilder? _contentBuilder;
     private bool _useHotReload;
     private bool _useHttpRedirection;
-    private List<Action<WebApplicationBuilder>> _builderMods = new();
+    private readonly List<Action<WebApplicationBuilder>> _builderMods = new();
 
     public string? DefaultAppId { get; private set; }
     public AppRepository AppRepository { get; } = new();
@@ -57,8 +58,14 @@ public class Server
         _args = args ?? IvyServerUtils.GetArgs();
         if (int.TryParse(Environment.GetEnvironmentVariable("PORT"), out int parsedPort))
         {
-            _args.Port = parsedPort;
+            _args = _args with { Port = parsedPort };
         }
+
+        _args = _args with
+        {
+            AssetAssembly = _args.AssetAssembly ?? Assembly.GetCallingAssembly(),
+        };
+
         Services.AddSingleton(_args);
     }
 
@@ -158,7 +165,7 @@ public class Server
 
     public Server UseDefaultApp(Type appType)
     {
-        DefaultAppId = AppHelpers.GetApp(appType)?.Id;
+        DefaultAppId = AppHelpers.GetApp(appType).Id;
         return this;
     }
 
@@ -301,7 +308,7 @@ public class Server
         }
 
         app.UseFrontend(_args);
-        app.UseAssets("Assets");
+        app.UseAssets(_args, "Assets");
 
         app.Lifetime.ApplicationStarted.Register(() =>
         {
@@ -348,7 +355,7 @@ public static class WebApplicationExtensions
 {
     public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
     {
-        var assembly = Assembly.GetExecutingAssembly()!;
+        var assembly = typeof(WebApplicationExtensions).Assembly;
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
             $"{assembly.GetName().Name}"
@@ -404,9 +411,9 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static WebApplication UseAssets(this WebApplication app, string folder)
+    public static WebApplication UseAssets(this WebApplication app, ServerArgs args, string folder)
     {
-        var assembly = Assembly.GetEntryAssembly()!;
+        var assembly = args.AssetAssembly ?? Assembly.GetEntryAssembly()!;
 
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
