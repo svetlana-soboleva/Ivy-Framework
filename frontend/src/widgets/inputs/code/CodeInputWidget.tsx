@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { python } from '@codemirror/lang-python';
@@ -56,13 +62,17 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
   const eventHandler = useEventHandler();
   const [localValue, setLocalValue] = useState(value || '');
   const [isFocused, setIsFocused] = useState(false);
+  const localValueRef = useRef(localValue);
+
+  // Keep ref in sync with state
+  localValueRef.current = localValue;
 
   // Update local value when server value changes and control is not focused
   useEffect(() => {
-    if (!isFocused && value !== localValue) {
+    if (!isFocused && value !== localValueRef.current) {
       setLocalValue(value || '');
     }
-  }, [value, isFocused, localValue]);
+  }, [value, isFocused]);
 
   const handleChange = useCallback(
     (value: string) => {
