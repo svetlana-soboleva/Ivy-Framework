@@ -14,10 +14,12 @@ public class ShouldFailWithAnalyser : ViewBase
         };
 
         // Also test inside a local function
+#pragma warning disable CS8321 // Local function is declared but never used
         void LocalFunction()
         {
             UseState(42);
         }
+#pragma warning restore CS8321
 
         // This code is intentionally incorrect to demonstrate the analyzer's functionality.
         return new Button().HandleClick(handler);

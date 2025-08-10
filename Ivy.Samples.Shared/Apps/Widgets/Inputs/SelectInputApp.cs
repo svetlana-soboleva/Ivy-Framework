@@ -349,4 +349,4 @@ public class SelectInputApp : SampleBase
     }
 }
 
-#pragma warning enable IVYHOOK001
+#pragma warning restore IVYHOOK001
