@@ -29,7 +29,7 @@ public class BasicDialogAlertDemo : ViewBase
             new Button("Show Alert", _ => 
                 showAlert("Are you sure you want to continue?", result => {
                     client.Toast($"You selected: {result}");
-                })
+                }, "Alert title")
             ),
             alertView
         );
