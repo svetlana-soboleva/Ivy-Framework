@@ -407,7 +407,7 @@ export const getAlign = (
 
   styles.flexDirection = orientation === 'Horizontal' ? 'row' : 'column';
 
-  // Ensure horizontal layouts don't wrap and can properly distribute space
+  // Prevent wrapping in horizontal layouts so that fractional widths (e.g., flex: 1, width: 50%) correctly share available space; wrapping would break the intended distribution.
   if (orientation === 'Horizontal') {
     styles.flexWrap = 'nowrap';
     styles.width = '100%';
