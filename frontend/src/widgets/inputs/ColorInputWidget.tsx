@@ -119,15 +119,9 @@ export const ColorInputWidget: React.FC<ColorInputWidgetProps> = ({
       const b = parseInt(rgbMatch[3]);
       return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
-    const oklchMatch = colorValue.match(
-      /oklch\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
-    );
-    if (oklchMatch) {
-      // TODO: Replace this placeholder with a real OKLCH → HEX conversion.
-      const hash = Math.abs(
-        colorValue.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
-      );
-      return `#${(hash % 0xffffff).toString(16).padStart(6, '0')}`;
+    // OKLCH format is not supported
+    if (colorValue.includes('oklch(')) {
+      return colorValue; // Return original value unchanged
     }
     // Use theme color if available
     const lowerValue = colorValue.toLowerCase();
