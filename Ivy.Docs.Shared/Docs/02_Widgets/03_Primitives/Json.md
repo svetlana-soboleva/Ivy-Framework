@@ -54,12 +54,12 @@ public class ApiResponseViewer : ViewBase
         
         // Fetch data initially
         UseEffect(() => {
-            FetchRandomData();
+            _ = FetchRandomData();
         }, []);
         
         return Layout.Vertical().Gap(4)
             | Text.H1("API Response Viewer")
-            | new Button("Fetch New Data", onClick: _ => FetchRandomData()).Disabled(isLoading.Value)
+            | new Button("Fetch New Data", onClick: _ => Task.Run(FetchRandomData)).Disabled(isLoading.Value)
             | (isLoading.Value
                 ? "Loading..."
                 : apiResponse.Value != null
