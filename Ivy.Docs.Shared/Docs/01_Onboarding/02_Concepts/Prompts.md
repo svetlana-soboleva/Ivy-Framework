@@ -1,6 +1,6 @@
 # Prompts
 
-<Ingress Text="Gather user input through various interactive prompts including confirmations, text entry, file selection, and custom dialog interactions. Prompts in Ivy are a powerful system for handling user interactions and gathering input through various types of prompts, including confirmations, text input, file selection, and more. They provide a clean and consistent way to interact with users and collect information." />
+<Ingress Text="Interact with users and gather input using Ivy's prompt system." />
 
 ## Overview
 
