@@ -1,7 +1,6 @@
 # Sheet
 
-`Sheets` slide in from the side of the screen and display additional content while
-allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page.
+<Ingress Text="Sheets slide in from the side of the screen and display additional content while allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page." />
 
 ## Basic Usage
 
@@ -195,6 +194,8 @@ public class NavigationSheetContent : ViewBase
 }
 ```
 
+<WidgetDocs Type="Ivy.Sheet" ExtensionTypes="Ivy.SheetExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Sheet.cs"/>
+
 ## Advanced example
 
 ### Conditional Rendering
@@ -267,4 +268,3 @@ public class ConditionalSheetExample : ViewBase
 }
 ```
 
-<WidgetDocs Type="Ivy.Sheet" ExtensionTypes="Ivy.SheetExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Sheet.cs"/>
