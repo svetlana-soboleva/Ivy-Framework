@@ -19,7 +19,7 @@ const getDeveloperOptionsFromStorage = () => {
       return JSON.parse(stored);
     }
   } catch (error) {
-    console.warn('Failed to parse developer options from localStorage:', error);
+    logger.warn('Failed to parse developer options from localStorage:', error);
   }
   return { showDetailedLogging: false };
 };
@@ -41,9 +41,9 @@ export const setDeveloperOptions = (options: {
     // Update cached state
     developerOptions = newOptions;
 
-    console.log('Developer options updated:', newOptions);
+    logger.error('Developer options updated:', newOptions);
   } catch (error) {
-    console.warn('Failed to save developer options to localStorage:', error);
+    logger.warn('Failed to save developer options to localStorage:', error);
   }
 };
 
@@ -56,7 +56,7 @@ export const getCurrentDeveloperOptions = () => {
 export const toggleDeveloperLogging = () => {
   const newValue = !developerOptions.showDetailedLogging;
   setDeveloperOptions({ showDetailedLogging: newValue });
-  console.log(`Developer logging ${newValue ? 'enabled' : 'disabled'}`);
+  logger.info(`Developer logging ${newValue ? 'enabled' : 'disabled'}`);
   return newValue;
 };
 
@@ -90,7 +90,7 @@ class Logger {
    */
   debug(...args: unknown[]): void {
     if (developerOptions.showDetailedLogging) {
-      console.log(`[${this.formatTime()}]`, ...args);
+      logger.info(`[${this.formatTime()}]`, ...args);
     }
   }
 
@@ -98,21 +98,21 @@ class Logger {
    * Log message with timestamp at info level
    */
   info(...args: unknown[]): void {
-    console.info(`[${this.formatTime()}]`, ...args);
+    logger.info(`[${this.formatTime()}]`, ...args);
   }
 
   /**
    * Log message with timestamp at warn level
    */
   warn(...args: unknown[]): void {
-    console.warn(`[${this.formatTime()}]`, ...args);
+    logger.warn(`[${this.formatTime()}]`, ...args);
   }
 
   /**
    * Log message with timestamp at error level
    */
   error(...args: unknown[]): void {
-    console.error(`[${this.formatTime()}]`, ...args);
+    logger.error(`[${this.formatTime()}]`, ...args);
   }
 }
 

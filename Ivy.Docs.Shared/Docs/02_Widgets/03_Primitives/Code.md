@@ -18,7 +18,7 @@ public class CodeSamplesView : ViewBase
             
             // Print first 10 Fibonacci numbers
             for (let i = 0; i < 10; i++) {
-                console.log(fibonacci(i));
+                logger.info(fibonacci(i));
             }
             """;
             
