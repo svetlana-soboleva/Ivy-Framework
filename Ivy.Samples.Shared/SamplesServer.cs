@@ -1,5 +1,7 @@
 using Ivy.Samples.Shared.Apps.Demos;
 
+namespace Ivy.Samples.Shared;
+
 public static class SamplesServer
 {
     public static async Task RunAsync(ServerArgs? args = null)

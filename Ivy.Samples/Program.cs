@@ -1,1 +1,3 @@
-﻿await SamplesServer.RunAsync();
+﻿using Ivy.Samples.Shared;
+
+await SamplesServer.RunAsync();

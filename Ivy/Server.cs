@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Ivy;
 
@@ -61,6 +62,11 @@ public class Server
             _args = _args with { Port = parsedPort };
         }
 
+        if (bool.TryParse(Environment.GetEnvironmentVariable("VERBOSE"), out bool parsedVerbose))
+        {
+            _args = _args with { Verbose = parsedVerbose };
+        }
+
         _args = _args with
         {
             AssetAssembly = _args.AssetAssembly ?? Assembly.GetCallingAssembly(),
@@ -97,6 +103,20 @@ public class Server
     public void AddAppsFromAssembly(Assembly? assembly = null)
     {
         AppRepository.AddFactory(() => AppHelpers.GetApps(assembly));
+    }
+
+    public void AddConnectionsFromAssembly()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+
+        var connections = assembly!.GetTypes()
+            .Where(t => t.IsClass && typeof(IConnection).IsAssignableFrom(t));
+
+        foreach (var type in connections)
+        {
+            var connection = (IConnection)Activator.CreateInstance(type)!;
+            connection.RegisterServices(this.Services);
+        }
     }
 
     public AppDescriptor GetApp(string id)
@@ -291,6 +311,8 @@ public class Server
             app.UseHttpsRedirection();
         }
 
+        var logger = _args.Verbose ? app.Services.GetRequiredService<ILogger<Server>>() : new NullLogger<Server>();
+
         app.UseRouting();
         app.UseCors();
 
@@ -307,8 +329,8 @@ public class Server
             };
         }
 
-        app.UseFrontend(_args);
-        app.UseAssets(_args, "Assets");
+        app.UseFrontend(_args, logger);
+        app.UseAssets(_args, logger, "Assets");
 
         app.Lifetime.ApplicationStarted.Register(() =>
         {
@@ -335,34 +357,20 @@ public class Server
             Console.WriteLine($@"Failed to start Ivy server. Is the port already in use?");
         }
     }
-
-    public void AddConnectionsFromAssembly()
-    {
-        var assembly = Assembly.GetEntryAssembly();
-
-        var connections = assembly!.GetTypes()
-            .Where(t => t.IsClass && typeof(IConnection).IsAssignableFrom(t));
-
-        foreach (var type in connections)
-        {
-            var connection = (IConnection)Activator.CreateInstance(type)!;
-            connection.RegisterServices(this.Services);
-        }
-    }
 }
 
 public static class WebApplicationExtensions
 {
-    public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs)
+    public static WebApplication UseFrontend(this WebApplication app, ServerArgs serverArgs, ILogger<Server> logger)
     {
         var assembly = typeof(WebApplicationExtensions).Assembly;
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
             $"{assembly.GetName().Name}"
         );
+        var resourceName = $"{assembly.GetName().Name}.index.html";
         app.MapGet("/", async context =>
         {
-            var resourceName = $"{assembly.GetName().Name}.index.html";
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
             {
@@ -401,8 +409,15 @@ public static class WebApplicationExtensions
                 }
 
                 context.Response.ContentType = "text/html";
+                context.Response.StatusCode = 200;
                 var bytes = Encoding.UTF8.GetBytes(html);
                 await context.Response.Body.WriteAsync(bytes);
+            }
+            else
+            {
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync($"Error: {resourceName} not found.");
             }
         });
 
@@ -411,9 +426,12 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static WebApplication UseAssets(this WebApplication app, ServerArgs args, string folder)
+    public static WebApplication UseAssets(this WebApplication app, ServerArgs args, ILogger<Server> logger,
+        string folder)
     {
         var assembly = args.AssetAssembly ?? Assembly.GetEntryAssembly()!;
+
+        logger.LogDebug("Using {Assembly} for assets.", assembly.FullName);
 
         var embeddedProvider = new EmbeddedFileProvider(
             assembly,
