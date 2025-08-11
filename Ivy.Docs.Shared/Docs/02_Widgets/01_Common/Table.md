@@ -1,5 +1,7 @@
 # Table
 
+<Ingress Text="Display structured data in a clean, organized format with powerful table widgets that support sorting, filtering, and custom formatting." />
+
 The `Table` widget is a layout container designed to render data in a tabular format. It accepts rows composed of `TableRow` elements, making it suitable for structured display of content like data listings, reports, or grids.
 
 ## Basic Usage

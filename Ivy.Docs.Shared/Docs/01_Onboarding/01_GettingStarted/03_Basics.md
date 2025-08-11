@@ -5,7 +5,7 @@ prepare: |
 
 # Basics
 
-This page gives an introduction to the most common concepts that you will use when building Ivy apps.
+<Ingress Text="Learn the essential concepts of Ivy development including Views, Widgets, state management, and how to build your first interactive application." />
 
 First, make sure you have [installed](./02_Installation.md) Ivy on your development machine.
 

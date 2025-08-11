@@ -1,5 +1,7 @@
 ﻿# DropDownMenu
 
+<Ingress Text="Create interactive dropdown menus with customizable options, actions, and styling for navigation and user choices." />
+
 ## Basic Usage
 
 Here's a simple example of a `DropDownMenu` that shows a toast message when an item is selected.

@@ -5,6 +5,8 @@ prepare: |
 
 # Progress
 
+<Ingress Text="Show task completion status with customizable progress bars that support dynamic updates and multiple color variants." />
+
 The `Progress` widget is used to visually represent the completion status of a task or process. It displays a visual progress bar that can be customized with different color variants and can be bound to state for dynamic updates.
 
 ## Basic Usage

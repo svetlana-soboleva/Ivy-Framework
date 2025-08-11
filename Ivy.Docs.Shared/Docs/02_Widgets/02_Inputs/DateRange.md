@@ -1,5 +1,7 @@
 # DateRangeInput
 
+<Ingress Text="Select date ranges with an intuitive calendar interface for start and end dates, perfect for filtering and event scheduling." />
+
 The `DateRangeInput` widget allows users to select a range of dates. It provides a calendar interface for both start and end date selection, making it ideal for filtering data by date ranges or scheduling events.
 
 ## Basic Usage

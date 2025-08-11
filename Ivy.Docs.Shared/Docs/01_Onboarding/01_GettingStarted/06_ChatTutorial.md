@@ -5,11 +5,12 @@ prepare: |
 
 # Chat Tutorial
 
-This tutorial will guide you through creating a chat application that uses AI to suggest Lucide icons based on application descriptions.
+<Ingress Text="Create an AI-powered chat application that suggests Lucide icons based on application descriptions using modern chat patterns." />
 
 ## Prerequisites
 
 Before starting this tutorial, make sure you have:
+
 1. [Installed](Installation.md) Ivy on your development machine
 2. An OpenAI API key set in your environment variables as `OPENAI_API_KEY`
 
@@ -137,4 +138,4 @@ You can now run the application and try it out! Describe your application, and t
 Make sure you have set your OpenAI API key in the environment variables before running the application.
 </Callout>
 
-You can find the full source code for the project at https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Samples/Apps/Demos/LucideIconAgentApp.cs.
+You can find the full source code for the project at <https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Samples/Apps/Demos/LucideIconAgentApp.cs>.

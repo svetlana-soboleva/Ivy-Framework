@@ -1,8 +1,6 @@
 # Alerts & Notifications
 
-> **TL;DR:** Ivy provides two types of user notifications: modal dialog alerts for important confirmations and toast notifications for feedback messages.
-
-Ivy offers a comprehensive alerting system to communicate with users effectively. Whether you need to confirm important actions or provide quick feedback, Ivy has you covered.
+<Ingress Text="Communicate with users effectively using modal dialog alerts for important confirmations and toast notifications for feedback messages." />
 
 ## Types of Alerts
 

@@ -1,5 +1,7 @@
 # Json
 
+<Ingress Text="Display JSON data with beautiful formatting and syntax highlighting, perfect for debugging, API responses, and data visualization." />
+
 The `Json` widget displays JSON data in a formatted, syntax-highlighted view. It's useful for debugging, data visualization, and displaying API responses.
 
 ```csharp demo-tabs ivy-bg

@@ -1,6 +1,6 @@
 # Signals
 
-Signals in Ivy provide a reactive programming model for handling state changes and side effects. They are similar to observables but with a simpler API and better integration with Ivy's component system.
+<Ingress Text="Signals enable reactive state management and side effect handling in Ivy applications." />
 
 ## Overview
 
@@ -26,16 +26,19 @@ public class SignalExample : ViewBase
 ## Signal Types
 
 ### Value Signals
+
 ```csharp
 var value = UseSignal(42);
 ```
 
 ### Async Signals
+
 ```csharp
 var data = UseSignal(async () => await api.GetData());
 ```
 
 ### Computed Signals
+
 ```csharp
 var doubled = UseSignal(() => count.Value * 2);
 ```
@@ -101,16 +104,19 @@ public class SignalCompositionExample : ViewBase
 Signals support various operators for transformation and combination:
 
 ### Map
+
 ```csharp
 var upperCase = searchTerm.Map(s => s.ToUpper());
 ```
 
 ### Filter
+
 ```csharp
 var nonEmpty = searchTerm.Filter(s => !string.IsNullOrEmpty(s));
 ```
 
 ### Combine
+
 ```csharp
 var combined = Signal.Combine(firstName, lastName, (f, l) => $"{f} {l}");
 ```

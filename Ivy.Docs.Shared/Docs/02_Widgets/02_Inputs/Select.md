@@ -1,5 +1,7 @@
 # SelectInput
 
+<Ingress Text="Create dropdown menus with single or multiple selection capabilities, option grouping, and custom rendering for user choices." />
+
 The `SelectInput` widget provides a dropdown menu for selecting items from a predefined list of options. It supports single
 and multiple selections, option grouping, and custom rendering of option items.
 

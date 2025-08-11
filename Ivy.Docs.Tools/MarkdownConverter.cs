@@ -231,6 +231,10 @@ public static class MarkdownConverter
         {
             HandleDetailsBlock(codeBuilder, xml);
         }
+        else if (xml.Name.LocalName == "Ingress")
+        {
+            HandleIngressBlock(codeBuilder, xml);
+        }
         else
         {
             throw new Exception($"Unknown HTML block: {xml.Name.LocalName}");
@@ -263,6 +267,12 @@ public static class MarkdownConverter
     {
         string url = xml.Attribute("Url")?.Value ?? throw new Exception("Embed block must have an Url attribute.");
         codeBuilder.AppendTab(3).AppendLine($"""| new Embed("{url}")""");
+    }
+
+    private static void HandleIngressBlock(StringBuilder codeBuilder, XElement xml)
+    {
+        string content = xml.Attribute("Text")?.Value ?? throw new Exception("Ingress block must have a Text attribute.");
+        AppendAsMultiLineStringIfNecessary(3, content, codeBuilder, "| Lead(", ")");
     }
 
     private static string MapLanguageToEnum(string lang)

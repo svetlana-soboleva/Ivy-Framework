@@ -1,5 +1,7 @@
 # Separator
 
+<Ingress Text="Create visual dividers between content sections to organize information and improve interface readability with clear content demarcation." />
+
 The `Separator` widget creates a visual divider between content sections. It helps organize information and improve readability by clearly demarcating different parts of your interface.
 
 ```csharp demo-tabs ivy-bg

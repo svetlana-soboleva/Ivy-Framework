@@ -1,5 +1,7 @@
 ﻿# Ivy Authentication
 
+<Ingress Text="Secure your Ivy application with integrated authentication providers including Auth0, Supabase, Authelia, and Microsoft Entra ID." />
+
 The `ivy auth` commands allow you to add and configure authentication providers in your Ivy project. Ivy supports several authentication providers and helps you to integrate them with your application.
 
 ## Supported Authentication Providers

@@ -9,6 +9,8 @@ prepare: |
 
 # TextInput
 
+<Ingress Text="Capture user text input with validation, formatting, and interactive features like autocomplete and real-time feedback." />
+
 The`TextInput` widget provides a standard text entry field. It supports various text input types including single-line text, multi-line text, password fields, email, phone number, URL and offers features like placeholder text, validation, shortcut keys and text formatting.
 
 ## Basic Usage

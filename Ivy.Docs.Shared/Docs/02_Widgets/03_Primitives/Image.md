@@ -1,5 +1,7 @@
 # Image
 
+<Ingress Text="Display images with automatic loading, responsive sizing, and proper accessibility features for rich visual content." />
+
 The `Image` widget displays images in your application.
 
 ```csharp demo-below ivy-bg

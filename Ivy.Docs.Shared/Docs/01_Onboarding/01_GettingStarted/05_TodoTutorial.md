@@ -1,6 +1,6 @@
 ﻿# Todo Tutorial
 
-In this tutorial, we'll create the classic todo application using Ivy. We'll learn about basic Ivy concepts like state management, components, and event handling.
+<Ingress Text="Build a complete todo application from scratch to learn essential Ivy concepts including state management, components, and event handling." />
 
 ## Prerequisites
 
@@ -121,7 +121,7 @@ public class TodoItem(Todo todo, Action deleteTodo, Action toggleTodo) : ViewBas
 }
 ```
 
-### 7. Run 
+### 7. Run
 
 Now let's run the app.
 
@@ -129,4 +129,4 @@ Now let's run the app.
 >dotnet watch
 ```
 
-You can find the full source code for the project at https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Docs/Samples/Todo.
+You can find the full source code for the project at <https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Docs/Samples/Todo>.
