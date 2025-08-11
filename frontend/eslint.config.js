@@ -31,8 +31,7 @@ export default tseslint.config(
         {
           object: 'console',
           property: 'log',
-          message:
-            'console log is not allowed. Use appropriate logging or remove debug statements.',
+          message: 'console log is not allowed. Use logger.info instead.',
         },
       ],
     },
