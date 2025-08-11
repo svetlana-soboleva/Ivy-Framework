@@ -18,13 +18,13 @@ public class GreetingView : ViewBase
 {
     public override object? Build()
     {
-        return Text.H1("Hello, World!");
+        return Text.P("Hello, World!");
     }
 }
 ```
 
 ```csharp demo-tabs ivy-bg
-Text.H1("Hello from a View!")
+Text.P("Hello from a View!")
 ```
 
 ## The ViewBase Class
@@ -76,7 +76,7 @@ public class CounterView : ViewBase
         
         return new Card(
             Layout.Vertical().Align(Align.Center).Gap(4)
-                | Text.H1($"{count.Value}")
+                | Text.P($"{count.Value}")
                 | (Layout.Horizontal().Gap(2).Align(Align.Center)
                     | new Button("-", onClick: _ => count.Set(count.Value - 1))
                     | new Button("Reset", onClick: _ => count.Set(0))
@@ -131,7 +131,7 @@ public class TimerView : ViewBase
             }
         });
         
-        return Text.H3($"Current time: {time.Value:HH:mm:ss}");
+        return Text.P($"Current time: {time.Value:HH:mm:ss}");
     }
 }
 ```
@@ -250,7 +250,7 @@ new Card(
         | Layout.Horizontal()
             | new Avatar("John Doe", "JD")
             | Layout.Vertical()
-                | Text.H3("John Doe")
+                | Text.P("John Doe")
                 | Text.Small("42 posts")
         | new Button("Follow")
             .Variant(ButtonVariant.Primary)
