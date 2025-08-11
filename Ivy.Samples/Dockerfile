@@ -13,8 +13,6 @@ COPY ["Ivy.Samples.Shared/Ivy.Samples.Shared.csproj", "Ivy.Samples.Shared/"]
 RUN dotnet restore "Ivy.Samples.Shared/Ivy.Samples.Shared.csproj" -p:UseNuGetPackage=true -p:IvyPackageVersion=$IVY_PACKAGE_VERSION
 RUN dotnet restore "Ivy.Samples/Ivy.Samples.csproj"
 COPY . .
-WORKDIR "/src/Ivy.Samples.Shared"
-RUN dotnet build "Ivy.Samples.Shared.csproj" -c $BUILD_CONFIGURATION -p:UseNuGetPackage=true -p:IvyPackageVersion=$IVY_PACKAGE_VERSION
 WORKDIR "/src/Ivy.Samples"
 RUN dotnet build "Ivy.Samples.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

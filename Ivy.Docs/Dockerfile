@@ -15,10 +15,6 @@ RUN dotnet restore "Ivy.Docs.Tools/Ivy.Docs.Tools.csproj"
 RUN dotnet restore "Ivy.Docs.Shared/Ivy.Docs.Shared.csproj" -p:UseNuGetPackage=true -p:IvyPackageVersion=$IVY_PACKAGE_VERSION
 RUN dotnet restore "Ivy.Docs/Ivy.Docs.csproj"
 COPY . .
-WORKDIR "/src/Ivy.Docs.Tools"
-RUN dotnet build "Ivy.Docs.Tools.csproj" -c $BUILD_CONFIGURATION
-WORKDIR "/src/Ivy.Docs.Shared"
-RUN dotnet build "Ivy.Docs.Shared.csproj" -c $BUILD_CONFIGURATION -p:UseNuGetPackage=true -p:IvyPackageVersion=$IVY_PACKAGE_VERSION
 WORKDIR "/src/Ivy.Docs"
 RUN dotnet build "Ivy.Docs.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
