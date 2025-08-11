@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils';
 import React from 'react';
 
 interface FormFieldWidgetProps {
@@ -15,7 +14,7 @@ export const FormFieldWidget: React.FC<FormFieldWidgetProps> = ({
   required,
   children,
 }) => (
-  <div className={cn('space-y-4', !label && !description && 'mt-2')}>
+  <div className="flex flex-col gap-2">
     {label && (
       <label className="text-body font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
         {label} {required && <span className="font-mono text-primary">*</span>}

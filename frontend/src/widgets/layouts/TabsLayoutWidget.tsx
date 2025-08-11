@@ -576,7 +576,7 @@ export const TabsLayoutWidget = ({
                 isUserInitiatedChangeRef.current = true;
                 eventHandler('OnRefresh', id, [tabOrder.indexOf(tabId)]);
               }}
-              className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
+              className="opacity-60 p-1 rounded-full border border-transparent hover:border-border hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
             >
               <RotateCw className="w-3 h-3" />
             </a>
@@ -589,7 +589,7 @@ export const TabsLayoutWidget = ({
                 isUserInitiatedChangeRef.current = true;
                 eventHandler('OnClose', id, [tabOrder.indexOf(tabId)]);
               }}
-              className="opacity-60 p-1 rounded-full hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
+              className="opacity-60 p-1 rounded-full border border-transparent hover:border-border hover:bg-accent hover:opacity-100 transition-colors cursor-pointer"
             >
               <X className="w-3 h-3" />
             </a>
