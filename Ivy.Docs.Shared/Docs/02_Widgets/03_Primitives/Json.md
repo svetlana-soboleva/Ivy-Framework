@@ -1,22 +1,47 @@
 # Json
 
-<Ingress Text="Display JSON data with beautiful formatting and syntax highlighting, perfect for debugging, API responses, and data visualization." />
-
 The `Json` widget displays JSON data in a formatted, syntax-highlighted view. It's useful for debugging, data visualization, and displaying API responses.
+
+## Basic Usage
+
+The simplest way to display JSON data is by passing a serialized string directly to the Json widget.
+
+```csharp demo-tabs ivy-bg
+public class BasicJsonExample : ViewBase
+{
+    public override object? Build()
+    {
+        var simpleData = new
+        {
+            name = "John Doe",
+            age = 30,
+            isActive = true,
+            tags = new[] { "developer", "designer", "architect" }
+        };
+        
+        return Layout.Vertical().Gap(4)
+            | new Json(System.Text.Json.JsonSerializer.Serialize(simpleData));
+    }
+}
+```
+
+## API Response Viewer
+
+This example demonstrates how to create an interactive JSON viewer that fetches data from an API and displays it with real-time updates.
 
 ```csharp demo-tabs ivy-bg
 public class ApiResponseViewer : ViewBase
 {
     public override object? Build()
     {
-        var apiResponse = UseState<string?>();
-        var isLoading = UseState(false);
+        var apiResponse = this.UseState<string>("");
+        var isLoading = this.UseState(false);
         
-              async Task FetchRandomData()
+        async Task FetchRandomData()
         {
             try
             {
-                isLoading.Set(true);
+                isLoading.Value = true;
                 
                 // Generate sample data - in a real app, this would be from an API
                 await Task.Delay(500); // Simulate network delay
@@ -46,11 +71,11 @@ public class ApiResponseViewer : ViewBase
                     }
                 };
                 
-                apiResponse.Set(System.Text.Json.JsonSerializer.Serialize(sampleData));
+                apiResponse.Value = System.Text.Json.JsonSerializer.Serialize(sampleData);
             }
             finally
             {
-                isLoading.Set(false);
+                isLoading.Value = false;
             }
         }
         
@@ -60,13 +85,144 @@ public class ApiResponseViewer : ViewBase
         }, []);
         
         return Layout.Vertical().Gap(4)
-            | Text.H1("API Response Viewer")
             | new Button("Fetch New Data", onClick: _ => Task.Run(FetchRandomData)).Disabled(isLoading.Value)
             | (isLoading.Value
                 ? "Loading..."
-                : apiResponse.Value != null
+                : apiResponse.Value != ""
                     ? new Json(apiResponse.Value)
                     : Text.Muted("No data available"));
+    }
+}
+```
+
+## Complex Data Structure
+
+Demonstrates nested objects, arrays, and complex data types with automatic formatting.
+
+```csharp demo-tabs ivy-bg
+public class ComplexJsonExample : ViewBase
+{
+    public override object? Build()
+    {
+        var complexData = new
+        {
+            company = new
+            {
+                name = "TechCorp Inc.",
+                founded = 2010,
+                headquarters = new
+                {
+                    city = "San Francisco",
+                    country = "USA",
+                    coordinates = new
+                    {
+                        latitude = 37.7749,
+                        longitude = -122.4194
+                    }
+                }
+            },
+            employees = new[]
+            {
+                new
+                {
+                    id = 1,
+                    name = "Alice Johnson",
+                    position = "CEO",
+                    department = "Executive",
+                    skills = new[] { "leadership", "strategy", "management" },
+                    contact = new
+                    {
+                        email = "alice@techcorp.com",
+                        phone = "+1-555-0101"
+                    }
+                },
+                new
+                {
+                    id = 2,
+                    name = "Bob Smith",
+                    position = "Lead Developer",
+                    department = "Engineering",
+                    skills = new[] { "C#", "JavaScript", "React", "Azure" },
+                    contact = new
+                    {
+                        email = "bob@techcorp.com",
+                        phone = "+1-555-0102"
+                    }
+                }
+            },
+            projects = new[]
+            {
+                new
+                {
+                    id = "proj-001",
+                    name = "E-commerce Platform",
+                    status = "In Progress",
+                    progress = 75.5,
+                    technologies = new[] { "C#", "React", "SQL Server", "Azure" },
+                    team = new[] { 1, 2 }
+                }
+            }
+        };
+        
+        var jsonString = System.Text.Json.JsonSerializer.Serialize(complexData, new System.Text.Json.JsonSerializerOptions 
+        { 
+            WriteIndented = true 
+        });
+        
+        return Layout.Vertical().Gap(4)
+            | Text.Muted("Showing nested objects, arrays, and various data types")
+            | new Json(jsonString);
+    }
+}
+```
+
+## Error Handling and Validation
+
+It shows error handling patterns and how to integrate the Json widget with other input components for a complete user experience.
+
+```csharp demo-tabs ivy-bg
+public class JsonValidationExample : ViewBase
+{
+    public override object? Build()
+    {
+        var jsonInput = this.UseState<string>("");
+        var parsedData = this.UseState<string>("");
+        var error = this.UseState<string>("");
+        
+        void ParseJson()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(jsonInput.Value))
+                {
+                    error.Value = "Please enter some JSON data";
+                    parsedData.Value = "";
+                    return;
+                }
+                
+                var data = System.Text.Json.JsonSerializer.Deserialize<object>(jsonInput.Value);
+                parsedData.Value = System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions 
+                { 
+                    WriteIndented = true 
+                });
+                error.Value = "";
+            }
+            catch (System.Text.Json.JsonException ex)
+            {
+                error.Value = $"Invalid JSON: {ex.Message}";
+                parsedData.Value = "";
+            }
+        }
+        
+        return Layout.Vertical().Gap(4)
+            | Text.Muted("Enter JSON data to validate and display")
+            | new TextInput(jsonInput, placeholder: "{ \"name\": \"example\", \"value\": 42 }", variant: TextInputs.Textarea)
+            | new Button("Parse JSON", onClick: _ => ParseJson())
+            | (error.Value != ""
+                ? Text.Muted(error.Value)
+                : parsedData.Value != ""
+                    ? new Json(parsedData.Value)
+                    : Text.Muted("Enter valid JSON above to see the result"));
     }
 }
 ```
