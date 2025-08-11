@@ -1,6 +1,6 @@
 # Signals
 
-<Ingress Text="Implement reactive programming patterns with Signals for handling state changes and side effects with a simple, observable-like API. Signals in Ivy provide a reactive programming model for handling state changes and side effects. They are similar to observables but with a simpler API and better integration with Ivy's component system." />
+<Ingress Text="Signals enable reactive state management and side effect handling in Ivy applications." />
 
 ## Overview
 
