@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 
 interface ConfettiWidgetProps {
@@ -12,9 +12,13 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
 }) => {
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const quadrant = confetti.shapeFromPath({
-    path: 'M47 0H0V47.0222C25.9234 47.0222 47 25.9801 47 0Z',
-  });
+  const quadrant = useMemo(
+    () =>
+      confetti.shapeFromPath({
+        path: 'M47 0H0V47.0222C25.9234 47.0222 47 25.9801 47 0Z',
+      }),
+    []
+  );
 
   const triggerConfetti = useCallback(
     (x: number, y: number) => {
@@ -50,9 +54,15 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
       const rect = elementRef.current.getBoundingClientRect();
       const x = (rect.left + rect.width / 2) / window.innerWidth;
       const y = (rect.top + rect.height / 2) / window.innerHeight;
-      triggerConfetti(x, y);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x, y },
+        shapes: [quadrant],
+        colors: ['#00CC92', '#0D4A2F'],
+      });
     }
-  }, [trigger, triggerConfetti]);
+  }, [trigger, quadrant]);
 
   return (
     <div ref={elementRef} onClick={handleClick} onMouseEnter={handleMouseEnter}>
