@@ -55,14 +55,14 @@ export function BladeWidget({
         <div className="flex items-center h-[70px]">
           <button
             onClick={() => eventHandler('OnRefresh', id, [])}
-            className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
+            className="hover:bg-accent border border-transparent hover:border-border rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
           >
             <RotateCw className="h-4 w-4" />
           </button>
           {index > 0 && (
             <button
               onClick={() => eventHandler('OnClose', id, [])}
-              className="hover:bg-accent rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
+              className="hover:bg-accent border border-transparent hover:border-border rounded-sm transition-colors h-9 w-9 inline-flex items-center justify-center cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
