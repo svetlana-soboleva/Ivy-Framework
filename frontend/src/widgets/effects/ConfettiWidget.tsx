@@ -20,17 +20,24 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
     []
   );
 
+  const confettiConfig = useMemo(
+    () => ({
+      particleCount: 100,
+      spread: 70,
+      shapes: [quadrant],
+      colors: ['#00CC92', '#0D4A2F'],
+    }),
+    [quadrant]
+  );
+
   const triggerConfetti = useCallback(
     (x: number, y: number) => {
       confetti({
-        particleCount: 100,
-        spread: 70,
+        ...confettiConfig,
         origin: { x, y },
-        shapes: [quadrant],
-        colors: ['#00CC92', '#0D4A2F'],
       });
     },
-    [quadrant]
+    [confettiConfig]
   );
 
   const handleClick = (e: React.MouseEvent) => {
@@ -55,14 +62,11 @@ const ConfettiWidget: React.FC<ConfettiWidgetProps> = ({
       const x = (rect.left + rect.width / 2) / window.innerWidth;
       const y = (rect.top + rect.height / 2) / window.innerHeight;
       confetti({
-        particleCount: 100,
-        spread: 70,
+        ...confettiConfig,
         origin: { x, y },
-        shapes: [quadrant],
-        colors: ['#00CC92', '#0D4A2F'],
       });
     }
-  }, [trigger, quadrant]);
+  }, [trigger, confettiConfig]);
 
   return (
     <div ref={elementRef} onClick={handleClick} onMouseEnter={handleMouseEnter}>
