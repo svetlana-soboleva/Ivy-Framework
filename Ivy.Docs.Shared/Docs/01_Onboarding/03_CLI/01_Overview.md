@@ -1,7 +1,8 @@
 ﻿# Ivy CLI - Overview
 
-Ivy CLI is a powerful tool designed to streamline the development of Ivy applications. It provides:
+<Ingress Text="Streamline your Ivy development workflow with powerful CLI tools for project initialization, database integration, authentication, and deployment." />
 
+Ivy CLI is a powerful tool designed to streamline the development of Ivy applications. It provides:
 
 - **Database Integration**: Connect to multiple database providers (SQL Server, PostgreSQL, MySQL, SQLite, and more)
 - **Authentication**: Add authentication providers (Auth0, Supabase, Authelia, Basic Auth)

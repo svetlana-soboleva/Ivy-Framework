@@ -1,10 +1,11 @@
 # Downloads
 
-Downloads in Ivy provide a seamless way to handle file downloads in your applications. Whether you're downloading generated reports, user-uploaded files, or any other type of content, Ivy's download functionality makes it easy to manage file transfers between the server and client.
+<Ingress Text="Enable seamless file downloads for reports, documents, and user content with built-in transfer management between server and client. Downloads in Ivy provide a seamless way to handle file downloads in your applications. Whether you're downloading generated reports, user-uploaded files, or any other type of content, Ivy's download functionality makes it easy to manage file transfers between the server and client." />
 
 ## Overview
 
 The download system in Ivy supports:
+
 - Direct file downloads
 - Generated content downloads
 - Large file transfers

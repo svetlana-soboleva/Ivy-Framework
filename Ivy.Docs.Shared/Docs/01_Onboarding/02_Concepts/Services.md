@@ -1,10 +1,11 @@
 # Services
 
-Services in Ivy are a powerful dependency injection and service management system that helps you organize and manage your application's dependencies, business logic, and shared functionality. They provide a clean way to handle cross-cutting concerns and maintain separation of concerns in your application.
+<Ingress Text="Organize your application architecture with dependency injection, service registration, and lifecycle management for clean separation of concerns. Services in Ivy are a powerful dependency injection and service management system that helps you organize and manage your application's dependencies, business logic, and shared functionality. They provide a clean way to handle cross-cutting concerns and maintain separation of concerns in your application." />
 
 ## Overview
 
 The service system in Ivy supports:
+
 - Dependency injection
 - Service registration and configuration
 - Service lifecycle management

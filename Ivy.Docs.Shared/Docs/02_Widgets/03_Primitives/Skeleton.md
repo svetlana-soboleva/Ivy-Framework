@@ -1,5 +1,7 @@
 # Skeleton
 
+<Ingress Text="Create elegant loading placeholders that mimic your content structure to improve perceived performance during data loading." />
+
 The `Skeleton` widget creates placeholder loading indicators that mimic the shape of your content. It improves perceived performance by showing users the layout of the page while data is loading.
 
 ```csharp demo-tabs ivy-bg

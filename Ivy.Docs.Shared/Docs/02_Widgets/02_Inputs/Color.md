@@ -5,6 +5,8 @@ prepare: |
 
 # ColorInput
 
+<Ingress Text="Select colors visually with an intuitive color picker interface that returns values suitable for styling and theming applications." />
+
 The `ColorInput` widget provides a color picker interface for selecting color values. It allows users to visually choose colors and returns the selected color in a format suitable for use in styles and themes.
 
 ## Basic Usage

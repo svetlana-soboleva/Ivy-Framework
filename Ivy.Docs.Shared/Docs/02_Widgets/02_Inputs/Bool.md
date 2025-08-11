@@ -1,5 +1,7 @@
 # BoolInput
 
+<Ingress Text="Handle boolean input with elegant checkboxes, switches, and toggles for true/false values in forms and interfaces." />
+
 The `BoolInput` widget provides a checkbox, switch and toggle for boolean (true/false) input values. It allows users to easily switch between two states in a form or configuration interface.
 
 ## Basic Usage
@@ -48,9 +50,9 @@ The non-generic `BoolInput` constructor is the most convenient when you need a s
 ## Nullable Bool Inputs
 
 Null values are supported for boolean values. The following example shows it in action.
-These values are useful in situations where boolean values can be either not set (`null`) 
-or set (`true` or `false`). These can be really handy to capture different answers from 
-questions in a survey. 
+These values are useful in situations where boolean values can be either not set (`null`)
+or set (`true` or `false`). These can be really handy to capture different answers from
+questions in a survey.
 
 ```csharp demo-below ivy-bg
 public class NullableBoolDemo: ViewBase
@@ -77,7 +79,7 @@ There are three variants of `BoolInput`s. The following blocks show how to creat
 
 ### CheckBox
 
-To make the bool input appear like a checkbox, this variant should be used. 
+To make the bool input appear like a checkbox, this variant should be used.
 
 ```csharp demo-below ivy-bg
 public class BoolInputDemo : ViewBase
@@ -104,9 +106,10 @@ public class BoolInputDemo : ViewBase
 }
 
 ```
-### Switch 
 
-To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling 
+### Switch
+
+To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling
 some settings values on and off.  
 
 ```csharp demo-below ivy-bg
@@ -143,14 +146,14 @@ public class BoolInputDemo : ViewBase
 }
 ```
 
-### Toggle 
+### Toggle
 
-`Toggle` is a button-style boolean input that switches between two states (on/off, enabled/disabled) with a single click. 
+`Toggle` is a button-style boolean input that switches between two states (on/off, enabled/disabled) with a single click.
 It appears as a pressable button that visually indicates its current state through styling and optional icons.
-This is represented by `BoolInputs.Toggle` 
+This is represented by `BoolInputs.Toggle`
 
-`ToToggleInput` extension function can be used to create such a `BoolInput.Toggle` variant. 
-The following is a small demo showing how such a control may be used. 
+`ToToggleInput` extension function can be used to create such a `BoolInput.Toggle` variant.
+The following is a small demo showing how such a control may be used.
 
 ```csharp demo-below ivy-bg
 public class SingleToggleDemo : ViewBase 
@@ -172,9 +175,9 @@ public class SingleToggleDemo : ViewBase
 
 ## Extension Functions
 
-There are several extension functions that can be used to generate these boolean inputs. `ToBoolInput` creates a 
-`BoolInputs.CheckBox` variant. `ToSwitchInput` creates a `BoolInputs.Switch` variant, and `ToToggleInput` creates 
-a `BoolInputs.Toggle` variant. 
+There are several extension functions that can be used to generate these boolean inputs. `ToBoolInput` creates a
+`BoolInputs.CheckBox` variant. `ToSwitchInput` creates a `BoolInputs.Switch` variant, and `ToToggleInput` creates
+a `BoolInputs.Toggle` variant.
 
 ```csharp demo-below ivy-bg
 public class BoolInputVariants : ViewBase
@@ -191,10 +194,10 @@ public class BoolInputVariants : ViewBase
 }
 ```
 
-## Bool represented by integers 
+## Bool represented by integers
 
-`BoolInput`s have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`. 
-The following example shows how integers can be used to represent bool inputs. 
+`BoolInput`s have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`.
+The following example shows how integers can be used to represent bool inputs.
 
 ```csharp demo-below ivy-bg
 public class BoolInputVariants2 : ViewBase
@@ -224,14 +227,13 @@ All values captured are integers; either 1 or 0.
 
 <WidgetDocs Type="Ivy.BoolInput" ExtensionTypes="Ivy.BoolInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/BoolInput.cs"/>
 
-
 ## Examples
 
 This is a set of few examples showing how to use `BoolInput`s in several situations.
 
 ### Toggling Dashboard Controls
 
-The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface. 
+The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface.
 
 ```csharp demo-below ivy-bg
 public class DashboardToggle : ViewBase 
@@ -268,7 +270,7 @@ public class DashboardToggle : ViewBase
 ### Round trip example
 
 The following example shows a demo of how `Switch` variant can be used in a possible situation where it makes sense
-to do so. 
+to do so.
 
 ```csharp demo-below ivy-bg
 public class SimpleFlightBooking : ViewBase
@@ -302,4 +304,3 @@ public class SimpleFlightBooking : ViewBase
     }
 }
 ```
-

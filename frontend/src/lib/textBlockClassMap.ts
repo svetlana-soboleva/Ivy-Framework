@@ -10,7 +10,7 @@ export const textBlockClassMap: Record<string, string> = {
   P: 'leading-7 scroll-m-20',
 
   // Lead Typography - Prominent Text
-  Lead: 'text-xl text-muted-foreground',
+  Lead: 'text-muted-foreground',
 
   // Blockquote styling with original spacing
   Blockquote: 'border-l-2 pl-6 italic mb-2',
