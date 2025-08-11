@@ -100,6 +100,8 @@ public class DownloadView : ViewBase
 5. **Security**: Validate file types and sizes before download
 6. **Caching**: Consider implementing caching for frequently downloaded files
 
+<WidgetDocs Type="Ivy.Hooks.UseDownloadExtensions" ExtensionTypes="" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Hooks/UseDownload.cs"/>
+
 ## Examples
 
 ### CSV Export
