@@ -85,7 +85,7 @@ public class SheetWithFooterActions : ViewBase
 
 ### Complex Layout
 
-It shows how to organize complex content within sheets using nested layouts and various input controls.
+This example shows how to organize complex content within sheets using nested layouts and various input controls.
 
 ```csharp demo-tabs ivy-bg
 public class ComplexSheetLayout : ViewBase
