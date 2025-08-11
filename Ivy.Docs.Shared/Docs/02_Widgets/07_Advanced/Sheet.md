@@ -37,23 +37,12 @@ public class SheetView : ViewBase
 
 - **`Title`** - Optional title displayed at the top of the sheet
 - **`Description`** - Optional description text below the title
-- **`Width`** - Controls the width of the sheet (defaults to `Size.Rem(24)`)
+- **`Width`** - Controls the width of the sheet
 - **`OnClose`** - Event handler called when the sheet is closed
 
-## Width Options
-
-Sheets support various width configurations:
-
-- **`Size.Fraction(1/2f)`** - Half the screen width
-- **`Size.Fraction(1/3f)`** - One-third screen width  
-- **`Size.Rem(24)`** - 24rem (default)
-- **`Size.Units(150)`** - 150 units
-- **`Size.Px(400)`** - 400 pixels
-- **`Size.Full()`** - Full screen width
-
-## Examples
-
 ### Basic Sheet with Custom Content
+
+The following demonstrates how to create a sheet with custom content using a Fragment and Card. The sheet opens with a title, description, and custom width, showing how to structure content within sheets.
 
 ```csharp demo-tabs ivy-bg
 public class BasicSheetWithContent : ViewBase
@@ -77,6 +66,8 @@ public class BasicSheetWithContent : ViewBase
 
 ### Sheet with Footer Actions
 
+You also can create a sheet with action buttons in the footer using FooterLayout.
+
 ```csharp demo-tabs ivy-bg
 public class SheetWithFooterActions : ViewBase
 {
@@ -99,6 +90,8 @@ public class SheetWithFooterActions : ViewBase
 ```
 
 ### Sheet with Complex Layout
+
+The following demonstrates a complex sheet layout with multiple cards, user information display, form inputs, and action buttons. It shows how to organize complex content within sheets using nested layouts and various input controls.
 
 ```csharp demo-tabs ivy-bg
 public class ComplexSheetLayout : ViewBase
@@ -136,6 +129,8 @@ public class ComplexSheetLayout : ViewBase
 
 ### Sheet with Different Widths
 
+The following showcases the various width options available for sheets. It creates multiple buttons that open sheets with different sizes, from small rem-based widths to full-screen layouts, demonstrating how width affects the user experience.
+
 ```csharp demo-tabs ivy-bg
 public class SheetWidthExamples : ViewBase
 {
@@ -167,6 +162,8 @@ public class SheetWidthExamples : ViewBase
 ```
 
 ### Sheet with Navigation
+
+The following demonstrates how to create a sheet with internal navigation between different pages. It uses state management to track the current page and dynamically updates the content based on user selection, showing how sheets can contain complex, multi-page interfaces.
 
 ```csharp demo-tabs ivy-bg
 public class NavigationSheet : ViewBase
@@ -201,23 +198,5 @@ public class NavigationSheetContent : ViewBase
     }
 }
 ```
-
-## Best Practices
-
-1. **Use descriptive titles** - Make it clear what the sheet contains
-2. **Keep content focused** - Don't overload sheets with too much information
-3. **Provide clear actions** - Include save/cancel buttons when appropriate
-4. **Consider width carefully** - Use appropriate sizing for the content
-5. **Handle state properly** - Ensure sheet state is managed correctly in your views
-
-## Integration with Other Widgets
-
-Sheets work seamlessly with other Ivy widgets:
-
-- **Forms** - Use `ToSheet()` for form-based sheets
-- **Cards** - Organize content within sheets using cards
-- **Layouts** - Use `Layout.Vertical()` and `Layout.Horizontal()` for structured content
-- **Buttons** - Include action buttons in sheet footers
-- **Inputs** - Display form inputs and controls within sheets
 
 <WidgetDocs Type="Ivy.Sheet" ExtensionTypes="Ivy.SheetExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Sheet.cs"/>
