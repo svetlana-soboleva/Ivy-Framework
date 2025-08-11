@@ -59,7 +59,7 @@ public class BasicSheetWithContent : ViewBase
 
 ### Footer Actions
 
-You also can create a sheet with action buttons in the footer using FooterLayout.
+You can also create a sheet with action buttons in the footer using FooterLayout.
 
 ```csharp demo-tabs ivy-bg
 public class SheetWithFooterActions : ViewBase
