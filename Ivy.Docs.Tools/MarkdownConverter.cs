@@ -231,6 +231,10 @@ public static class MarkdownConverter
         {
             HandleDetailsBlock(codeBuilder, xml);
         }
+        else if (xml.Name.LocalName == "Ingress")
+        {
+            HandleIngressBlock(codeBuilder, xml);
+        }
         else
         {
             throw new Exception($"Unknown HTML block: {xml.Name.LocalName}");
@@ -265,6 +269,12 @@ public static class MarkdownConverter
         codeBuilder.AppendTab(3).AppendLine($"""| new Embed("{url}")""");
     }
 
+    private static void HandleIngressBlock(StringBuilder codeBuilder, XElement xml)
+    {
+        string content = xml.Attribute("Text")?.Value ?? throw new Exception("Ingress block must have a Text attribute.");
+        AppendAsMultiLineStringIfNecessary(3, content, codeBuilder, "| Lead(", ")");
+    }
+
     private static string MapLanguageToEnum(string lang)
     {
         return lang.ToLowerInvariant() switch
@@ -283,7 +293,7 @@ public static class MarkdownConverter
     }
 
     private static void HandleCodeBlock(FencedCodeBlock codeBlock, string markdownContent, StringBuilder codeBuilder,
-        StringBuilder viewBuilder, HashSet<string> usedClassNames)
+StringBuilder viewBuilder, HashSet<string> usedClassNames)
     {
         string language = codeBlock.Info ?? "csharp";
         string codeContent = markdownContent.Substring(codeBlock.Span.Start, codeBlock.Span.Length).Trim();
@@ -307,6 +317,12 @@ public static class MarkdownConverter
                     codeBuilder.AppendTab(4).AppendLine($".AddOutput(\"{line.Trim()}\")");
                 }
             }
+        }
+        else if (language == "mermaid")
+        {
+            // Handle Mermaid diagrams by wrapping them in Markdown widget with proper syntax
+            string mermaidBlock = $"```mermaid\n{codeContent}\n```";
+            AppendAsMultiLineStringIfNecessary(3, mermaidBlock, codeBuilder, "| new Markdown(", ").HandleLinkClick(onLinkClick)");
         }
         else
         {

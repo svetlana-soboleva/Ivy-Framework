@@ -1,5 +1,7 @@
 ﻿# Ivy Deployment
 
+<Ingress Text="Deploy your Ivy applications to cloud platforms with automated containerization, infrastructure setup, and configuration management." />
+
 The `ivy deploy` command allows you to deploy your Ivy application to various cloud platforms. Ivy supports multiple deployment providers and automatically handles the deployment process including containerization, configuration, and infrastructure setup.
 
 ## Supported Deployment Providers

@@ -1,5 +1,7 @@
 # Box
 
+<Ingress Text="Create versatile container elements with customizable borders, colors, and padding for grouping content and structuring layouts." />
+
 `Box`es are versatile container elements with customizable borders, colors, and padding. They're useful for visually grouping related content or creating distinct sections in your UI.
 
 ```csharp demo-tabs ivy-bg

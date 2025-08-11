@@ -1,5 +1,7 @@
 # Avatar
 
+<Ingress Text="Display user or entity representations with automatic fallbacks from images to initials to placeholders for consistent visual identity." />
+
 `Avatars` are graphical representations of users or entities. They display an image if available or fall back to initials or a placeholder when no image is provided.
 
 To create a new avatar, it is recommended to use a layout.

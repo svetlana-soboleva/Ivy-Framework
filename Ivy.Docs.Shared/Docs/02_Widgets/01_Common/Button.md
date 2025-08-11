@@ -5,6 +5,8 @@ prepare: |
 
 # Button
 
+<Ingress Text="Create interactive buttons with multiple variants, states, sizes, and styling options for triggering actions in your Ivy applications." />
+
 The `Button` widget is one of the most fundamental interactive elements in Ivy. It allows users to trigger actions and navigate through your application.
 
 ## Basic Usage

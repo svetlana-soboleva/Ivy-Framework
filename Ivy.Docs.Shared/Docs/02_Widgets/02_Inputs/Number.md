@@ -1,5 +1,7 @@
 # NumberInput
 
+<Ingress Text="Capture numeric input with built-in validation, minimum/maximum constraints, step increments, and custom formatting options." />
+
 The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for
 setting minimum/maximum values, step increments, and formatting.
 

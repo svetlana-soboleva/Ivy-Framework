@@ -89,7 +89,7 @@ const DateVariant: React.FC<DateVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-20 cursor-pointer hover:bg-transparent', // pr-20 for clear+icon, remove hover effect
+              'w-full justify-start text-left font-normal pr-20 cursor-pointer', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
               invalid && inputStyles.invalidInput,
               disabled && 'cursor-not-allowed'
@@ -272,7 +272,7 @@ const DateTimeVariant: React.FC<DateTimeVariantProps> = ({
             disabled={disabled}
             variant="outline"
             className={cn(
-              'w-full justify-start text-left font-normal pr-20 cursor-pointer hover:bg-transparent', // pr-20 for clear+icon, remove hover effect
+              'w-full justify-start text-left font-normal pr-20 cursor-pointer', // pr-20 for clear+icon
               !date && 'text-muted-foreground',
               invalid && inputStyles.invalidInput,
               disabled && 'cursor-not-allowed'

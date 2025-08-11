@@ -1,6 +1,6 @@
 ﻿# Content Builders
 
-Content Builders are a powerful feature in Ivy that handle the transformation and formatting of different types of content into appropriate visual representations. They form a crucial part of Ivy's content rendering system, ensuring that data is displayed in a user-friendly and contextually appropriate manner.
+<Ingress Text="Flexible system for transforming and formatting content for display in Ivy." />
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # How Ivy Works
 
-> **TL;DR:** Ivy lets you build modern web UIs using pure C# on the server. It combines the familiarity of React patterns with the power of C# and .NET.
+<Ingress Text="Ivy lets you build modern web UIs using pure C# on the server, combining the familiarity of React patterns with the power of C# and .NET." />
 
 ## Core Philosophy
 
@@ -8,13 +8,22 @@ Ivy is a **server-side web framework** that brings React-like patterns to C#. In
 
 ## Architecture Overview
 
-```
-C# Views → Widget Tree → WebSocket → React Frontend → Browser
-    ↑                                                      ↓
-    ← ← ← ← ← ← Event Handlers ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
+```mermaid
+graph LR
+    A["C# Views<br/>(ViewBase)"] --> B["Widget Tree<br/>(JSON)"]
+    B --> C["WebSocket<br/>Communication"]
+    C --> D["React Frontend<br/>(Shadcn/TailwindCSS)"]
+    D --> E["Browser<br/>(HTML/CSS)"]
+    
+    E --> F["User Events<br/>(clicks, input)"]
+    F --> C
+    C --> G["Event Handlers<br/>(C# methods)"]
+    G --> H["State Updates<br/>(UseState, etc.)"]
+    H --> A
 ```
 
 ### 1. Views & Components
+
 Every Ivy application is built from **Views** - C# classes that inherit from `ViewBase`. Each view implements a single `Build()` method that returns widgets or other views:
 
 ```csharp
@@ -46,7 +55,10 @@ public class TodoApp : ViewBase
 ```
 
 ### 2. Reactive State Management
+
 Ivy provides React-inspired hooks for state management:
+
+**Available Hooks:**
 
 - `UseState<T>()` - Local component state that triggers re-renders
 - `UseEffect()` - Side effects with dependency tracking  
@@ -70,6 +82,7 @@ public override object? Build()
 ```
 
 ### 3. Widget Library
+
 Ivy ships with a comprehensive set of strongly-typed widgets:
 
 | Category | Examples |
@@ -80,7 +93,10 @@ Ivy ships with a comprehensive set of strongly-typed widgets:
 | Primitives | `Text`, `Icon`, `Image`, `Markdown`, `Json`, `Code`... |
 
 ### 4. Real-time Communication
+
 The magic happens through WebSocket communication:
+
+**Key Steps:**
 
 1. **Initial Render**: Ivy builds your view tree and serializes it to JSON
 2. **WebSocket Transfer**: The widget tree is sent to the browser
@@ -91,6 +107,7 @@ The magic happens through WebSocket communication:
 ## Development Experience
 
 ### Hot Reloading
+
 The development workflow is incredibly smooth:
 
 ```terminal
@@ -100,6 +117,7 @@ The development workflow is incredibly smooth:
 That's it! Changes to your C# code instantly refresh the browser.
 
 ### Strongly Typed Everything
+
 No more runtime errors from typos in HTML/CSS:
 
 ```csharp
@@ -114,6 +132,7 @@ new Button().Variant("invalid-variant"); // Compiler error!
 ```
 
 ### Seamless .NET Integration
+
 ```csharp
 public override object? Build()
 {
@@ -136,18 +155,21 @@ public override object? Build()
 ## Why This Approach Works
 
 ### For C# Developers
+
 - Leverage existing C# skills and ecosystem
 - Full IntelliSense and debugging support
 - Type safety prevents runtime UI errors
 - Seamless integration with existing .NET code
 
 ### For Teams
+
 - Single language across the entire stack
 - Shared models between frontend and backend
 - Easier code reviews and maintenance
 - Faster development cycles
 
 ### For Applications
+
 - Server-side rendering for better SEO and performance
 - Real-time updates without complex JavaScript
 - Built-in security (business logic stays on server)

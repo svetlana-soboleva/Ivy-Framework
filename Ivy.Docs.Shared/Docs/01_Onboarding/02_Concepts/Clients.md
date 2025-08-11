@@ -1,6 +1,6 @@
 # Clients
 
-Clients in Ivy are the bridge between your server-side C# code and the client-side React components. They provide a seamless way to interact with the browser and handle client-side operations.
+<Ingress Text="Bridge server-side C# code with client-side React components for seamless browser interactions and client-side operations." />
 
 ## Overview
 

@@ -1,5 +1,7 @@
 # ReadOnlyInput
 
+<Ingress Text="Display form data in a consistent input-like style that maintains visual coherence while preventing user modification." />
+
 The `ReadOnlyInput` widget displays data in an input-like format that cannot be edited by the user. It's useful for showing form values in a consistent style with other inputs, while preventing modification.
 
 ## Basic Usage
