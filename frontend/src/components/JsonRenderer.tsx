@@ -12,7 +12,8 @@ export const JsonRenderer = ({ data }: JsonRendererProps) => {
   if (typeof data === 'string') {
     try {
       parsedData = JSON.parse(data);
-    } catch {
+    } catch (error) {
+      console.error(error);
       return <div className="text-destructive">Invalid JSON string</div>;
     }
   }
