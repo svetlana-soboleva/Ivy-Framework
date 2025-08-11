@@ -32,7 +32,7 @@ public class JavaScriptDemo : ViewBase
 {
     public override object? Build()
     {    
-        var jsCode = UseState("function greet(name) {\n  logger.info(`Hello, ${name}!`);\n}\ngreet('World');");
+        var jsCode = UseState("function greet(name) {\n  console.log(`Hello, ${name}!`);\n}\ngreet('World');");
         return Layout.Vertical()
                     | Text.H3("JavaScript")
                     | jsCode.ToCodeInput()
@@ -168,7 +168,7 @@ public class InvalidCodeDemo: ViewBase
 {
     public override object? Build()
     {
-        var jsCode = UseState("function greet(name) {\n    logger.info('Hello, ' + name);\n    return 'Welcome ' + name;\n}");
+        var jsCode = UseState("function greet(name) {\n    console.log('Hello, ' + name);\n    return 'Welcome ' + name;\n}");
         return Layout.Vertical()
                 | jsCode.ToCodeInput()
                     .Width(Size.Auto())

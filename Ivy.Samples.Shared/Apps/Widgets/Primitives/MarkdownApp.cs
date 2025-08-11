@@ -50,7 +50,7 @@ public class MarkdownApp : ViewBase
         //              
         //              ```javascript
         //              const hello = 'world';
-        //              logger.info(hello);
+        //              console.log(hello);
         //              ```
         //              
         //              This is inline code: `const x = 10;`

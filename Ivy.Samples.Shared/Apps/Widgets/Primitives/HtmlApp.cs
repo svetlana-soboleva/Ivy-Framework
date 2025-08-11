@@ -15,7 +15,7 @@ public class HtmlApp : SampleBase
             <h2>Code Example</h2>
             <pre>
             <code>const hello = 'world';
-            logger.info(hello);
+            console.log(hello);
             </code>
             </pre>
             
