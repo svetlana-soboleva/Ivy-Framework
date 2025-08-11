@@ -33,14 +33,7 @@ public class SheetView : ViewBase
 }
 ```
 
-## Properties
-
-- **`Title`** - Optional title displayed at the top of the sheet
-- **`Description`** - Optional description text below the title
-- **`Width`** - Controls the width of the sheet
-- **`OnClose`** - Event handler called when the sheet is closed
-
-### Basic Sheet with Custom Content
+### Custom Content
 
 The following demonstrates how to create a sheet with custom content using a Fragment and Card. The sheet opens with a title, description, and custom width, showing how to structure content within sheets.
 
@@ -49,11 +42,12 @@ public class BasicSheetWithContent : ViewBase
 {
     public override object? Build()
     {
+        var client = UseService<IClientProvider>();
         return new Button("Open Basic Sheet").WithSheet(
             () => new Fragment(
                 new Card(
                     "Welcome to the sheet!",
-                    new Button("Action Button", onClick: _ => { })
+                    new Button("Action Button", onClick: _ => client.Toast("Button clicked!"))
                 ).Title("Sheet Content").Description("This is a simple sheet with custom content")
             ),
             title: "Basic Sheet",
@@ -64,7 +58,7 @@ public class BasicSheetWithContent : ViewBase
 }
 ```
 
-### Sheet with Footer Actions
+### Footer Actions
 
 You also can create a sheet with action buttons in the footer using FooterLayout.
 
@@ -73,11 +67,12 @@ public class SheetWithFooterActions : ViewBase
 {
     public override object? Build()
     {
+        var client = UseService<IClientProvider>();
         return new Button("Open Sheet with Actions").WithSheet(
             () => new FooterLayout(
                 Layout.Horizontal().Gap(2)
-                    | new Button("Save").Variant(ButtonVariant.Primary).HandleClick(_ => { })
-                    | new Button("Cancel").Variant(ButtonVariant.Outline).HandleClick(_ => { }),
+                    | new Button("Save").Variant(ButtonVariant.Primary).HandleClick(_ => client.Toast("Profile saved successfully!"))
+                    | new Button("Cancel").Variant(ButtonVariant.Outline).HandleClick(_ => client.Toast("Changes cancelled")),
                 new Card(
                     "This sheet has action buttons in the footer"
                 ).Title("Content")
@@ -89,22 +84,23 @@ public class SheetWithFooterActions : ViewBase
 }
 ```
 
-### Sheet with Complex Layout
+### Complex Layout
 
-The following demonstrates a complex sheet layout with multiple cards, user information display, form inputs, and action buttons. It shows how to organize complex content within sheets using nested layouts and various input controls.
+It shows how to organize complex content within sheets using nested layouts and various input controls.
 
 ```csharp demo-tabs ivy-bg
 public class ComplexSheetLayout : ViewBase
 {
     public override object? Build()
     {
+        var client = UseService<IClientProvider>();
         return new Button("Open Complex Sheet").WithSheet(
             () => Layout.Vertical()
                 | new Card(
                     Layout.Horizontal()
                         | new Avatar("JD").Size(64)
                         | Layout.Vertical()
-                            | Text.H3("John Doe")
+                            | Text.Small("John Doe").NoWrap()
                             | Text.Small("john.doe@example.com")
                 ).Title("User Information")
                 | new Card(
@@ -115,9 +111,9 @@ public class ComplexSheetLayout : ViewBase
                 ).Title("Preferences")
                 | new Card(
                     Layout.Horizontal().Gap(2)
-                        | new Button("Update Profile")
-                        | new Button("Change Password")
-                        | new Button("Delete Account").Variant(ButtonVariant.Destructive)
+                        | new Button("Update Profile").HandleClick(_ => client.Toast("Profile updated!"))
+                        | new Button("Change Password").HandleClick(_ => client.Toast("Password change initiated"))
+                        | new Button("Delete Account").Variant(ButtonVariant.Destructive).HandleClick(_ => client.Toast("Account deletion requested"))
                 ).Title("Actions"),
             title: "User Profile",
             description: "Manage your account settings and preferences",
@@ -127,9 +123,9 @@ public class ComplexSheetLayout : ViewBase
 }
 ```
 
-### Sheet with Different Widths
+### Different Widths
 
-The following showcases the various width options available for sheets. It creates multiple buttons that open sheets with different sizes, from small rem-based widths to full-screen layouts, demonstrating how width affects the user experience.
+The following demonstrates different sheet width options, from small to full-screen layouts.
 
 ```csharp demo-tabs ivy-bg
 public class SheetWidthExamples : ViewBase
@@ -163,7 +159,7 @@ public class SheetWidthExamples : ViewBase
 
 ### Sheet with Navigation
 
-The following demonstrates how to create a sheet with internal navigation between different pages. It uses state management to track the current page and dynamically updates the content based on user selection, showing how sheets can contain complex, multi-page interfaces.
+This example shows a sheet with internal navigation between multiple pages using state management.
 
 ```csharp demo-tabs ivy-bg
 public class NavigationSheet : ViewBase
@@ -182,7 +178,7 @@ public class NavigationSheetContent : ViewBase
 {
     public override object? Build()
     {
-        var currentPage = UseState(0);
+        var currentPage = UseState<int>(0);
         var pages = new[] { "Home", "Profile", "Settings", "Help" };
         
         return Layout.Vertical()
@@ -195,6 +191,78 @@ public class NavigationSheetContent : ViewBase
             | new Card(
                 $"This is the {pages[currentPage.Value]} page content"
             ).Title("Page Content");
+    }
+}
+```
+
+## Advanced example
+
+### Conditional Rendering
+
+The following demonstrates how to conditionally render different content within a sheet based on state or user actions.
+
+```csharp demo-tabs ivy-bg
+public class ConditionalSheetExample : ViewBase
+{
+    public override object? Build()
+    {
+        var client = UseService<IClientProvider>();
+        var isOpen = UseState<bool>(false);
+        var viewMode = UseState<string>("list"); // "list", "grid", "details"
+        
+        object RenderContent()
+        {
+            return viewMode.Value switch
+            {
+                "list" => new Card(
+                    Layout.Vertical().Gap(1)
+                        | "Item 1"
+                        | "Item 2"
+                        | "Item 3"
+                ).Title("List View"),
+                
+                "grid" => new Card(
+                    Layout.Horizontal().Gap(2)
+                        | new Card("Item 1").Width(Size.Fraction(1/3f))
+                        | new Card("Item 2").Width(Size.Fraction(1/3f))
+                        | new Card("Item 3").Width(Size.Fraction(1/3f))
+                ).Title("Grid View"),
+                
+                "details" => new Card(
+                    Layout.Vertical().Gap(2)
+                        | Text.H3("Detailed Information")
+                        | Text.Small("This is a detailed view with more information about the selected item.")
+                        | new Button("Action").Variant(ButtonVariant.Primary).HandleClick(_ => client.Toast("Action performed on detailed item!"))
+                ).Title("Details View"),
+                
+                _ => new Card("Unknown view mode").Title("Error")
+            };
+        }
+        
+        return Layout.Vertical().Gap(2)
+            | new Button("Open Conditional Sheet").HandleClick(_ => isOpen.Value = true)
+            | (isOpen.Value ? new Sheet((Event<Sheet> _) => isOpen.Value = false,
+                Layout.Vertical().Gap(2)
+                    | Layout.Horizontal().Gap(2)
+                        | new Button("List").Variant(viewMode.Value == "list" ? ButtonVariant.Primary : ButtonVariant.Outline)
+                            .HandleClick(_ => {
+                                viewMode.Value = "list";
+                                client.Toast("Switched to List view");
+                            })
+                        | new Button("Grid").Variant(viewMode.Value == "grid" ? ButtonVariant.Primary : ButtonVariant.Outline)
+                            .HandleClick(_ => {
+                                viewMode.Value = "grid";
+                                client.Toast("Switched to Grid view");
+                            })
+                        | new Button("Details").Variant(viewMode.Value == "details" ? ButtonVariant.Primary : ButtonVariant.Outline)
+                            .HandleClick(_ => {
+                                viewMode.Value = "details";
+                                client.Toast("Switched to Details view");
+                            })
+                    | RenderContent(),
+                title: "Conditional Content Sheet",
+                description: "Switch between different view modes"
+            ).Width(Size.Fraction(2/3f)) : null);
     }
 }
 ```
