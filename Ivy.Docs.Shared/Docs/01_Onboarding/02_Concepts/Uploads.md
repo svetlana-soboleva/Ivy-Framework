@@ -1,6 +1,6 @@
 # Uploads
 
-<Ingress Text="Handle file uploads robustly with support for single/multiple files, drag-and-drop interfaces, and progress tracking for various file types. Uploads in Ivy provide a robust system for handling file uploads in your applications. Whether you're allowing users to upload documents, images, or any other type of file, Ivy's upload functionality makes it easy to manage file transfers from the client to the server." />
+<Ingress Text="Handle file uploads robustly with support for single/multiple files, drag-and-drop interfaces, and progress tracking for various file types." />
 
 ## Overview
 
