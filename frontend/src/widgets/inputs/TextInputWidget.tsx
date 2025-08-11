@@ -81,7 +81,7 @@ const formatShortcutForDisplay = (shortcutStr?: string): React.ReactNode[] => {
       result.push(
         <span
           key={`meta-${index}`}
-          style={{ fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }}
+          className="inline-flex items-center justify-center"
         >
           ⌘
         </span>
@@ -457,7 +457,7 @@ const SearchVariant: React.FC<{
         )}
         {props.shortcutKey && !isFocused && (
           <div className="pointer-events-auto flex items-center h-6">
-            <kbd className="px-1 py-0.5 text-small-label font-medium text-foreground bg-muted border border-border rounded-md">
+            <kbd className="badge-text-small font-medium text-foreground bg-muted border border-border rounded-sm">
               {shortcutDisplay}
             </kbd>
           </div>
