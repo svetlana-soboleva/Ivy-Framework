@@ -1,6 +1,6 @@
 # Memoization
 
-<Ingress Text="Optimize performance by caching expensive computations and preventing unnecessary recalculations in your Ivy applications. Memoization is a powerful optimization technique in Ivy that allows you to cache the results of expensive computations and prevent unnecessary recalculations. This is particularly useful when dealing with complex calculations or data transformations that are computationally expensive." />
+<Ingress Text="Memoization helps Ivy applications run faster by caching results of expensive computations." />
 
 ## Overview
 
