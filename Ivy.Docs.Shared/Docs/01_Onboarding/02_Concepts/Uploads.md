@@ -146,6 +146,8 @@ public class ValidatedUploadView : ViewBase
 5. **User Feedback**: Provide clear feedback about upload status
 6. **Accessibility**: Ensure upload interfaces are accessible
 
+<WidgetDocs Type="Ivy.FileInput" ExtensionTypes="Ivy.FileInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/FileInput.cs"/>
+
 ## Examples
 
 ### Image Upload with Preview
