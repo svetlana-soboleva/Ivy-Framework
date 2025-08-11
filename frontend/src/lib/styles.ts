@@ -29,9 +29,7 @@ const _getWantedWidth = (width?: string): React.CSSProperties => {
       return { width: `${value}rem` };
     case 'fraction':
       return {
-        flexBasis: `${parseFloat(value) * 100}%`,
-        flexShrink: 1,
-        flexGrow: 0,
+        width: `${parseFloat(value) * 100}%`,
       };
     case 'fraction-gap':
       return {
