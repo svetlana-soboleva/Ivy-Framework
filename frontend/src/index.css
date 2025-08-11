@@ -422,7 +422,6 @@
     --tracking-widest: calc(var(--tracking-normal) + 0.1em);
   }
   body {
-    letter-spacing: var(--tracking-normal);
     font-family: var(--font-sans);
   }
 
