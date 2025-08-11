@@ -371,13 +371,13 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   );
 
   const container = (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4">
       <div className="flex-1">
         <RadioGroup
           value={stringValue}
           onValueChange={handleValueChange}
           disabled={disabled}
-          className="flex flex-col space-y-2"
+          className="flex flex-col gap-4"
           data-testid={dataTestId}
         >
           {validOptions.map(option => (
@@ -505,7 +505,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div className="flex items-center gap-2">
       <div className="flex-1">
-        <div className="flex flex-col space-y-2 gap-2" data-testid={dataTestId}>
+        <div className="flex flex-col gap-4" data-testid={dataTestId}>
           {validOptions.map(option => {
             const isSelected = selectedValues.includes(option.value);
             const isInvalid = !!invalid && isSelected;
