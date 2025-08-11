@@ -119,7 +119,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [showToc, children]);
+  }, [showToc]);
 
   return (
     <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8 ">
