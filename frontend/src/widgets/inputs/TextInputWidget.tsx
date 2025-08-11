@@ -457,7 +457,7 @@ const SearchVariant: React.FC<{
         )}
         {props.shortcutKey && !isFocused && (
           <div className="pointer-events-auto flex items-center h-6">
-            <kbd className="badge-text-small font-medium text-foreground bg-muted border border-border rounded-sm">
+            <kbd className="badge-text-primary font-medium text-foreground bg-muted border border-border rounded-sm">
               {shortcutDisplay}
             </kbd>
           </div>
