@@ -293,7 +293,7 @@ public static class MarkdownConverter
     }
 
     private static void HandleCodeBlock(FencedCodeBlock codeBlock, string markdownContent, StringBuilder codeBuilder,
-        StringBuilder viewBuilder, HashSet<string> usedClassNames)
+StringBuilder viewBuilder, HashSet<string> usedClassNames)
     {
         string language = codeBlock.Info ?? "csharp";
         string codeContent = markdownContent.Substring(codeBlock.Span.Start, codeBlock.Span.Length).Trim();
@@ -317,6 +317,12 @@ public static class MarkdownConverter
                     codeBuilder.AppendTab(4).AppendLine($".AddOutput(\"{line.Trim()}\")");
                 }
             }
+        }
+        else if (language == "mermaid")
+        {
+            // Handle Mermaid diagrams by wrapping them in Markdown widget with proper syntax
+            string mermaidBlock = $"```mermaid\n{codeContent}\n```";
+            AppendAsMultiLineStringIfNecessary(3, mermaidBlock, codeBuilder, "| new Markdown(", ").HandleLinkClick(onLinkClick)");
         }
         else
         {

@@ -8,10 +8,18 @@ Ivy is a **server-side web framework** that brings React-like patterns to C#. In
 
 ## Architecture Overview
 
-```
-C# Views → Widget Tree → WebSocket → React Frontend → Browser
-    ↑                                                      ↓
-    ← ← ← ← ← ← Event Handlers ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
+```mermaid
+graph LR
+    A["C# Views<br/>(ViewBase)"] --> B["Widget Tree<br/>(JSON)"]
+    B --> C["WebSocket<br/>Communication"]
+    C --> D["React Frontend<br/>(Shadcn/TailwindCSS)"]
+    D --> E["Browser<br/>(HTML/CSS)"]
+    
+    E --> F["User Events<br/>(clicks, input)"]
+    F --> C
+    C --> G["Event Handlers<br/>(C# methods)"]
+    G --> H["State Updates<br/>(UseState, etc.)"]
+    H --> A
 ```
 
 ### 1. Views & Components
@@ -50,6 +58,8 @@ public class TodoApp : ViewBase
 
 Ivy provides React-inspired hooks for state management:
 
+**Available Hooks:**
+
 - `UseState<T>()` - Local component state that triggers re-renders
 - `UseEffect()` - Side effects with dependency tracking  
 - `UseService<T>()` - Dependency injection integration
@@ -85,6 +95,8 @@ Ivy ships with a comprehensive set of strongly-typed widgets:
 ### 4. Real-time Communication
 
 The magic happens through WebSocket communication:
+
+**Key Steps:**
 
 1. **Initial Render**: Ivy builds your view tree and serializes it to JSON
 2. **WebSocket Transfer**: The widget tree is sent to the browser
