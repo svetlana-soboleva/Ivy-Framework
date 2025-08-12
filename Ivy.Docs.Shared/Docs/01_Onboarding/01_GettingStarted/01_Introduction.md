@@ -96,7 +96,7 @@ Deploy anywhere - AWS, Azure, GCP, or your own infrastructure. No vendor lock-in
 Ready to try Ivy? The fastest way to get started is:
 
 ```terminal
->dotnet tool install -g Ivy.Cli
+>dotnet tool install -g Ivy.Console
 >ivy init --namespace MyCompany.InternalApp
 >dotnet watch
 ```
