@@ -98,9 +98,9 @@ public class ArticleDemo : ViewBase
             | Text.Block("• Basic knowledge of C#")
             | Text.H2("Installation")
             | Text.P("Install Ivy using the .NET CLI:")
-            | Text.InlineCode("dotnet new -i Ivy.Templates")
+            | Text.InlineCode("dotnet tool install -g Ivy.Console")
             | Text.P("Create a new project:")
-            | Text.InlineCode("dotnet new ivy -n MyFirstApp");
+            | Text.InlineCode("ivy init -n MyFirstApp");
     }
 }
 ```
