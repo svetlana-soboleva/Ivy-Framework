@@ -2,7 +2,7 @@
 
 <Ingress Text="Add celebratory confetti effects to any widget with customizable triggers for automatic, click, or hover activation." />
 
-`Confetti` adds a fun celebratory effect to any widget by wrapping it and triggering confetti animations. The confetti can be triggered automatically, on click, or when the mouse hovers over the widget. Perfect for celebrating user achievements, form submissions, or adding delightful interactions to your interface.
+The `Confetti` animation can be triggered automatically, on click, or when the mouse hovers over the widget. Perfect for celebrating user achievements, form submissions, or adding delightful interactions to your interface.
 
 ## Basic Usage
 
@@ -15,83 +15,43 @@ new Button("Celebrate!")
 
 ### Auto Trigger
 
-Confetti fires automatically when the widget is first rendered:
+Confetti fires automatically when the widget is first rendered, perfect for welcoming users or celebrating initial page loads.
 
 ```csharp demo-tabs
 Text.Block("Welcome!")
     .WithConfetti(AnimationTrigger.Auto)
 ```
 
-## Animation Triggers
-
-Confetti supports three different trigger modes that control when the effect activates:
-
-### Click Trigger
-
-Confetti fires when the user clicks on the wrapped widget:
-
-```csharp demo-tabs
-new Button("Click Me!")
-    .WithConfetti(AnimationTrigger.Click)
-```
-
 ### Hover Trigger
 
-Confetti activates when the mouse hovers over the widget:
+Confetti activates when the mouse hovers over the widget, providing immediate visual feedback for interactive elements.
 
 ```csharp demo-tabs
 new Card("Hover over me")
     .WithConfetti(AnimationTrigger.Hover)
 ```
 
-## Common Use Cases
+### List Usage
 
-### Task Completion Celebration
-
-```csharp demo-tabs
-Layout.Vertical().Gap(20)
-    | new Card("Task Manager")
-    | new Button("Complete Task").WithConfetti(AnimationTrigger.Click)
-    | Text.Block("Task completed! 🎉").WithConfetti(AnimationTrigger.Auto)
-```
-
-### Achievement Unlocking
+Demonstrates how to add confetti to list items, making each selection feel special and celebratory.
 
 ```csharp demo-tabs
-Layout.Vertical().Gap(20)
-    | new Button("Unlock Achievement").WithConfetti(AnimationTrigger.Click)
-    | new List(new[] { "First Steps", "Quick Learner", "Power User" }
-        .Select(achievement => new ListItem(achievement)))
+Layout.Vertical().Gap(10)
+    | new List(new[] { "First option", "Second option" }
+        .Select(level => new ListItem(level, onClick: _ => {}, icon: Icons.Circle)
+            .WithConfetti(AnimationTrigger.Click)))
 ```
 
 ### Interactive Elements
 
+Shows various interactive widgets with different confetti triggers, demonstrating the flexibility of the confetti system.
+
 ```csharp demo-tabs
-Layout.Vertical().Gap(20)
+Layout.Vertical().Gap(10)
     | Text.Block("Interactive elements with confetti:")
     | new Button("Click me").WithConfetti(AnimationTrigger.Click)
     | new Card("Hover me").WithConfetti(AnimationTrigger.Hover)
     | new Badge("Auto confetti").WithConfetti(AnimationTrigger.Auto)
-```
-
-## Advanced Patterns
-
-### Conditional Confetti
-
-Show confetti only under certain conditions:
-
-```csharp demo-tabs
-Layout.Vertical().Gap(20)
-    | new Button("Special Action").WithConfetti(AnimationTrigger.Click)
-    | new Button("Auto Confetti").WithConfetti(AnimationTrigger.Auto)
-```
-
-### Confetti with State Changes
-
-```csharp demo-tabs
-Layout.Vertical().Gap(20)
-    | new Button("Complete Task").WithConfetti(AnimationTrigger.Click)
-    | Text.Block("Task completed! 🎉").WithConfetti(AnimationTrigger.Auto)
 ```
 
 <WidgetDocs Type="Ivy.Confetti" ExtensionTypes="Ivy.ConfettiExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Effects/Confetti.cs"/>
@@ -100,13 +60,13 @@ Layout.Vertical().Gap(20)
 
 ## Integration with Other Widgets
 
-Confetti works seamlessly with all Ivy widgets:
+Confetti works seamlessly with all Ivy widgets, allowing you to add celebratory effects to any interface element.
 
 ```csharp demo-tabs
 Layout.Vertical().Gap(10)
     | new Button("Action").WithConfetti(AnimationTrigger.Click)
     | new Card("Content").WithConfetti(AnimationTrigger.Hover)
     | new ListItem("Item").WithConfetti(AnimationTrigger.Click)
-    | Text.Block("Message").WithConfetti(AnimationTrigger.Auto)
-    | new Badge("Success").WithConfetti(AnimationTrigger.Auto)
+    | Text.Block("Message").WithConfetti(AnimationTrigger.Hover)
+    | new Badge("Success").WithConfetti(AnimationTrigger.Hover)
 ```
