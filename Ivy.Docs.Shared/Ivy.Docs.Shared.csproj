@@ -11,12 +11,12 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(UseNuGetPackage)' != 'true'">
-    <ProjectReference Include="../Ivy/Ivy.csproj" />
+  <ItemGroup Condition="'$(IvyPackageVersion)' != ''">
+    <PackageReference Include="Ivy" Version="$(IvyPackageVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(UseNuGetPackage)' == 'true'">
-    <PackageReference Include="Ivy" Version="$(IvyPackageVersion)" />
+  <ItemGroup Condition="'$(IvyPackageVersion)' == ''">
+    <ProjectReference Include="../Ivy/Ivy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
