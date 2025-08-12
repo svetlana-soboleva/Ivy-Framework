@@ -4,7 +4,7 @@
 
 The `Fragment` widget is a container component that doesn't produce any HTML elements itself. It's useful for grouping multiple elements without adding extra markup to the DOM, similar to React Fragments.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ConditionalRenderingView : ViewBase
 {
     public override object? Build()

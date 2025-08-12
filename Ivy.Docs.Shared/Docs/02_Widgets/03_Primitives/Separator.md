@@ -4,7 +4,7 @@
 
 The `Separator` widget creates a visual divider between content sections. It helps organize information and improve readability by clearly demarcating different parts of your interface.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ProfileDetailView : ViewBase
 {
     public override object? Build()

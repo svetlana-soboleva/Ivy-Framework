@@ -23,8 +23,6 @@ public record Box : WidgetBase<Box>
     [Prop] public Thickness Margin { get; set; } = new(0);
 
     [Prop] public Align? ContentAlign { get; set; } = Align.Center;
-
-    [Prop] public string? ClassName { get; set; }
 }
 
 public static class BoxExtensions
@@ -46,6 +44,4 @@ public static class BoxExtensions
 
     public static Box Content(this Box box, params object[] content) => box with { Children = content };
     public static Box ContentAlign(this Box box, Align? align) => box with { ContentAlign = align };
-
-    public static Box ClassName(this Box box, string className) => box with { ClassName = className };
 }

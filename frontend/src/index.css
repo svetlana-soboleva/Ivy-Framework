@@ -72,7 +72,7 @@
 
 @layer base {
   :root {
-    --background: #f4f6f6;
+    --background: #ffffff;
     --foreground: #000000;
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.26 0 0);
@@ -105,9 +105,6 @@
     --sidebar-border: #d1d5db;
     --sidebar-ring: oklch(0.77 0 0);
 
-    /* Docs specific colors */
-    --docs-black: #061109;
-    --docs-surface: #061d13;
     /* Custom color palette with variants */
     --black: #000000;
     --black-foreground: #ffffff;
@@ -279,9 +276,9 @@
   }
   .dark {
     /* Global dark background color per spec */
-    --background: #061109;
+    --background: #000000;
     --foreground: #f8f8f8;
-    --card: var(--docs-surface);
+    --card: #171717;
     --card-foreground: #f8f8f8;
     --popover: var(--background);
     --popover-foreground: #f8f8f8;
@@ -313,8 +310,6 @@
     --sidebar-ring: oklch(0.87 0.01 286.29);
 
     /* Keep docs palette consistent in dark mode */
-    --docs-black: #061109;
-    --docs-surface: #061d13;
     --font-sans: 'Geist';
     --font-serif: 'Geist';
     --font-mono: 'Geist Mono';

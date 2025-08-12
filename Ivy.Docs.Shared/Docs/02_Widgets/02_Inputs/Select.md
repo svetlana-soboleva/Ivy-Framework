@@ -38,7 +38,7 @@ Using this variant `SelectInputs.Select`, the options can be rendered as a list 
 of this variant. This is the default variant. This should be used when only one item is expected
 to be selected from the inputs.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class SelectVariantDemo : ViewBase
 {
     public override object? Build()
@@ -57,7 +57,7 @@ public class SelectVariantDemo : ViewBase
 
 If it is required to render the select options as checkboxes, then this variant `SelectInputs.List` should be used.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 // Option 1: Single Select (probably what you want)
 public class SelectVariantDemoSingleSelect : ViewBase
 {
@@ -78,7 +78,7 @@ public class SelectVariantDemoSingleSelect : ViewBase
 Sometimes it is visually useful to show different options in their own boxes so that those can be toggled.
 The following example shows how to use it.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class MealComboDemo : ViewBase
 {
         private static readonly Dictionary<string, decimal> BurgerPrices = new()
@@ -147,7 +147,7 @@ single element. The following example shows this in action.
 
 The following example shows how a `SelectInputs.List` allows multiple selection.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class SelectMultiVariantDemo : ViewBase
 {
     public override object? Build()
@@ -167,7 +167,7 @@ public class SelectMultiVariantDemo : ViewBase
 
 The following example shows how a `SelectInputs.Toggle` allows multiple selection.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class SelectMultiVariantDemo : ViewBase
 {
     public override object? Build()
@@ -187,7 +187,7 @@ public class SelectMultiVariantDemo : ViewBase
 
 Handle change events using the `onChange` parameter:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class SelectVariantDemoSingleSelect : ViewBase
 {
     public override object? Build()
@@ -247,7 +247,7 @@ A `SelectInput` can be rendered as disabled using the `Disabled` function.
 
 The following code shows how to use these functions and how it will render
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 
 public class SimpleSelectDemo : ViewBase
 {
@@ -286,7 +286,7 @@ public class SimpleSelectDemo : ViewBase
 The following demo shows how different condiment options for different coffees can be shown possibly
 in a software designed for a coffee shop.  
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CoffeeShopDemo: ViewBase
 {
     // Coffee varieties and their typical accompaniments

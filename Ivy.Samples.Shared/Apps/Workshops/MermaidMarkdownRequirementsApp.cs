@@ -38,7 +38,7 @@ public class MermaidMarkdownRequirementsApp : SampleBase
             )
             | new Markdown(
                 """"
-                ```csharp demo-below ivy-bg
+                ```csharp demo-below 
                 class Diagram {
                 }
                 ```

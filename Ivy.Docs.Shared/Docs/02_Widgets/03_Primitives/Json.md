@@ -6,7 +6,7 @@ The `Json` widget displays JSON data in a formatted, syntax-highlighted view. It
 
 The simplest way to display JSON data is by passing a serialized string directly to the Json widget.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BasicJsonExample : ViewBase
 {
     public override object? Build()
@@ -29,7 +29,7 @@ public class BasicJsonExample : ViewBase
 
 This example demonstrates how to create an interactive JSON viewer that fetches data from an API and displays it with real-time updates.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ApiResponseViewer : ViewBase
 {
     public override object? Build()
@@ -99,7 +99,7 @@ public class ApiResponseViewer : ViewBase
 
 Demonstrates nested objects, arrays, and complex data types with automatic formatting.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ComplexJsonExample : ViewBase
 {
     public override object? Build()
@@ -180,7 +180,7 @@ public class ComplexJsonExample : ViewBase
 
 It shows error handling patterns and how to integrate the Json widget with other input components for a complete user experience.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class JsonValidationExample : ViewBase
 {
     public override object? Build()

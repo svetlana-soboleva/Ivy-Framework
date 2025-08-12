@@ -8,7 +8,7 @@ The `Markdown` widget renders Markdown content as formatted HTML with syntax hig
 
 The Markdown widget supports standard markdown syntax including text formatting, lists, links, and blockquotes. This example demonstrates the most commonly used features for basic content creation.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BasicMarkdownView : ViewBase
 {
     public override object? Build()
@@ -36,7 +36,7 @@ public class BasicMarkdownView : ViewBase
 
 Tables in Markdown provide a structured way to display data in rows and columns. They support alignment, headers, and can be easily formatted for better readability.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TablesMarkdownView : ViewBase
 {
     public override object? Build()
@@ -59,7 +59,7 @@ public class TablesMarkdownView : ViewBase
 
 Code blocks support syntax highlighting for various programming languages and can be used for displaying code examples, configuration files, or any formatted text. The language is automatically detected based on the code fence specification.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CodeBlocksMarkdownView : ViewBase
 {
     public override object? Build()
@@ -83,7 +83,7 @@ public class CodeBlocksMarkdownView : ViewBase
 
 Mathematical expressions can be rendered using KaTeX, supporting both inline math with single dollar signs and block math with double dollar signs. This feature is perfect for technical documentation and educational content.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class MathMarkdownView : ViewBase
 {
     public override object? Build()
@@ -108,7 +108,7 @@ Mermaid diagrams allow you to create various types of visual diagrams directly i
 
 For more information on how to use Mermaid, [follow this link](https://mermaid.js.org/):
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class MermaidView : ViewBase
 {
     public override object? Build()
@@ -137,7 +137,7 @@ public class MermaidView : ViewBase
 
 Emoji support enhances content with visual elements and expressions. You can use standard emoji shortcodes to add personality and visual appeal to your markdown content.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class EmojiView : ViewBase
 {
     public override object? Build()
@@ -160,7 +160,7 @@ public class EmojiView : ViewBase
 
 The Markdown widget supports HTML tags for advanced formatting and provides interactive link handling through the OnLinkClick event. This allows for custom navigation logic and enhanced user interactions.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class HtmlAndLinksView : ViewBase
 {
     public override object? Build()
@@ -198,7 +198,7 @@ public class HtmlAndLinksView : ViewBase
 
 This comprehensive example showcases multiple Markdown features working together in a single widget. It demonstrates how different elements can be combined to create rich, interactive content with proper link handling.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ComprehensiveMarkdownView : ViewBase
 {
     public override object? Build()

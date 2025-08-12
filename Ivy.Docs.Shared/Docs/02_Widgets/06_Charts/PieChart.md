@@ -13,7 +13,7 @@ altered via the `PieChartStyles` enum.
 
 The following example shows how to create a Pie and a Donut chart easily.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class PieChartDemo : ViewBase
 {
     public override object? Build()
@@ -52,7 +52,7 @@ The following example shows how to use `PieChart` type to create a more fine con
 The color scheme of the Pie can be changed using `ColorScheme` enum. The legend can be placed
 in any corner using `Alignment` and `VerticalAlignment` enums.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BrowserStatsPie : ViewBase
 {
     public override object? Build()
@@ -109,7 +109,7 @@ when users hover on that specific part of the pie chart.
 The following example shows how these combinations of charts can be used in a realistic example
 for showing how populated some countries are.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 
 public class DrillDownDemo : ViewBase
 {

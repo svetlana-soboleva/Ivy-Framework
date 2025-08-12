@@ -6,7 +6,7 @@ The `Html` widget allows you to render raw HTML content in your Ivy application.
 
 ## Basic Usage
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BasicHtmlView : ViewBase
 {
     public override object? Build()
@@ -25,7 +25,7 @@ public class BasicHtmlView : ViewBase
 
 ### Text Formatting
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TextFormattingView : ViewBase
 {
     public override object? Build()
@@ -57,7 +57,7 @@ public class TextFormattingView : ViewBase
 
 ### Lists and Structure
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ListsView : ViewBase
 {
     public override object? Build()
@@ -118,7 +118,7 @@ public class ListsView : ViewBase
 
 ### Links and Navigation
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class LinksView : ViewBase
 {
     public override object? Build()
@@ -142,7 +142,7 @@ public class LinksView : ViewBase
 
 ### Tables
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TablesView : ViewBase
 {
     public override object? Build()
@@ -188,7 +188,7 @@ public class TablesView : ViewBase
 
 ## Complex Layout Example
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ComplexLayoutView : ViewBase
 {
     public override object? Build()

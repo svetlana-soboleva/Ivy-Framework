@@ -8,7 +8,7 @@ The `FileInput` widget allows users to upload files. It provides a file selector
 
 Here's a simple example of a `FileInput` that allows users to select files:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class BasicFileInputDemo : ViewBase
 {
     public override object? Build()
@@ -32,7 +32,7 @@ The `FileInput` widget supports different variants to suit various use cases. It
 where users can select a single file or multiple files and drag and drop them in the file upload
 section. The following demo showcases this.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FileDropDemo : ViewBase
 {    
     public override object? Build()
@@ -76,7 +76,7 @@ public class FileInputDisabledDemo : ViewBase
 
 ### Multiple File Selection
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class MultiFileSelectionDemo : ViewBase
 {
     public override object? Build()

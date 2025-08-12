@@ -11,7 +11,7 @@ The TabsLayout widget creates a tabbed interface that allows users to switch bet
 
 We recommend using Layout.Tabs to create simple tabbed interfaces.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Tabs(
     new Tab("Profile", "User profile information"),
     new Tab("Security", "Security settings"),
@@ -25,7 +25,7 @@ This example creates a basic layout with three tabs.
 
 This example demonstrates how to combine multiple TabView features, including icons, badges, variant selection, and size control:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Tabs(
     new Tab("Customers", "Customer list").Icon(Icons.User).Badge("10"),
     new Tab("Orders", "Order management").Icon(Icons.DollarSign).Badge("0"),
@@ -42,7 +42,7 @@ If you need more flexibility in creating and managing tabs, TabsLayout offers a 
 
 The first parameter is the selected tab index (0), and the remaining parameters are the Tab objects.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 new TabsLayout(null, null, null, null, 0,
     new Tab("Overview", "This is the overview content"),
     new Tab("Details", "This is the details content"),
@@ -60,7 +60,7 @@ new TabsLayout(null, null, null, null, 0,
 
 This example demonstrates how to handle all available events. The event handlers receive the tab index and can perform custom actions such as logging, state updates, or API calls.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 new TabsLayout(
     onSelect: (e) => Console.WriteLine($"Selected: {e.Value}"),
     onClose: (e) => Console.WriteLine($"Closed: {e.Value}"),
@@ -79,7 +79,7 @@ new TabsLayout(
 
 The Tabs variant displays tabs as clickable buttons with an underline indicator for the active tab, providing a traditional tab interface.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 new TabsLayout(null, null, null, null, 0,
     new Tab("First", "First tab content"),
     new Tab("Second", "Second tab content"),

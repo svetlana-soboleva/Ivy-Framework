@@ -13,7 +13,7 @@ setting minimum/maximum values, step increments, and formatting.
 Here's a simple example of a `NumberInput` that allows users to input a number. It also allows to set a minimum
 and a maximum limit.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class SimpleNumericValueDemo : ViewBase
 {
     public override object? Build()
@@ -42,7 +42,7 @@ This creates the `NumberInputs.Slider` variant.
 
 The following demo shows how a slider can be used to give a visual clue.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class NumberSliderInput : ViewBase 
 {
     public override object? Build()
@@ -75,7 +75,7 @@ should be used to create this variant. This is the idiomatic way to use Ivy.
 The following demo uses `NumberInputs.Number` with `NumberFormatStyle.Currency` to create
 `NumberInput`s that can take money inputs. `ToMoneyInput` hides all these complexities.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class MoneyInputDemo : ViewBase 
 {
     public override object? Build()
@@ -126,7 +126,7 @@ public class MoneyInputDemo : ViewBase
 To mark a number input as invalid, this style should be used.
 This can be used via the extension function `Invalid`.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class InvalidDemo : ViewBase
 {
     public override object? Build()
@@ -144,7 +144,7 @@ public class InvalidDemo : ViewBase
 
 To disable a `NumberInput` this style should be used. This can be used via the extension function `Disabled`.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class DisabledDemo : ViewBase
 {
     public override object? Build()
@@ -163,7 +163,7 @@ To set the precision of a `NumberInput` this style should be used. This can be u
 
 The following demo shows these two in action.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class MoneyPrecisionDemo : ViewBase
 {
     public override object? Build()
@@ -187,7 +187,7 @@ public class MoneyPrecisionDemo : ViewBase
 
 There are three different kinds of formats that a `NumberInput` can have. The following shows these in action.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FormatStyleDemos : ViewBase
 {
     public override object? Build()
@@ -228,7 +228,7 @@ new NumberInput<int>(onChangedState.Value, e =>
 
 The following shows a realistic example of how several `NumberInput`s can be used.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class GroceryAppDemo : ViewBase
 {
     public override object? Build()

@@ -13,7 +13,7 @@ The `FeedbackInput` widget provides a specialized input for collecting user feed
 
 Here's a simple example of a `FeedbackInput` with a default variant:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class BasicFeedbackDemo : ViewBase
 {    
     public override object? Build()
@@ -43,7 +43,7 @@ public class BasicFeedbackDemo : ViewBase
  the variant `FeedbackInputs.Thumbs` should be used. `FeedbackInputs.Emojis` should be used
  for collecting sentiment analysis feedbacks about anything.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FeedbackDemo : ViewBase
 {
     public override object? Build()
@@ -71,7 +71,7 @@ public class FeedbackDemo : ViewBase
 
 The following example shows how change events can be handled for `FeedbackInput`s.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FeedbackHandling: ViewBase
 {    
     public override object? Build()
@@ -103,7 +103,7 @@ public class FeedbackHandling: ViewBase
 
 To render a `FeedbackInput` in disabled state, this function `Disabled` should be used.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class DisabledFeedbackDemo : ViewBase
 {
     public override object? Build()
@@ -121,7 +121,7 @@ public class DisabledFeedbackDemo : ViewBase
 
 To render a `FeedbackInput` in invalid (or error) state, the function `Invalid` should be used.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class InvalidFeedbackDemo : ViewBase
 {
     public override object? Build()

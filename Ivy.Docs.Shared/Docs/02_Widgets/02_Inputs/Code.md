@@ -11,7 +11,7 @@ It supports various programming languages and offers features like line numbers 
 
 ## Supported Languages
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CSharpDemo : ViewBase
 {
     public override object? Build()
@@ -27,7 +27,7 @@ public class CSharpDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class JavaScriptDemo : ViewBase 
 {
     public override object? Build()
@@ -43,7 +43,7 @@ public class JavaScriptDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class PythonDemo : ViewBase 
 {
     public override object? Build()
@@ -59,7 +59,7 @@ public class PythonDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class SqlDemo : ViewBase 
 {
     public override object? Build()
@@ -75,7 +75,7 @@ public class SqlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class HtmlDemo : ViewBase 
 {
     public override object? Build()
@@ -91,7 +91,7 @@ public class HtmlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CssDemo : ViewBase 
 {
     public override object? Build()
@@ -107,7 +107,7 @@ public class CssDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class JsonDemo : ViewBase 
 {
     public override object? Build()
@@ -123,7 +123,7 @@ public class JsonDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class DbmlDemo : ViewBase 
 {
     public override object? Build()
@@ -140,7 +140,7 @@ public class DbmlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TypeScriptDemo : ViewBase 
 {
     public override object? Build()
@@ -163,7 +163,7 @@ The `Invalid` state provides visual feedback when code contains syntax errors or
 
 Mark a `CodeInput` as invalid when content has syntax errors:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class InvalidCodeDemo: ViewBase
 {
     public override object? Build()
@@ -206,7 +206,7 @@ Event handling enables you to respond to code changes and validate input in real
 
 Handle code changes and validation:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CodeInputWithValidation : ViewBase 
 {
     public override object? Build()

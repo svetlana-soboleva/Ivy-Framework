@@ -334,50 +334,42 @@ StringBuilder viewBuilder, HashSet<string> usedClassNames)
         string language, string arguments, HashSet<string> usedClassNames)
     {
         // Local helpers to reduce duplication and improve readability
-        static (string layout, bool ivyBg) ParseDemoArgs(string args)
+        static string ParseDemoArgs(string args)
         {
             var parts = args.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             var layout = parts.Length > 0 ? parts[0] : "demo";
-            // Explicit: only enable ivy-bg when flag is present
-            var ivyBg = parts.Any(p => p.Equals("ivy-bg", StringComparison.InvariantCultureIgnoreCase));
-            return (layout, ivyBg);
+            return layout;
         }
 
-        static void AppendDemoContent(StringBuilder cb, int tabs, string insert, bool ivyBg)
+        static void AppendDemoContent(StringBuilder cb, int tabs, string insert)
         {
-            if (ivyBg)
-                cb.AppendTab(tabs).AppendLine($"| new Box().ClassName(\"ivy-demo-surface p-4\").Content({insert})");
-            else
-                cb.AppendTab(tabs).AppendLine($"| ({insert})");
+            cb.AppendTab(tabs).AppendLine($"| new DemoBox().Content({insert})");
         }
 
-        static void AppendTabbedDemo(StringBuilder cb, string code, string insert, string lang, bool ivyBg)
+        static void AppendTabbedDemo(StringBuilder cb, string code, string insert, string lang)
         {
             cb.AppendTab(3).AppendLine("| Tabs( ");
-            cb.AppendTab(4).AppendLine(
-                ivyBg
-                    ? $"new Tab(\"Demo\", new Box().ClassName(\"ivy-demo-surface p-4\").Content({insert})),"
-                    : $"new Tab(\"Demo\", {insert}),");
+            cb.AppendTab(4).AppendLine($"new Tab(\"Demo\", new DemoBox().Content({insert})),");
             AppendAsMultiLineStringIfNecessary(4, code, cb, "new Tab(\"Code\", new Code(", $",{MapLanguageToEnum(lang)}))")
                 ;
             cb.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 8, 0, 0).Variant(TabsVariant.Content)");
         }
 
-        static void AppendVerticalDemo(StringBuilder cb, string code, string insert, string lang, bool demoBelow, bool ivyBg)
+        static void AppendVerticalDemo(StringBuilder cb, string code, string insert, string lang, bool demoBelow)
         {
             cb.AppendTab(3).AppendLine("| (Vertical() ");
-            if (!demoBelow) AppendDemoContent(cb, 4, insert, ivyBg);
+            if (!demoBelow) AppendDemoContent(cb, 4, insert);
             AppendAsMultiLineStringIfNecessary(4, code, cb, "| Code(", $",{MapLanguageToEnum(lang)})");
-            if (demoBelow) AppendDemoContent(cb, 4, insert, ivyBg);
+            if (demoBelow) AppendDemoContent(cb, 4, insert);
             cb.AppendTab(3).AppendLine(")");
         }
 
-        static void AppendGridDemo(StringBuilder cb, string code, string insert, string lang, bool demoRight, bool ivyBg)
+        static void AppendGridDemo(StringBuilder cb, string code, string insert, string lang, bool demoRight)
         {
             cb.AppendTab(3).AppendLine("| (Grid().Columns(2) ");
-            if (!demoRight) AppendDemoContent(cb, 4, insert, ivyBg);
+            if (!demoRight) AppendDemoContent(cb, 4, insert);
             AppendAsMultiLineStringIfNecessary(4, code, cb, "| Code(", $",{MapLanguageToEnum(lang)})");
-            if (demoRight) AppendDemoContent(cb, 4, insert, ivyBg);
+            if (demoRight) AppendDemoContent(cb, 4, insert);
             cb.AppendTab(3).AppendLine(")");
         }
 
@@ -404,30 +396,30 @@ StringBuilder viewBuilder, HashSet<string> usedClassNames)
             insertCode = codeContent;
         }
 
-        var (layout, ivyBg) = ParseDemoArgs(arguments);
+        var layout = ParseDemoArgs(arguments);
         switch (layout)
         {
             case "demo":
-                AppendDemoContent(codeBuilder, 3, insertCode, ivyBg);
+                AppendDemoContent(codeBuilder, 3, insertCode);
                 break;
             case "demo-tabs":
-                AppendTabbedDemo(codeBuilder, codeContent, insertCode, language, ivyBg);
+                AppendTabbedDemo(codeBuilder, codeContent, insertCode, language);
                 break;
             case "demo-below":
-                AppendVerticalDemo(codeBuilder, codeContent, insertCode, language, demoBelow: true, ivyBg: ivyBg);
+                AppendVerticalDemo(codeBuilder, codeContent, insertCode, language, demoBelow: true);
                 break;
             case "demo-above":
-                AppendVerticalDemo(codeBuilder, codeContent, insertCode, language, demoBelow: false, ivyBg: ivyBg);
+                AppendVerticalDemo(codeBuilder, codeContent, insertCode, language, demoBelow: false);
                 break;
             case "demo-right":
-                AppendGridDemo(codeBuilder, codeContent, insertCode, language, demoRight: true, ivyBg: ivyBg);
+                AppendGridDemo(codeBuilder, codeContent, insertCode, language, demoRight: true);
                 break;
             case "demo-left":
-                AppendGridDemo(codeBuilder, codeContent, insertCode, language, demoRight: false, ivyBg: ivyBg);
+                AppendGridDemo(codeBuilder, codeContent, insertCode, language, demoRight: false);
                 break;
             default:
                 // Fallback to simple demo
-                AppendDemoContent(codeBuilder, 3, insertCode, ivyBg);
+                AppendDemoContent(codeBuilder, 3, insertCode);
                 break;
         }
     }

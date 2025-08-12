@@ -8,7 +8,7 @@ All colors meet WCAG accessibility standards and automatically adapt to light/da
 
 ### All Colors
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class AllColorsView : ViewBase
 {
     public override object? Build()
@@ -30,7 +30,7 @@ public class AllColorsView : ViewBase
 
 ### Neutral Colors
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class NeutralColorsView : ViewBase
 {
     public override object? Build()
@@ -52,7 +52,7 @@ public class NeutralColorsView : ViewBase
 
 ### Chromatic Colors
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ChromaticColorsView : ViewBase
 {
     public override object? Build()
@@ -78,7 +78,7 @@ public class ChromaticColorsView : ViewBase
 
 ### Semantic Colors
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class SemanticColorsView : ViewBase
 {
     public override object? Build()
@@ -104,7 +104,7 @@ public class SemanticColorsView : ViewBase
 
 This example demonstrates how colors appear on both light and dark backgrounds:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ColorsOnBackgroundsView : ViewBase
 {
     public override object? Build()
@@ -145,7 +145,7 @@ public class ColorsOnBackgroundsView : ViewBase
 
 #### Status Indicators
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class StatusIndicatorsView : ViewBase
 {
     public override object? Build()
@@ -162,7 +162,7 @@ public class StatusIndicatorsView : ViewBase
 
 #### Button Colors
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ButtonColorsView : ViewBase
 {
     public override object? Build()

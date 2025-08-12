@@ -13,7 +13,7 @@ Views are the fundamental building blocks of Ivy applications. They are similar 
 
 Here's a simple view that displays a greeting:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class GreetingView : ViewBase
 {
     public override object? Build()
@@ -23,7 +23,7 @@ public class GreetingView : ViewBase
 }
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Text.P("Hello from a View!")
 ```
 
@@ -48,7 +48,7 @@ The `Build()` method is the heart of every view. It can return:
 - Collections (arrays, lists)
 - `null` (to render nothing)
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class FlexibleContentView : ViewBase
 {
     public override object? Build()
@@ -67,7 +67,7 @@ public class FlexibleContentView : ViewBase
 
 Views use React-like hooks for state management. The most common hook is `UseState()`:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CounterView : ViewBase
 {
     public override object? Build()
@@ -140,7 +140,7 @@ public class TimerView : ViewBase
 
 Views can be composed together to create complex UIs:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 Layout.Vertical()
     | Text.H2("Team Members")
     | new Card(
@@ -189,7 +189,7 @@ The `[App]` attribute supports several properties:
 
 ### Conditional Rendering
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class ConditionalView : ViewBase
 {
     public override object? Build()
@@ -208,7 +208,7 @@ public class ConditionalView : ViewBase
 
 ### Dynamic Lists
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TodoApp : ViewBase
 {
     public override object? Build()
@@ -244,7 +244,7 @@ public class TodoApp : ViewBase
 
 ### Simple User Profile Example
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 new Card(
     Layout.Vertical()
         | Layout.Horizontal()

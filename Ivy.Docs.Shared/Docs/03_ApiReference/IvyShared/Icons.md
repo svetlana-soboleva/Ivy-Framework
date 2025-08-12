@@ -2,7 +2,7 @@
 
 Ivy use the [Lucide](https://lucide.dev/icons/) icon library.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class SearchIconsView : ViewBase
 {
     public override object? Build()
