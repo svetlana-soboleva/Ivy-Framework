@@ -13,7 +13,7 @@ The `Badge` widget is a versatile component used to display small pieces of info
 
 Here's a simple example of a badge:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 new Badge("Primary")
 ```
 
@@ -21,7 +21,7 @@ new Badge("Primary")
 
 Badges come in several variants to suit different use cases and visual hierarchies.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Horizontal()
     | new Badge("Primary")
     | new Badge("Destructive", variant:BadgeVariant.Destructive)
@@ -33,7 +33,7 @@ Layout.Horizontal()
 
 You can also use extension methods for cleaner code:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Horizontal()
     | new Badge("Primary")
     | new Badge("Destructive").Destructive()
@@ -47,7 +47,7 @@ Layout.Horizontal()
 
 Badges support different sizes to match your design requirements.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Grid().Columns(4)
     | new Badge("Small").Small()
     | new Badge("Medium")
@@ -69,7 +69,7 @@ Layout.Grid().Columns(4)
 
 #### Icons on the Left (Default)
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Grid().Columns(4)
     | new Badge("Notification", icon:Icons.Bell)
     | new Badge("Success", icon:Icons.Check)
@@ -91,7 +91,7 @@ Layout.Grid().Columns(4)
 
 #### Icons on the Right
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Grid().Columns(4)
     | new Badge("Download").Icon(Icons.Download, Align.Right)
     | new Badge("Upload").Icon(Icons.Upload, Align.Right)
@@ -115,7 +115,7 @@ Layout.Grid().Columns(4)
 
 You can create icon-only badges by passing `null` as the title:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Grid().Columns(4)
     | new Badge(null, icon:Icons.Bell)
     | new Badge(null, icon:Icons.Check, variant:BadgeVariant.Secondary)
@@ -127,7 +127,7 @@ Layout.Grid().Columns(4)
 
 Badges inherit from WidgetBase, so they support width and height customization:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Vertical()
     | new Badge("Fixed Width").Width(200)
     | new Badge("Percentage Width").Width("50%")
@@ -148,7 +148,7 @@ Layout.Horizontal()
 
 ### Notification Counters
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 Layout.Horizontal()
     | new Badge("3", icon:Icons.Bell).Large()
     | new Badge("12", icon:Icons.Mail).Large()
@@ -157,7 +157,7 @@ Layout.Horizontal()
 
 ### Categories and Tags
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 Layout.Wrap()
     | new Badge("Technology", icon:Icons.Cpu)
     | new Badge("Design", icon:Icons.Palette)
@@ -169,7 +169,7 @@ Layout.Wrap()
 
 ### Priority Levels
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 Layout.Horizontal()
     | new Badge("High", icon:Icons.CircleAlert, variant:BadgeVariant.Destructive)
     | new Badge("Medium", icon:Icons.CircleAlert, variant:BadgeVariant.Secondary)

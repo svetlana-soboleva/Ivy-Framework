@@ -13,7 +13,7 @@ The `ColorInput` widget provides a color picker interface for selecting color va
 
 Here's a simple example of a `ColorInput` that updates a state with the selected color:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class ColorDemo : ViewBase
 {
     public override object? Build()
@@ -54,7 +54,7 @@ should be used.
 
 The following code shows all these three variants in action.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class ColorDemo : ViewBase
 {
     public override object? Build()
@@ -91,7 +91,7 @@ ColorInput can handle change events using the `onChange` parameter.
 The following demo shows how the `Picker` variant can be used with a code
 block so that
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class ColorChangedDemo : ViewBase
 {
 
@@ -124,7 +124,7 @@ public class ColorChangedDemo : ViewBase
 
 To render a disabled `ColorInput` the function `Disabled` should be used.  
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class DisabledColorInput : ViewBase
 {
     public override object? Build()
@@ -141,7 +141,7 @@ public class DisabledColorInput : ViewBase
 To represent that there is something wrong with a `ColorInput` the `Invalid` function
 should be used.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class InvalidStyleDemo : ViewBase
 { 
     public override object? Build()
@@ -161,7 +161,7 @@ public class InvalidStyleDemo : ViewBase
 The following example shows how `ColorPicker` control can be used in a developer tool setting that
 generates CSS blocks.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class CSSColorDemo : ViewBase
 {
     public override object? Build()

@@ -3,7 +3,7 @@
 `BarChart`s compare values across categories. The sample below shows a stacked bar
 chart with two series; sales of Desktop and Mobile in the first quarter of a year.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 
 public class BarChartBasic : ViewBase 
 {    
@@ -34,7 +34,7 @@ the `BarChart` type, the recommended way to easily draw Bar Charts is using `ToB
 There are two different color schemes supported; namely `Default` and `Rainbow`. The following
 demo shows how the rainbow color scheme works.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class RainbowBarChartBasic : ViewBase 
 {    
     
@@ -68,7 +68,7 @@ public class RainbowBarChartBasic : ViewBase
 
 Here instead of using a preset `ColorScheme`, a particular bar can also be filled using a custom color.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 
 public class RainbowBarChartBasic : ViewBase 
 {    
@@ -115,7 +115,7 @@ where TIOBE index is shown for some programming languages over the last five yea
 
 Changing the value of the year, changes the chart below.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class TiobeIndexDemo : ViewBase
 {
     public override object? Build()

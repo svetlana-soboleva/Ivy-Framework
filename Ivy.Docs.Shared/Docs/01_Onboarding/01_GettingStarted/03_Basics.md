@@ -38,7 +38,7 @@ The result from `Build` is usually another view or a widget. Widgets are the sma
 
 Now let's make it a little more interesting by returning a button widget that shows a toast when clicked.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class CounterApp : ViewBase
 {
     public override object? Build()
@@ -72,7 +72,7 @@ public class CounterApp : ViewBase
 }
 ```
 
-```csharp demo ivy-bg
+```csharp demo 
 public class CounterApp : ViewBase
 {
     public override object? Build()

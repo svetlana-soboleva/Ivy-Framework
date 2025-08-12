@@ -13,7 +13,7 @@ Create a blade container with a root view:
 this.UseBlades(() => new RootView("A"), "Blade 0");
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BasicBladesDemo : ViewBase
 {
     public override object? Build()
@@ -70,7 +70,7 @@ action<Event<Button>> onClick = e =>
 };
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BladeNavigationDemo : ViewBase
 {
     public override object? Build()
@@ -125,7 +125,7 @@ var width = Size.Auto().Min(Size.Units(80)).Max(Size.Units(120));
 blades.Push(this, new DetailView(item), item.Name, width: width);
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BladeSizingDemo : ViewBase
 {
     public override object? Build()
@@ -175,7 +175,7 @@ return BladeHelper.WithHeader(
 );
 ```
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class BladeHeaderDemo : ViewBase
 {
     public override object? Build()

@@ -39,7 +39,7 @@ Layout.Grid()
 
 Define the number of columns and rows in your grid:
 
-```csharp demo ivy-bg
+```csharp demo 
 Layout.Grid()
     .Columns(3)
     .Rows(2)
@@ -55,7 +55,7 @@ Layout.Grid()
 
 Control spacing between grid items and around the grid:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Vertical()
     | Text.Block("With Gap")
     | Layout.Grid()
@@ -77,7 +77,7 @@ Layout.Vertical()
 
 Control how items are automatically placed in the grid:
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Vertical()
     | Text.Block("Row (Default)")
     | Layout.Grid()
@@ -101,7 +101,7 @@ Layout.Vertical()
 
 Position children at specific grid coordinates:
 
-```csharp demo ivy-bg
+```csharp demo 
 Layout.Grid()
     .Columns(3)
     .Rows(3)
@@ -114,7 +114,7 @@ Layout.Grid()
 
 Make children span across multiple columns or rows:
 
-```csharp demo ivy-bg
+```csharp demo 
 Layout.Grid()
     .Columns(3)
     .Rows(3)
@@ -164,7 +164,7 @@ new GridLayout(
 
 ### Responsive Card Grid
 
-```csharp demo ivy-bg
+```csharp demo 
 Layout.Grid()
     .Columns(3)
     .Gap(6)
@@ -184,7 +184,7 @@ Layout.Grid()
 
 ### Dashboard Layout
 
-```csharp demo ivy-bg
+```csharp demo 
 Layout.Grid()
     .Columns(4)
     .Rows(3)
@@ -204,7 +204,7 @@ The `AutoFlow` enum provides different ways to automatically place grid items:
 - **RowDense**: Fill rows, but try to fill gaps with later items
 - **ColumnDense**: Fill columns, but try to fill gaps with later items
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 Layout.Vertical()
     | Text.Block("Row Dense")
     | Layout.Grid()

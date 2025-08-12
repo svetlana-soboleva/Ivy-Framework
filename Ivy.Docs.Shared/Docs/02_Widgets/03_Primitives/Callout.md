@@ -2,7 +2,7 @@
 
 `Callout`s are attention-grabbing components used to highlight important information, warnings, or tips. They come in different variants including info, warning, error, and success.
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class UserGuideView : ViewBase
 {
     public override object? Build()

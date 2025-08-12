@@ -8,7 +8,7 @@ The `DateTimeInput` widget provides a comprehensive date and time picker interfa
 
 Here's a simple example of a DateTimeInput that allows users to select a date and time:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class BasicDateTimeUsageDemo : ViewBase
 {
     public override object? Build()
@@ -60,7 +60,7 @@ Instead of using `DateTimeInputs.Time` the function `ToTimeInput` should general
 
 The following demo shows all of these in action.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class DateTimeVariantsDemo : ViewBase
 {    
     public override object? Build()
@@ -118,7 +118,7 @@ return dateState.ToDateTimeInput().OnChange(onChangeHandler);
 `DateTimeInput` can be customized with various formats. So the captured value can be
 expressed in any format as supported by .NET.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FormatDemo : ViewBase
 {
      public override object? Build()
@@ -147,7 +147,7 @@ public class FormatDemo : ViewBase
 To represent that something might be wrong with a date input the function `Invalid`
 should be used. The following code shows a demonstration.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class InvalidDateTimeDemo : ViewBase
 {
     public override object? Build()
@@ -166,7 +166,7 @@ public class InvalidDateTimeDemo : ViewBase
 
 To disable a `DateTimeInput` the `Disabled` function should be used.
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class DisabledDateTimeDemo : ViewBase
 {
     public override object? Build()
@@ -183,7 +183,7 @@ public class DisabledDateTimeDemo : ViewBase
 
 ## Examples
 
-```csharp demo-tabs ivy-bg
+```csharp demo-tabs 
 public class LibraryBookReturnDemo : ViewBase
 {
    

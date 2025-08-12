@@ -15,7 +15,7 @@ Dialog alerts are modal windows that require user interaction. They're perfect f
 
 ### Basic Dialog Alert
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class BasicDialogAlertDemo : ViewBase
 {
     public override object? Build()
@@ -39,7 +39,7 @@ public class BasicDialogAlertDemo : ViewBase
 
 Dialog alerts support different button combinations:
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class AlertButtonSetsDemo : ViewBase
 {
     public override object? Build()
@@ -78,7 +78,7 @@ Toast notifications are lightweight, non-blocking messages that appear temporari
 
 ### Basic Toast Notifications
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class BasicToastDemo : ViewBase
 {
     public override object? Build()
@@ -102,7 +102,7 @@ public class BasicToastDemo : ViewBase
 
 ### Toast with Exception Handling
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class ToastExceptionDemo : ViewBase
 {
     public override object? Build()
@@ -129,7 +129,7 @@ public class ToastExceptionDemo : ViewBase
 
 ### Form Submission with Feedback
 
-```csharp demo-below ivy-bg
+```csharp demo-below 
 public class FormSubmissionDemo : ViewBase
 {
     public override object? Build()
