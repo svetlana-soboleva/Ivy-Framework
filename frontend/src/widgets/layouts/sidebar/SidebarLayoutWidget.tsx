@@ -253,7 +253,7 @@ const CollapsibleMenuItem: React.FC<{
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={16} />
-              <span>{item.label}</span>
+              <span className="text-sm">{item.label}</span>
               <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
             </button>
           </CollapsibleTrigger>
@@ -280,7 +280,7 @@ const CollapsibleMenuItem: React.FC<{
           onMouseDown={e => onCtrlRightMouseClick(e, item)}
         >
           <Icon name={item.icon} size={16} />
-          <span>{item.label}</span>
+          <span className="text-sm">{item.label}</span>
         </button>
       </li>
     );
@@ -343,7 +343,7 @@ const renderMenuItems = (
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={16} />
-              <span>{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </button>
           </li>
         );
@@ -356,7 +356,7 @@ const renderMenuItems = (
               onMouseDown={e => onCtrlRightMouseClick(e, item)}
             >
               <Icon name={item.icon} size={16} />
-              <span>{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </button>
           </li>
         );
