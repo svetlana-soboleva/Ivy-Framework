@@ -343,13 +343,13 @@ StringBuilder viewBuilder, HashSet<string> usedClassNames)
 
         static void AppendDemoContent(StringBuilder cb, int tabs, string insert)
         {
-            cb.AppendTab(tabs).AppendLine($"| new Box().Content({insert})");
+            cb.AppendTab(tabs).AppendLine($"| new DemoBox().Content({insert})");
         }
 
         static void AppendTabbedDemo(StringBuilder cb, string code, string insert, string lang)
         {
             cb.AppendTab(3).AppendLine("| Tabs( ");
-            cb.AppendTab(4).AppendLine($"new Tab(\"Demo\", new Box().Content({insert})),");
+            cb.AppendTab(4).AppendLine($"new Tab(\"Demo\", new DemoBox().Content({insert})),");
             AppendAsMultiLineStringIfNecessary(4, code, cb, "new Tab(\"Code\", new Code(", $",{MapLanguageToEnum(lang)}))")
                 ;
             cb.AppendTab(3).AppendLine(").Height(Size.Fit()).Padding(0, 8, 0, 0).Variant(TabsVariant.Content)");
