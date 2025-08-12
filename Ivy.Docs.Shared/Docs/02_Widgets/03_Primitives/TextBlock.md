@@ -100,7 +100,7 @@ public class ArticleDemo : ViewBase
             | Text.P("Install Ivy using the .NET CLI:")
             | Text.InlineCode("dotnet tool install -g Ivy.Console")
             | Text.P("Create a new project:")
-            | Text.InlineCode("ivy init -n MyFirstApp");
+            | Text.InlineCode("ivy init --namespace MyFirstApp");
     }
 }
 ```
