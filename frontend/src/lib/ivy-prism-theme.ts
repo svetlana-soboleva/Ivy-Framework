@@ -4,13 +4,13 @@ import { CSSProperties } from 'react';
 const createIvyPrismTheme = (): Record<string, CSSProperties> => ({
   'code[class*="language-"]': {
     fontFamily: 'var(--font-mono)',
-    fontSize: '1em',
+    fontSize: '14px',
     background: 'transparent',
     color: 'var(--foreground)',
   },
   'pre[class*="language-"]': {
     fontFamily: 'var(--font-mono)',
-    fontSize: '1em',
+    fontSize: '14px',
     background: 'transparent',
     padding: '1em',
     margin: 0,
