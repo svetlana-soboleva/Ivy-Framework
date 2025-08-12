@@ -18,7 +18,7 @@ public class BasicBladesDemo : ViewBase
 {
     public override object? Build()
     {
-        return Context.UseBlades(() => new RootBladeView(), "Products");
+        return this.UseBlades(() => new RootBladeView(), "Products");
     }
 }
 
@@ -75,7 +75,7 @@ public class BladeNavigationDemo : ViewBase
 {
     public override object? Build()
     {
-        return Context.UseBlades(() => new NavigationRootView(), "Home");
+        return this.UseBlades(() => new NavigationRootView(), "Home");
     }
 }
 
@@ -130,7 +130,7 @@ public class BladeSizingDemo : ViewBase
 {
     public override object? Build()
     {
-        return Context.UseBlades(() => new SizingRootView(), "Sizing Demo", Size.Units(60));
+        return this.UseBlades(() => new SizingRootView(), "Sizing Demo", Size.Units(60));
     }
 }
 
@@ -240,7 +240,7 @@ public class ListBlade : ViewBase
 {
     public override object? Build()
     {
-        var blades = this.UseContext<Ivy.Views.Blades.IBladeController>();
+        var blades = this.UseContext<IBladeController>();
         var items = this.UseState(SampleData.GetItems());
         
         var onItemClick = new Action<Event<ListItem>>(e =>
