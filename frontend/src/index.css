@@ -281,7 +281,7 @@
     /* Global dark background color per spec */
     --background: #061109;
     --foreground: #f8f8f8;
-    --card: var(--background);
+    --card: var(--docs-surface);
     --card-foreground: #f8f8f8;
     --popover: var(--background);
     --popover-foreground: #f8f8f8;
