@@ -353,6 +353,11 @@
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
+
+    --text-body: 14px;
+    --text-large-body: 14px;
+    --text-large-label: 14px;
+    --text-small-label: 12px;
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
@@ -516,6 +521,23 @@
   /* shadcn muted */
   .typography-muted {
     @apply text-sm text-muted-foreground;
+  }
+
+  /* Custom text utilities for forms */
+  .text-body {
+    font-size: var(--text-body);
+  }
+
+  .text-large-body {
+    font-size: var(--text-large-body);
+  }
+
+  .text-large-label {
+    font-size: var(--text-large-label);
+  }
+
+  .text-small-label {
+    font-size: var(--text-small-label);
   }
 
   /* Badge-specific typography classes that don't interfere with colors */
