@@ -29,7 +29,7 @@ export const textBlockClassMap: Record<string, string> = {
   em: 'italic',
   ul: 'ml-6 list-disc [&>li:first-child]:mt-0 mb-2',
   ol: 'ml-6 list-decimal [&>li:first-child]:mt-0 mb-2',
-  li: 'mt-1',
+  li: 'mt-1 text-sm',
   a: 'text-primary underline brightness-90 hover:brightness-100',
   blockquote: 'border-l-2 pl-6 italic mb-2',
   table: 'w-full border-collapse border border-border mb-2',
