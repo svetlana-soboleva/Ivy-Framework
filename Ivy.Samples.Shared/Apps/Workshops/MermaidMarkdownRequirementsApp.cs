@@ -1,8 +1,8 @@
 using Ivy.Shared;
 
-namespace Ivy.Samples.Shared.Apps.Tests;
+namespace Ivy.Samples.Shared.Apps.Workshops;
 
-[App(icon: Icons.Workflow, path: ["Tests"], isVisible: true, title: "Mermaid Workshop")]
+[App(icon: Icons.Workflow, path: ["Workshops"], isVisible: true, title: "Mermaid Workshop")]
 public class MermaidMarkdownRequirementsApp : SampleBase
 {
     protected override object? BuildSample()
@@ -10,7 +10,7 @@ public class MermaidMarkdownRequirementsApp : SampleBase
         return new Article()
             | new Markdown(
                 """"
-                # Project Idea: Mermaid Diagrams in Markdown
+                # Project Idea: Mermaid Diagrams in Markdown (10. August 2025)
 
                 We want to render [Mermaid](https://mermaid.js.org) diagrams inside Markdown content across Ivy apps and documentation.
                 """"
