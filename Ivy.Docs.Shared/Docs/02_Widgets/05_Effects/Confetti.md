@@ -8,8 +8,8 @@ The `Confetti` animation can be triggered automatically, on click, or when the m
 
 Wrap any widget with confetti using the `WithConfetti()` extension method:
 
-```csharp demo-tabs
-new Button("Celebrate!")
+```csharp demo-tabs ivy-bg
+new Button("Confetti on click!")
     .WithConfetti(AnimationTrigger.Click)
 ```
 
@@ -17,7 +17,7 @@ new Button("Celebrate!")
 
 Confetti fires automatically when the widget is first rendered, perfect for welcoming users or celebrating initial page loads.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Text.Block("Welcome!")
     .WithConfetti(AnimationTrigger.Auto)
 ```
@@ -26,7 +26,7 @@ Text.Block("Welcome!")
 
 Confetti activates when the mouse hovers over the widget, providing immediate visual feedback for interactive elements.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 new Card("Hover over me")
     .WithConfetti(AnimationTrigger.Hover)
 ```
@@ -35,9 +35,9 @@ new Card("Hover over me")
 
 Demonstrates how to add confetti to list items, making each selection feel special and celebratory.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Vertical().Gap(10)
-    | new List(new[] { "First option", "Second option" }
+    | new List(new[] { "First option on click", "Second option on click" }
         .Select(level => new ListItem(level, onClick: _ => {}, icon: Icons.Circle)
             .WithConfetti(AnimationTrigger.Click)))
 ```
@@ -46,7 +46,7 @@ Layout.Vertical().Gap(10)
 
 Shows various interactive widgets with different confetti triggers, demonstrating the flexibility of the confetti system.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Vertical().Gap(10)
     | Text.Block("Interactive elements with confetti:")
     | new Button("Click me").WithConfetti(AnimationTrigger.Click)
@@ -62,7 +62,7 @@ Layout.Vertical().Gap(10)
 
 Confetti works seamlessly with all Ivy widgets, allowing you to add celebratory effects to any interface element.
 
-```csharp demo-tabs
+```csharp demo-tabs ivy-bg
 Layout.Vertical().Gap(10)
     | new Button("Action").WithConfetti(AnimationTrigger.Click)
     | new Card("Content").WithConfetti(AnimationTrigger.Hover)
