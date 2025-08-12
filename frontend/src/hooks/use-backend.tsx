@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast';
@@ -98,6 +98,7 @@ export const useBackend = (
   const { toast } = useToast();
   const machineId = getMachineId();
   const connectionId = connection?.connectionId;
+  const currentConnectionRef = useRef<signalR.HubConnection | null>(null);
 
   useEffect(() => {
     if (import.meta.env.DEV && widgetTree) {
@@ -200,17 +201,39 @@ export const useBackend = (
   );
 
   useEffect(() => {
+    // Clean up the previous connection before creating a new one
+    if (currentConnectionRef.current) {
+      currentConnectionRef.current.stop().catch(err => {
+        logger.warn('Error stopping previous SignalR connection:', err);
+      });
+    }
+
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(
         `${getIvyHost()}/messages?appId=${appId ?? ''}&appArgs=${appArgs ?? ''}&machineId=${machineId}&parentId=${parentId ?? ''}`
       )
       .withAutomaticReconnect()
       .build();
+
+    currentConnectionRef.current = newConnection;
     setConnection(newConnection);
+
+    return () => {
+      // Clean up on component unmount
+      if (currentConnectionRef.current === newConnection) {
+        newConnection.stop().catch(err => {
+          logger.warn('Error stopping SignalR connection during unmount:', err);
+        });
+        currentConnectionRef.current = null;
+      }
+    };
   }, [appArgs, appId, machineId, parentId]);
 
   useEffect(() => {
-    if (connection) {
+    if (
+      connection &&
+      connection.state === signalR.HubConnectionState.Disconnected
+    ) {
       connection
         .start()
         .then(() => {
@@ -297,6 +320,16 @@ export const useBackend = (
         connection.off('reconnecting');
         connection.off('reconnected');
         connection.off('close');
+
+        // Stop and dispose the connection when the component unmounts or connection changes
+        if (connection.state !== signalR.HubConnectionState.Disconnected) {
+          connection.stop().catch(err => {
+            logger.warn(
+              'Error stopping SignalR connection during cleanup:',
+              err
+            );
+          });
+        }
       };
     }
   }, [
