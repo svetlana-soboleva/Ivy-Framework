@@ -709,7 +709,7 @@ export const TabsLayoutWidget = ({
     >
       <div className="flex-shrink-0">
         <div
-          className="relative pl-12 pr-12 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border before:z-0 overflow-hidden bg-sidebar"
+          className="relative pl-12 pr-12 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border before:z-0 overflow-hidden"
           ref={containerRef}
         >
           <DndContext
