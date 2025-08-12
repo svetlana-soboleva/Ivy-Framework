@@ -226,7 +226,7 @@ public class TiobeIndexDemo : ViewBase
                     | Text.Large("TIOBE Programming Language Rankings.")
                     | Text.Small("Select Year")
                     | year.ToNumberInput()
-                          .Min(2020).Max(2025).Step(1).ShowArrows()
+                          .Min(2020).Max(2025).Step(1)
                     | new BarChart(tiobeMap[year.Value])
                             .ColorScheme(ColorScheme.Default)
                             .Bar(new Bar("Rating", 1)
