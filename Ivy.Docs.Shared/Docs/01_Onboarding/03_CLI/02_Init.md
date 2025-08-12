@@ -65,10 +65,6 @@ After running `ivy init`, your project will have the following structure:
 ```text
 YourProject/
 ├── Program.cs              # Main application entry point
-├── appsettings.json        # Application configuration
-├── appsettings.Development.json  # Development-specific settings
-├── .ivy/                   # Ivy-specific configuration
-│   └── config.json        # Ivy project configuration
 ├── .gitignore             # Git ignore file
 ├── GlobalUsings.cs        # Global using statements
 └── README.md              # Project documentation
@@ -81,38 +77,20 @@ YourProject/
 The main entry point for your Ivy application:
 
 ```csharp
-using Ivy;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container
-builder.Services.AddIvy();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline
-app.UseIvy();
-
-app.Run();
-```
-
-### appsettings.json
-
-Basic configuration file with Ivy settings:
-
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "Ivy": {
-    "ProjectName": "YourProject"
-  }
-}
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+var server = new Server();
+#if !DEBUG
+server.UseHttpRedirection();
+#endif
+#if DEBUG
+server.UseHotReload();
+#endif
+server.AddAppsFromAssembly();
+server.AddConnectionsFromAssembly();
+server.UseHotReload();
+var chromeSettings = new ChromeSettings().UseTabs(preventDuplicates: true);
+server.UseChrome(chromeSettings);
+await server.RunAsync();
 ```
 
 ### GlobalUsings.cs
@@ -121,8 +99,31 @@ Global using statements for common Ivy namespaces:
 
 ```csharp
 global using Ivy;
-global using Ivy.Data;
+global using Ivy.Alerts;
+global using Ivy.Apps;
 global using Ivy.Auth;
+global using Ivy.Builders;
+global using Ivy.Chrome;
+global using Ivy.Client;
+global using Ivy.Core;
+global using Ivy.Core.Hooks;
+global using Ivy.Helpers;
+global using Ivy.Hooks;
+global using Ivy.Shared;
+global using Ivy.Views;
+global using Ivy.Views.Blades;
+global using Ivy.Views.Forms;
+global using Ivy.Views.Tables;
+global using Ivy.Widgets.Inputs;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using System.Collections.Immutable;
+global using System.ComponentModel.DataAnnotations;
+global using System.Globalization;
+global using System.Reactive.Linq;
+
+namespace YourProject;
 ```
 
 ## Prerequisites
