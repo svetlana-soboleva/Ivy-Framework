@@ -24,7 +24,7 @@ const TerminalWidget = ({ lines, title, showHeader }: TerminalWidgetProps) => {
     >
       {showHeader && (
         <div className="bg-zinc-800 px-4 py-2 flex items-center">
-          <div className="text-zinc-400 text-large-body font-medium flex-1 text-center">
+          <div className="text-zinc-400 text-body font-medium flex-1 text-center">
             {title}
           </div>
           <div className="flex gap-1">
@@ -52,7 +52,12 @@ const TerminalWidget = ({ lines, title, showHeader }: TerminalWidgetProps) => {
                   </span>
                 )}
               </div>
-              <span className={line.isCommand ? commandColor : outputColor}>
+              <span
+                className={cn(
+                  'text-sm',
+                  line.isCommand ? commandColor : outputColor
+                )}
+              >
                 {line.content}
               </span>
             </div>
