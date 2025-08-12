@@ -58,7 +58,7 @@ Layout.Vertical().Gap(10)
 
 ## Advanced Examples
 
-## Integration with Other Widgets
+### Integration with Other Widgets
 
 Confetti works seamlessly with all Ivy widgets, allowing you to add celebratory effects to any interface element.
 
