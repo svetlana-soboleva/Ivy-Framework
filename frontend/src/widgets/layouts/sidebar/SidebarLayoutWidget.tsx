@@ -121,7 +121,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   return (
     <div
       ref={containerRef}
-      className="grid h-screen w-full remove-parent-padding"
+      className="grid h-full w-full remove-parent-padding"
       style={{
         gridTemplateColumns: isSidebarOpen ? '16rem 1fr' : '0 1fr',
         transition: 'grid-template-columns 300ms ease-in-out',
@@ -129,7 +129,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
     >
       {/* Custom Sidebar with Slide Animation */}
       <div
-        className={`flex h-screen w-[256px] flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-transform duration-300 ease-in-out relative overflow-hidden ${
+        className={`flex h-full w-[256px] flex-col bg-sidebar text-sidebar-foreground border-r border-border transition-transform duration-300 ease-in-out relative overflow-hidden ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -177,7 +177,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className="relative h-screen overflow-auto">
+      <div className="relative h-full overflow-auto p-4">
         {slots?.MainContent}
       </div>
     </div>
