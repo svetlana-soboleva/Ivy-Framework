@@ -4,7 +4,7 @@ using Ivy.Widgets.Inputs;
 namespace Ivy.Samples.Shared.Apps.Tests;
 
 [App(icon: Icons.Image, path: ["Tests"], isVisible: true)]
-public class BannersGeneratorApp : SampleBase
+public class LongSidebarTestApp : SampleBase
 {
     protected override object? BuildSample()
     {
@@ -27,7 +27,7 @@ public class BannersGeneratorApp : SampleBase
         // Sidebar content with form inputs
         var sidebarContent = Layout.Vertical(
             // Section header
-            Text.H3("Banner Settings"),
+            Text.H3("Long Sidebar Test"),
 
             // Endpoint
             Layout.Vertical(
@@ -129,7 +129,7 @@ public class BannersGeneratorApp : SampleBase
 
         // Main content area with preview
         var mainContent = Layout.Vertical(
-            Text.H1("Banners Generator"),
+            Text.H1("Long Sidebar Test"),
 
             // URL display (copyable)
             Layout.Vertical(
@@ -144,18 +144,33 @@ public class BannersGeneratorApp : SampleBase
 
             // Download button
             new Button("Download Banner", onClick: _ =>
-        {
-            // Generate download URL with current parameters
-            var downloadUrl = GetBannerUrl(endpoint.Value, text.Value, width.Value, height.Value,
-                                         widthHeightPreset.Value, showLogo.Value, seed.Value,
-                                         primaryBackgroundColor.Value, secondaryBackgroundColor.Value,
-                                         textColor.Value, bannerRadius.Value, targetQuadrantSize.Value,
-                                         theme.Value, fileFormat.Value);
-            // Open URL in new tab for download
-            UseService<IClientProvider>().OpenUrl(downloadUrl);
-        })
-        .Icon(Icons.Download)
-        .Variant(ButtonVariant.Primary)
+                {
+                    // Generate download URL with current parameters
+                    var downloadUrl = GetBannerUrl(endpoint.Value, text.Value, width.Value, height.Value,
+                                                widthHeightPreset.Value, showLogo.Value, seed.Value,
+                                                primaryBackgroundColor.Value, secondaryBackgroundColor.Value,
+                                                textColor.Value, bannerRadius.Value, targetQuadrantSize.Value,
+                                                theme.Value, fileFormat.Value);
+                    // Open URL in new tab for download
+                    UseService<IClientProvider>().OpenUrl(downloadUrl);
+                }
+            ).Icon(Icons.Download).Variant(ButtonVariant.Primary),
+
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg"),
+            Text.P("egg")
         ).Gap(6);
 
         // Return SidebarLayout with form inputs in sidebar and preview in main content
