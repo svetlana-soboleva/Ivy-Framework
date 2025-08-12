@@ -18,7 +18,7 @@ This command will:
 
 ## Command Options
 
-`--namespace <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
+`--namespace <NAMESPACE>` or `-n <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
 ```terminal
 >ivy init --namespace MyCompany.MyApp
