@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { WidgetEventHandlerType, WidgetNode } from '@/types/widgets';
 import { useToast } from '@/hooks/use-toast';
@@ -22,7 +22,6 @@ type RefreshMessage = {
 
 type ErrorMessage = {
   title: string;
-  type: string;
   description: string;
   stackTrace?: string;
 };
@@ -98,6 +97,7 @@ export const useBackend = (
   const { toast } = useToast();
   const machineId = getMachineId();
   const connectionId = connection?.connectionId;
+  const connectionRef = useRef<signalR.HubConnection | null>(null);
 
   useEffect(() => {
     if (import.meta.env.DEV && widgetTree) {
@@ -144,28 +144,22 @@ export const useBackend = (
     });
   }, [connection]);
 
-  const handleSetJwt = useCallback(async (jwt: AuthToken | null) => {
-    logger.debug('Processing SetJwt request', { hasJwt: !!jwt });
-    const response = await fetch(`${getIvyHost()}/auth/set-jwt`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(jwt),
-      credentials: 'include',
-    });
-    if (response.ok) {
-      logger.info('JWT set successfully, reloading page');
-      window.location.reload();
-    } else {
-      logger.error('Failed to set JWT', {
-        status: response.status,
-        statusText: response.statusText,
-      });
-    }
-  }, []);
+  const handleSetJwt = useCallback(
+    (token: AuthToken) => {
+      const storageKey = `ivy-token-${appId}`;
+      if (token.jwt) {
+        localStorage.setItem(storageKey, JSON.stringify(token));
+        logger.debug('JWT token stored');
+      } else {
+        localStorage.removeItem(storageKey);
+        logger.debug('JWT token removed');
+      }
+    },
+    [appId]
+  );
 
   const handleSetTheme = useCallback((theme: string) => {
-    logger.debug('Processing SetTheme request', { theme });
-    const normalizedTheme = theme.toLowerCase();
+    const normalizedTheme = theme?.toLowerCase();
     if (['dark', 'light', 'system'].includes(normalizedTheme)) {
       logger.info('Setting theme globally', { theme: normalizedTheme });
       setThemeGlobal(normalizedTheme as 'dark' | 'light' | 'system');
@@ -200,17 +194,59 @@ export const useBackend = (
   );
 
   useEffect(() => {
-    const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl(
-        `${getIvyHost()}/messages?appId=${appId ?? ''}&appArgs=${appArgs ?? ''}&machineId=${machineId}&parentId=${parentId ?? ''}`
-      )
-      .withAutomaticReconnect()
-      .build();
-    setConnection(newConnection);
+    let cancelled = false;
+
+    const setupConnection = async () => {
+      // Stop previous connection if it exists and wait for it to finish
+      if (connectionRef.current) {
+        try {
+          await connectionRef.current.stop();
+          logger.debug('Previous connection stopped successfully');
+        } catch (err) {
+          logger.warn('Error stopping previous SignalR connection:', err);
+        }
+      }
+
+      // Check if effect was cancelled during cleanup
+      if (cancelled) return;
+
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(
+          `${getIvyHost()}/messages?appId=${appId ?? ''}&appArgs=${appArgs ?? ''}&machineId=${machineId}&parentId=${parentId ?? ''}`
+        )
+        .withAutomaticReconnect()
+        .build();
+
+      connectionRef.current = newConnection;
+
+      // Check again if effect was cancelled
+      if (cancelled) {
+        newConnection.stop().catch(() => {});
+        return;
+      }
+
+      setConnection(newConnection);
+    };
+
+    setupConnection();
+
+    // Cleanup function for component unmount
+    return () => {
+      cancelled = true;
+      if (connectionRef.current) {
+        connectionRef.current.stop().catch(err => {
+          logger.warn('Error stopping SignalR connection during cleanup:', err);
+        });
+        connectionRef.current = null;
+      }
+    };
   }, [appArgs, appId, machineId, parentId]);
 
   useEffect(() => {
-    if (connection) {
+    if (
+      connection &&
+      connection.state === signalR.HubConnectionState.Disconnected
+    ) {
       connection
         .start()
         .then(() => {
