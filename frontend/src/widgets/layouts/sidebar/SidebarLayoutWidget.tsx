@@ -177,9 +177,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className="relative h-full overflow-auto p-4">
-        {slots?.MainContent}
-      </div>
+      <div className="relative h-full overflow-auto">{slots?.MainContent}</div>
     </div>
   );
 };
