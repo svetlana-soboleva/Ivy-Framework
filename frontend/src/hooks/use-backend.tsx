@@ -97,7 +97,6 @@ export const useBackend = (
   const { toast } = useToast();
   const machineId = getMachineId();
   const connectionId = connection?.connectionId;
-  const cleanupInProgressRef = useRef(false);
   const connectionRef = useRef<signalR.HubConnection | null>(null);
 
   useEffect(() => {
@@ -198,53 +197,17 @@ export const useBackend = (
     let cancelled = false;
 
     const setupConnection = async () => {
-      // Don't create connection if appId is null or empty
-      if (!appId) {
-        logger.debug('Skipping connection setup: appId is null or empty');
-        setConnection(null);
-        setDisconnected(false);
-        return;
-      }
-
-      // Prevent multiple cleanup operations
-      if (cleanupInProgressRef.current) {
-        return;
-      }
-
-      // Clean up the previous connection and wait for it to fully stop
+      // Stop previous connection if it exists and wait for it to finish
       if (connectionRef.current) {
-        cleanupInProgressRef.current = true;
         try {
-          // Remove all event listeners first
-          connectionRef.current.off('Refresh');
-          connectionRef.current.off('Update');
-          connectionRef.current.off('Toast');
-          connectionRef.current.off('Error');
-          connectionRef.current.off('CopyToClipboard');
-          connectionRef.current.off('HotReload');
-          connectionRef.current.off('SetJwt');
-          connectionRef.current.off('SetTheme');
-          connectionRef.current.off('OpenUrl');
-          connectionRef.current.off('reconnecting');
-          connectionRef.current.off('reconnected');
-          connectionRef.current.off('close');
-
-          // Wait for connection to stop if it's not already disconnected
-          if (
-            connectionRef.current.state !==
-            signalR.HubConnectionState.Disconnected
-          ) {
-            await connectionRef.current.stop();
-            logger.debug('Previous connection stopped successfully');
-          }
+          await connectionRef.current.stop();
+          logger.debug('Previous connection stopped successfully');
         } catch (err) {
           logger.warn('Error stopping previous SignalR connection:', err);
-        } finally {
-          cleanupInProgressRef.current = false;
         }
       }
 
-      // Don't proceed if effect was cancelled during cleanup
+      // Check if effect was cancelled during cleanup
       if (cancelled) return;
 
       const newConnection = new signalR.HubConnectionBuilder()
@@ -254,125 +217,126 @@ export const useBackend = (
         .withAutomaticReconnect()
         .build();
 
-      // Don't proceed if effect was cancelled during connection creation
+      connectionRef.current = newConnection;
+
+      // Check again if effect was cancelled
       if (cancelled) {
         newConnection.stop().catch(() => {});
         return;
       }
 
-      // Set up event handlers before starting connection
-      newConnection.on('Refresh', message => {
-        logger.debug(`[${newConnection.connectionId}] Refresh`, message);
-        handleRefreshMessage(message);
-      });
-
-      newConnection.on('Update', message => {
-        logger.debug(`[${newConnection.connectionId}] Update`, message);
-        handleUpdateMessage(message);
-      });
-
-      newConnection.on('Toast', message => {
-        logger.debug(`[${newConnection.connectionId}] Toast`, message);
-        toast(message);
-      });
-
-      newConnection.on('Error', message => {
-        logger.debug(`[${newConnection.connectionId}] Error`, message);
-        handleError(message);
-      });
-
-      newConnection.on('SetJwt', jwt => {
-        logger.debug(`[${newConnection.connectionId}] SetJwt`);
-        handleSetJwt(jwt);
-      });
-
-      newConnection.on('SetTheme', theme => {
-        logger.debug(`[${newConnection.connectionId}] SetTheme`, { theme });
-        handleSetTheme(theme);
-      });
-
-      newConnection.on('CopyToClipboard', (text: string) => {
-        logger.debug(`[${newConnection.connectionId}] CopyToClipboard`);
-        navigator.clipboard.writeText(text);
-      });
-
-      newConnection.on('OpenUrl', (url: string) => {
-        logger.debug(`[${newConnection.connectionId}] OpenUrl`, { url });
-        window.open(url, '_blank');
-      });
-
-      newConnection.on('HotReload', () => {
-        logger.debug(`[${newConnection.connectionId}] HotReload`);
-        handleHotReloadMessage();
-      });
-
-      newConnection.onreconnecting(() => {
-        logger.warn(`[${newConnection.connectionId}] Reconnecting`);
-        setDisconnected(true);
-      });
-
-      newConnection.onreconnected(() => {
-        logger.info(`[${newConnection.connectionId}] Reconnected`);
-        setDisconnected(false);
-      });
-
-      newConnection.onclose(() => {
-        logger.warn(`[${newConnection.connectionId}] Closed`);
-        setDisconnected(true);
-      });
-
-      try {
-        // Start the connection
-        await newConnection.start();
-
-        // Don't proceed if effect was cancelled during connection start
-        if (cancelled) {
-          newConnection.stop().catch(() => {});
-          return;
-        }
-
-        logger.info('✅ WebSocket connection established for:', {
-          appId,
-          parentId,
-          connectionId: newConnection.connectionId,
-        });
-
-        // Only update state if effect wasn't cancelled
-        connectionRef.current = newConnection;
-        setConnection(newConnection);
-        setDisconnected(false);
-      } catch (error) {
-        logger.error('SignalR connection failed:', error);
-        if (!cancelled) {
-          setDisconnected(true);
-        }
-      }
+      setConnection(newConnection);
     };
 
     setupConnection();
 
+    // Cleanup function for component unmount
     return () => {
       cancelled = true;
-      if (connectionRef.current && !cleanupInProgressRef.current) {
-        cleanupInProgressRef.current = true;
-        connectionRef.current
-          .stop()
-          .catch(err => {
-            logger.warn(
-              'Error stopping SignalR connection during cleanup:',
-              err
-            );
-          })
-          .finally(() => {
-            cleanupInProgressRef.current = false;
-          });
+      if (connectionRef.current) {
+        connectionRef.current.stop().catch(err => {
+          logger.warn('Error stopping SignalR connection during cleanup:', err);
+        });
+        connectionRef.current = null;
       }
     };
+  }, [appArgs, appId, machineId, parentId]);
+
+  useEffect(() => {
+    if (
+      connection &&
+      connection.state === signalR.HubConnectionState.Disconnected
+    ) {
+      connection
+        .start()
+        .then(() => {
+          logger.info('✅ WebSocket connection established for:', {
+            appId,
+            parentId,
+            connectionId: connection.connectionId,
+          });
+
+          connection.on('Refresh', message => {
+            logger.debug(`[${connection.connectionId}] Refresh`, message);
+            handleRefreshMessage(message);
+          });
+
+          connection.on('Update', message => {
+            logger.debug(`[${connection.connectionId}] Update`, message);
+            handleUpdateMessage(message);
+          });
+
+          connection.on('Toast', message => {
+            logger.debug(`[${connection.connectionId}] Toast`, message);
+            toast(message);
+          });
+
+          connection.on('Error', message => {
+            logger.debug(`[${connection.connectionId}] Error`, message);
+            handleError(message);
+          });
+
+          connection.on('SetJwt', jwt => {
+            logger.debug(`[${connection.connectionId}] SetJwt`);
+            handleSetJwt(jwt);
+          });
+
+          connection.on('SetTheme', theme => {
+            logger.debug(`[${connection.connectionId}] SetTheme`, { theme });
+            handleSetTheme(theme);
+          });
+
+          connection.on('CopyToClipboard', (text: string) => {
+            logger.debug(`[${connection.connectionId}] CopyToClipboard`);
+            navigator.clipboard.writeText(text);
+          });
+
+          connection.on('OpenUrl', (url: string) => {
+            logger.debug(`[${connection.connectionId}] OpenUrl`, { url });
+            window.open(url, '_blank');
+          });
+
+          connection.on('HotReload', () => {
+            logger.debug(`[${connection.connectionId}] HotReload`);
+            handleHotReloadMessage();
+          });
+
+          connection.onreconnecting(() => {
+            logger.warn(`[${connection.connectionId}] Reconnecting`);
+            setDisconnected(true);
+          });
+
+          connection.onreconnected(() => {
+            logger.info(`[${connection.connectionId}] Reconnected`);
+            setDisconnected(false);
+          });
+
+          connection.onclose(() => {
+            logger.warn(`[${connection.connectionId}] Closed`);
+            setDisconnected(true);
+          });
+        })
+        .catch(e => {
+          logger.error('SignalR connection failed:', e);
+        });
+
+      return () => {
+        connection.off('Refresh');
+        connection.off('Update');
+        connection.off('Toast');
+        connection.off('Error');
+        connection.off('CopyToClipboard');
+        connection.off('HotReload');
+        connection.off('SetJwt');
+        connection.off('SetTheme');
+        connection.off('OpenUrl');
+        connection.off('reconnecting');
+        connection.off('reconnected');
+        connection.off('close');
+      };
+    }
   }, [
-    appArgs,
-    appId,
-    machineId,
-    parentId,
+    connection,
     handleRefreshMessage,
     handleUpdateMessage,
     handleHotReloadMessage,
@@ -380,6 +344,8 @@ export const useBackend = (
     handleSetJwt,
     handleSetTheme,
     handleError,
+    appId,
+    parentId,
   ]);
 
   const eventHandler: WidgetEventHandlerType = useCallback(
