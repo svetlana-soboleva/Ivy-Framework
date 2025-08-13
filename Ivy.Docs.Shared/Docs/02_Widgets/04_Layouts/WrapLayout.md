@@ -124,32 +124,36 @@ new WrapLayout([
 ], gap: 2)
 ```
 
-### Advanced Size & Gap Controls
+### Select & Slider Controls
 
-Enhanced slider controls with more size options and mixed badge configurations:
+Badge size selector with pixel-based gap slider:
 
 ```csharp demo-tabs
-public class AdvancedSizeControlDemo : ViewBase
+public class SelectSliderControlDemo : ViewBase
 {
     public override object? Build()
     {
-        var sizeScale = UseState(50); // 0-100 scale for more granular control
-        var gap = UseState(4);
-        var mixedSizes = UseState(false); // Toggle for mixed vs uniform sizes
-
-        // Enhanced size mapping with more options
-        (Sizes size, string label) GetSizeInfo(int scale) => scale switch
+        var sizeOptions = new List<string>()
         {
-            < 20 => (Sizes.Small, "Extra Small"),
-            < 35 => (Sizes.Small, "Small"),
-            < 50 => (Sizes.Medium, "Small-Medium"),
-            < 65 => (Sizes.Medium, "Medium"),
-            < 80 => (Sizes.Medium, "Medium-Large"),
-            < 95 => (Sizes.Large, "Large"),
-            _ => (Sizes.Large, "Extra Large")
+            "Small",
+            "Medium", 
+            "Large"
         };
 
-        // Create badges with different size strategies
+        var selectedSize = UseState("Medium");
+        var gap = UseState(8); // Gap in pixels
+        var mixedSizes = UseState(false);
+
+        // Convert size selection to badge size
+        Sizes GetBadgeSize(string size) => size switch
+        {
+            "Small" => Sizes.Small,
+            "Medium" => Sizes.Medium,
+            "Large" => Sizes.Large,
+            _ => Sizes.Medium
+        };
+
+        // Create badges
         object[] CreateBadges()
         {
             var technologies = new[] 
@@ -161,47 +165,53 @@ public class AdvancedSizeControlDemo : ViewBase
                 ("JavaScript", BadgeVariant.Secondary),
                 ("Node.js", BadgeVariant.Outline),
                 ("Python", BadgeVariant.Destructive),
-                ("C#", BadgeVariant.Primary)
+                ("C#", BadgeVariant.Primary),
+                ("Svelte", BadgeVariant.Secondary),
+                ("Rust", BadgeVariant.Outline)
             };
 
             if (mixedSizes.Value)
             {
-                // Mixed sizes based on index and scale
+                // Mixed sizes: Small, Medium, Large pattern
                 return technologies.Select((tech, index) =>
                 {
-                    var adjustedScale = sizeScale.Value + (index % 3 - 1) * 25; // Vary by ±25
-                    adjustedScale = Math.Max(0, Math.Min(100, adjustedScale)); // Clamp to 0-100
-                    var (size, _) = GetSizeInfo(adjustedScale);
-                    return new Badge(tech.Item1).Size(size).Variant(tech.Item2);
+                    var sizeIndex = index % 3;
+                    var size = sizeIndex switch
+                    {
+                        0 => Sizes.Small,
+                        1 => Sizes.Medium,
+                        _ => Sizes.Large
+                    };
+                    return new Badge(tech.Item1)
+                        .Size(size)
+                        .Variant(tech.Item2);
                 }).Cast<object>().ToArray();
             }
             else
             {
                 // Uniform sizes
-                var (uniformSize, _) = GetSizeInfo(sizeScale.Value);
+                var uniformSize = GetBadgeSize(selectedSize.Value);
                 return technologies.Select(tech => 
-                    new Badge(tech.Item1).Size(uniformSize).Variant(tech.Item2)
+                    new Badge(tech.Item1)
+                        .Size(uniformSize)
+                        .Variant(tech.Item2)
                 ).Cast<object>().ToArray();
             }
         }
 
-        var (currentSize, sizeLabel) = GetSizeInfo(sizeScale.Value);
-
         return Layout.Vertical()
             | Layout.Horizontal()
-                | Text.Label("Size Scale:").Width(12)
-                | sizeScale.ToNumberInput()
-                    .Min(0)
-                    .Max(100)
-                    .ShowArrows()
-                    .Width(10)
+                | Text.Label("Badge Size:").Width(20)
+                | new SelectInput<string>(
+                    value: selectedSize.Value,
+                    onChange: e => selectedSize.Set(_ => e.Value),
+                    sizeOptions.ToOptions()
+                )
             | Layout.Horizontal()
-                | Text.Label("Gap:").Width(12)
-                | gap.ToNumberInput()
+                | Text.Label("Gap:").Width(15)
+                | gap.ToSliderInput()
                     .Min(0)
-                    .Max(20)
-                    .ShowArrows()
-                    .Width(10)
+                    .Max(24)
             | Layout.Horizontal()
             | new WrapLayout(CreateBadges(), gap: gap.Value);
     }
