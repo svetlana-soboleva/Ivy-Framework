@@ -29,13 +29,35 @@ interface SidebarLayoutWidgetProps {
   showToggleButton?: boolean;
   autoCollapseThreshold?: number; // Width threshold for auto-collapse (default: 768px)
   mainAppSidebar?: boolean;
+  mainContentPadding?: number; // Padding for main content area (default: 2)
 }
+
+// Helper function to check if a slot has meaningful content by checking props.children
+const hasContent = (slot?: React.ReactNode[]): boolean => {
+  if (!slot || slot.length === 0) return false;
+
+  return slot.some(node => {
+    if (node === null || node === undefined) return false;
+    if (typeof node === 'string') return node.trim().length > 0;
+    if (typeof node === 'number') return true;
+    if (React.isValidElement(node)) {
+      const props = node.props as { children?: React.ReactNode };
+      if (props.children === null || props.children === undefined) return false;
+      if (typeof props.children === 'string')
+        return props.children.trim().length > 0;
+      if (Array.isArray(props.children)) return props.children.length > 0;
+      return true;
+    }
+    return false;
+  });
+};
 
 export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   slots,
   showToggleButton = true,
   autoCollapseThreshold = 768,
   mainAppSidebar = false,
+  mainContentPadding = 2,
 }) => {
   // Initialize sidebar state based on current window width (only for main app sidebar)
   const getInitialSidebarState = () => {
@@ -133,9 +155,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {slots?.SidebarHeader && (
+        {hasContent(slots?.SidebarHeader) && (
           <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
-            {slots.SidebarHeader}
+            {slots?.SidebarHeader}
           </div>
         )}
         {slots?.SidebarContent && (
@@ -145,10 +167,10 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
             </ScrollArea>
           </div>
         )}
-        {slots?.SidebarFooter && (
+        {hasContent(slots?.SidebarFooter) && (
           <div className="flex flex-col shrink-0 border-t">
             <div className="flex flex-col px-4 py-3 gap-4 min-h-0">
-              {slots.SidebarFooter}
+              {slots?.SidebarFooter}
             </div>
           </div>
         )}
@@ -177,7 +199,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className="relative h-full overflow-auto">{slots?.MainContent}</div>
+      <div className={`relative h-full overflow-auto p-${mainContentPadding}`}>
+        {slots?.MainContent}
+      </div>
     </div>
   );
 };
