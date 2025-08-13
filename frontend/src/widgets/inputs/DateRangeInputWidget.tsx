@@ -143,7 +143,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
             disabled={disabled}
             data-testid={dataTestId}
             className={cn(
-              'w-full justify-start text-left font-normal cursor-pointer',
+              'w-full justify-start text-left font-normal cursor-pointer bg-transparent', // bg-transparent to match other inputs
               !date && 'text-muted-foreground',
               invalid && 'border-destructive focus-visible:ring-destructive',
               showClear && invalid
