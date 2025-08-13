@@ -69,7 +69,7 @@ export function BladeWidget({
           )}
         </div>
       </div>
-      <div className="bg-muted h-full">
+      <div className="bg-background h-full">
         <ScrollArea type="hover" className="blade-container h-full">
           <div className="p-4">{children}</div>
         </ScrollArea>
