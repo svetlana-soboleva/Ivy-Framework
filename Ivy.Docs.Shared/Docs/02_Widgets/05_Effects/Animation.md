@@ -1,5 +1,7 @@
 # Animation
 
+<Ingress Text="The Animation widget provides a comprehensive set of animation effects that can transform any widget with engaging visual feedback. From subtle hover effects to attention-grabbing loading spinners, animations enhance user experience by providing visual cues, feedback, and polish to your interface." />
+
 The `Animation` widget wraps any child widget and animates it using the specified `AnimationType`. Animations can be triggered automatically, on click, or on hover, with extensive customization options for duration, easing, direction, and more.
 
 ## Basic Usage
