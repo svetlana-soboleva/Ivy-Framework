@@ -21,8 +21,7 @@ Let's create a new chat application that helps users find appropriate Lucide ico
 First, let's create the basic structure:
 
 ```csharp
-[App(icon: Icons.Sparkles)
-]
+[App(icon: Icons.Sparkles)]
 public class LucideIconAgentApp : SampleBase
 {
     public LucideIconAgentApp() : base(Align.TopRight)
@@ -33,7 +32,7 @@ public class LucideIconAgentApp : SampleBase
     {
         var client = UseService<IClientProvider>();
         
-        var messages = UseState(ImmutableArray.Create<ChatMessage>(new ChatMessage(ChatSender.Assistant, 
+        var messages = UseState(ImmutableArray.Create<ChatMessage>(new ChatMessage(ChatSender.Assistant,
             "Hello! I'm the Lucide Icon Agent. I can help you find icons for your app. Please describe your application.")));
 
         return new Chat(messages.Value.ToArray(), OnSendMessage);
