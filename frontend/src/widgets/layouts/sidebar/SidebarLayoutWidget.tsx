@@ -57,7 +57,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   showToggleButton = true,
   autoCollapseThreshold = 768,
   mainAppSidebar = false,
-  mainContentPadding = 2,
+  mainContentPadding,
 }) => {
   // Initialize sidebar state based on current window width (only for main app sidebar)
   const getInitialSidebarState = () => {
@@ -199,9 +199,13 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className={`relative h-full overflow-auto p-${mainContentPadding}`}>
-        {slots?.MainContent}
-      </div>
+      <ScrollArea className="h-full">
+        <div
+          className={`relative h-full overflow-auto p-${mainContentPadding}`}
+        >
+          {slots?.MainContent}
+        </div>
+      </ScrollArea>
     </div>
   );
 };
