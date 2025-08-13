@@ -119,7 +119,33 @@ Layout.Wrap().Gap(4).Align(Align.Center)
 
 ### Animation Triggers
 
-Control when animations start using different trigger types. Try clicking and hovering over the icons:
+Control when animations start using different trigger types:
+
+**Auto Trigger** - Animations play automatically when the page renders:
+
+```csharp demo-tabs
+Layout.Wrap().Gap(4).Align(Align.Center)
+    | Icons.LoaderCircle
+        .ToIcon()
+        .Color(Colors.Blue)
+        .WithAnimation(AnimationType.Rotate)
+        .Trigger(AnimationTrigger.Auto)
+        .Duration(2)
+    | Icons.Heart
+        .ToIcon()
+        .Color(Colors.Red)
+        .WithAnimation(AnimationType.Pulse)
+        .Trigger(AnimationTrigger.Auto)
+        .Duration(1.5)
+    | Icons.Activity
+        .ToIcon()
+        .Color(Colors.Green)
+        .WithAnimation(AnimationType.Pulse)
+        .Trigger(AnimationTrigger.Auto)
+        .Duration(1.2)
+```
+
+**Click and Hover Triggers** - Try clicking and hovering over these icons:
 
 ```csharp demo-tabs
 Layout.Wrap().Gap(4).Align(Align.Center)
@@ -217,7 +243,7 @@ Layout.Wrap().Gap(4).Align(Align.Center)
     | Icons.Loader
         .ToIcon()
         .Color(Colors.Blue)
-        .WithAnimation(AnimationType.Rotate)
+    .WithAnimation(AnimationType.Rotate)
         .Trigger(AnimationTrigger.Click)
         .Repeat(3)
     | Icons.Activity
