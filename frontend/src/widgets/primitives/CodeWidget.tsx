@@ -80,7 +80,7 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
     const dynamicTheme = useMemo(() => createPrismTheme(), []);
 
     return (
-      <div className="relative border border-border rounded-md">
+      <div className="relative">
         {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
         <ScrollArea className={cn('w-full h-full')}>
           <SyntaxHighlighter
