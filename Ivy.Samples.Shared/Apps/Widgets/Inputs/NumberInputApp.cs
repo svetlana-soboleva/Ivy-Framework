@@ -27,13 +27,14 @@ public class NumberInputApp : SampleBase
                // Main grid with variants
                | Text.H1("Number Inputs")
                | Text.H2("Variants")
-               | (Layout.Grid().Columns(5)
+               | (Layout.Grid().Columns(6)
 
                   | null!
                   | Text.InlineCode("Null")
                   | Text.InlineCode("With Value")
                   | Text.InlineCode("Disabled")
                   | Text.InlineCode("Invalid")
+                  | Text.InlineCode("Invalid Nullable")
 
                   | Text.InlineCode("ToNumberInput()")
                   | nullIntValue
@@ -51,6 +52,10 @@ public class NumberInputApp : SampleBase
                     .ToNumberInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-main")
+                  | nullIntInvalid
+                    .ToNumberInput()
+                    .Invalid(loremIpsumString)
+                    .TestId("number-input-nullable-invalid-main")
 
                   | Text.InlineCode("ToSliderInput()")
                   | nullIntValue
@@ -68,6 +73,10 @@ public class NumberInputApp : SampleBase
                     .ToSliderInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-slider-main")
+                  | nullIntInvalid
+                    .ToSliderInput()
+                    .Invalid(loremIpsumString)
+                    .TestId("number-input-nullable-invalid-slider-main")
                )
 
                // Data Binding:
