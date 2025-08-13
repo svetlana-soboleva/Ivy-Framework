@@ -18,6 +18,7 @@ import { MenuItem, WidgetEventHandlerType } from '@/types/widgets';
 import { useFocusable } from '@/hooks/use-focus-management';
 import { sidebarMenuRef } from './sidebar-refs';
 import { useEventHandler } from '@/components/event-handler';
+import { cn } from '@/lib/utils';
 
 interface SidebarLayoutWidgetProps {
   slots?: {
@@ -57,7 +58,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
   showToggleButton = true,
   autoCollapseThreshold = 768,
   mainAppSidebar = false,
-  mainContentPadding = 2,
+  mainContentPadding,
 }) => {
   // Initialize sidebar state based on current window width (only for main app sidebar)
   const getInitialSidebarState = () => {
@@ -199,7 +200,12 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       )}
 
       {/* Main Content - Always takes full remaining width */}
-      <div className={`relative h-full overflow-auto p-${mainContentPadding}`}>
+      <div
+        className={cn(
+          `relative h-full overflow-auto`,
+          !mainAppSidebar ? `p-${mainContentPadding}` : ''
+        )}
+      >
         {slots?.MainContent}
       </div>
     </div>
