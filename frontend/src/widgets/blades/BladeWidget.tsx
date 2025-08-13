@@ -42,7 +42,7 @@ export function BladeWidget({
   return (
     <div
       style={styles}
-      className={`flex flex-col bg-background border-l border-border h-full ${flexClass}`}
+      className={`flex flex-col bg-background border-r border-border h-full ${flexClass}`}
     >
       <div
         className="flex items-center justify-between px-4 bg-background text-foreground h-[70px] border-b border-border"
