@@ -748,19 +748,6 @@
   }
 }
 
-/* Docs demo/code surface */
-.ivy-demo-surface {
-  background-color: var(--docs-surface);
-  border: 1px solid var(--docs-black);
-  border-radius: var(--radius);
-}
-
-/* Light-mode override for demo/code surface */
-:root:not(.dark) .ivy-demo-surface {
-  background-color: #f4f6f6;
-  border-color: var(--border);
-}
-
 #root {
   @apply p-4;
 }

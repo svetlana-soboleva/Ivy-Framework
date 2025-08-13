@@ -126,7 +126,7 @@ const CodeBlock = memo(
             <div className="absolute top-2 right-2 z-10">
               <CopyToClipboardButton textToCopy={cleanContent} />
             </div>
-            <ScrollArea className="w-full ivy-demo-surface">
+            <ScrollArea className="w-full">
               <pre className="p-4 bg-muted rounded-md font-mono text-sm">
                 {lines.map((line, index) => (
                   <div key={index} className="flex">
@@ -158,7 +158,7 @@ const CodeBlock = memo(
             <div className="absolute top-2 right-2 z-10">
               <CopyToClipboardButton textToCopy={content} />
             </div>
-            <ScrollArea className="w-full ivy-demo-surface">
+            <ScrollArea className="w-full">
               <SyntaxHighlighter
                 language={match[1]}
                 style={dynamicTheme}
