@@ -51,9 +51,6 @@ public class NumberInputApp : SampleBase
                     .ToNumberInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-main")
-                  | intValue
-                    .ToNumberInput()
-                    .TestId("number-input-int-arrows-main")
 
                   | Text.InlineCode("ToSliderInput()")
                   | nullIntValue
@@ -71,8 +68,6 @@ public class NumberInputApp : SampleBase
                     .ToSliderInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-slider-main")
-                  | intValue
-                    .ToSliderInput()
                )
 
                // Data Binding:
