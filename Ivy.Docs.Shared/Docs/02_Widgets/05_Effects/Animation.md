@@ -245,7 +245,7 @@ Layout.Wrap().Gap(4).Align(Align.Center)
     | Icons.Loader
         .ToIcon()
         .Color(Colors.Blue)
-    .WithAnimation(AnimationType.Rotate)
+        .WithAnimation(AnimationType.Rotate)
         .Trigger(AnimationTrigger.Click)
         .Repeat(3)
     | Icons.Activity
