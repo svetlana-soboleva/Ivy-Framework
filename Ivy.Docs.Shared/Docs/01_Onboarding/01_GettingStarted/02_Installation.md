@@ -4,8 +4,6 @@
 
 Ivy can be installed easily using the .NET command line tool.
 
----
-
 ## 1. Install Ivy Globally
 
 Run the following command in your terminal to install Ivy as a global tool:
@@ -15,8 +13,6 @@ Run the following command in your terminal to install Ivy as a global tool:
 ```
 
 This will install Ivy globally on your machine. You can now use the `ivy` command in your terminal.
-
----
 
 ## 2. Create a New Ivy Project
 
