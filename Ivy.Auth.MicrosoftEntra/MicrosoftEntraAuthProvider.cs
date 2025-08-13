@@ -49,15 +49,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
         _clientSecret = configuration.GetValue<string>("MICROSOFT_ENTRA_CLIENT_SECRET") ?? throw new Exception("MICROSOFT_ENTRA_CLIENT_SECRET is required");
     }
 
-    public void SetHttpContext(HttpContext context)
-    {
-        if (_app != null)
-        {
-            return;
-        }
-
-        _httpContext = context;
-    }
+    public void SetHttpContext(HttpContext context) => _httpContext = context;
 
     private IConfidentialClientApplication GetApp()
     {
