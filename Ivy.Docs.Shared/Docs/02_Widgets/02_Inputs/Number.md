@@ -22,14 +22,12 @@ public class SimpleNumericValueDemo : ViewBase
         return Layout.Horizontal() 
                 | new NumberInput<double>(value)
                      .Min(-10)
-                     .Max(10)
-                     .ShowArrows();
+                     .Max(10);
     }
 }
 ```
 
-To indicate that the value of a `NumberInput` can be incremented or decremented, you can use
-`ShowArrows` function; as it's done in this example. By default, these arrows are hidden.
+The `NumberInput` allows users to enter numeric values directly.
 
 ## Variants
 
@@ -111,7 +109,6 @@ public class MoneyInputDemo : ViewBase
                 | Text.Label("GBP:")
                 | moneyInGBP.ToMoneyInput()
                             .Currency("GBP")
-                            .ShowArrows(false)
                             .Disabled();
     }
 }
@@ -172,7 +169,6 @@ public class MoneyPrecisionDemo : ViewBase
         return Layout.Horizontal() 
                 | Text.Label("Min 0, Max 100, Step 0.5, Precision 2")
                 | new NumberInput<decimal>(precValue)
-                     .ShowArrows()
                      .Min(0.0)
                      .Max(100.0)
                      .Step(0.5)
@@ -241,7 +237,6 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal() 
                    | Text.Label("Egg").Width(10)
                    | eggs.ToNumberInput()
-                         .ShowArrows()
                          .Min(0)
                          .Max(12)
                          .Width(10)
@@ -250,7 +245,6 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal()
                    | Text.Label("Bread").Width(10)
                    | breads.ToNumberInput()
-                              .ShowArrows()
                               .Min(0)
                               .Max(5)
                               .Width(10)
