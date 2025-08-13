@@ -21,16 +21,16 @@ new WrapLayout([
 
 ```csharp demo-tabs ivy-bg
 new WrapLayout([
-    new Badge("React", BadgeVariant.Secondary),
-    new Badge("Vue", BadgeVariant.Secondary),
-    new Badge("Angular", BadgeVariant.Secondary),
-    new Badge("Svelte", BadgeVariant.Secondary),
-    new Badge("Next.js", BadgeVariant.Secondary),
-    new Badge("Nuxt.js", BadgeVariant.Secondary)
+    new Badge("React").Secondary(),
+    new Badge("Vue").Secondary(),
+    new Badge("Angular").Secondary(),
+    new Badge("Svelte").Secondary(),
+    new Badge("Next.js").Secondary(),
+    new Badge("Nuxt.js").Secondary(),
+    new Badge("Tailwind CSS").Secondary(),
+    new Badge("TypeScript").Secondary()
 ])
 ```
-
-## Properties
 
 ### Gap
 
@@ -102,23 +102,110 @@ Layout.Vertical()
 
 ## Advanced Examples
 
-### Tag List
+### Responsive Technology Tags
 
-Create a responsive tag list that wraps nicely:
+Create a responsive tag list with varying sizes that demonstrates natural wrapping:
 
 ```csharp demo-tabs ivy-bg
 new WrapLayout([
-    new Badge("JavaScript", BadgeVariant.Primary),
-    new Badge("TypeScript", BadgeVariant.Secondary),
-    new Badge("React", BadgeVariant.Primary),
-    new Badge("Vue.js", BadgeVariant.Secondary),
-    new Badge("Angular", BadgeVariant.Outline),
-    new Badge("Svelte", BadgeVariant.Destructive),
-    new Badge("Node.js", BadgeVariant.Primary),
-    new Badge("Express", BadgeVariant.Secondary),
-    new Badge("MongoDB", BadgeVariant.Primary),
-    new Badge("PostgreSQL", BadgeVariant.Outline)
+    new Badge("JavaScript").Large().Primary(),
+    new Badge("TS").Small().Secondary(),
+    new Badge("React Framework").Large().Primary(),
+    new Badge("Vue").Small().Secondary(),
+    new Badge("Angular Development").Large().Outline(),
+    new Badge("Svelte").Small().Destructive(),
+    new Badge("Node.js Runtime").Large().Primary(),
+    new Badge("API").Small().Secondary(),
+    new Badge("MongoDB Database").Large().Primary(),
+    new Badge("SQL").Small().Outline(),
+    new Badge("Full Stack Development").Large().Primary(),
+    new Badge("UI").Small().Secondary(),
+    new Badge("DevOps").Secondary()
 ], gap: 2)
+```
+
+### Advanced Size & Gap Controls
+
+Enhanced slider controls with more size options and mixed badge configurations:
+
+```csharp demo-tabs
+public class AdvancedSizeControlDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var sizeScale = UseState(50); // 0-100 scale for more granular control
+        var gap = UseState(4);
+        var mixedSizes = UseState(false); // Toggle for mixed vs uniform sizes
+
+        // Enhanced size mapping with more options
+        (Sizes size, string label) GetSizeInfo(int scale) => scale switch
+        {
+            < 20 => (Sizes.Small, "Extra Small"),
+            < 35 => (Sizes.Small, "Small"),
+            < 50 => (Sizes.Medium, "Small-Medium"),
+            < 65 => (Sizes.Medium, "Medium"),
+            < 80 => (Sizes.Medium, "Medium-Large"),
+            < 95 => (Sizes.Large, "Large"),
+            _ => (Sizes.Large, "Extra Large")
+        };
+
+        // Create badges with different size strategies
+        object[] CreateBadges()
+        {
+            var technologies = new[] 
+            { 
+                ("React", BadgeVariant.Primary),
+                ("Vue", BadgeVariant.Secondary),
+                ("Angular", BadgeVariant.Outline),
+                ("TypeScript", BadgeVariant.Primary),
+                ("JavaScript", BadgeVariant.Secondary),
+                ("Node.js", BadgeVariant.Outline),
+                ("Python", BadgeVariant.Destructive),
+                ("C#", BadgeVariant.Primary)
+            };
+
+            if (mixedSizes.Value)
+            {
+                // Mixed sizes based on index and scale
+                return technologies.Select((tech, index) =>
+                {
+                    var adjustedScale = sizeScale.Value + (index % 3 - 1) * 25; // Vary by ±25
+                    adjustedScale = Math.Max(0, Math.Min(100, adjustedScale)); // Clamp to 0-100
+                    var (size, _) = GetSizeInfo(adjustedScale);
+                    return new Badge(tech.Item1).Size(size).Variant(tech.Item2);
+                }).Cast<object>().ToArray();
+            }
+            else
+            {
+                // Uniform sizes
+                var (uniformSize, _) = GetSizeInfo(sizeScale.Value);
+                return technologies.Select(tech => 
+                    new Badge(tech.Item1).Size(uniformSize).Variant(tech.Item2)
+                ).Cast<object>().ToArray();
+            }
+        }
+
+        var (currentSize, sizeLabel) = GetSizeInfo(sizeScale.Value);
+
+        return Layout.Vertical()
+            | Layout.Horizontal()
+                | Text.Label("Size Scale:").Width(12)
+                | sizeScale.ToNumberInput()
+                    .Min(0)
+                    .Max(100)
+                    .ShowArrows()
+                    .Width(10)
+            | Layout.Horizontal()
+                | Text.Label("Gap:").Width(12)
+                | gap.ToNumberInput()
+                    .Min(0)
+                    .Max(20)
+                    .ShowArrows()
+                    .Width(10)
+            | Layout.Horizontal()
+            | new WrapLayout(CreateBadges(), gap: gap.Value);
+    }
+}
 ```
 
 ### Button Group
