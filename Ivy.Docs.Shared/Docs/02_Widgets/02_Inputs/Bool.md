@@ -231,42 +231,6 @@ All values captured are integers; either 1 or 0.
 
 This is a set of few examples showing how to use `BoolInput`s in several situations.
 
-### Toggling Dashboard Controls
-
-The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface.
-
-```csharp demo-tabs
-public class DashboardToggle : ViewBase 
-{
-    public override object? Build()
-    {        
-        var showCharts = UseState(true);
-        var showNotifications = UseState(true);
-        var showSidebar = UseState(false);
-        var compactView = UseState(false);
-        
-        return Layout.Vertical()
-            | Text.P("Dashboard Customization")            
-            | Layout.Grid().Columns(2)
-               | showCharts.ToToggleInput(Icons.ChartBar)
-                           .Label("Show Charts")
-               | showNotifications.ToToggleInput(Icons.Bell)
-                           .Label("Show Notifications")
-               | showSidebar.ToToggleInput(Icons.Menu)
-                            .Label("Show Sidebar")
-               | compactView.ToToggleInput(Icons.Minimize)
-                            .Label("Compact View")
-            | Text.Block("Dashboard Preview:")
-            | Layout.Horizontal()
-               | (showSidebar.Value ? Text.Block("📋 Sidebar") : new Empty())
-               | Layout.Vertical()
-                    | (showNotifications.Value ? Text.Block("🔔 Notifications Panel") : new Empty())
-                    | (showCharts.Value ? Text.Block("📊 Charts & Analytics") : new Empty())
-                    | Text.Block(compactView.Value ? "Compact Layout Active" : "Full Layout Active");
-    }
-}
-```
-
 ### Round trip example
 
 The following example shows a demo of how `Switch` variant can be used in a possible situation where it makes sense
