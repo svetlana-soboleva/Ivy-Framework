@@ -226,116 +226,127 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
 
   // Outer container
   const container = (
-    <div className="flex items-center gap-2">
-      <div className="flex-1">
-        {selectMany ? (
-          <ToggleGroup
-            type="multiple"
-            value={selectedValues.map(v => v.toString())}
-            onValueChange={handleValueChange}
-            disabled={disabled}
-            className="flex flex-wrap gap-2"
-            data-testid={dataTestId}
-          >
-            {validOptions.map(option => {
-              const isSelected = selectedValues.includes(option.value);
-              const isInvalid = !!invalid && isSelected;
-              const toggleItem = (
-                <ToggleGroupItem
-                  key={option.value}
-                  value={option.value.toString()}
-                  aria-label={option.label}
-                  className={cn(
-                    'px-3 py-2 hover:text-foreground',
-                    isInvalid
-                      ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
-                      : isSelected
-                        ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
-                        : undefined
-                  )}
-                >
-                  {option.label}
-                </ToggleGroupItem>
-              );
-              if (isInvalid) {
-                return (
-                  <TooltipProvider key={option.value}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
-                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                        <div className="max-w-60">{invalid}</div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+    <div
+      className={cn(
+        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        invalid && 'border-destructive focus-within:ring-destructive'
+      )}
+    >
+      <div className="flex items-center gap-2">
+        <div className="flex-1">
+          {selectMany ? (
+            <ToggleGroup
+              type="multiple"
+              value={selectedValues.map(v => v.toString())}
+              onValueChange={handleValueChange}
+              disabled={disabled}
+              className="flex flex-wrap gap-2"
+              data-testid={dataTestId}
+            >
+              {validOptions.map(option => {
+                const isSelected = selectedValues.includes(option.value);
+                const isInvalid = !!invalid && isSelected;
+                const toggleItem = (
+                  <ToggleGroupItem
+                    key={option.value}
+                    value={option.value.toString()}
+                    aria-label={option.label}
+                    className={cn(
+                      'px-3 py-2 hover:text-foreground',
+                      isInvalid
+                        ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
+                        : isSelected
+                          ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
+                          : undefined
+                    )}
+                  >
+                    {option.label}
+                  </ToggleGroupItem>
                 );
-              }
-              return toggleItem;
-            })}
-          </ToggleGroup>
-        ) : (
-          <ToggleGroup
-            type="single"
-            value={selectedValues[0]?.toString()}
-            onValueChange={handleValueChange}
-            disabled={disabled}
-            className="flex flex-wrap gap-2"
-            data-testid={dataTestId}
-          >
-            {validOptions.map(option => {
-              const isSelected = selectedValues[0] === option.value.toString();
-              const isInvalid = !!invalid && isSelected;
-              const toggleItem = (
-                <ToggleGroupItem
-                  key={option.value}
-                  value={option.value.toString()}
-                  aria-label={option.label}
-                  className={cn(
-                    'px-3 py-2 hover:text-foreground',
-                    isInvalid
-                      ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
-                      : isSelected
-                        ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
-                        : undefined
-                  )}
-                >
-                  {option.label}
-                </ToggleGroupItem>
-              );
-              if (isInvalid) {
-                return (
-                  <TooltipProvider key={option.value}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
-                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                        <div className="max-w-60">{invalid}</div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                if (isInvalid) {
+                  return (
+                    <TooltipProvider key={option.value}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+                        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                          <div className="max-w-60">{invalid}</div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  );
+                }
+                return toggleItem;
+              })}
+            </ToggleGroup>
+          ) : (
+            <ToggleGroup
+              type="single"
+              value={selectedValues[0]?.toString()}
+              onValueChange={handleValueChange}
+              disabled={disabled}
+              className="flex flex-wrap gap-2"
+              data-testid={dataTestId}
+            >
+              {validOptions.map(option => {
+                const isSelected =
+                  selectedValues[0] === option.value.toString();
+                const isInvalid = !!invalid && isSelected;
+                const toggleItem = (
+                  <ToggleGroupItem
+                    key={option.value}
+                    value={option.value.toString()}
+                    aria-label={option.label}
+                    className={cn(
+                      'px-3 py-2 hover:text-foreground',
+                      isInvalid
+                        ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
+                        : isSelected
+                          ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
+                          : undefined
+                    )}
+                  >
+                    {option.label}
+                  </ToggleGroupItem>
                 );
-              }
-              return toggleItem;
-            })}
-          </ToggleGroup>
+                if (isInvalid) {
+                  return (
+                    <TooltipProvider key={option.value}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+                        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                          <div className="max-w-60">{invalid}</div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  );
+                }
+                return toggleItem;
+              })}
+            </ToggleGroup>
+          )}
+        </div>
+        {nullable && hasValue && !disabled && (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label={selectMany ? 'Clear All' : 'Clear'}
+            onClick={() => {
+              logger.debug(
+                'Select input clear button clicked (ToggleVariant)',
+                {
+                  id,
+                  selectMany,
+                  clearValue: selectMany ? [] : null,
+                }
+              );
+              eventHandler('OnChange', id, [selectMany ? [] : null]);
+            }}
+            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
+          >
+            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          </button>
         )}
       </div>
-      {nullable && hasValue && !disabled && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label={selectMany ? 'Clear All' : 'Clear'}
-          onClick={() => {
-            logger.debug('Select input clear button clicked (ToggleVariant)', {
-              id,
-              selectMany,
-              clearValue: selectMany ? [] : null,
-            });
-            eventHandler('OnChange', id, [selectMany ? [] : null]);
-          }}
-          className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
-        >
-          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-        </button>
-      )}
     </div>
   );
 
@@ -371,58 +382,65 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   );
 
   const container = (
-    <div className="flex items-center gap-4">
-      <div className="flex-1">
-        <RadioGroup
-          value={stringValue}
-          onValueChange={handleValueChange}
-          disabled={disabled}
-          className="flex flex-col gap-4"
-          data-testid={dataTestId}
-        >
-          {validOptions.map(option => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <RadioGroupItem
-                value={option.value.toString()}
-                id={`${id}-${option.value}`}
-                className={cn(
-                  'border-input text-input',
-                  stringValue === option.value.toString() && !invalid
-                    ? 'border-primary text-primary'
-                    : undefined,
-                  stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalidInput
-                    : undefined
-                )}
-              />
-              <Label
-                htmlFor={`${id}-${option.value}`}
-                className={cn(
-                  stringValue === option.value.toString() && invalid
-                    ? inputStyles.invalidInput
-                    : undefined
-                )}
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-      {nullable && hasValue && !disabled && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label="Clear"
-          onClick={() => {
-            logger.debug('Select input clear button clicked', { id });
-            eventHandler('OnChange', id, [null]);
-          }}
-          className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
-        >
-          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-        </button>
+    <div
+      className={cn(
+        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        invalid && 'border-destructive focus-within:ring-destructive'
       )}
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex-1">
+          <RadioGroup
+            value={stringValue}
+            onValueChange={handleValueChange}
+            disabled={disabled}
+            className="flex flex-col gap-4"
+            data-testid={dataTestId}
+          >
+            {validOptions.map(option => (
+              <div key={option.value} className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value={option.value.toString()}
+                  id={`${id}-${option.value}`}
+                  className={cn(
+                    'border-input text-input',
+                    stringValue === option.value.toString() && !invalid
+                      ? 'border-primary text-primary'
+                      : undefined,
+                    stringValue === option.value.toString() && invalid
+                      ? inputStyles.invalidInput
+                      : undefined
+                  )}
+                />
+                <Label
+                  htmlFor={`${id}-${option.value}`}
+                  className={cn(
+                    stringValue === option.value.toString() && invalid
+                      ? inputStyles.invalidInput
+                      : undefined
+                  )}
+                >
+                  {option.label}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
+        {nullable && hasValue && !disabled && (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Clear"
+            onClick={() => {
+              logger.debug('Select input clear button clicked', { id });
+              eventHandler('OnChange', id, [null]);
+            }}
+            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
+          >
+            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          </button>
+        )}
+      </div>
     </div>
   );
 
@@ -503,82 +521,92 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const hasValues = selectedValues.length > 0;
 
   const container = (
-    <div className="flex items-center gap-2">
-      <div className="flex-1">
-        <div className="flex flex-col gap-4" data-testid={dataTestId}>
-          {validOptions.map(option => {
-            const isSelected = selectedValues.includes(option.value);
-            const isInvalid = !!invalid && isSelected;
-            return (
-              <div key={option.value} className="flex items-center space-x-2">
-                {isInvalid ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Checkbox
-                          id={`${id}-${option.value}`}
-                          checked={isSelected}
-                          onCheckedChange={checked =>
-                            handleCheckboxChange(option.value, checked === true)
-                          }
-                          disabled={disabled}
-                          className={cn(
-                            inputStyles.invalidInput +
-                              ' !bg-red-50 !border-red-500 !text-red-900'
-                          )}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                        <div className="max-w-60">{invalid}</div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <Checkbox
-                    id={`${id}-${option.value}`}
-                    checked={isSelected}
-                    onCheckedChange={checked =>
-                      handleCheckboxChange(option.value, checked === true)
-                    }
-                    disabled={disabled}
-                    className={cn(
-                      'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
-                      isSelected
-                        ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
-                        : undefined
-                    )}
-                  />
-                )}
-                <Label
-                  htmlFor={`${id}-${option.value}`}
-                  className={cn(
-                    isInvalid ? inputStyles.invalidInput : undefined
-                  )}
-                >
-                  {option.label}
-                </Label>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      {nullable && hasValues && !disabled && (
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label="Clear All"
-          onClick={() => {
-            logger.debug(
-              'Select input clear button clicked (CheckboxVariant)',
-              { id }
-            );
-            eventHandler('OnChange', id, [[]]);
-          }}
-          className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none"
-        >
-          <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-        </button>
+    <div
+      className={cn(
+        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        invalid && 'border-destructive focus-within:ring-destructive'
       )}
+    >
+      <div className="flex items-center gap-2">
+        <div className="flex-1">
+          <div className="flex flex-col gap-4" data-testid={dataTestId}>
+            {validOptions.map(option => {
+              const isSelected = selectedValues.includes(option.value);
+              const isInvalid = !!invalid && isSelected;
+              return (
+                <div key={option.value} className="flex items-center space-x-2">
+                  {isInvalid ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Checkbox
+                            id={`${id}-${option.value}`}
+                            checked={isSelected}
+                            onCheckedChange={checked =>
+                              handleCheckboxChange(
+                                option.value,
+                                checked === true
+                              )
+                            }
+                            disabled={disabled}
+                            className={cn(
+                              inputStyles.invalidInput +
+                                ' !bg-red-50 !border-red-500 !text-red-900'
+                            )}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+                          <div className="max-w-60">{invalid}</div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <Checkbox
+                      id={`${id}-${option.value}`}
+                      checked={isSelected}
+                      onCheckedChange={checked =>
+                        handleCheckboxChange(option.value, checked === true)
+                      }
+                      disabled={disabled}
+                      className={cn(
+                        'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
+                        isSelected
+                          ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
+                          : undefined
+                      )}
+                    />
+                  )}
+                  <Label
+                    htmlFor={`${id}-${option.value}`}
+                    className={cn(
+                      isInvalid ? inputStyles.invalidInput : undefined
+                    )}
+                  >
+                    {option.label}
+                  </Label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {nullable && hasValues && !disabled && (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Clear All"
+            onClick={() => {
+              logger.debug(
+                'Select input clear button clicked (CheckboxVariant)',
+                { id }
+              );
+              eventHandler('OnChange', id, [[]]);
+            }}
+            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none"
+          >
+            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          </button>
+        )}
+      </div>
     </div>
   );
   return container;
