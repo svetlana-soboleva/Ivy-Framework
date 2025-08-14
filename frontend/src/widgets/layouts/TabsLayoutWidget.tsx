@@ -188,9 +188,11 @@ export const TabsLayoutWidget = ({
   const [activeTabId, setActiveTabId] = React.useState<string | null>(
     () => tabOrder[selectedIndex] ?? tabOrder[0] ?? null
   );
-  const [loadedTabs, setLoadedTabs] = React.useState<Set<string>>(
-    () => new Set()
-  );
+  const [loadedTabs, setLoadedTabs] = React.useState<Set<string>>(() => {
+    // Only load the initially active tab
+    const initialActiveTab = tabOrder[selectedIndex] ?? tabOrder[0] ?? null;
+    return initialActiveTab ? new Set([initialActiveTab]) : new Set();
+  });
   const activeTabIdRef = React.useRef<string | null>(activeTabId);
   const eventHandler = useEventHandler();
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -517,8 +519,8 @@ export const TabsLayoutWidget = ({
         !tabOrder.includes(activeTabId)
       ) {
         if (targetTabId !== activeTabId) {
-          setActiveTabId(targetTabId);
           setLoadedTabs(prev => new Set(prev).add(targetTabId));
+          setActiveTabId(targetTabId);
           // Update activeIndex for Content variant animation
           setActiveIndex(selectedIndex);
         }
@@ -529,9 +531,11 @@ export const TabsLayoutWidget = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- activeTabId intentionally excluded to prevent race conditions
   }, [selectedIndex, tabOrder]);
 
-  // Load active tab
+  // Load active tab only when it becomes active
   React.useEffect(() => {
-    if (activeTabId) setLoadedTabs(prev => new Set(prev).add(activeTabId));
+    if (activeTabId) {
+      setLoadedTabs(prev => new Set(prev).add(activeTabId));
+    }
   }, [activeTabId]);
 
   // Event handlers
@@ -758,8 +762,10 @@ export const TabsLayoutWidget = ({
                   onClick={() => {
                     // Mark as user-initiated for Content variant
                     isUserInitiatedChangeRef.current = true;
+                    const tabId = tabOrder[index];
+                    setLoadedTabs(prev => new Set(prev).add(tabId));
                     setActiveIndex(index);
-                    setActiveTabId(tabOrder[index]);
+                    setActiveTabId(tabId);
                     eventHandler('OnSelect', id, [index]);
                   }}
                 >
