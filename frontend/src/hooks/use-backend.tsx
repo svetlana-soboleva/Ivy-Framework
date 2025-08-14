@@ -68,6 +68,12 @@ function applyUpdateMessage(
 
   message.forEach(update => {
     let parent = newTree;
+
+    if (!parent) {
+      logger.error('No parent found in applyUpdateMessage', { message });
+      return;
+    }
+
     if (update.indices.length === 0) {
       applyPatch(parent, update.patch);
     } else {
