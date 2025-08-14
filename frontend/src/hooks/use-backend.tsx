@@ -68,14 +68,50 @@ function applyUpdateMessage(
 
   message.forEach(update => {
     let parent = newTree;
+
+    if (!parent) {
+      logger.error('No parent found in applyUpdateMessage', { message });
+      return;
+    }
+
     if (update.indices.length === 0) {
       applyPatch(parent, update.patch);
     } else {
       update.indices.forEach((index, i) => {
         if (i === update.indices.length - 1) {
-          applyPatch(parent.children![index], update.patch);
+          if (!parent.children) {
+            logger.error('No children found in parent', { parent });
+            return;
+          }
+          applyPatch(parent.children[index], update.patch);
         } else {
-          parent = parent.children![index];
+          if (!parent) {
+            logger.error('No parent found in applyUpdateMessage', { message });
+            return;
+          }
+          if (!parent.children) {
+            logger.error('No children found in parent', { parent });
+            return;
+          }
+          if (index >= parent.children.length) {
+            logger.error('Index out of bounds', {
+              index,
+              childrenLength: parent.children.length,
+              parent,
+            });
+            return;
+          }
+          const nextParent = parent.children[index];
+          if (!nextParent) {
+            logger.error('Child at index is null/undefined', {
+              index,
+              childrenLength: parent.children.length,
+              parentType: parent.type,
+              parentId: parent.id,
+            });
+            return;
+          }
+          parent = nextParent;
         }
       });
     }
