@@ -1,6 +1,8 @@
 # BoolInput
 
-<Ingress Text="Handle boolean input with elegant checkboxes, switches, and toggles for true/false values in forms and interfaces." />
+<Ingress>
+Handle boolean input with elegant checkboxes, switches, and toggles for true/false values in forms and interfaces.
+</Ingress>
 
 The `BoolInput` widget provides a checkbox, switch and toggle for boolean (true/false) input values. It allows users to easily switch between two states in a form or configuration interface.
 

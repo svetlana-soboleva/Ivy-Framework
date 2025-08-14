@@ -5,7 +5,9 @@ prepare: |
 
 # Basics
 
-<Ingress Text="Learn the essential concepts of Ivy development including Views, Widgets, state management, and how to build your first interactive application." />
+<Ingress>
+Learn the essential concepts of Ivy development including Views, Widgets, state management, and how to build your first interactive application.
+</Ingress>
 
 First, make sure you have [installed](./02_Installation.md) Ivy on your development machine.
 

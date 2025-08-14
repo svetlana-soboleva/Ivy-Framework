@@ -1,6 +1,8 @@
 ﻿# DropDownMenu
 
-<Ingress Text="Create interactive dropdown menus with customizable options, actions, and styling for navigation and user choices." />
+<Ingress>
+Create interactive dropdown menus with customizable options, actions, and styling for navigation and user choices.
+</Ingress>
 
 ## Basic Usage
 

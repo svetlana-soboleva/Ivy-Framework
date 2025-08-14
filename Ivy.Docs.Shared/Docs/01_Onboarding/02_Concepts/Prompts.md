@@ -1,6 +1,8 @@
 # Prompts
 
-<Ingress Text="Interact with users and gather input using Ivy's prompt system." />
+<Ingress>
+Interact with users and gather input using Ivy's prompt system.
+</Ingress>
 
 ## Overview
 

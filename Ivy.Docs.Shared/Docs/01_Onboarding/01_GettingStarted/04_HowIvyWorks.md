@@ -1,6 +1,8 @@
 # How Ivy Works
 
-<Ingress Text="Ivy lets you build modern web UIs using pure C# on the server, combining the familiarity of React patterns with the power of C# and .NET." />
+<Ingress>
+Ivy lets you build modern web UIs using pure C# on the server, combining the familiarity of React patterns with the power of C# and .NET.
+</Ingress>
 
 ## Core Philosophy
 

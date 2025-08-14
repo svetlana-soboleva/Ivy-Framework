@@ -1,6 +1,8 @@
 # Details
 
-<Ingress Text="Display structured label-value pairs from models with automatic formatting using the ToDetails() extension method." />
+<Ingress>
+Display structured label-value pairs from models with automatic formatting using the ToDetails() extension method.
+</Ingress>
 
 `Detail` widgets display label and value pairs. They are usually generated from a model using `ToDetails()`.
 

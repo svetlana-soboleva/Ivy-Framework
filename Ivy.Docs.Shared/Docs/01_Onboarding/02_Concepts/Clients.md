@@ -1,6 +1,8 @@
 # Clients
 
-<Ingress Text="Bridge server-side C# code with client-side React components for seamless browser interactions and client-side operations." />
+<Ingress>
+Bridge server-side C# code with client-side React components for seamless browser interactions and client-side operations.
+</Ingress>
 
 ## Overview
 

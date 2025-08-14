@@ -1,6 +1,8 @@
 # Html
 
-<Ingress Text="Render raw HTML content directly in your Ivy application for external content integration, formatted text, and custom markup control." />
+<Ingress>
+Render raw HTML content directly in your Ivy application for external content integration, formatted text, and custom markup control.
+</Ingress>
 
 The `Html` widget allows you to render raw HTML content in your Ivy application. This is useful when you need to include content from external sources, display formatted text, or when you want direct control over the markup.
 

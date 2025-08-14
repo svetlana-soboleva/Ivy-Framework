@@ -1,6 +1,8 @@
 ﻿# Ivy CLI - Overview
 
-<Ingress Text="Streamline your Ivy development workflow with powerful CLI tools for project initialization, database integration, authentication, and deployment." />
+<Ingress>
+Streamline your Ivy development workflow with powerful CLI tools for project initialization, database integration, authentication, and deployment.
+</Ingress>
 
 Ivy CLI is a powerful tool designed to streamline the development of Ivy applications. It provides:
 

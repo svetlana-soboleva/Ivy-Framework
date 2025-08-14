@@ -1,6 +1,8 @@
 # FileInput
 
-<Ingress Text="Enable file uploads with a flexible interface supporting type filtering, size limits, and single or multiple file selection." />
+<Ingress>
+Enable file uploads with a flexible interface supporting type filtering, size limits, and single or multiple file selection.
+</Ingress>
 
 The `FileInput` widget allows users to upload files. It provides a file selector interface with options for file type filtering, size limitations, and support for single or multiple file selections.
 

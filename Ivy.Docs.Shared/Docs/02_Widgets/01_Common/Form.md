@@ -1,6 +1,8 @@
 # Form
 
-<Ingress Text="Build structured forms with validation, state management, and submission handling for collecting user data efficiently." />
+<Ingress>
+Build structured forms with validation, state management, and submission handling for collecting user data efficiently.
+</Ingress>
 
 Todo
 

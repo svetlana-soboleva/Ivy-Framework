@@ -1,6 +1,8 @@
 ﻿# Expandable
 
-<Ingress Text="Create collapsible content sections that users can expand and collapse to maintain clean, organized layouts." />
+<Ingress>
+Create collapsible content sections that users can expand and collapse to maintain clean, organized layouts.
+</Ingress>
 
 The `Expandable` widget allows you to hide and show content interactively, providing a clean and organized way to present information.
 

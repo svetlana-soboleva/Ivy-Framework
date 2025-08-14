@@ -1,6 +1,8 @@
 # Downloads
 
-<Ingress Text="Enable seamless file downloads for reports, documents, and user content." />
+<Ingress>
+Enable seamless file downloads for reports, documents, and user content.
+</Ingress>
 
 ## Overview
 

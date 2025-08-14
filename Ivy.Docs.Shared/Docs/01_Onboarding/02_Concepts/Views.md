@@ -5,7 +5,9 @@ prepare: |
 
 # Views
 
-<Ingress Text="Understand how Views work as the core building blocks of Ivy apps, similar to React components but written entirely in C#." />
+<Ingress>
+Understand how Views work as the core building blocks of Ivy apps, similar to React components but written entirely in C#.
+</Ingress>
 
 Views are the fundamental building blocks of Ivy applications. They are similar to React components, providing a way to encapsulate UI logic and state management in a reusable way. Every view inherits from `ViewBase` and implements a `Build()` method that returns the UI structure.
 

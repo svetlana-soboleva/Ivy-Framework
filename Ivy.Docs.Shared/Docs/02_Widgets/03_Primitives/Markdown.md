@@ -1,6 +1,8 @@
 # Markdown
 
-<Ingress Text="Render rich Markdown content with syntax highlighting, math support, tables, and interactive features in your Ivy applications." />
+<Ingress>
+Render rich Markdown content with syntax highlighting, math support, tables, and interactive features in your Ivy applications.
+</Ingress>
 
 The `Markdown` widget renders Markdown content as formatted HTML with syntax highlighting, math support, tables, images, and interactive link handling.
 

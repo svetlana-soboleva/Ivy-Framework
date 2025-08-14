@@ -5,7 +5,9 @@ prepare: |
 
 # GridLayout
 
-<Ingress Text="Create responsive two-dimensional grid layouts with precise control over positioning, spacing, and spanning for complex UI arrangements." />
+<Ingress>
+Create responsive two-dimensional grid layouts with precise control over positioning, spacing, and spanning for complex UI arrangements.
+</Ingress>
 
 The `GridLayout` widget arranges child elements in a two-dimensional grid system with precise control over positioning, spacing, and spanning. It provides both automatic flow and explicit positioning for flexible grid layouts.
 

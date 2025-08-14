@@ -1,6 +1,8 @@
 ﻿# Content Builders
 
-<Ingress Text="Flexible system for transforming and formatting content for display in Ivy." />
+<Ingress>
+Flexible system for transforming and formatting content for display in Ivy.
+</Ingress>
 
 ## Overview
 

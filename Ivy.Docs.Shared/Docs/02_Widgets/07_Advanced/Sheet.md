@@ -1,6 +1,8 @@
 # Sheet
 
-<Ingress Text="Sheets slide in from the side of the screen and display additional content while allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page." />
+<Ingress>
+Sheets slide in from the side of the screen and display additional content while allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page.
+</Ingress>
 
 ## Basic Usage
 

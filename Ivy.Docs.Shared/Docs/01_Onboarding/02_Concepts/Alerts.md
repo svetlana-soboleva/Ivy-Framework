@@ -1,6 +1,8 @@
 # Alerts & Notifications
 
-<Ingress Text="Communicate with users effectively using modal dialog alerts for important confirmations and toast notifications for feedback messages." />
+<Ingress>
+Communicate with users effectively using modal dialog alerts for important confirmations and toast notifications for feedback messages.
+</Ingress>
 
 ## Types of Alerts
 
