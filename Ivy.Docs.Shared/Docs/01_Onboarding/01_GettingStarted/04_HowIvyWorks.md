@@ -104,6 +104,10 @@ The magic happens through WebSocket communication:
 4. **Event Handling**: User interactions trigger events sent back to C#
 5. **State Updates**: Ivy detects changes and re-renders only affected parts
 
+<Callout Type="tip">
+When working with search results in the sidebar (both in Ivy Samples and Docs), you can **Ctrl + right click** on any item to open it as a separate app in a new window. This is handy for multitasking or developing multiple features simultaneously.
+</Callout>
+
 ## Development Experience
 
 ### Hot Reloading
