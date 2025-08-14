@@ -8,7 +8,7 @@ The `BoolInput` widget provides a checkbox, switch and toggle for boolean (true/
 
 Here's a simple example of a `BoolInput` used as a checkbox:
 
-```csharp demo-below 
+```csharp demo-below
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -24,26 +24,26 @@ public class BoolInputDemo : ViewBase
 
 You can create `BoolInput` instances in several ways:
 
-1. **Using the non-generic constructor (defaults to `bool` type):**
+**Using the non-generic constructor (defaults to `bool` type):**
 
-   ```csharp
-   var input = new BoolInput(); // Creates BoolInput<bool> with default values
-   var labeledInput = new BoolInput("My Label"); // With custom label
-   ```
+```csharp
+var input = new BoolInput(); // Creates BoolInput<bool> with default values
+var labeledInput = new BoolInput("My Label"); // With custom label
+```
 
-2. **Using the generic constructor for specific types:**
+**Using the generic constructor for specific types:**
 
-   ```csharp
-   var nullableInput = new BoolInput<bool?>(); // For nullable boolean
-   var intInput = new BoolInput<int>(); // For integer-based boolean (0/1)
-   ```
+```csharp
+var nullableInput = new BoolInput<bool?>(); // For nullable boolean
+var intInput = new BoolInput<int>(); // For integer-based boolean (0/1)
+```
 
-3. **Using extension methods from state:**
+**Using extension methods from state:**
 
-   ```csharp
-   var state = UseState(false);
-   var input = state.ToBoolInput(); // Creates BoolInput from state
-   ```
+```csharp
+var state = UseState(false);
+var input = state.ToBoolInput(); // Creates BoolInput from state
+```
 
 The non-generic `BoolInput` constructor is the most convenient when you need a simple boolean input without nullable types or other boolean-like representations.
 
@@ -54,7 +54,7 @@ These values are useful in situations where boolean values can be either not set
 or set (`true` or `false`). These can be really handy to capture different answers from
 questions in a survey.
 
-```csharp demo-below 
+```csharp demo-below
 public class NullableBoolDemo: ViewBase
 {
     public override object? Build()
@@ -81,7 +81,7 @@ There are three variants of `BoolInput`s. The following blocks show how to creat
 
 To make the bool input appear like a checkbox, this variant should be used.
 
-```csharp demo-below 
+```csharp demo-below
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -112,7 +112,7 @@ public class BoolInputDemo : ViewBase
 To make the bool input appear like a switch, this variant should be used. This is most suitable for toggling
 some settings values on and off.  
 
-```csharp demo-below 
+```csharp demo-below
 public class BoolInputDemo : ViewBase
 {
     public override object? Build()
@@ -155,7 +155,7 @@ This is represented by `BoolInputs.Toggle`
 `ToToggleInput` extension function can be used to create such a `BoolInput.Toggle` variant.
 The following is a small demo showing how such a control may be used.
 
-```csharp demo-below 
+```csharp demo-below
 public class SingleToggleDemo : ViewBase 
 {
     public override object? Build()
@@ -179,7 +179,7 @@ There are several extension functions that can be used to generate these boolean
 `BoolInputs.CheckBox` variant. `ToSwitchInput` creates a `BoolInputs.Switch` variant, and `ToToggleInput` creates
 a `BoolInputs.Toggle` variant.
 
-```csharp demo-below 
+```csharp demo-below
 public class BoolInputVariants : ViewBase
 {
     public override object? Build()
@@ -199,7 +199,7 @@ public class BoolInputVariants : ViewBase
 `BoolInput`s have been historically attempted to represent with integers. `0` indicates `false` and `1` indicates `true`.
 The following example shows how integers can be used to represent bool inputs.
 
-```csharp demo-below 
+```csharp demo-below
 public class BoolInputVariants2 : ViewBase
 {
     public override object? Build()
@@ -235,7 +235,7 @@ This is a set of few examples showing how to use `BoolInput`s in several situati
 
 The following example shows how Toggle can be used to customize the look and feel of a Dashboard interface.
 
-```csharp demo-below 
+```csharp demo-tabs
 public class DashboardToggle : ViewBase 
 {
     public override object? Build()
@@ -246,7 +246,7 @@ public class DashboardToggle : ViewBase
         var compactView = UseState(false);
         
         return Layout.Vertical()
-            | Text.H3("Dashboard Customization")            
+            | Text.P("Dashboard Customization")            
             | Layout.Grid().Columns(2)
                | showCharts.ToToggleInput(Icons.ChartBar)
                            .Label("Show Charts")
@@ -258,10 +258,10 @@ public class DashboardToggle : ViewBase
                             .Label("Compact View")
             | Text.Block("Dashboard Preview:")
             | Layout.Horizontal()
-               | (showSidebar.Value ? Text.Block("📋 Sidebar") : null!)
+               | (showSidebar.Value ? Text.Block("📋 Sidebar") : new Empty())
                | Layout.Vertical()
-                    | (showNotifications.Value ? Text.Block("🔔 Notifications Panel") : null!)
-                    | (showCharts.Value ? Text.Block("📊 Charts & Analytics") : null!)
+                    | (showNotifications.Value ? Text.Block("🔔 Notifications Panel") : new Empty())
+                    | (showCharts.Value ? Text.Block("📊 Charts & Analytics") : new Empty())
                     | Text.Block(compactView.Value ? "Compact Layout Active" : "Full Layout Active");
     }
 }
@@ -272,7 +272,7 @@ public class DashboardToggle : ViewBase
 The following example shows a demo of how `Switch` variant can be used in a possible situation where it makes sense
 to do so.
 
-```csharp demo-below 
+```csharp demo-tabs
 public class SimpleFlightBooking : ViewBase
 {
     public override object? Build()
@@ -282,7 +282,7 @@ public class SimpleFlightBooking : ViewBase
         var returnDate = UseState(DateTime.Today.AddDays(7));
 
         return Layout.Vertical()
-                | Text.H3("Book Flight")
+                | Text.P("Book Flight")
                 // Round Trip Switch
                 | isRoundTrip.ToSwitchInput().Label("Round Trip")
                 // Departure Date (always visible)
