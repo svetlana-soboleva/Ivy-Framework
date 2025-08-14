@@ -310,16 +310,6 @@ var goodHtml = "<p>Welcome to our <strong>application</strong>!</p>";
 var complexHtml = "<div><div><div><p>Deep nesting</p></div></div></div>";
 ```
 
-#### Use Inline Styles Sparingly
-
-```csharp
-// Good: Minimal inline styling
-var styledHtml = "<p style='color: blue;'>Blue text</p>";
-
-// Better: Use CSS classes when possible (if your app supports them)
-var classBasedHtml = "<p class='text-blue'>Blue text</p>";
-```
-
 #### Validate External Content
 
 ```csharp
