@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { WidgetNode } from '@/types/widgets';
 import { widgetMap } from '@/widgets/widgetMap';
+import { logger } from '@/lib/logger';
 
 const isLazyComponent = (
   component:
@@ -19,6 +20,11 @@ const isChartComponent = (nodeType: string): boolean => {
 
 const flattenChildren = (children: WidgetNode[]): WidgetNode[] => {
   return children.flatMap(child => {
+    // Handle null/undefined children
+    if (!child) {
+      logger.warn('Null child found in flattenChildren', { child });
+      return [];
+    }
     if (child.type === 'Ivy.Fragment') {
       return flattenChildren(child.children || []);
     }
@@ -51,6 +57,10 @@ export const renderWidgetTree = (node: WidgetNode): React.ReactNode => {
   // Process children, grouping by Slot widgets
   const slots = children.reduce(
     (acc, child) => {
+      // Additional safety check for null/undefined children
+      if (!child) {
+        return acc;
+      }
       if (child.type === 'Ivy.Slot') {
         const slotName = child.props.name as string;
         acc[slotName] = (child.children || []).map(slotChild =>

@@ -44,7 +44,10 @@ const widgetTreeToXml = (node: WidgetNode) => {
   }
   let childrenXml = '';
   if (node.children && node.children.length > 0) {
-    childrenXml = node.children.map(child => widgetTreeToXml(child)).join('');
+    childrenXml = node.children
+      .filter(child => child != null)
+      .map(child => widgetTreeToXml(child))
+      .join('');
     return `<${tagName} ${attributes.join(' ')}>${childrenXml}</${tagName}>`;
   } else {
     return `<${tagName} ${attributes.join(' ')} />`;
