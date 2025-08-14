@@ -188,9 +188,11 @@ export const TabsLayoutWidget = ({
   const [activeTabId, setActiveTabId] = React.useState<string | null>(
     () => tabOrder[selectedIndex] ?? tabOrder[0] ?? null
   );
-  const [loadedTabs, setLoadedTabs] = React.useState<Set<string>>(
-    () => new Set()
-  );
+  const [loadedTabs, setLoadedTabs] = React.useState<Set<string>>(() => {
+    // Only load the initially active tab
+    const initialActiveTab = tabOrder[selectedIndex] ?? tabOrder[0] ?? null;
+    return initialActiveTab ? new Set([initialActiveTab]) : new Set();
+  });
   const activeTabIdRef = React.useRef<string | null>(activeTabId);
   const eventHandler = useEventHandler();
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -487,6 +489,16 @@ export const TabsLayoutWidget = ({
     return () => observer.disconnect();
   }, []);
 
+  // Helper function to efficiently add tab to loaded tabs
+  const addToLoadedTabs = React.useCallback((tabId: string) => {
+    setLoadedTabs(prev => {
+      if (prev.has(tabId)) {
+        return prev; // Return the same Set if tab is already loaded
+      }
+      return new Set([...prev, tabId]);
+    });
+  }, []);
+
   // Keep ref in sync with state
   React.useEffect(() => {
     activeTabIdRef.current = activeTabId;
@@ -517,8 +529,8 @@ export const TabsLayoutWidget = ({
         !tabOrder.includes(activeTabId)
       ) {
         if (targetTabId !== activeTabId) {
+          addToLoadedTabs(targetTabId);
           setActiveTabId(targetTabId);
-          setLoadedTabs(prev => new Set(prev).add(targetTabId));
           // Update activeIndex for Content variant animation
           setActiveIndex(selectedIndex);
         }
@@ -529,14 +541,16 @@ export const TabsLayoutWidget = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- activeTabId intentionally excluded to prevent race conditions
   }, [selectedIndex, tabOrder]);
 
-  // Load active tab
+  // Load active tab only when it becomes active
   React.useEffect(() => {
-    if (activeTabId) setLoadedTabs(prev => new Set(prev).add(activeTabId));
-  }, [activeTabId]);
+    if (activeTabId) {
+      addToLoadedTabs(activeTabId);
+    }
+  }, [activeTabId, addToLoadedTabs]);
 
   // Event handlers
   const handleTabSelect = (tabId: string) => {
-    setLoadedTabs(prev => new Set(prev).add(tabId));
+    addToLoadedTabs(tabId);
     setActiveTabId(tabId);
     setDropdownOpen(false);
     // Update activeIndex for Content variant animation
@@ -758,8 +772,10 @@ export const TabsLayoutWidget = ({
                   onClick={() => {
                     // Mark as user-initiated for Content variant
                     isUserInitiatedChangeRef.current = true;
+                    const tabId = tabOrder[index];
+                    addToLoadedTabs(tabId);
                     setActiveIndex(index);
-                    setActiveTabId(tabOrder[index]);
+                    setActiveTabId(tabId);
                     eventHandler('OnSelect', id, [index]);
                   }}
                 >
