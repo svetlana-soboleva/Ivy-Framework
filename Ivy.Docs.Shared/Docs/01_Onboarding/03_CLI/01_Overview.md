@@ -55,11 +55,14 @@ An Ivy project follows a standardized structure:
 ```text
 YourProject/
 ├── Program.cs              # Main application entry point
-├── appsettings.json        # Configuration settings
+├── YourProject.csproj      # .NET project file
+├── GlobalUsings.cs         # Global using statements
+├── README.md               # Project documentation
+├── Apps/                   # User interface code
 ├── Connections/            # Database connections
 │   └── [ConnectionName]/   # Individual connection configs
-├── Auth/                   # Authentication providers
-└── .ivy/                   # Ivy-specific configuration
+├── .ivy/                   # Ivy-specific configuration, only created by Ivy CLI when necessary
+└── .gitignore              # Git ignore file
 ```
 
 ## Getting Help

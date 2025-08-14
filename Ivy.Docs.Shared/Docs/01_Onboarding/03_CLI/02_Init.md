@@ -65,9 +65,10 @@ After running `ivy init`, your project will have the following structure:
 ```text
 YourProject/
 ├── Program.cs              # Main application entry point
-├── .gitignore             # Git ignore file
-├── GlobalUsings.cs        # Global using statements
-└── README.md              # Project documentation
+├── YourProject.csproj      # .NET project file
+├── GlobalUsings.cs         # Global using statements
+├── README.md               # Project documentation
+└── .gitignore              # Git ignore file
 ```
 
 ## Generated Files
