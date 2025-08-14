@@ -1,14 +1,14 @@
 ﻿# Todo Tutorial
 
-<Ingress Text="Build a complete todo application from scratch to learn essential Ivy concepts including state management, components, and event handling." />
+<Ingress Text="Build a complete todo app from scratch to learn essential Ivy concepts including state management, components, and event handling." />
 
 ## Prerequisites
 
 Before starting this tutorial, make sure you have [installed](02_Installation.md) Ivy.
 
-## Creating the Todo Application
+## Creating the Todo App
 
-Let's create a new todo application step by step.
+Let's create a new todo app step by step.
 
 ### 1. Create a new project
 
