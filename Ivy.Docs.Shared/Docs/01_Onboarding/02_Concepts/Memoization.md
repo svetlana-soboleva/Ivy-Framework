@@ -1,6 +1,6 @@
 # Memoization
 
-<Ingress Text="Memoization helps Ivy applications run faster by caching results of expensive computations." />
+<Ingress Text="Memoization helps Ivy projects run faster by caching results of expensive computations." />
 
 ## Overview
 

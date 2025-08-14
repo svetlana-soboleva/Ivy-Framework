@@ -1,6 +1,6 @@
 # Embed
 
-The `Embed` widget allows you to incorporate external content such as videos, maps, or other web resources into your application. It creates a responsive container for embedded content.
+The `Embed` widget allows you to incorporate external content such as videos, maps, or other web resources into your app. It creates a responsive container for embedded content.
 
 ```csharp demo-tabs 
 public class ResourcesView : ViewBase

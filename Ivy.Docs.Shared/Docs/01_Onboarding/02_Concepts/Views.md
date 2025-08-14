@@ -7,7 +7,7 @@ prepare: |
 
 <Ingress Text="Understand how Views work as the core building blocks of Ivy apps, similar to React components but written entirely in C#." />
 
-Views are the fundamental building blocks of Ivy applications. They are similar to React components, providing a way to encapsulate UI logic and state management in a reusable way. Every view inherits from `ViewBase` and implements a `Build()` method that returns the UI structure.
+Views are the fundamental building blocks of Ivy apps. They are similar to React components, providing a way to encapsulate UI logic and state management in a reusable way. Every view inherits from `ViewBase` and implements a `Build()` method that returns the UI structure.
 
 ## Basic Usage
 
@@ -106,7 +106,7 @@ var cache = this.UseState(new Dictionary<string, object>(), buildOnChange: false
 Views can access application services using the `UseService<T>()` hook:
 
 ```csharp demo
-new Button("Show Toast", 
+new Button("Show Toast",
     onClick: _ => client.Toast("Hello from service!", "Service Demo"))
 ```
 
@@ -165,7 +165,7 @@ Layout.Vertical()
 
 ## App Attribute
 
-To make a view available as an application, use the `[App]` attribute:
+To make a view available as an app, use the `[App]` attribute:
 
 ```csharp
 [App(icon: Icons.Home, title: "My App")]

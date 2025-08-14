@@ -181,7 +181,7 @@ public class ButtonColorsView : ViewBase
 1. **Use semantic colors** for consistent UI patterns (Primary, Secondary, Destructive)
 2. **Test on both backgrounds** to ensure proper contrast and readability
 3. **Consider color meaning** - use red/destructive for errors, green for success
-4. **Maintain consistency** - stick to your chosen color scheme throughout the application
+4. **Maintain consistency** - stick to a chosen color scheme throughout your project
 5. **Accessibility first** - ensure proper contrast ratios for text and backgrounds
 
 ## Technical Implementation

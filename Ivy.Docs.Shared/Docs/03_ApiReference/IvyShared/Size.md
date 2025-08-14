@@ -58,7 +58,7 @@ Layout.Horizontal()
         .Height(Size.Units(20))
 ```
 
-Framework units provide a consistent sizing system across the application. These units scale with the overall design system and maintain proportional relationships.
+Framework units provide a consistent sizing system across your project. These units scale with the overall design system and maintain proportional relationships.
 
 ### Fractions
 

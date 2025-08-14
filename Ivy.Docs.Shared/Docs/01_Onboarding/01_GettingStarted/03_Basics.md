@@ -14,12 +14,12 @@ First, make sure you have [installed](./02_Installation.md) Ivy on your developm
 Using the CLI we can easily create a new project.
 
 ```terminal
->ivy init -n YourAppNamespace
+>ivy init --namespace YourProjectNamespace
 ```
 
 ## Views and Widgets
 
-Now let's add our first Ivy App. In the folder `Apps` create a new file `CounterApp.cs` that inherits from `ViewBase`.
+Now let's add our first Ivy app. In the folder `Apps` create a new file `CounterApp.cs` that inherits from `ViewBase`.
 
 ```csharp
 [App(icon: Icons.Box)]

@@ -1,8 +1,8 @@
 ﻿# Ivy Deployment
 
-<Ingress Text="Deploy your Ivy applications to cloud platforms with automated containerization, infrastructure setup, and configuration management." />
+<Ingress Text="Deploy your Ivy projects to cloud platforms with automated containerization, infrastructure setup, and configuration management." />
 
-The `ivy deploy` command allows you to deploy your Ivy application to various cloud platforms. Ivy supports multiple deployment providers and automatically handles the deployment process including containerization, configuration, and infrastructure setup.
+The `ivy deploy` command allows you to deploy your Ivy project to various cloud platforms. Ivy supports multiple deployment providers and automatically handles the deployment process including containerization, configuration, and infrastructure setup.
 
 ## Supported Deployment Providers
 
@@ -16,7 +16,7 @@ Ivy supports the following cloud deployment providers:
 
 ## Basic Usage
 
-### Deploying Your Application
+### Deploying Your Project
 
 ```terminal
 >ivy deploy
@@ -25,9 +25,9 @@ Ivy supports the following cloud deployment providers:
 This command will:
 
 - Prompt you to select a deployment provider
-- Build and containerize your application
+- Build and containerize your project
 - Configure the necessary cloud resources
-- Deploy your application to the selected platform
+- Deploy your project to the selected platform
 - Provide you with the deployment URL
 
 ## Command Options
@@ -50,7 +50,7 @@ When you run `ivy deploy` without specifying options, Ivy will guide you through
 
 1. **Select Deployment Provider**: Choose from AWS, Azure, or GCP
 2. **Configuration Setup**: Configure provider-specific settings
-3. **Build Process**: Ivy will build and containerize your application
+3. **Build Process**: Ivy will build and containerize your project
 4. **Deployment**: Deploy to the selected cloud platform
 
 ## Deployment Provider Configuration
@@ -104,15 +104,15 @@ When you run `ivy deploy` without specifying options, Ivy will guide you through
 
 **1. Project Validation** - Ivy validates your project before deployment: ensures it's an Ivy project, checks for required files and configuration, and validates authentication status.
 
-**2. Build Process** - Ivy builds your application: restores NuGet packages, builds the application, creates Docker container, and pushes to container registry.
+**2. Build Process** - Ivy builds your project: restores NuGet packages, builds the project, creates Docker container, and pushes to container registry.
 
 **3. Infrastructure Setup** - Ivy configures cloud resources: creates necessary cloud services, configures networking and security, and sets up monitoring and logging.
 
-**4. Application Deployment** - Ivy deploys your application: deploys container to cloud platform, configures environment variables, sets up custom domains (if configured), and provides deployment URL.
+**4. Project Deployment** - Ivy deploys your project: deploys container to cloud platform, configures environment variables, sets up custom domains (if configured), and provides deployment URL.
 
 ## Containerization
 
-**Docker Configuration** - Ivy automatically generates a `Dockerfile` for your application:
+**Docker Configuration** - Ivy automatically generates a `Dockerfile` for your project:
 
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
@@ -146,7 +146,7 @@ ConnectionStrings__MyDatabase="your-connection-string"
 AUTH0_DOMAIN="your-auth0-domain"
 AUTH0_CLIENT_ID="your-client-id"
 
-# Application settings
+# Project settings
 ASPNETCORE_ENVIRONMENT="Production"
 ```
 
@@ -176,7 +176,7 @@ ASPNETCORE_ENVIRONMENT="Production"
 
 **Common Deployment Issues**
 
-**Build Failures** - Check your application builds locally, verify all dependencies are included, and check for compilation errors.
+**Build Failures** - Check that project builds locally, verify all dependencies are included, and check for compilation errors.
 
 **Container Registry Issues** - Verify container registry credentials, check network connectivity, and ensure proper permissions.
 
@@ -228,7 +228,7 @@ ASPNETCORE_ENVIRONMENT="Production"
 
 ## Best Practices
 
-**Pre-deployment Checklist** - Test locally (ensure your application runs locally), check dependencies (verify all required services are configured), review configuration (check environment variables and settings), and security review (verify authentication and authorization setup).
+**Pre-deployment Checklist** - Test locally (ensure your project runs locally), check dependencies (verify all required services are configured), review configuration (check environment variables and settings), and security review (verify authentication and authorization setup).
 
 **Deployment Strategy** - Blue-green deployment (zero-downtime deployments), rolling updates (gradual deployment across instances), and canary deployments (test with subset of users).
 
@@ -247,7 +247,7 @@ ASPNETCORE_ENVIRONMENT="Production"
 - `ivy init` - Initialize a new Ivy project
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
-- `ivy app create` - Create applications
+- `ivy app create` - Create apps
 
 ## Cloud Provider Documentation
 

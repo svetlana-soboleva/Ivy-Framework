@@ -215,7 +215,7 @@ public class MultiStepView : ViewBase
 4. **Error Handling**: Handle prompt cancellation and errors gracefully
 5. **User Experience**: Keep prompts focused and avoid asking too many questions
 6. **Accessibility**: Ensure prompts are accessible to screen readers
-7. **Consistency**: Maintain consistent prompt styling across your application
+7. **Consistency**: Maintain consistent prompt styling across your project
 
 ## Examples
 

@@ -1,6 +1,6 @@
 # Services
 
-<Ingress Text="Services in Ivy provide dependency injection and service management for clean application architecture." />
+<Ingress Text="Services in Ivy provide dependency injection and service management for clean project architecture." />
 
 ## Overview
 

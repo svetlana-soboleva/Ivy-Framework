@@ -7,7 +7,7 @@ prepare: |
 
 <Ingress Text="Organize content in visually grouped containers with headers, footers, and actions to create structured, professional layouts." />
 
-The `Card` widget is a versatile container used to group related content and actions in Ivy applications. It can hold text, buttons, charts, and other widgets, making it a fundamental building block for creating structured layouts.
+The `Card` widget is a versatile container used to group related content and actions in Ivy apps. It can hold text, buttons, charts, and other widgets, making it a fundamental building block for creating structured layouts.
 
 ## Basic Usage
 
