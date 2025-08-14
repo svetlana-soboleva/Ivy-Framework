@@ -22,7 +22,7 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"));
 new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 ```
 
-## Variants
+### Variants
 
 `Button`s come in several variants to suit different use cases.
 

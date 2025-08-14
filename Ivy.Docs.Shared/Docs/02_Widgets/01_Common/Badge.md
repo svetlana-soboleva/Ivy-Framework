@@ -67,7 +67,7 @@ Layout.Grid().Columns(4)
 
 `Badge`s can include icons to enhance their visual appearance and meaning.
 
-#### Icons on the Left (Default)
+### Icons on the Left (Default)
 
 ```csharp demo-tabs
 Layout.Grid().Columns(4)
@@ -89,7 +89,7 @@ Layout.Grid().Columns(4)
     | new Badge("Error", icon:Icons.X).Outline()
 ```
 
-#### Icons on the Right
+### Icons on the Right
 
 ```csharp demo-tabs
 Layout.Grid().Columns(4)
@@ -111,7 +111,7 @@ Layout.Grid().Columns(4)
     | new Badge("Info").Outline().Icon(Icons.Info, Align.Right)
 ```
 
-#### Icon-Only Badges
+### Icon-Only Badges
 
 You can create icon-only badges by passing `null` as the title:
 

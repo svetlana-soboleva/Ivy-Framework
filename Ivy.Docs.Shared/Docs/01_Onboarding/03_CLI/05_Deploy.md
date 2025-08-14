@@ -30,7 +30,7 @@ This command will:
 - Deploy your project to the selected platform
 - Provide you with the deployment URL
 
-## Command Options
+### Command Options
 
 `--project-path <PATH>` - Specify the path to your project directory. Defaults to the current directory.
 
@@ -44,7 +44,7 @@ This command will:
 >ivy deploy --verbose
 ```
 
-## Interactive Mode
+### Interactive Mode
 
 When you run `ivy deploy` without specifying options, Ivy will guide you through an interactive deployment process:
 
@@ -53,7 +53,7 @@ When you run `ivy deploy` without specifying options, Ivy will guide you through
 3. **Build Process**: Ivy will build and containerize your project
 4. **Deployment**: Deploy to the selected cloud platform
 
-## Deployment Provider Configuration
+### Deployment Provider Configuration
 
 **AWS (Amazon Web Services)** - Comprehensive cloud platform with various services for application deployment.
 
@@ -100,7 +100,7 @@ When you run `ivy deploy` without specifying options, Ivy will guide you through
 
 **GCP Setup Prerequisites** - Create a Google Cloud account, install Google Cloud CLI, login to GCP: `gcloud auth login`, and set your project: `gcloud config set project <project-id>`.
 
-## Deployment Process
+### Deployment Process
 
 **1. Project Validation** - Ivy validates your project before deployment: ensures it's an Ivy project, checks for required files and configuration, and validates authentication status.
 
@@ -110,7 +110,7 @@ When you run `ivy deploy` without specifying options, Ivy will guide you through
 
 **4. Project Deployment** - Ivy deploys your project: deploys container to cloud platform, configures environment variables, sets up custom domains (if configured), and provides deployment URL.
 
-## Containerization
+### Containerization
 
 **Docker Configuration** - Ivy automatically generates a `Dockerfile` for your project:
 
@@ -139,30 +139,30 @@ ENTRYPOINT ["dotnet", "YourProject.dll"]
 **Environment Configuration** - Ivy configures environment variables for your deployed application:
 
 ```text
-# Database connection strings
+### Database connection strings
 ConnectionStrings__MyDatabase="your-connection-string"
 
-# Authentication settings
+### Authentication settings
 AUTH0_DOMAIN="your-auth0-domain"
 AUTH0_CLIENT_ID="your-client-id"
 
-# Project settings
+### Project settings
 ASPNETCORE_ENVIRONMENT="Production"
 ```
 
-## Security and Configuration
+### Security and Configuration
 
 **Secrets Management** - Ivy handles secrets securely during deployment: connection strings stored as environment variables, authentication secrets configured securely, and API keys managed through cloud provider secrets.
 
 **Network Security** - Ivy configures network security: automatic SSL/TLS configuration, appropriate firewall rules, and network isolation (where applicable).
 
-## Monitoring and Logging
+### Monitoring and Logging
 
 **Application Monitoring** - Ivy sets up monitoring for your deployed application: health checks, performance and resource metrics, centralized log collection, and automated alerting for issues.
 
 **Cloud Provider Monitoring** - Each cloud provider offers specific monitoring tools: AWS CloudWatch, Azure Application Insights, and GCP Cloud Monitoring.
 
-## Deployment Options
+### Deployment Options
 
 **Build Choices** - Ivy offers different build options:
 
@@ -172,7 +172,7 @@ ASPNETCORE_ENVIRONMENT="Production"
 
 **Scaling Configuration** - Configure application scaling: auto-scaling (automatic scaling based on demand), manual scaling (fixed number of instances), and min/max instances (scaling boundaries).
 
-## Troubleshooting
+### Troubleshooting
 
 **Common Deployment Issues**
 
@@ -226,7 +226,7 @@ ASPNETCORE_ENVIRONMENT="Production"
 # Configure project and region
 ```
 
-## Best Practices
+### Best Practices
 
 **Pre-deployment Checklist** - Test locally (ensure your project runs locally), check dependencies (verify all required services are configured), review configuration (check environment variables and settings), and security review (verify authentication and authorization setup).
 
@@ -236,20 +236,20 @@ ASPNETCORE_ENVIRONMENT="Production"
 
 **Security Best Practices** - Secrets management (use cloud provider secrets services), network security (configure appropriate firewall rules), access control (implement least-privilege access), and regular updates (keep dependencies and runtime updated).
 
-## Post-deployment
+### Post-deployment
 
 **Application Management** - After deployment, you can monitor performance (use cloud provider monitoring tools), scale application (adjust instance count based on demand), update application (deploy new versions), and configure domains (set up custom domains and SSL).
 
 **Maintenance** - Regular maintenance tasks include security updates (keep dependencies updated), performance monitoring (monitor and optimize performance), cost monitoring (track and optimize costs), and backup management (configure and test backups).
 
-## Related Commands
+### Related Commands
 
 - `ivy init` - Initialize a new Ivy project
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
 - `ivy app create` - Create apps
 
-## Cloud Provider Documentation
+### Cloud Provider Documentation
 
 For detailed information about each cloud provider:
 

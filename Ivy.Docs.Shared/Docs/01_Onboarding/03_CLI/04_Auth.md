@@ -18,7 +18,7 @@ Ivy supports the following authentication providers:
 
 - **Basic Auth** - Simple username/password authentication
 
-## Basic Usage
+### Basic Usage
 
 ### Adding an Authentication Provider
 
@@ -33,7 +33,7 @@ This command will:
 - Update your `Program.cs` with the necessary authentication setup
 - Store sensitive configuration in .NET User Secrets
 
-## Command Options
+### Command Options
 
 `--provider <PROVIDER>` - Specify the authentication provider directly:
 
@@ -55,7 +55,7 @@ Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
 >ivy auth add --verbose
 ```
 
-## Interactive Mode
+### Interactive Mode
 
 When you run `ivy auth add` without specifying options, Ivy will guide you through an interactive setup:
 
@@ -63,7 +63,7 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 2. **Provider Configuration**: Enter the necessary configuration details
 3. **Integration Setup**: Ivy will automatically configure your project
 
-## Authentication Provider Configuration
+### Authentication Provider Configuration
 
 **Auth0** - Universal authentication platform that supports multiple identity providers.
 
@@ -135,7 +135,7 @@ BaseUrl=https://auth.your-domain.com;ClientId=your-client-id;ClientSecret=your-c
 Username=admin;Password=secure-password
 ```
 
-## Security and Secrets Management
+### Security and Secrets Management
 
 Ivy automatically configures .NET User Secrets for secure authentication configuration. To view configured secrets:
 
@@ -258,7 +258,7 @@ app.Run();
 >ivy auth add --provider Basic --connection-string YourConnectionString
 ```
 
-## Best Practices
+### Best Practices
 
 **Security** - Always use HTTPS in production, store sensitive configuration in user secrets or environment variables, regularly rotate client secrets, use strong passwords for Basic Auth, and implement proper session management.
 
@@ -266,7 +266,7 @@ app.Run();
 
 **Testing** - Test authentication flows in development, verify token validation works correctly, and ensure logout functionality works properly.
 
-## Related Commands
+### Related Commands
 
 - `ivy init` - Initialize a new Ivy project
 - `ivy db add` - Add database connections
