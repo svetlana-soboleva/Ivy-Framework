@@ -28,6 +28,7 @@ export function createIvyCodeTheme(): Extension {
       overflow: 'auto',
       width: '100%',
       maxWidth: '100%',
+      backgroundColor: 'var(--background)',
     },
     '.cm-content': {
       padding: '10px',
@@ -77,6 +78,16 @@ export function createIvyCodeTheme(): Extension {
     '.cm-cursor': {
       borderLeftColor: 'var(--foreground)',
     },
+    // Ensure all editor areas have proper background
+    '.cm-editor .cm-content': {
+      backgroundColor: 'var(--background)',
+    },
+    '.cm-editor .cm-scroller': {
+      backgroundColor: 'var(--background)',
+    },
+    '.cm-editor': {
+      backgroundColor: 'var(--background)',
+    },
     // Container classes for proper sizing
     '.w-tc-editor': {
       height: '100%',
@@ -85,12 +96,14 @@ export function createIvyCodeTheme(): Extension {
       display: 'flex',
       flexDirection: 'column',
       boxSizing: 'border-box',
+      backgroundColor: 'var(--background)',
     },
     '.w-tc-editor-text': {
       flex: '1',
       overflow: 'auto',
       width: '100%',
       maxWidth: '100%',
+      backgroundColor: 'var(--background)',
     },
   });
 
