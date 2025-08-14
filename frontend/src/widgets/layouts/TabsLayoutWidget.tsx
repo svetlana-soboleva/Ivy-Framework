@@ -495,7 +495,7 @@ export const TabsLayoutWidget = ({
       if (prev.has(tabId)) {
         return prev; // Return the same Set if tab is already loaded
       }
-      return new Set(prev).add(tabId); // Only create new Set if needed
+      return new Set([...prev, tabId]);
     });
   }, []);
 
