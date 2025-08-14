@@ -30,7 +30,9 @@ public class BasicUsageDemo : ViewBase
 }
 ```
 
-**Note:** The `TextInput` class now defaults to `string` type, so you can use `new TextInput(...)` instead of `new TextInput<string>(...)`. The generic version is still available if you need to work with other string-compatible types.
+<Callout Type="tip">
+The TextInput class now defaults to `string` type, so you can use `new TextInput(...)` instead of `new TextInput&lt;string&gt;(...)`. The generic version is still available if you need to work with other string-compatible types.
+</Callout>
 
 ## Variants
 
