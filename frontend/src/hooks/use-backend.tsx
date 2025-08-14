@@ -73,9 +73,17 @@ function applyUpdateMessage(
     } else {
       update.indices.forEach((index, i) => {
         if (i === update.indices.length - 1) {
-          applyPatch(parent.children![index], update.patch);
+          if (!parent.children) {
+            logger.error('No children found in parent', { parent });
+            return;
+          }
+          applyPatch(parent.children[index], update.patch);
         } else {
-          parent = parent.children![index];
+          if (!parent.children) {
+            logger.error('No children found in parent', { parent });
+            return;
+          }
+          parent = parent.children[index];
         }
       });
     }
