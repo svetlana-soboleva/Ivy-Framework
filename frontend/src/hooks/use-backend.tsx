@@ -85,11 +85,33 @@ function applyUpdateMessage(
           }
           applyPatch(parent.children[index], update.patch);
         } else {
+          if (!parent) {
+            logger.error('No parent found in applyUpdateMessage', { message });
+            return;
+          }
           if (!parent.children) {
             logger.error('No children found in parent', { parent });
             return;
           }
-          parent = parent.children[index];
+          if (index >= parent.children.length) {
+            logger.error('Index out of bounds', {
+              index,
+              childrenLength: parent.children.length,
+              parent,
+            });
+            return;
+          }
+          const nextParent = parent.children[index];
+          if (!nextParent) {
+            logger.error('Child at index is null/undefined', {
+              index,
+              childrenLength: parent.children.length,
+              parentType: parent.type,
+              parentId: parent.id,
+            });
+            return;
+          }
+          parent = nextParent;
         }
       });
     }
