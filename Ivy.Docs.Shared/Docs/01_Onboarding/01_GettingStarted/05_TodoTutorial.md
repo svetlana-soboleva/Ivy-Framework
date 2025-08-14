@@ -6,7 +6,7 @@
 
 Before starting this tutorial, make sure you have [installed](02_Installation.md) Ivy.
 
-## Creating the Todo App
+## Creating the Todo Application
 
 Let's create a new todo application step by step.
 
@@ -123,7 +123,7 @@ public class TodoItem(Todo todo, Action deleteTodo, Action toggleTodo) : ViewBas
 
 ### 7. Run
 
-Now let's run the app.
+Now let's run the project.
 
 ```terminal
 >dotnet watch

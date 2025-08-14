@@ -180,7 +180,7 @@ new TextInput(onChangedState.Value, e => onChangedState.Set(e.Value))
 ```
 
 In this code example shown, the value of the text input will be stored in `onChangedState` variable.
-The following demo shows how to use it in a small application, where users are greeted as they enter their name.
+The following demo shows how to use it in a small app, where users are greeted as they enter their name.
 
 ```csharp demo-tabs 
 public class EventsDemoApp : ViewBase

@@ -89,7 +89,7 @@ new TabsLayout(null, null, null, null, 0,
 
 ### Content Variant
 
-The Content variant emphasizes the content area with subtle tab indicators. This is ideal for content-heavy applications where the focus should be on the displayed information.
+The Content variant emphasizes the content area with subtle tab indicators. This is ideal for content-heavy apps where the focus should be on the displayed information.
 
 ```csharp demo-tabs
 new TabsLayout(null, null, null, null, 0,

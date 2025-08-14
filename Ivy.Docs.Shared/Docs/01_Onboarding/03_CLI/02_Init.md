@@ -21,7 +21,7 @@ This command will:
 `--namespace <NAMESPACE>` or `-n <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
 ```terminal
->ivy init --namespace MyCompany.MyApp
+>ivy init --namespace MyCompany.MyProject
 ```
 
 `--dangerous-clear` - Clear the current folder before creating the new project. **Use with caution!**
@@ -42,7 +42,7 @@ This command will:
 >ivy init --verbose
 ```
 
-`--helloworld` or `--hello` - Include a simple demo application in the new project to help you get started.
+`--helloworld` or `--hello` - Include a simple demo app in the new project to help you get started.
 
 ```terminal
 >ivy init --helloworld
@@ -64,7 +64,7 @@ After running `ivy init`, your project will have the following structure:
 
 ```text
 YourProject/
-├── Program.cs              # Main application entry point
+├── Program.cs              # Main project entry point
 ├── YourProject.csproj      # .NET project file
 ├── GlobalUsings.cs         # Global using statements
 ├── README.md               # Project documentation
@@ -75,7 +75,7 @@ YourProject/
 
 ### Program.cs
 
-The main entry point for your Ivy application:
+The main entry point for your Ivy project:
 
 ```csharp
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
@@ -164,16 +164,16 @@ After initializing your project:
 
 1. **Add a database connection**: `ivy db add`
 2. **Add authentication**: `ivy auth add`
-3. **Create an application**: `ivy app create`
-4. **Deploy your application**: `ivy deploy`
+3. **Create an app**: `ivy app create`
+4. **Deploy your project**: `ivy deploy`
 
 ## Examples
 
 **Basic Project Initialization**
 
 ```terminal
->mkdir MyIvyApp
->cd MyIvyApp
+>mkdir MyIvyProject
+>cd MyIvyProject
 >ivy init
 ```
 
@@ -186,13 +186,13 @@ After initializing your project:
 **Project with Demo App**
 
 ```terminal
->ivy init --helloworld --namespace MyDemoApp
+>ivy init --helloworld --namespace MyDemoProject
 ```
 
 **Verbose Initialization**
 
 ```terminal
->ivy init --verbose --namespace MyApp
+>ivy init --verbose --namespace MyProject
 ```
 
 ## Troubleshooting
@@ -212,5 +212,5 @@ After initializing your project:
 
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
-- `ivy app create` - Create applications
-- `ivy deploy` - Deploy your application
+- `ivy app create` - Create apps
+- `ivy deploy` - Deploy your project

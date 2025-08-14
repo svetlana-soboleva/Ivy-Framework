@@ -2,7 +2,7 @@
 
 <Ingress Text="Streamline your Ivy development workflow with powerful CLI tools for project initialization, database integration, authentication, and deployment." />
 
-Ivy CLI is a powerful tool designed to streamline the development of Ivy applications. It provides:
+Ivy CLI is a powerful tool designed to streamline the development of Ivy projects. It provides:
 
 - **Database Integration**: Connect to multiple database providers (SQL Server, PostgreSQL, MySQL, SQLite, and more)
 - **Authentication**: Add authentication providers (Auth0, Supabase, Authelia, Basic Auth)
@@ -54,7 +54,7 @@ An Ivy project follows a standardized structure:
 
 ```text
 YourProject/
-├── Program.cs              # Main application entry point
+├── Program.cs              # Main project entry point
 ├── YourProject.csproj      # .NET project file
 ├── GlobalUsings.cs         # Global using statements
 ├── README.md               # Project documentation
@@ -79,7 +79,7 @@ Most Ivy commands require authentication. Use `ivy login` to authenticate with y
 1. **Initialize a project**: `ivy init`
 2. **Add a database**: `ivy db add`
 3. **Add authentication**: `ivy auth add`
-4. **Deploy your app**: `ivy deploy`
+4. **Deploy your project**: `ivy deploy`
 
 For detailed information on each feature, see the specific documentation files:
 

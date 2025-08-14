@@ -6,7 +6,7 @@
 
 ## What Makes Ivy Different
 
-Ivy eliminates the traditional frontend/backend split by bringing React-like patterns directly to C#. You write your entire application - UI, logic, and data access - in one cohesive C# codebase.
+Ivy eliminates the traditional frontend/backend split by bringing React-like patterns directly to C#. You build your entire project - UI, logic, and data access - in one cohesive C# codebase.
 
 ```csharp
 [App(icon: Icons.Users)]
@@ -38,7 +38,7 @@ We created Ivy to solve common frustrations with modern web development:
 
 ### Cost & Speed Optimization
 
-Everyday tasks should be simple and idiomatic. Complex requirements should remain possible, but building basic CRUD apps shouldn't require weeks of setup.
+Everyday tasks should be simple and idiomatic. Complex requirements should remain possible, but building basic CRUD projects shouldn't require weeks of setup.
 
 ### Eliminating Boilerplate
 
@@ -97,7 +97,7 @@ Ready to try Ivy? The fastest way to get started is:
 
 ```terminal
 >dotnet tool install -g Ivy.Console
->ivy init --namespace MyCompany.InternalApp
+>ivy init --namespace MyCompany.InternalProject
 >dotnet watch
 ```
 
