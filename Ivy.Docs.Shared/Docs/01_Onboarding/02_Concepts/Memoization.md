@@ -33,7 +33,7 @@ public class ExpensiveCalculationView : ViewBase
 }
 ```
 
-## When to Use Memoization
+### When to Use Memoization
 
 Use memoization when:
 
@@ -41,7 +41,7 @@ Use memoization when:
 2. You want to prevent unnecessary re-renders of child components
 3. You're dealing with complex data transformations
 
-## Best Practices
+### Best Practices
 
 1. **Dependency Array**: Always specify the dependencies that should trigger a recomputation
 2. **Expensive Operations**: Only memoize truly expensive operations

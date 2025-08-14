@@ -27,7 +27,7 @@ public class GreetingView : ViewBase
 Text.P("Hello from a View!")
 ```
 
-## The ViewBase Class
+### The ViewBase Class
 
 All views inherit from the abstract `ViewBase` class, which provides:
 
@@ -63,7 +63,7 @@ public class FlexibleContentView : ViewBase
 }
 ```
 
-## State Management with Hooks
+### State Management with Hooks
 
 Views use React-like hooks for state management. The most common hook is `UseState()`:
 
@@ -136,7 +136,7 @@ public class TimerView : ViewBase
 }
 ```
 
-## View Composition
+### View Composition
 
 Views can be composed together to create complex UIs:
 
@@ -163,7 +163,7 @@ Layout.Vertical()
     )
 ```
 
-## App Attribute
+### App Attribute
 
 To make a view available as an app, use the `[App]` attribute:
 

@@ -29,7 +29,7 @@ if (result)
 }
 ```
 
-## Confirmation Prompts
+### Confirmation Prompts
 
 Get user confirmation for important actions:
 
@@ -59,7 +59,7 @@ public class DeleteView : ViewBase
 }
 ```
 
-## Text Input Prompts
+### Text Input Prompts
 
 Collect text input from users:
 
@@ -89,7 +89,7 @@ public class RenameView : ViewBase
 }
 ```
 
-## File Selection Prompts
+### File Selection Prompts
 
 Handle file selection through prompts:
 
@@ -119,7 +119,7 @@ public class UploadView : ViewBase
 }
 ```
 
-## Custom Prompts
+### Custom Prompts
 
 Create custom prompts for specific needs:
 
@@ -161,7 +161,7 @@ public class CustomPromptView : ViewBase
 }
 ```
 
-## Prompt Chaining
+### Prompt Chaining
 
 Chain multiple prompts together:
 
@@ -207,7 +207,7 @@ public class MultiStepView : ViewBase
 }
 ```
 
-## Best Practices
+### Best Practices
 
 1. **Clear Messages**: Use clear and concise prompt messages
 2. **Default Values**: Provide sensible default values when appropriate

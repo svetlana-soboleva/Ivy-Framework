@@ -16,7 +16,7 @@ This command will:
 - Set up the basic project structure
 - Generate necessary configuration files
 
-## Command Options
+### Command Options
 
 `--namespace <NAMESPACE>` or `-n <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
@@ -48,7 +48,7 @@ This command will:
 >ivy init --helloworld
 ```
 
-## Interactive Mode
+### Interactive Mode
 
 When you run `ivy init` without specifying a namespace, Ivy will prompt you to enter one:
 
@@ -58,7 +58,7 @@ Namespace for the new Ivy project: [suggested-namespace]
 
 Ivy will suggest a namespace based on your current folder name. You can accept the suggestion or enter a custom namespace.
 
-## Project Structure
+### Project Structure
 
 After running `ivy init`, your project will have the following structure:
 
@@ -71,7 +71,7 @@ YourProject/
 └── .gitignore              # Git ignore file
 ```
 
-## Generated Files
+### Generated Files
 
 ### Program.cs
 
@@ -127,7 +127,7 @@ global using System.Reactive.Linq;
 namespace YourProject;
 ```
 
-## Prerequisites
+### Prerequisites
 
 Before running `ivy init`, ensure you have:
 
@@ -135,7 +135,7 @@ Before running `ivy init`, ensure you have:
 2. **Git** installed (optional, but recommended)
 3. **Empty directory** or use `--dangerous-clear`/`--dangerous-overwrite`
 
-## Validation
+### Validation
 
 Ivy performs several validations during initialization:
 
@@ -144,7 +144,7 @@ Ivy performs several validations during initialization:
 - **Git Status**: Checks for uncommitted changes if Git is initialized
 - **.NET Tools**: Ensures required .NET tools are installed
 
-## Error Handling
+### Error Handling
 
 **Empty Directory Required** - If the current directory is not empty, Ivy will show an error:
 
@@ -158,7 +158,7 @@ The current folder is not empty. Please clear the folder or use the --dangerous-
 Invalid 'invalid-namespace' namespace. Please enter a valid namespace.
 ```
 
-## Next Steps
+### Next Steps
 
 After initializing your project:
 
@@ -195,7 +195,7 @@ After initializing your project:
 >ivy init --verbose --namespace MyProject
 ```
 
-## Troubleshooting
+### Troubleshooting
 
 **Permission Issues** - If you encounter permission issues, ensure you have write access to the current directory.
 
@@ -208,7 +208,7 @@ After initializing your project:
 
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
-## Related Commands
+### Related Commands
 
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
