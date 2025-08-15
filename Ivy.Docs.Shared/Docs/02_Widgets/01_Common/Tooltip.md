@@ -5,7 +5,9 @@ prepare: |
 
 # Tooltip
 
-<Ingress Text="Enhance user experience with contextual tooltips that provide helpful information on hover or focus without cluttering the interface." />
+<Ingress>
+Enhance user experience with contextual tooltips that provide helpful information on hover or focus without cluttering the interface.
+</Ingress>
 
 `Tooltip`s provide contextual information when hovering or focusing on a widget. They are essential for improving user experience by offering additional context without cluttering the interface.
 

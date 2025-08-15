@@ -1,6 +1,8 @@
 ﻿# Installation
 
-<Ingress Text="Getting started with Ivy." />
+<Ingress>
+Getting started with Ivy.
+</Ingress>
 
 Ivy can be installed easily using the .NET command line tool.
 

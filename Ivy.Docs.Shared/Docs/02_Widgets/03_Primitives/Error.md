@@ -1,6 +1,8 @@
 # Error
 
-<Ingress Text="Display error states consistently with standardized messaging, optional details, and recovery options for better user experience." />
+<Ingress>
+Display error states consistently with standardized messaging, optional details, and recovery options for better user experience.
+</Ingress>
 
 The `Error` widget provides a standardized way to display error states in your app. It's designed to communicate that something went wrong and optionally provide details and recovery options.
 

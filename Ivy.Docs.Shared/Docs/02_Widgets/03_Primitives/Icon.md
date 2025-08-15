@@ -1,6 +1,8 @@
 # Icon
 
-<Ingress Text="Display beautiful vector icons from the comprehensive Lucide icon set with customizable colors, sizes, and styling options." />
+<Ingress>
+Display beautiful vector icons from the comprehensive Lucide icon set with customizable colors, sizes, and styling options.
+</Ingress>
 
 The `Icon` widget displays vector icons from Ivy's built-in icon set. Icons enhance visual communication and can be customized with different colors and sizes.
 

@@ -1,6 +1,8 @@
 # Kbd
 
-<Ingress Text="Display keyboard shortcuts and key combinations with proper styling to help users identify commands and improve documentation." />
+<Ingress>
+Display keyboard shortcuts and key combinations with proper styling to help users identify commands and improve documentation.
+</Ingress>
 
 The `Kbd` widget displays keyboard shortcuts or key combinations with proper styling. It helps users identify key commands and improves documentation clarity.
 

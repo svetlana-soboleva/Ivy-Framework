@@ -1,6 +1,8 @@
 # DateTimeInput
 
-<Ingress Text="Capture dates and times with intuitive picker interfaces supporting calendar selection, time input, and combined date-time entry." />
+<Ingress>
+Capture dates and times with intuitive picker interfaces supporting calendar selection, time input, and combined date-time entry.
+</Ingress>
 
 The `DateTimeInput` widget provides a comprehensive date and time picker interface with support for different variants. It allows users to select dates from a calendar, times from a time selector, or both date and time together, making it ideal for scheduling, event creation, and form inputs.
 

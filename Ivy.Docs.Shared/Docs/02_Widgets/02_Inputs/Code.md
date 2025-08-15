@@ -4,7 +4,9 @@ prepare: |
 ---
 # CodeInput
 
-<Ingress Text="Edit code with syntax highlighting, line numbers, and formatting support for multiple programming languages in a specialized input field." />
+<Ingress>
+Edit code with syntax highlighting, line numbers, and formatting support for multiple programming languages in a specialized input field.
+</Ingress>
 
 The `CodeInput` widget provides a specialized text input field for entering and editing code with syntax highlighting.
 It supports various programming languages and offers features like line numbers and code formatting.

@@ -1,6 +1,8 @@
 # Iframe
 
-<Ingress Text="Embed external web pages securely within your app using contained browsing contexts with proper security boundaries." />
+<Ingress>
+Embed external web pages securely within your application using contained browsing contexts with proper security boundaries.
+</Ingress>
 
 The `Iframe` widget embeds external web pages into your app. It creates a contained browsing context that can display content from other websites while maintaining security boundaries.
 

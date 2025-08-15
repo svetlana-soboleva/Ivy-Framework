@@ -1,6 +1,8 @@
 # Image
 
-<Ingress Text="Display images with automatic loading, responsive sizing, and proper accessibility features for rich visual content." />
+<Ingress>
+Display images with automatic loading, responsive sizing, and proper accessibility features for rich visual content.
+</Ingress>
 
 The `Image` widget displays images in your app.
 

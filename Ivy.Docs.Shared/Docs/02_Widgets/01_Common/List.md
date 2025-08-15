@@ -1,6 +1,8 @@
 # List
 
-<Ingress Text="Display collections of items in organized, styled lists with customizable formatting and interactive elements." />
+<Ingress>
+Display collections of items in organized, styled lists with customizable formatting and interactive elements.
+</Ingress>
 
 Todo
 

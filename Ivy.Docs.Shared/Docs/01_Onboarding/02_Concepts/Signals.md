@@ -1,6 +1,8 @@
 # Signals
 
-<Ingress Text="Signals enable reactive state management and side effect handling in Ivy apps." />
+<Ingress>
+Signals enable reactive state management and side effect handling in Ivy applications.
+</Ingress>
 
 ## Overview
 
