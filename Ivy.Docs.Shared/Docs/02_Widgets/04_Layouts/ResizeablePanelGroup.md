@@ -10,14 +10,26 @@ The `ResizeablePanelGroup` widget creates layouts with multiple panels separated
 
 The simplest resizable panel group consists of two or more panels arranged horizontally:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class BasicResizeablePanelView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(30, new Card("Left Panel")),
-            new ResizeablePanel(70, new Card("Right Panel"))
+            new ResizeablePanel(30, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Left Panel")
+                        | Text.Block("This is the left sidebar")
+                        | Text.Block("with navigation items")
+                )),
+            new ResizeablePanel(70, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Right Panel")
+                        | Text.Block("This is the main content area")
+                        | Text.Block("where your primary content goes")
+                ))
         );
     }
 }
@@ -29,15 +41,36 @@ public class BasicResizeablePanelView : ViewBase
 
 Panels are arranged side by side with vertical drag handles:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class HorizontalResizeableView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(25, new Card("Sidebar")),
-            new ResizeablePanel(50, new Card("Main Content")),
-            new ResizeablePanel(25, new Card("Info Panel"))
+            new ResizeablePanel(25, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Sidebar")
+                        | Text.Block("Navigation")
+                        | Text.Block("• Home")
+                        | Text.Block("• Settings")
+                )),
+            new ResizeablePanel(50, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Main Content")
+                        | Text.Block("This is the primary content area")
+                        | Text.Block("where the main application content")
+                        | Text.Block("would be displayed.")
+                )),
+            new ResizeablePanel(25, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Info Panel")
+                        | Text.Block("Additional info")
+                        | Text.Block("• Stats")
+                        | Text.Block("• Notifications")
+                ))
         ).Horizontal();
     }
 }
@@ -47,16 +80,33 @@ public class HorizontalResizeableView : ViewBase
 
 Panels are stacked vertically with horizontal drag handles:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class VerticalResizeableView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(30, new Card("Header")),
-            new ResizeablePanel(50, new Card("Content")),
-            new ResizeablePanel(20, new Card("Footer"))
-        ).Vertical();
+            new ResizeablePanel(30, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Header Section")
+                        | Text.Block("Navigation and branding")
+                )),
+            new ResizeablePanel(40, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Main Content")
+                        | Text.Block("This is the main content area where")
+                        | Text.Block("your primary content would be displayed.")
+                        | Text.Block("It takes up the majority of the space.")
+                )),
+            new ResizeablePanel(30, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Footer Section")
+                        | Text.Block("Copyright and links")
+                ))
+        ).Vertical().Height(Size.Units(150));
     }
 }
 ```
@@ -67,15 +117,31 @@ public class VerticalResizeableView : ViewBase
 
 Each panel can have a default size specified as a percentage of the total space:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class DefaultSizesView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(20, new Card("20% width")),
-            new ResizeablePanel(60, new Card("60% width")),
-            new ResizeablePanel(20, new Card("20% width"))
+            new ResizeablePanel(20, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("20% Panel")
+                        | Text.Block("Small panel")
+                )),
+            new ResizeablePanel(60, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("60% Panel")
+                        | Text.Block("Large main panel")
+                        | Text.Block("with more content space")
+                )),
+            new ResizeablePanel(20, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("20% Panel")
+                        | Text.Block("Small panel")
+                ))
         );
     }
 }
@@ -85,15 +151,33 @@ public class DefaultSizesView : ViewBase
 
 Panels without specified sizes will automatically distribute the remaining space:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class AutoSizingView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(25, new Card("Fixed 25%")),
-            new ResizeablePanel(null, new Card("Auto size")),
-            new ResizeablePanel(null, new Card("Auto size"))
+            new ResizeablePanel(25, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Fixed 25%")
+                        | Text.Block("This panel has")
+                        | Text.Block("a fixed size")
+                )),
+            new ResizeablePanel(null, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Auto Size")
+                        | Text.Block("This panel automatically")
+                        | Text.Block("sizes to available space")
+                )),
+            new ResizeablePanel(null, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Auto Size")
+                        | Text.Block("This panel also")
+                        | Text.Block("sizes automatically")
+                ))
         );
     }
 }
@@ -103,24 +187,44 @@ public class AutoSizingView : ViewBase
 
 ### Show/Hide Resize Handles
 
-Control whether the drag handles are visible and functional:
+Create a workspace with multiple resizable sections for different content areas:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class HandleVisibilityView : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical()
-            | Text.Block("With Handles (Default)")
+        return Layout.Vertical().Gap(4)
+            | new Box(Text.Block("With Handles (Default)")).Padding(2)
             | new ResizeablePanelGroup(
-                new ResizeablePanel(50, new Card("Panel A")),
-                new ResizeablePanel(50, new Card("Panel B"))
-            ).ShowHandle(true)
-            | Text.Block("Without Handles")
+                new ResizeablePanel(50, 
+                    new Card(
+                        Layout.Vertical()
+                            | Text.H3("Panel A")
+                            | Text.Block("Resizable panel")
+                    )),
+                new ResizeablePanel(50, 
+                    new Card(
+                        Layout.Vertical()
+                            | Text.H3("Panel B")
+                            | Text.Block("Resizable panel")
+                    ))
+            ).ShowHandle(true).Height(Size.Units(50))
+            | new Box(Text.Block("Without Handles")).Padding(2)
             | new ResizeablePanelGroup(
-                new ResizeablePanel(50, new Card("Panel A")),
-                new ResizeablePanel(50, new Card("Panel B"))
-            ).ShowHandle(false);
+                new ResizeablePanel(50, 
+                    new Card(
+                        Layout.Vertical()
+                            | Text.H3("Panel A")
+                            | Text.Block("Fixed panel")
+                    )),
+                new ResizeablePanel(50, 
+                    new Card(
+                        Layout.Vertical()
+                            | Text.H3("Panel B")
+                            | Text.Block("Fixed panel")
+                    ))
+            ).ShowHandle(false).Height(Size.Units(50));
     }
 }
 ```
@@ -129,20 +233,47 @@ public class HandleVisibilityView : ViewBase
 
 Create complex layouts by nesting ResizeablePanelGroups:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class NestedLayoutView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            new ResizeablePanel(25, new Card("Sidebar")),
+            new ResizeablePanel(25, 
+                new Card(
+                    Layout.Vertical()
+                        | Text.H3("Sidebar")
+                        | Text.Block("Navigation menu")
+                        | Text.Block("• Dashboard")
+                        | Text.Block("• Reports")
+                        | Text.Block("• Settings")
+                )),
             new ResizeablePanel(75,
                 new ResizeablePanelGroup(
-                    new ResizeablePanel(60, new Card("Main Content")),
+                    new ResizeablePanel(60, 
+                        new Card(
+                            Layout.Vertical()
+                                | Text.H3("Main Content")
+                                | Text.Block("Primary workspace area")
+                                | Text.Block("This is where the main")
+                                | Text.Block("application content is displayed.")
+                        )),
                     new ResizeablePanel(40,
                         new ResizeablePanelGroup(
-                            new ResizeablePanel(50, new Card("Top Right")),
-                            new ResizeablePanel(50, new Card("Bottom Right"))
+                            new ResizeablePanel(50, 
+                                new Card(
+                                    Layout.Vertical()
+                                        | Text.H3("Top Right")
+                                        | Text.Block("Quick stats")
+                                        | Text.Block("or tools")
+                                )),
+                            new ResizeablePanel(50, 
+                                new Card(
+                                    Layout.Vertical()
+                                        | Text.H3("Bottom Right")
+                                        | Text.Block("Additional info")
+                                        | Text.Block("or controls")
+                                ))
                         ).Vertical())
                 ).Horizontal())
         ).Horizontal();
@@ -150,124 +281,74 @@ public class NestedLayoutView : ViewBase
 }
 ```
 
-## Full-Height Layouts
-
-For layouts that should fill the entire viewport height:
-
-```csharp demo-tabs 
-public class FullHeightView : ViewBase
-{
-    public override object? Build()
-    {
-        return new ResizeablePanelGroup(
-            new ResizeablePanel(20, new Card("Navigation")),
-            new ResizeablePanel(60, new Card("Main")),
-            new ResizeablePanel(20, new Card("Sidebar"))
-        ).Height(Size.Screen());
-    }
-}
-```
+<WidgetDocs Type="Ivy.ResizeablePanelGroup" ExtensionTypes="Ivy.ResizeablePanelsExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/ResizeablePanelGroup.cs"/>
 
 ## Advanced Examples
 
-### IDE-Style Layout
+### Multi-Directional Resizing
 
-Create a layout similar to an integrated development environment:
+Demonstrate both horizontal and vertical resizing in a complex nested layout:
 
-```csharp demo-tabs 
-public class IDELayoutView : ViewBase
+```csharp demo-tabs
+public class MultiDirectionalResizingView : ViewBase
 {
     public override object? Build()
     {
         return new ResizeablePanelGroup(
-            // Left sidebar
-            new ResizeablePanel(20, 
+            // Left panel - File browser
+            new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Explorer")
-                        | Text.Block("• src/")
-                        | Text.Block("• components/")
-                        | Text.Block("• pages/")
-                )),
-            // Main area
-            new ResizeablePanel(60,
+                        | Text.H3("File Browser")
+                        | Text.Block("App.cs")
+                        | Text.Block("Layout.cs")
+                        | Text.Block("Components.cs")
+                        | Text.Block("Utils.cs")
+                        | Text.Block("Assets/")
+                        | Text.Block("Tests/")
+                ).Title("Files")
+            ),
+            // Center area - Split editor and console
+            new ResizeablePanel(50,
                 new ResizeablePanelGroup(
-                    // Code editor
+                    // Top - Code editor
                     new ResizeablePanel(70, 
                         new Card(
                             Layout.Vertical()
-                                | Text.H3("Editor")
-                                | Text.Code("function hello() {\n  console.log('Hello!');\n}")
-                        )),
-                    // Bottom panel
-                    new ResizeablePanel(30,
+                                | Text.H3("Code Editor")
+                                | Text.Code("public class ResizeableExample\n{\n    public void DemoResize()\n    {\n        // Drag handles to resize!\n        Console.WriteLine(\"Resizing works!\");\n    }\n}", Languages.Csharp)
+                        ).Title("main.cs")
+                    ),
+                    // Bottom - Console/Output
+                    new ResizeablePanel(70,
                         new Card(
                             Layout.Vertical()
-                                | Text.H3("Terminal")
-                                | Text.Block("$ npm start")
-                                | Text.Block("Server running on port 3000")
-                        ))
-                ).Vertical()),
-            // Right sidebar
-            new ResizeablePanel(20,
+                                | Text.H3("Console Output")
+                                | Text.Block("> dotnet run")
+                                | Text.Block("Building...")
+                                | Text.Block("Build succeeded")
+                                | Text.Block("Application started")
+                                | Text.Block("Resizing works!")
+                        ).Title("Output")
+                    )
+                ).Vertical().Height(Size.Units(190))),
+            // Right panel - Properties and tools
+            new ResizeablePanel(25,
                 new Card(
                     Layout.Vertical()
                         | Text.H3("Properties")
-                        | Text.Block("Component props")
-                        | Text.Block("State variables")
-                ))
-        ).Height(Size.Screen());
+                        | Text.Block("Selected: ResizeablePanel")
+                        | Text.Block("Default Size: 25%")
+                        | Text.Block("Direction: Horizontal")
+                        | Text.Block("Show Handle: true")
+                        | Text.Block("")
+                        | Text.H3("Actions")
+                        | Text.Block("• Resize horizontally ↔")
+                        | Text.Block("• Resize vertically ↕")
+                        | Text.Block("• Nested resizing ⤡")
+                ).Title("Inspector")
+            )
+        ).Height(Size.Units(200));
     }
 }
 ```
-
-### Dashboard with Resizable Widgets
-
-Create a dashboard where users can resize different sections:
-
-```csharp demo-tabs 
-public class DashboardView : ViewBase
-{
-    public override object? Build()
-    {
-        return new ResizeablePanelGroup(
-            new ResizeablePanel(30,
-                new ResizeablePanelGroup(
-                    new ResizeablePanel(50, 
-                        new Card(
-                            Layout.Vertical()
-                                | Text.H3("Metrics")
-                                | Text.Block("Revenue: $45,231")
-                                | Text.Block("Users: 1,234")
-                        )),
-                    new ResizeablePanel(50,
-                        new Card(
-                            Layout.Vertical()
-                                | Text.H3("Alerts")
-                                | Text.Block("• System healthy")
-                                | Text.Block("• 2 warnings")
-                        ))
-                ).Vertical()),
-            new ResizeablePanel(70,
-                new ResizeablePanelGroup(
-                    new ResizeablePanel(60,
-                        new Card(
-                            Layout.Vertical()
-                                | Text.H3("Analytics Chart")
-                                | Text.Block("[Chart would go here]")
-                        )),
-                    new ResizeablePanel(40,
-                        new Card(
-                            Layout.Vertical()
-                                | Text.H3("Recent Activity")
-                                | Text.Block("• User logged in")
-                                | Text.Block("• Order processed")
-                                | Text.Block("• Payment received")
-                        ))
-                ).Vertical())
-        );
-    }
-}
-```
-
-<WidgetDocs Type="Ivy.ResizeablePanelGroup" ExtensionTypes="Ivy.ResizeablePanelsExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/ResizeablePanelGroup.cs"/>
