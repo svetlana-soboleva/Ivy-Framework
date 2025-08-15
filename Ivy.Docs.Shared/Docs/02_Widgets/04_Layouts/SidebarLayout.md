@@ -177,7 +177,7 @@ public class MainAppSidebarExample : ViewBase
 ```
 
 <Callout Type="tip">
-"There is default padding 2 in main content accessable MainContentPadding by default."
+"There is default padding of 2 in main content accessible via MainContentPadding by default."
 </Callout>
 
 ### SidebarMenu Widget
