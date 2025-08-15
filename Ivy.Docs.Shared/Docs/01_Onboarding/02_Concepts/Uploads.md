@@ -31,7 +31,7 @@ var uploadUrl = this.UseUpload(
 );
 ```
 
-## File Input Component
+### File Input Component
 
 The most common way to handle uploads is using the FileInput component:
 
@@ -66,7 +66,7 @@ public class UploadView : ViewBase
 }
 ```
 
-## Progress Tracking
+### Progress Tracking
 
 Track upload progress for better user feedback:
 
@@ -103,7 +103,7 @@ public class UploadWithProgressView : ViewBase
 }
 ```
 
-## File Validation
+### File Validation
 
 Validate files before upload:
 
@@ -139,7 +139,7 @@ public class ValidatedUploadView : ViewBase
 }
 ```
 
-## Best Practices
+### Best Practices
 
 1. **File Validation**: Validate file types and sizes before upload
 2. **Progress Feedback**: Show upload progress for better UX

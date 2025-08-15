@@ -7,8 +7,9 @@ Capture numeric input with built-in validation, minimum/maximum constraints, ste
 The `NumberInput` widget provides an input field specifically for numeric values. It includes validation for numeric entries and options for
 setting minimum/maximum values, step increments, and formatting.
 
-> **Note:**
-> Unless you explicitly specify `Min` and `Max` for a `NumberInput`, common default values will be applied based on the numeric type. For example, integer types use their natural limits, while decimal, double, and float types use practical defaults (e.g., ±999,999.99 for sliders). If you need a specific range, always set `Min` and `Max` yourself.
+<Callout Type="tip">
+Unless you explicitly specify `Min` and `Max` for a `NumberInput`, common default values will be applied based on the numeric type. For example, integer types use their natural limits, while decimal, double, and float types use practical defaults (e.g., ±999,999.99 for sliders). If you need a specific range, always set `Min` and `Max` yourself.
+</Callout>
 
 ## Basic Usage
 
@@ -24,14 +25,12 @@ public class SimpleNumericValueDemo : ViewBase
         return Layout.Horizontal() 
                 | new NumberInput<double>(value)
                      .Min(-10)
-                     .Max(10)
-                     .ShowArrows();
+                     .Max(10);
     }
 }
 ```
 
-To indicate that the value of a `NumberInput` can be incremented or decremented, you can use
-`ShowArrows` function; as it's done in this example. By default, these arrows are hidden.
+The `NumberInput` allows users to enter numeric values directly.
 
 ## Variants
 
@@ -113,7 +112,6 @@ public class MoneyInputDemo : ViewBase
                 | Text.Label("GBP:")
                 | moneyInGBP.ToMoneyInput()
                             .Currency("GBP")
-                            .ShowArrows(false)
                             .Disabled();
     }
 }
@@ -174,7 +172,6 @@ public class MoneyPrecisionDemo : ViewBase
         return Layout.Horizontal() 
                 | Text.Label("Min 0, Max 100, Step 0.5, Precision 2")
                 | new NumberInput<decimal>(precValue)
-                     .ShowArrows()
                      .Min(0.0)
                      .Max(100.0)
                      .Step(0.5)
@@ -243,7 +240,6 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal() 
                    | Text.Label("Egg").Width(10)
                    | eggs.ToNumberInput()
-                         .ShowArrows()
                          .Min(0)
                          .Max(12)
                          .Width(10)
@@ -252,7 +248,6 @@ public class GroceryAppDemo : ViewBase
                 | (Layout.Horizontal()
                    | Text.Label("Bread").Width(10)
                    | breads.ToNumberInput()
-                              .ShowArrows()
                               .Min(0)
                               .Max(5)
                               .Width(10)

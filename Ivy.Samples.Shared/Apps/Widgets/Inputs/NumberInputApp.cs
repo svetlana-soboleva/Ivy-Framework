@@ -34,7 +34,7 @@ public class NumberInputApp : SampleBase
                   | Text.InlineCode("With Value")
                   | Text.InlineCode("Disabled")
                   | Text.InlineCode("Invalid")
-                  | Text.InlineCode("With Arrows")
+                  | Text.InlineCode("Invalid Nullable")
 
                   | Text.InlineCode("ToNumberInput()")
                   | nullIntValue
@@ -52,10 +52,10 @@ public class NumberInputApp : SampleBase
                     .ToNumberInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-main")
-                  | intValue
+                  | nullIntInvalid
                     .ToNumberInput()
-                    .ShowArrows()
-                    .TestId("number-input-int-arrows-main")
+                    .Invalid(loremIpsumString)
+                    .TestId("number-input-nullable-invalid-main")
 
                   | Text.InlineCode("ToSliderInput()")
                   | nullIntValue
@@ -73,9 +73,10 @@ public class NumberInputApp : SampleBase
                     .ToSliderInput()
                     .Invalid(loremIpsumString)
                     .TestId("number-input-int-invalid-slider-main")
-                  | intValue
+                  | nullIntInvalid
                     .ToSliderInput()
-                    .ShowArrows()
+                    .Invalid(loremIpsumString)
+                    .TestId("number-input-nullable-invalid-slider-main")
                )
 
                // Data Binding:
@@ -85,33 +86,6 @@ public class NumberInputApp : SampleBase
                // Currency Examples:
                | Text.H2("Currency Examples")
                | currencyExamples
-
-               // Show Arrows Examples:
-               | Text.H2("Show Arrows Examples")
-               | (Layout.Grid().Columns(5)
-                  | Text.InlineCode("Default (No Arrows)")
-                  | Text.InlineCode("With Arrows")
-                  | Text.InlineCode("With Arrows (Disabled)")
-                  | Text.InlineCode("With Arrows + Invalid")
-                  | Text.InlineCode("With Arrows + Invalid (Nullable)")
-
-                  | intValue.ToNumberInput()
-                  | intValue
-                    .ToNumberInput()
-                    .ShowArrows()
-                  | intValue
-                    .ToNumberInput()
-                    .ShowArrows()
-                    .Disabled()
-                  | intValue
-                    .ToNumberInput()
-                    .ShowArrows()
-                    .Invalid("Invalid value")
-                  | nullIntInvalid
-                    .ToNumberInput()
-                    .ShowArrows()
-                    .Invalid("Invalid value")
-               )
 
                // Events: 
                | Text.H2("Events")

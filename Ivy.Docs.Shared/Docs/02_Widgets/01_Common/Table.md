@@ -36,7 +36,7 @@ public class BasicRowTable : ViewBase
 }
 ```
 
-## Custom Column Builders
+### Custom Column Builders
 
 **Width(Size.Full())** - sets the overall table width
 
@@ -77,7 +77,7 @@ public class CustomBuilderTable : ViewBase
 }
 ```
 
-## Column Management Examples
+### Column Management Examples
 
 The `Clear()` method hides all columns, allowing you to selectively show only the columns you need.
 Use `Add()` to show specific columns in the order you want them to appear.
@@ -106,7 +106,7 @@ public class ColumnManagementTable : ViewBase
 }
 ```
 
-## Advanced Aggregations
+### Advanced Aggregations
 
 The `Totals()` method supports custom aggregation functions.
 You can use LINQ methods like `Count()`, `Average()`, `Sum()`, `Max()`, and `Min()` to create sophisticated calculations for your data.
@@ -136,7 +136,7 @@ public class AdvancedAggregationsTable : ViewBase
 }
 ```
 
-## Empty Columns Handling
+### Empty Columns Handling
 
 The `RemoveEmptyColumns()` method automatically hides columns that contain no data (empty strings, null values, or zero values). This is useful for dynamic data where some columns might be empty across all rows.
 
@@ -160,7 +160,7 @@ public class EmptyColumnsTable : ViewBase
 }
 ```
 
-## Reset and Rebuild
+### Reset and Rebuild
 
 The `Reset()` method restores all column settings to their default values. This is useful when you want to start fresh with a new configuration or when building dynamic table configurations.
 
@@ -186,7 +186,7 @@ public class ResetTableExample : ViewBase
 }
 ```
 
-## Manual Table
+### Manual Table
 
 It's also possible to create manual tables with headers and other methods using rows and cells:
 
@@ -211,7 +211,7 @@ public class ManualTableDemo : ViewBase
 }
 ```
 
-## Builder Factory Methods
+### Builder Factory Methods
 
 The `Builder()` method allows you to specify how different data types should be rendered. Use the builder factory methods to create appropriate renderers for your data.
 
@@ -237,7 +237,7 @@ public class CustomBuildersTable : ViewBase
 }
 ```
 
-## Automatic Table Conversion
+### Automatic Table Conversion
 
 Any `IEnumerable` is automatically converted to a table when returned from a view. This works through the `DefaultContentBuilder` which detects collections and converts them to tables.
 
@@ -261,7 +261,7 @@ public class AutomaticTableConversion : ViewBase
 }
 ```
 
-## Integration with Other Widgets
+### Integration with Other Widgets
 
 Tables integrate seamlessly with other Ivy widgets, allowing you to create rich, interactive interfaces.
 

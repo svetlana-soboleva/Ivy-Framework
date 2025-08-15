@@ -29,7 +29,7 @@ return new DropDownMenu(@evt =>
             | MenuItem.Default("Logout").Icon(Icons.LogOut);
 ```
 
-## Event Handling
+### Event Handling
 
 `DropDownMenu`s can handle selection events using the event parameter:
 

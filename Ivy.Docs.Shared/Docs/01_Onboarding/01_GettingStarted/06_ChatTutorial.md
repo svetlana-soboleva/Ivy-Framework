@@ -23,8 +23,7 @@ Let's create a new chat application that helps users find appropriate Lucide ico
 First, let's create the basic structure:
 
 ```csharp
-[App(icon: Icons.Sparkles)
-]
+[App(icon: Icons.Sparkles)]
 public class LucideIconAgentApp : SampleBase
 {
     public LucideIconAgentApp() : base(Align.TopRight)
@@ -35,7 +34,7 @@ public class LucideIconAgentApp : SampleBase
     {
         var client = UseService<IClientProvider>();
         
-        var messages = UseState(ImmutableArray.Create<ChatMessage>(new ChatMessage(ChatSender.Assistant, 
+        var messages = UseState(ImmutableArray.Create<ChatMessage>(new ChatMessage(ChatSender.Assistant,
             "Hello! I'm the Lucide Icon Agent. I can help you find icons for your app. Please describe your application.")));
 
         return new Chat(messages.Value.ToArray(), OnSendMessage);
@@ -134,10 +133,10 @@ public class LucideIconAgent
 
 ## Try It Out
 
-You can now run the application and try it out! Describe your application, and the AI will suggest appropriate Lucide icons that you can use in your project.
+You can now run the project and try it out! Describe your application, and the AI will suggest appropriate Lucide icons that you can use in your project.
 
 <Callout Icon="Info">
-Make sure you have set your OpenAI API key in the environment variables before running the application.
+Make sure you have set your OpenAI API key in the environment variables before running the project.
 </Callout>
 
 You can find the full source code for the project at <https://github.com/Ivy-Interactive/Ivy-Framework/tree/main/Ivy.Samples/Apps/Demos/LucideIconAgentApp.cs>.

@@ -9,7 +9,7 @@ prepare: |
 Create interactive buttons with multiple variants, states, sizes, and styling options for triggering actions in your Ivy applications.
 </Ingress>
 
-The `Button` widget is one of the most fundamental interactive elements in Ivy. It allows users to trigger actions and navigate through your application.
+The `Button` widget is one of the most fundamental interactive elements in Ivy. It allows users to trigger actions and navigate through your project.
 
 ## Basic Usage
 
@@ -24,11 +24,13 @@ new Button("Click Me", onClick: _ => client.Toast("Hello!"));
 new Button("Click Me", onClick: _ => client.Toast("Hello!"))
 ```
 
-## Variants
+### Variants
 
 `Button`s come in several variants to suit different use cases.
 
-> **Note:** Primary is the default variant applied to all buttons. You don't need to explicitly call `.Primary()` unless you want to be explicit in your code for clarity.
+<Callout Type="tip">
+Primary is the default variant applied to all buttons. You don't need to explicitly call `.Primary()` unless you want to be explicit in your code for clarity.
+</Callout>
 
 ```csharp demo-tabs 
 Layout.Horizontal()

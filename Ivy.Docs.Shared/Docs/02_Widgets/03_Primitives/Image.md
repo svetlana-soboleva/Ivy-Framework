@@ -4,7 +4,7 @@
 Display images with automatic loading, responsive sizing, and proper accessibility features for rich visual content.
 </Ingress>
 
-The `Image` widget displays images in your application.
+The `Image` widget displays images in your app.
 
 ```csharp demo-below 
 Layout.Horizontal()

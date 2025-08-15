@@ -4,7 +4,7 @@
 Render raw HTML content directly in your Ivy application for external content integration, formatted text, and custom markup control.
 </Ingress>
 
-The `Html` widget allows you to render raw HTML content in your Ivy application. This is useful when you need to include content from external sources, display formatted text, or when you want direct control over the markup.
+The `Html` widget allows you to render raw HTML content in your Ivy app. This is useful when you need to include content from external sources, display formatted text, or when you want direct control over the markup.
 
 ## Basic Usage
 
@@ -306,20 +306,10 @@ public class SecurityDemoView : ViewBase
 
 ```csharp
 // Good: Simple, clear HTML
-var goodHtml = "<p>Welcome to our <strong>application</strong>!</p>";
+var goodHtml = "<p>Welcome to our <strong>project</strong>!</p>";
 
 // Avoid: Overly complex nested structures
 var complexHtml = "<div><div><div><p>Deep nesting</p></div></div></div>";
-```
-
-#### Use Inline Styles Sparingly
-
-```csharp
-// Good: Minimal inline styling
-var styledHtml = "<p style='color: blue;'>Blue text</p>";
-
-// Better: Use CSS classes when possible (if your app supports them)
-var classBasedHtml = "<p class='text-blue'>Blue text</p>";
 ```
 
 #### Validate External Content

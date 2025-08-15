@@ -18,12 +18,12 @@ This command will:
 - Set up the basic project structure
 - Generate necessary configuration files
 
-## Command Options
+### Command Options
 
-`--namespace <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
+`--namespace <NAMESPACE>` or `-n <NAMESPACE>` - Specify the namespace for your Ivy project. If not provided, Ivy will suggest a namespace based on the folder name.
 
 ```terminal
->ivy init --namespace MyCompany.MyApp
+>ivy init --namespace MyCompany.MyProject
 ```
 
 `--dangerous-clear` - Clear the current folder before creating the new project. **Use with caution!**
@@ -44,13 +44,13 @@ This command will:
 >ivy init --verbose
 ```
 
-`--helloworld` or `--hello` - Include a simple demo application in the new project to help you get started.
+`--helloworld` or `--hello` - Include a simple demo app in the new project to help you get started.
 
 ```terminal
 >ivy init --helloworld
 ```
 
-## Interactive Mode
+### Interactive Mode
 
 When you run `ivy init` without specifying a namespace, Ivy will prompt you to enter one:
 
@@ -60,61 +60,40 @@ Namespace for the new Ivy project: [suggested-namespace]
 
 Ivy will suggest a namespace based on your current folder name. You can accept the suggestion or enter a custom namespace.
 
-## Project Structure
+### Project Structure
 
 After running `ivy init`, your project will have the following structure:
 
 ```text
 YourProject/
-├── Program.cs              # Main application entry point
-├── appsettings.json        # Application configuration
-├── appsettings.Development.json  # Development-specific settings
-├── .ivy/                   # Ivy-specific configuration
-│   └── config.json        # Ivy project configuration
-├── .gitignore             # Git ignore file
-├── GlobalUsings.cs        # Global using statements
-└── README.md              # Project documentation
+├── Program.cs              # Main project entry point
+├── YourProject.csproj      # .NET project file
+├── GlobalUsings.cs         # Global using statements
+├── README.md               # Project documentation
+└── .gitignore              # Git ignore file
 ```
 
-## Generated Files
+### Generated Files
 
 ### Program.cs
 
-The main entry point for your Ivy application:
+The main entry point for your Ivy project:
 
 ```csharp
-using Ivy;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container
-builder.Services.AddIvy();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline
-app.UseIvy();
-
-app.Run();
-```
-
-### appsettings.json
-
-Basic configuration file with Ivy settings:
-
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "Ivy": {
-    "ProjectName": "YourProject"
-  }
-}
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+var server = new Server();
+#if !DEBUG
+server.UseHttpRedirection();
+#endif
+#if DEBUG
+server.UseHotReload();
+#endif
+server.AddAppsFromAssembly();
+server.AddConnectionsFromAssembly();
+server.UseHotReload();
+var chromeSettings = new ChromeSettings().UseTabs(preventDuplicates: true);
+server.UseChrome(chromeSettings);
+await server.RunAsync();
 ```
 
 ### GlobalUsings.cs
@@ -123,11 +102,34 @@ Global using statements for common Ivy namespaces:
 
 ```csharp
 global using Ivy;
-global using Ivy.Data;
+global using Ivy.Alerts;
+global using Ivy.Apps;
 global using Ivy.Auth;
+global using Ivy.Builders;
+global using Ivy.Chrome;
+global using Ivy.Client;
+global using Ivy.Core;
+global using Ivy.Core.Hooks;
+global using Ivy.Helpers;
+global using Ivy.Hooks;
+global using Ivy.Shared;
+global using Ivy.Views;
+global using Ivy.Views.Blades;
+global using Ivy.Views.Forms;
+global using Ivy.Views.Tables;
+global using Ivy.Widgets.Inputs;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using System.Collections.Immutable;
+global using System.ComponentModel.DataAnnotations;
+global using System.Globalization;
+global using System.Reactive.Linq;
+
+namespace YourProject;
 ```
 
-## Prerequisites
+### Prerequisites
 
 Before running `ivy init`, ensure you have:
 
@@ -135,7 +137,7 @@ Before running `ivy init`, ensure you have:
 2. **Git** installed (optional, but recommended)
 3. **Empty directory** or use `--dangerous-clear`/`--dangerous-overwrite`
 
-## Validation
+### Validation
 
 Ivy performs several validations during initialization:
 
@@ -144,7 +146,7 @@ Ivy performs several validations during initialization:
 - **Git Status**: Checks for uncommitted changes if Git is initialized
 - **.NET Tools**: Ensures required .NET tools are installed
 
-## Error Handling
+### Error Handling
 
 **Empty Directory Required** - If the current directory is not empty, Ivy will show an error:
 
@@ -158,22 +160,22 @@ The current folder is not empty. Please clear the folder or use the --dangerous-
 Invalid 'invalid-namespace' namespace. Please enter a valid namespace.
 ```
 
-## Next Steps
+### Next Steps
 
 After initializing your project:
 
 1. **Add a database connection**: `ivy db add`
 2. **Add authentication**: `ivy auth add`
-3. **Create an application**: `ivy app create`
-4. **Deploy your application**: `ivy deploy`
+3. **Create an app**: `ivy app create`
+4. **Deploy your project**: `ivy deploy`
 
 ## Examples
 
 **Basic Project Initialization**
 
 ```terminal
->mkdir MyIvyApp
->cd MyIvyApp
+>mkdir MyIvyProject
+>cd MyIvyProject
 >ivy init
 ```
 
@@ -186,16 +188,16 @@ After initializing your project:
 **Project with Demo App**
 
 ```terminal
->ivy init --helloworld --namespace MyDemoApp
+>ivy init --helloworld --namespace MyDemoProject
 ```
 
 **Verbose Initialization**
 
 ```terminal
->ivy init --verbose --namespace MyApp
+>ivy init --verbose --namespace MyProject
 ```
 
-## Troubleshooting
+### Troubleshooting
 
 **Permission Issues** - If you encounter permission issues, ensure you have write access to the current directory.
 
@@ -208,9 +210,9 @@ After initializing your project:
 
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
-## Related Commands
+### Related Commands
 
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
-- `ivy app create` - Create applications
-- `ivy deploy` - Deploy your application
+- `ivy app create` - Create apps
+- `ivy deploy` - Deploy your project

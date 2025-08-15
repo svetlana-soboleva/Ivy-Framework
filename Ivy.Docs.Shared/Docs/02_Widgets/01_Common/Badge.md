@@ -15,7 +15,7 @@ The `Badge` widget is a versatile component used to display small pieces of info
 
 Here's a simple example of a badge:
 
-```csharp demo-below 
+```csharp demo-below
 new Badge("Primary")
 ```
 
@@ -23,7 +23,7 @@ new Badge("Primary")
 
 Badges come in several variants to suit different use cases and visual hierarchies.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Horizontal()
     | new Badge("Primary")
     | new Badge("Destructive", variant:BadgeVariant.Destructive)
@@ -35,7 +35,7 @@ Layout.Horizontal()
 
 You can also use extension methods for cleaner code:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Horizontal()
     | new Badge("Primary")
     | new Badge("Destructive").Destructive()
@@ -49,7 +49,7 @@ Layout.Horizontal()
 
 Badges support different sizes to match your design requirements.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Grid().Columns(4)
     | new Badge("Small").Small()
     | new Badge("Medium")
@@ -69,9 +69,9 @@ Layout.Grid().Columns(4)
 
 `Badge`s can include icons to enhance their visual appearance and meaning.
 
-#### Icons on the Left (Default)
+### Icons on the Left (Default)
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Grid().Columns(4)
     | new Badge("Notification", icon:Icons.Bell)
     | new Badge("Success", icon:Icons.Check)
@@ -91,9 +91,9 @@ Layout.Grid().Columns(4)
     | new Badge("Error", icon:Icons.X).Outline()
 ```
 
-#### Icons on the Right
+### Icons on the Right
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Grid().Columns(4)
     | new Badge("Download").Icon(Icons.Download, Align.Right)
     | new Badge("Upload").Icon(Icons.Upload, Align.Right)
@@ -113,28 +113,16 @@ Layout.Grid().Columns(4)
     | new Badge("Info").Outline().Icon(Icons.Info, Align.Right)
 ```
 
-#### Icon-Only Badges
+### Icon-Only Badges
 
 You can create icon-only badges by passing `null` as the title:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 Layout.Grid().Columns(4)
     | new Badge(null, icon:Icons.Bell)
     | new Badge(null, icon:Icons.Check, variant:BadgeVariant.Secondary)
     | new Badge(null, icon:Icons.X, variant:BadgeVariant.Destructive)
     | new Badge(null, icon:Icons.CircleAlert, variant:BadgeVariant.Outline)
-```
-
-### Layout and Sizing
-
-Badges inherit from WidgetBase, so they support width and height customization:
-
-```csharp demo-tabs 
-Layout.Vertical()
-    | new Badge("Fixed Width").Width(200)
-    | new Badge("Percentage Width").Width("50%")
-    | new Badge("Custom Height").Height(40)
-    | new Badge("Hidden").Hide()
 ```
 
 ## Common Use Cases
@@ -150,7 +138,7 @@ Layout.Horizontal()
 
 ### Notification Counters
 
-```csharp demo-below 
+```csharp demo-below
 Layout.Horizontal()
     | new Badge("3", icon:Icons.Bell).Large()
     | new Badge("12", icon:Icons.Mail).Large()
@@ -159,7 +147,7 @@ Layout.Horizontal()
 
 ### Categories and Tags
 
-```csharp demo-below 
+```csharp demo-below
 Layout.Wrap()
     | new Badge("Technology", icon:Icons.Cpu)
     | new Badge("Design", icon:Icons.Palette)
@@ -171,7 +159,7 @@ Layout.Wrap()
 
 ### Priority Levels
 
-```csharp demo-below 
+```csharp demo-below
 Layout.Horizontal()
     | new Badge("High", icon:Icons.CircleAlert, variant:BadgeVariant.Destructive)
     | new Badge("Medium", icon:Icons.CircleAlert, variant:BadgeVariant.Secondary)

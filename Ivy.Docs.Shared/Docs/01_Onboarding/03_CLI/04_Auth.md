@@ -4,7 +4,7 @@
 Secure your Ivy application with integrated authentication providers including Auth0, Supabase, Authelia, and Microsoft Entra ID.
 </Ingress>
 
-The `ivy auth` commands allow you to add and configure authentication providers in your Ivy project. Ivy supports several authentication providers and helps you to integrate them with your application.
+The `ivy auth` commands allow you to add and configure authentication providers in your Ivy project. Ivy supports several authentication providers and helps you to integrate them with your project.
 
 ## Supported Authentication Providers
 
@@ -20,7 +20,7 @@ Ivy supports the following authentication providers:
 
 - **Basic Auth** - Simple username/password authentication
 
-## Basic Usage
+### Basic Usage
 
 ### Adding an Authentication Provider
 
@@ -31,11 +31,11 @@ Ivy supports the following authentication providers:
 This command will:
 
 - Prompt you to select an authentication provider
-- Configure the provider with your application
+- Prompt you for necessary configuration details
 - Update your `Program.cs` with the necessary authentication setup
 - Store sensitive configuration in .NET User Secrets
 
-## Command Options
+### Command Options
 
 `--provider <PROVIDER>` - Specify the authentication provider directly:
 
@@ -57,15 +57,15 @@ Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
 >ivy auth add --verbose
 ```
 
-## Interactive Mode
+### Interactive Mode
 
 When you run `ivy auth add` without specifying options, Ivy will guide you through an interactive setup:
 
 1. **Select Authentication Provider**: Choose from the available providers
 2. **Provider Configuration**: Enter the necessary configuration details
-3. **Integration Setup**: Ivy will automatically configure your application
+3. **Integration Setup**: Ivy will automatically configure your project
 
-## Authentication Provider Configuration
+### Authentication Provider Configuration
 
 **Auth0** - Universal authentication platform that supports multiple identity providers.
 
@@ -75,7 +75,7 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 >ivy auth add --provider Auth0
 ```
 
-**Required Configuration** - Domain (e.g., `your-app.auth0.com`), Client ID, and Client Secret.
+**Required Configuration** - Domain (e.g., `your-project.auth0.com`), Client ID, and Client Secret.
 
 **Connection String Format**
 
@@ -83,7 +83,7 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 Domain=your-domain.auth0.com;ClientId=your-client-id;ClientSecret=your-client-secret
 ```
 
-**Auth0 Application Setup** - Create an application in your Auth0 dashboard, set the callback URL to `https://your-app.com/callback`, configure allowed logout URLs, and note your Domain, Client ID, and Client Secret.
+**Auth0 Application Setup** - Create an application in your Auth0 dashboard, set the callback URL to `https://your-project.com/callback`, configure allowed logout URLs, and note your Domain, Client ID, and Client Secret.
 
 **Supabase Auth** - Built-in authentication for Supabase projects.
 
@@ -137,7 +137,7 @@ BaseUrl=https://auth.your-domain.com;ClientId=your-client-id;ClientSecret=your-c
 Username=admin;Password=secure-password
 ```
 
-## Security and Secrets Management
+### Security and Secrets Management
 
 Ivy automatically configures .NET User Secrets for secure authentication configuration. To view configured secrets:
 
@@ -234,9 +234,9 @@ app.Run();
 
 ## Troubleshooting
 
-**Authentication Provider Issues** - Verify your provider configuration is correct, check that your application is properly registered with the identity provider, ensure callback URLs are correctly configured, and verify network connectivity to the authentication provider.
+**Authentication Provider Issues** - Verify your provider configuration is correct, check that your project is properly registered with the identity provider, ensure callback URLs are correctly configured, and verify network connectivity to the authentication provider.
 
-**Token Validation Issues** - Check that your JWT tokens are properly signed, verify audience and issuer claims, and ensure your application's clock is synchronized.
+**Token Validation Issues** - Check that your JWT tokens are properly signed, verify audience and issuer claims, and ensure your project's clock is synchronized.
 
 **Configuration Issues** - Ensure authentication settings are properly stored in user secrets, verify environment variables are correctly set, and check that your `Program.cs` includes the necessary authentication middleware.
 
@@ -260,7 +260,7 @@ app.Run();
 >ivy auth add --provider Basic --connection-string YourConnectionString
 ```
 
-## Best Practices
+### Best Practices
 
 **Security** - Always use HTTPS in production, store sensitive configuration in user secrets or environment variables, regularly rotate client secrets, use strong passwords for Basic Auth, and implement proper session management.
 
@@ -268,9 +268,9 @@ app.Run();
 
 **Testing** - Test authentication flows in development, verify token validation works correctly, and ensure logout functionality works properly.
 
-## Related Commands
+### Related Commands
 
 - `ivy init` - Initialize a new Ivy project
 - `ivy db add` - Add database connections
-- `ivy app create` - Create applications
-- `ivy deploy` - Deploy your application
+- `ivy app create` - Create apps
+- `ivy deploy` - Deploy your project

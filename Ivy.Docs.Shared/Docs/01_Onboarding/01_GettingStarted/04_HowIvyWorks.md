@@ -26,7 +26,7 @@ graph LR
 
 ### 1. Views & Components
 
-Every Ivy application is built from **Views** - C# classes that inherit from `ViewBase`. Each view implements a single `Build()` method that returns widgets or other views:
+Every Ivy app is built from **Views** - C# classes that inherit from `ViewBase`. Each view implements a single `Build()` method that returns widgets or other views:
 
 ```csharp
 [App(icon: Icons.Calendar)]
@@ -102,9 +102,13 @@ The magic happens through WebSocket communication:
 
 1. **Initial Render**: Ivy builds your view tree and serializes it to JSON
 2. **WebSocket Transfer**: The widget tree is sent to the browser
-3. **React Frontend**: A pre-built React app renders the widgets as HTML
+3. **React Frontend**: A pre-built React client renders the widgets as HTML
 4. **Event Handling**: User interactions trigger events sent back to C#
 5. **State Updates**: Ivy detects changes and re-renders only affected parts
+
+<Callout Type="tip">
+When working with search results in the sidebar (both in Ivy Samples and Docs), you can **Ctrl + right click** on any item to open it as a separate app in a new window. This is handy for multitasking or developing multiple features simultaneously.
+</Callout>
 
 ## Development Experience
 
@@ -175,7 +179,7 @@ public override object? Build()
 - Server-side rendering for better SEO and performance
 - Real-time updates without complex JavaScript
 - Built-in security (business logic stays on server)
-- Easy deployment (single .NET application)
+- Easy deployment (single .NET project)
 
 ---
 

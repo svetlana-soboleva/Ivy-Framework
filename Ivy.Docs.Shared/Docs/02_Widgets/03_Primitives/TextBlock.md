@@ -90,7 +90,7 @@ public class ArticleDemo : ViewBase
         return Layout.Vertical()
             | Text.H1("Getting Started with Ivy")
             | Text.Lead("Ivy is a powerful framework for building interactive web applications with C#.")
-            | Text.P("This guide will walk you through the basics of creating your first Ivy application. You'll learn about widgets, layouts, and how to structure your code effectively.")
+            | Text.P("This guide will walk you through the basics of creating your first Ivy project. You'll learn about widgets, layouts, and how to structure your code effectively.")
             | Text.H2("Prerequisites")
             | Text.P("Before you begin, make sure you have:")
             | Text.Block("• .NET 8.0 SDK installed")
@@ -98,9 +98,9 @@ public class ArticleDemo : ViewBase
             | Text.Block("• Basic knowledge of C#")
             | Text.H2("Installation")
             | Text.P("Install Ivy using the .NET CLI:")
-            | Text.InlineCode("dotnet new -i Ivy.Templates")
+            | Text.InlineCode("dotnet tool install -g Ivy.Console")
             | Text.P("Create a new project:")
-            | Text.InlineCode("dotnet new ivy -n MyFirstApp");
+            | Text.InlineCode("ivy init --namespace MyFirstProject");
     }
 }
 ```
@@ -185,7 +185,7 @@ The TextBuilder class provides several modifiers for customizing text appearance
 ## Best Practices
 
 - **Use semantic variants**: Choose the appropriate text variant for your content (H1-H4 for headings, P for paragraphs, etc.)
-- **Consistent styling**: Use the same text variants throughout your application for consistency
+- **Consistent styling**: Use the same text variants throughout your project for consistency
 - **Accessibility**: Use proper heading hierarchy (H1 → H2 → H3) for screen readers
 - **Color usage**: Use color modifiers sparingly and ensure sufficient contrast
 - **Responsive design**: Use width modifiers carefully to maintain responsive layouts

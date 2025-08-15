@@ -37,7 +37,7 @@ async Task<Option<Guid?>?> LookupCategory(Guid? id)
 return guidState.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder:"Select Category");
 ```
 
-## Event Handling
+### Event Handling
 
 The `AsyncSelectInput` can handle selection events using the `OnChange` parameter:
 
@@ -47,7 +47,7 @@ var input = state.ToAsyncSelectInput(QueryCategories, LookupCategory);
 input.OnChange = e => Console.WriteLine($"Selected: {e.Value}");
 ```
 
-## Styling
+### Styling
 
 The `AsyncSelectInput` can be customized with various styling options, such as setting a placeholder or disabling the input:
 

@@ -30,7 +30,7 @@ public class MyView : ViewBase
 }
 ```
 
-## Service Registration
+### Service Registration
 
 Register services in your application startup:
 
@@ -47,7 +47,7 @@ public class Program
 }
 ```
 
-## Service Interfaces
+### Service Interfaces
 
 Define service interfaces for better abstraction:
 
@@ -88,7 +88,7 @@ public class DataService : IDataService
 }
 ```
 
-## Service Lifetime
+### Service Lifetime
 
 Ivy supports different service lifetimes:
 
@@ -103,7 +103,7 @@ Ivy supports different service lifetimes:
 .UseService<ILogger, Logger>(ServiceLifetime.Transient)
 ```
 
-## Service Middleware
+### Service Middleware
 
 Add middleware to services for cross-cutting concerns:
 
@@ -136,7 +136,7 @@ public class LoggingServiceMiddleware : IServiceMiddleware
 .UseServiceMiddleware<LoggingServiceMiddleware>()
 ```
 
-## Best Practices
+### Best Practices
 
 1. **Interface-based Design**: Always define interfaces for your services
 2. **Single Responsibility**: Each service should have a single, well-defined purpose

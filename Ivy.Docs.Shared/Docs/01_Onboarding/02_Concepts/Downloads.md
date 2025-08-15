@@ -23,7 +23,7 @@ var client = this.UseService<IClientProvider>();
 client.DownloadFile("example.csv", csvContent);
 ```
 
-## Downloading Generated Content
+### Downloading Generated Content
 
 You can download dynamically generated content:
 
@@ -49,7 +49,7 @@ public class ReportView : ViewBase
 }
 ```
 
-## Progress Tracking
+### Progress Tracking
 
 For large files, you can track download progress:
 
@@ -64,7 +64,7 @@ client.DownloadFile(
 );
 ```
 
-## Error Handling
+### Error Handling
 
 Proper error handling is essential for downloads:
 
@@ -93,7 +93,7 @@ public class DownloadView : ViewBase
 }
 ```
 
-## Best Practices
+### Best Practices
 
 1. **File Naming**: Use clear, descriptive filenames
 2. **Content Types**: Always specify the correct content type

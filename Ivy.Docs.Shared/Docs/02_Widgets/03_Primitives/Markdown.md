@@ -34,7 +34,7 @@ public class BasicMarkdownView : ViewBase
 }
 ```
 
-## Tables
+### Tables
 
 Tables in Markdown provide a structured way to display data in rows and columns. They support alignment, headers, and can be easily formatted for better readability.
 
@@ -57,7 +57,7 @@ public class TablesMarkdownView : ViewBase
 }
 ```
 
-## Code Blocks
+### Code Blocks
 
 Code blocks support syntax highlighting for various programming languages and can be used for displaying code examples, configuration files, or any formatted text. The language is automatically detected based on the code fence specification.
 
@@ -81,7 +81,7 @@ public class CodeBlocksMarkdownView : ViewBase
 }
 ```
 
-## Math
+### Math
 
 Mathematical expressions can be rendered using KaTeX, supporting both inline math with single dollar signs and block math with double dollar signs. This feature is perfect for technical documentation and educational content.
 
@@ -104,7 +104,7 @@ public class MathMarkdownView : ViewBase
 }
 ```
 
-## Mermaid Diagrams
+### Mermaid Diagrams
 
 Mermaid diagrams allow you to create various types of visual diagrams directly in markdown content. Supported diagram types include flowcharts, sequence diagrams, class diagrams, and more for visualizing complex processes and relationships.
 
@@ -135,7 +135,7 @@ public class MermaidView : ViewBase
 }
 ```
 
-## Emojis
+### Emojis
 
 Emoji support enhances content with visual elements and expressions. You can use standard emoji shortcodes to add personality and visual appeal to your markdown content.
 
@@ -158,7 +158,7 @@ public class EmojiView : ViewBase
 }
 ```
 
-## HTML Support and Link Handling
+### HTML Support and Link Handling
 
 The Markdown widget supports HTML tags for advanced formatting and provides interactive link handling through the OnLinkClick event. This allows for custom navigation logic and enhanced user interactions.
 
@@ -196,7 +196,7 @@ public class HtmlAndLinksView : ViewBase
 }
 ```
 
-## Complete Example
+### Complete Example
 
 This comprehensive example showcases multiple Markdown features working together in a single widget. It demonstrates how different elements can be combined to create rich, interactive content with proper link handling.
 

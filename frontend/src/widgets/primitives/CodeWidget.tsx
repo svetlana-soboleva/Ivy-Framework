@@ -60,7 +60,6 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
         ...getWidth(width),
         ...getHeight(height),
         margin: 0,
-        // Remove overflow: 'auto' to use ScrollArea instead
       };
 
       if (!showBorder) {
@@ -84,7 +83,10 @@ const CodeWidget: React.FC<CodeWidgetProps> = memo(
       <div className="relative">
         {showCopyButton && <MemoizedCopyButton textToCopy={content} />}
         <ScrollArea
-          className={cn('w-full h-full', showBorder && 'ivy-demo-surface')}
+          className={cn(
+            'w-full h-full',
+            showBorder && 'border border-border rounded-md'
+          )}
         >
           <SyntaxHighlighter
             language={mapLanguageToPrism(language)}
