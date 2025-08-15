@@ -176,7 +176,6 @@ public override object? Build()
 
 ### For Applications
 
-- Server-side rendering for better SEO and performance
 - Real-time updates without complex JavaScript
 - Built-in security (business logic stays on server)
 - Easy deployment (single .NET project)
