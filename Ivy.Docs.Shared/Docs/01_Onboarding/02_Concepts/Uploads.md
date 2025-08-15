@@ -1,6 +1,8 @@
 # Uploads
 
-<Ingress Text="Handle file uploads robustly with support for single/multiple files, drag-and-drop interfaces, and progress tracking for various file types." />
+<Ingress>
+Handle file uploads robustly with support for single/multiple files, drag-and-drop interfaces, and progress tracking for various file types.
+</Ingress>
 
 ## Overview
 

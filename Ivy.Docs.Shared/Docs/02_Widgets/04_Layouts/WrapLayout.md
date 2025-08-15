@@ -1,6 +1,8 @@
 # WrapLayout
 
-<Ingress Text="Create flexible, responsive layouts that automatically wrap content to new lines when horizontal space runs out, perfect for tags, buttons, and card grids." />
+<Ingress>
+Create flexible, responsive layouts that automatically wrap content to new lines when horizontal space runs out, perfect for tags, buttons, and card grids.
+</Ingress>
 
 The `WrapLayout` widget arranges child elements in rows that automatically wrap to the next line when they reach the end of the available horizontal space. It's perfect for creating responsive layouts like tag lists, button groups, or card grids that adapt to different screen sizes.
 

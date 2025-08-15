@@ -271,7 +271,11 @@ public static class MarkdownConverter
 
     private static void HandleIngressBlock(StringBuilder codeBuilder, XElement xml)
     {
-        string content = xml.Attribute("Text")?.Value ?? throw new Exception("Ingress block must have a Text attribute.");
+        string content = xml.Value.Trim();
+        if (string.IsNullOrEmpty(content))
+        {
+            throw new Exception("Ingress block must have content.");
+        }
         AppendAsMultiLineStringIfNecessary(3, content, codeBuilder, "| Lead(", ")");
     }
 

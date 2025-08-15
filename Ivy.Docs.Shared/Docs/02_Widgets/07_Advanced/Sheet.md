@@ -1,12 +1,14 @@
 # Sheet
 
-<Ingress Text="Sheets slide in from the side of the screen and display additional content while allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page." />
+<Ingress>
+Sheets slide in from the side of the screen and display additional content while allowing the user to dismiss them. They provide a non-intrusive way to show additional information or forms without navigating away from the current page.
+</Ingress>
 
 ## Basic Usage
 
 The `WithSheet` extension on a `Button` provides an easy way to open a sheet:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class BasicSheetExample : ViewBase
 {
     public override object? Build()
@@ -36,7 +38,7 @@ public class SheetView : ViewBase
 
 The following demonstrates how to create a sheet with custom content using a Fragment and Card. The sheet opens with a title, description, and custom width, showing how to structure content within sheets.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class BasicSheetWithContent : ViewBase
 {
     public override object? Build()
@@ -61,7 +63,7 @@ public class BasicSheetWithContent : ViewBase
 
 You can also create a sheet with action buttons in the footer using FooterLayout.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SheetWithFooterActions : ViewBase
 {
     public override object? Build()
@@ -87,7 +89,7 @@ public class SheetWithFooterActions : ViewBase
 
 This example shows how to organize complex content within sheets using nested layouts and various input controls.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class ComplexSheetLayout : ViewBase
 {
     public override object? Build()
@@ -126,7 +128,7 @@ public class ComplexSheetLayout : ViewBase
 
 The following demonstrates different sheet width options, from small to full-screen layouts.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SheetWidthExamples : ViewBase
 {
     public override object? Build()
@@ -160,7 +162,7 @@ public class SheetWidthExamples : ViewBase
 
 This example shows a sheet with internal navigation between multiple pages using state management.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class NavigationSheet : ViewBase
 {
     public override object? Build()
@@ -202,7 +204,7 @@ public class NavigationSheetContent : ViewBase
 
 The following demonstrates how to conditionally render different content within a sheet based on state or user actions.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class ConditionalSheetExample : ViewBase
 {
     public override object? Build()
@@ -267,4 +269,3 @@ public class ConditionalSheetExample : ViewBase
     }
 }
 ```
-

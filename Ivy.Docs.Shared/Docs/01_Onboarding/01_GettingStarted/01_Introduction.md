@@ -1,6 +1,8 @@
 # Introduction to Ivy
 
-<Ingress Text="Ivy is a full-stack C# web framework that lets you build interactive data applications without the complexity of separate frontend/backend APIs. Think React patterns, but entirely in C#." />
+<Ingress>
+Ivy is a full-stack C# web framework that lets you build interactive data applications without the complexity of separate frontend/backend APIs. Think React patterns, but entirely in C#.
+</Ingress>
 
 <Embed Url="https://www.youtube.com/watch?v=pQKSQR9BfD8"/>
 

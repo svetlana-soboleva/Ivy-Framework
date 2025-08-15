@@ -5,7 +5,9 @@ prepare: |
 
 # Badge
 
-<Ingress Text="Display small pieces of information like counts, statuses, or labels in compact, styled badges with various colors and variants." />
+<Ingress>
+Display small pieces of information like counts, statuses, or labels in compact, styled badges with various colors and variants.
+</Ingress>
 
 The `Badge` widget is a versatile component used to display small pieces of information, such as counts or statuses, in a compact form.
 

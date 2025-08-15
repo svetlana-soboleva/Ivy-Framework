@@ -1,6 +1,8 @@
 # Fragment
 
-<Ingress Text="Group multiple elements without adding extra DOM markup, similar to React Fragments, for clean component composition." />
+<Ingress>
+Group multiple elements without adding extra DOM markup, similar to React Fragments, for clean component composition.
+</Ingress>
 
 The `Fragment` widget is a container component that doesn't produce any HTML elements itself. It's useful for grouping multiple elements without adding extra markup to the DOM, similar to React Fragments.
 

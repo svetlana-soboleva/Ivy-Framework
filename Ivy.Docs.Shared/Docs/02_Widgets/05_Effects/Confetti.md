@@ -1,6 +1,8 @@
 # Confetti
 
-<Ingress Text="Add celebratory confetti effects to any widget with customizable triggers for automatic, click, or hover activation." />
+<Ingress>
+Add celebratory confetti effects to any widget with customizable triggers for automatic, click, or hover activation.
+</Ingress>
 
 The `Confetti` animation can be triggered automatically, on click, or when the mouse hovers over the widget. Perfect for celebrating user achievements, form submissions, or adding delightful interactions to your interface.
 

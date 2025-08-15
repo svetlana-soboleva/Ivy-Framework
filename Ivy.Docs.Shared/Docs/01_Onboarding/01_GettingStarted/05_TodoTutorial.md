@@ -1,6 +1,8 @@
 ﻿# Todo Tutorial
 
-<Ingress Text="Build a complete todo app from scratch to learn essential Ivy concepts including state management, components, and event handling." />
+<Ingress>
+Build a complete todo application from scratch to learn essential Ivy concepts including state management, components, and event handling.
+</Ingress>
 
 ## Prerequisites
 

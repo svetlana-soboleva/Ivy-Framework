@@ -5,7 +5,9 @@ prepare: |
 
 # Chat Tutorial
 
-<Ingress Text="Create an AI-powered chat application that suggests Lucide icons based on application descriptions using modern chat patterns." />
+<Ingress>
+Create an AI-powered chat application that suggests Lucide icons based on application descriptions using modern chat patterns.
+</Ingress>
 
 ## Prerequisites
 

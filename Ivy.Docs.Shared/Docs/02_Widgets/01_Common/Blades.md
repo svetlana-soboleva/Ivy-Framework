@@ -1,7 +1,9 @@
 
 # Blades
 
-<Ingress Text="Create stacked navigation experiences where new views slide in from the right, managed through a blade controller for intuitive drill-down interfaces." />
+<Ingress>
+Create stacked navigation experiences where new views slide in from the right, managed through a blade controller for intuitive drill-down interfaces.
+</Ingress>
 
 `Blade`s provide a stacked navigation pattern where new views slide in from the right. Use the `UseBlades` extension to create a root blade and manage a stack of blades through `IBladeController`. Perfect for master-detail interfaces, wizards, and hierarchical navigation.
 

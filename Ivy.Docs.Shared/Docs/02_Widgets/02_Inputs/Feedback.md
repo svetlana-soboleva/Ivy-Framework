@@ -5,7 +5,9 @@ prepare: |
 
 # FeedbackInput
 
-<Ingress Text="Collect user feedback with combined rating and comment inputs, perfect for surveys, reviews, and feedback forms." />
+<Ingress>
+Collect user feedback with combined rating and comment inputs, perfect for surveys, reviews, and feedback forms.
+</Ingress>
 
 The `FeedbackInput` widget provides a specialized input for collecting user feedback. It typically includes rating options and a text field for comments, making it ideal for surveys, reviews, and feedback forms.
 

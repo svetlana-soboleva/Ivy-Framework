@@ -4,14 +4,16 @@ prepare: |
 ---
 # CodeInput
 
-<Ingress Text="Edit code with syntax highlighting, line numbers, and formatting support for multiple programming languages in a specialized input field." />
+<Ingress>
+Edit code with syntax highlighting, line numbers, and formatting support for multiple programming languages in a specialized input field.
+</Ingress>
 
-The `CodeInput` widget provides a specialized text input field for entering and editing code with syntax highlighting. 
+The `CodeInput` widget provides a specialized text input field for entering and editing code with syntax highlighting.
 It supports various programming languages and offers features like line numbers and code formatting.
 
 ## Supported Languages
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class CSharpDemo : ViewBase
 {
     public override object? Build()
@@ -27,7 +29,7 @@ public class CSharpDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class JavaScriptDemo : ViewBase 
 {
     public override object? Build()
@@ -43,7 +45,7 @@ public class JavaScriptDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class PythonDemo : ViewBase 
 {
     public override object? Build()
@@ -59,7 +61,7 @@ public class PythonDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SqlDemo : ViewBase 
 {
     public override object? Build()
@@ -75,7 +77,7 @@ public class SqlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class HtmlDemo : ViewBase 
 {
     public override object? Build()
@@ -91,7 +93,7 @@ public class HtmlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class CssDemo : ViewBase 
 {
     public override object? Build()
@@ -107,7 +109,7 @@ public class CssDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class JsonDemo : ViewBase 
 {
     public override object? Build()
@@ -123,7 +125,7 @@ public class JsonDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class DbmlDemo : ViewBase 
 {
     public override object? Build()
@@ -140,7 +142,7 @@ public class DbmlDemo : ViewBase
 }
 ```
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class TypeScriptDemo : ViewBase 
 {
     public override object? Build()
@@ -159,11 +161,12 @@ public class TypeScriptDemo : ViewBase
 ## Styling Options
 
 ### Invalid State
+
 The `Invalid` state provides visual feedback when code contains syntax errors or validation issues. It displays an error message and typically shows a red border to indicate problems.
 
 Mark a `CodeInput` as invalid when content has syntax errors:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class InvalidCodeDemo: ViewBase
 {
     public override object? Build()
@@ -180,6 +183,7 @@ public class InvalidCodeDemo: ViewBase
 ```
 
 ### Disabled State
+
 The `Disabled` state prevents editing while allowing users to view the code. It's useful for displaying read-only examples or temporarily preventing modifications.
 
 Disable a `CodeInput` when needed:
@@ -206,7 +210,7 @@ Event handling enables you to respond to code changes and validate input in real
 
 Handle code changes and validation:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class CodeInputWithValidation : ViewBase 
 {
     public override object? Build()
