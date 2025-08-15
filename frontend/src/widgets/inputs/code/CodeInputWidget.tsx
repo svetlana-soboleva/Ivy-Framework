@@ -19,7 +19,7 @@ import { InvalidIcon } from '@/components/InvalidIcon';
 import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import { cpp } from '@codemirror/lang-cpp';
 import { dbml } from './dbml-language';
-import { ivyCodeTheme } from './theme';
+import { createIvyCodeTheme } from './theme';
 
 interface CodeInputWidgetProps {
   id: string;
@@ -102,7 +102,7 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
     const langExtension = lang
       ? [typeof lang === 'function' ? lang() : lang]
       : [];
-    return [...langExtension, ivyCodeTheme];
+    return [...langExtension, createIvyCodeTheme()];
   }, [language]);
 
   return (

@@ -204,8 +204,3 @@ export function createIvyCodeTheme(): Extension {
 
   return [baseTheme, syntaxHighlighting(highlightStyle)];
 }
-
-/**
- * Default Ivy Code theme instance
- */
-export const ivyCodeTheme = createIvyCodeTheme();
