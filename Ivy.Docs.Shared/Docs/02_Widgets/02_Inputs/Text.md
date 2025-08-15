@@ -19,7 +19,7 @@ The`TextInput` widget provides a standard text entry field. It supports various 
 
 Here's a simple example of a text input with a placeholder:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class BasicUsageDemo : ViewBase
 {
     public override object? Build()
@@ -48,7 +48,7 @@ a new password.
 
 See it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class PasswordCaptureDemo: ViewBase
 {
     public override object? Build()
@@ -70,7 +70,7 @@ that typically spans over multiple lines. The following demo shows how to use it
 
 See it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class CaptureAddressDemo: ViewBase
 {
     public override object? Build()
@@ -97,7 +97,7 @@ The following demo shows how to add such an text input.
 
 See it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class SearchBarDemo: ViewBase
 {
     public override object? Build()
@@ -118,7 +118,7 @@ To capture the emails `TextInputs.Email` variant should be used.
 
 See it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class EmailEnterDemo: ViewBase
 {
     public override object? Build()
@@ -139,7 +139,7 @@ To capture the phone numbers `TextInputs.Tel` variant needs to be used.
 
 see it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class PhoneEnterDemo: ViewBase
 {
     public override object? Build()
@@ -160,7 +160,7 @@ To capture the URLs/Links  `TextInputs.Url` variant needs to be used.
 
 see it in action here.
 
-```csharp demo-below 
+```csharp demo-below
 public class URLEnterDemo: ViewBase
 {
     public override object? Build()
@@ -186,7 +186,7 @@ new TextInput(onChangedState.Value, e => onChangedState.Set(e.Value))
 In this code example shown, the value of the text input will be stored in `onChangedState` variable.
 The following demo shows how to use it in a small app, where users are greeted as they enter their name.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class EventsDemoApp : ViewBase
 {
      public override object? Build()
@@ -229,7 +229,7 @@ new TextInput(withoutValue)
 
 This renders like this, an invalid text input.
 
-```csharp demo-below 
+```csharp demo-below
 
 public class InvalidInputDemo: ViewBase
 {
@@ -258,7 +258,7 @@ new TextInput(withoutValue)
 
 This renders as shown below as a disabled text input.
 
-```csharp demo-below 
+```csharp demo-below
 public class DisabledInputDemo : ViewBase
 {
     public override object? Build()
@@ -287,7 +287,7 @@ We can use associate keyboard shortcuts to text inputs the following way.
 The following demo shows this in action with multiple `TextInput`s each
 with different shortcut keys.
 
-```csharp demo-below 
+```csharp demo-below
 public class ShortCutDemo : ViewBase
 {
     public override object? Build()
@@ -319,7 +319,7 @@ There are several helper functions to create `TextInput` variants from state ins
 `TextInput`, these functions should be used. The following is an example of how Ivy can be employed to generate UI idiomatically using
 these functions.
 
-```csharp demo-below 
+```csharp demo-below
 public class DataCaptureUsingExtensionDemo: ViewBase
 {
     public override object? Build()
@@ -365,7 +365,7 @@ There is also another extension function to create a `TextInput.Search` variant.
 
 Here is how it can be used.
 
-```csharp demo-below 
+```csharp demo-below
 
 public class BasicFilter : ViewBase 
 {      
@@ -402,7 +402,7 @@ The following demo shows how to use style like `Invalid` in form validations.
 
 In this example, if the email format is wrong, the input is invalidated and a message is shown.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class EmailValidationDemo : ViewBase 
 {      
     // Email regex pattern
@@ -446,7 +446,7 @@ public class EmailValidationDemo : ViewBase
 
 In this demo, password field is enabled only when the username field has a value.
 
-```csharp demo-tabs 
+```csharp demo-tabs
 
 public class LoginForm : ViewBase 
 {      
