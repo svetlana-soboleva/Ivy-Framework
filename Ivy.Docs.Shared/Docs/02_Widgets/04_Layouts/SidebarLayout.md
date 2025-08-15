@@ -142,7 +142,7 @@ public class SidebarMenuExample : ViewBase
 When used as the main application sidebar, the layout includes a toggle button and responsive behavior:
 
 <Callout Type="tip">
-"You also can create toggle sidebar layout by defining the sidebar as .MainAppSidebar()">
+"You can also create a toggle sidebar layout by defining the sidebar as .MainAppSidebar()">
 </Callout>
 
 ```csharp demo-tabs
