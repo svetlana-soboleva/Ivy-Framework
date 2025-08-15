@@ -1,6 +1,8 @@
 # SidebarLayout
 
-<Ingress Text="SidebarLayout provides a flexible sidebar navigation layout with a main content area and collapsible sidebar. It supports header and footer sections, responsive behavior, and can be configured as the main application sidebar with toggle functionality." />
+<Ingress>
+SidebarLayout provides a flexible sidebar navigation layout with a main content area and collapsible sidebar. It supports header and footer sections, responsive behavior, and can be configured as the main application sidebar with toggle functionality.
+</Ingress>
 
 Sidebars are essential navigation components in modern applications, providing users with quick access to different sections while keeping the main content area uncluttered. They can be used for primary navigation, contextual tools, or supplementary information display.
 
@@ -139,6 +141,10 @@ public class SidebarMenuExample : ViewBase
 
 When used as the main application sidebar, the layout includes a toggle button and responsive behavior:
 
+<Callout Type="tip">
+"You also can create toggle sidebar layout by defining the sidebar as .MainAppSidebar()">
+</Callout>
+
 ```csharp demo-tabs
 public class MainAppSidebarExample : ViewBase
 {
@@ -165,51 +171,14 @@ public class MainAppSidebarExample : ViewBase
             sidebarHeader: Layout.Vertical().Gap(2)
                 | Text.H3("Workspace")
                 | new TextInput(placeholder: "Search...", variant: TextInputs.Search)
-        ).MainAppSidebar(); // Enable main app sidebar behavior
+        ); 
     }
 }
 ```
 
-### Custom Padding
-
-You can control the padding of the main content area:
-
-```csharp demo-tabs
-public class CustomPaddingExample : ViewBase
-{
-    public override object? Build()
-    {
-        return Layout.Vertical().Gap(4)
-            | Text.H2("Padding Examples")
-            | Layout.Horizontal().Gap(2)
-                | new Button("No Padding").WithSheet(
-                    () => new SidebarLayout(
-                        mainContent: 
-                            new Card("Content with no padding")
-                            .Title("No Padding"),
-                        sidebarContent: "Sidebar"
-                    ).Padding(0),
-                    title: "No Padding Example"
-                )
-                | new Button("Default Padding").WithSheet(
-                    () => new SidebarLayout(
-                        mainContent: 
-                            new Card("Content with default padding").Title("Default Padding"),
-                        sidebarContent: "Sidebar"
-                    ),
-                    title: "Default Padding Example"
-                )
-                | new Button("Large Padding").WithSheet(
-                    () => new SidebarLayout(
-                        mainContent: 
-                            new Card("Content with large padding").Title("Large Padding"),
-                        sidebarContent: "Sidebar"
-                    ).Padding(6),
-                    title: "Large Padding Example"
-                );
-    }
-}
-```
+<Callout Type="tip">
+"There is default padding 2 in main content accessable MainContentPadding by default."
+</Callout>
 
 ### SidebarMenu Widget
 
