@@ -162,7 +162,7 @@ new GridLayout(
 )
 ```
 
-## Advanced Examples
+## Examples
 
 ### Responsive Card Grid
 

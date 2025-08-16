@@ -102,7 +102,7 @@ Layout.Vertical()
 
 <WidgetDocs Type="Ivy.WrapLayout" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/WrapLayout.cs"/>
 
-## Advanced Examples
+## Examples
 
 ### Responsive Technology Tags
 
