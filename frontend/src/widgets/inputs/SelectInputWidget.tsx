@@ -523,13 +523,16 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        'w-full border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex-1">
-          <div className="flex flex-col gap-4" data-testid={dataTestId}>
+      <div className="flex items-start gap-2">
+        <div className="flex-1 min-w-0">
+          <div
+            className="flex flex-col gap-4 max-h-48 overflow-y-auto pr-2 -mr-2"
+            data-testid={dataTestId}
+          >
             {validOptions.map(option => {
               const isSelected = selectedValues.includes(option.value);
               const isInvalid = !!invalid && isSelected;
@@ -579,6 +582,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                   <Label
                     htmlFor={`${id}-${option.value}`}
                     className={cn(
+                      'flex-1 cursor-pointer',
                       isInvalid ? inputStyles.invalidInput : undefined
                     )}
                   >
@@ -601,7 +605,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
               );
               eventHandler('OnChange', id, [[]]);
             }}
-            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none"
+            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none mt-1"
           >
             <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
           </button>
