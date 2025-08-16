@@ -228,7 +228,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -325,26 +325,35 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
             </ToggleGroup>
           )}
         </div>
-        {nullable && hasValue && !disabled && (
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label={selectMany ? 'Clear All' : 'Clear'}
-            onClick={() => {
-              logger.debug(
-                'Select input clear button clicked (ToggleVariant)',
-                {
-                  id,
-                  selectMany,
-                  clearValue: selectMany ? [] : null,
-                }
-              );
-              eventHandler('OnChange', id, [selectMany ? [] : null]);
-            }}
-            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
-          >
-            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </button>
+        {((nullable && hasValue && !disabled) || invalid) && (
+          <div className="flex items-center gap-1">
+            {nullable && hasValue && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label={selectMany ? 'Clear All' : 'Clear'}
+                onClick={() => {
+                  logger.debug(
+                    'Select input clear button clicked (ToggleVariant)',
+                    {
+                      id,
+                      selectMany,
+                      clearValue: selectMany ? [] : null,
+                    }
+                  );
+                  eventHandler('OnChange', id, [selectMany ? [] : null]);
+                }}
+                className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
+              >
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
+            {invalid && (
+              <div className="flex items-center">
+                <InvalidIcon message={invalid} />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -384,7 +393,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -415,6 +424,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                 <Label
                   htmlFor={`${id}-${option.value}`}
                   className={cn(
+                    'cursor-pointer',
                     stringValue === option.value.toString() && invalid
                       ? inputStyles.invalidInput
                       : undefined
@@ -426,36 +436,34 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
             ))}
           </RadioGroup>
         </div>
-        {nullable && hasValue && !disabled && (
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label="Clear"
-            onClick={() => {
-              logger.debug('Select input clear button clicked', { id });
-              eventHandler('OnChange', id, [null]);
-            }}
-            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
-          >
-            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </button>
+        {((nullable && hasValue && !disabled) || invalid) && (
+          <div className="flex items-center gap-1">
+            {nullable && hasValue && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear"
+                onClick={() => {
+                  logger.debug('Select input clear button clicked', { id });
+                  eventHandler('OnChange', id, [null]);
+                }}
+                className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none cursor-pointer"
+              >
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
+            {invalid && (
+              <div className="flex items-center">
+                <InvalidIcon message={invalid} />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
   );
 
-  return invalid ? (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{container}</TooltipTrigger>
-        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-          <div className="max-w-60">{invalid}</div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    container
-  );
+  return container;
 };
 
 const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
@@ -523,7 +531,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'w-full border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        'relative w-full border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -593,22 +601,31 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
             })}
           </div>
         </div>
-        {nullable && hasValues && !disabled && (
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label="Clear All"
-            onClick={() => {
-              logger.debug(
-                'Select input clear button clicked (CheckboxVariant)',
-                { id }
-              );
-              eventHandler('OnChange', id, [[]]);
-            }}
-            className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none mt-1"
-          >
-            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-          </button>
+        {((nullable && hasValues && !disabled) || invalid) && (
+          <div className="flex flex-col items-center gap-1">
+            {nullable && hasValues && !disabled && (
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Clear All"
+                onClick={() => {
+                  logger.debug(
+                    'Select input clear button clicked (CheckboxVariant)',
+                    { id }
+                  );
+                  eventHandler('OnChange', id, [[]]);
+                }}
+                className="flex-shrink-0 p-1 rounded hover:bg-accent focus:outline-none"
+              >
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
+            {invalid && (
+              <div className="flex items-center">
+                <InvalidIcon message={invalid} />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
