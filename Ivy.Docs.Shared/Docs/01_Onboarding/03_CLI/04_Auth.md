@@ -14,6 +14,7 @@ Ivy supports the following authentication providers:
 
 - **Auth0** - Universal authentication platform
 - **Supabase Auth** - Built-in authentication for Supabase
+- **Microsoft Entra** - Identity and access management from Microsoft
 - **Authelia** - Open-source identity provider
 
 ### Basic Authentication
@@ -43,7 +44,7 @@ This command will:
 >ivy auth add --provider Auth0
 ```
 
-Available providers: `Auth0`, `Supabase`, `Authelia`, `Basic`
+Available providers: `Auth0`, `Supabase`, `MicrosoftEntra`, `Authelia`, `Basic`
 
 `--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax:
 
@@ -158,65 +159,35 @@ export AUTH0_AUDIENCE="https://your-domain.auth0.com/api/v2"
 
 ## Program.cs Integration
 
-Ivy automatically updates your `Program.cs` to include authentication:
+Ivy automatically parses and updates your `Program.cs` to configure authentication:
+
+**Basic Auth**
+
+```csharp
+server.UseAuth<BasicAuthProvider>();
+```
 
 **Auth0 Integration**
 
 ```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-// Add authentication
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.Authority = builder.Configuration["Auth0:Domain"];
-    options.Audience = builder.Configuration["Auth0:ClientId"];
-});
-
-// Add Ivy services
-builder.Services.AddIvy();
-
-var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseIvy();
-app.Run();
+server.UseAuth<Auth0AuthProvider>(c => c.UseEmailPassword().UseGoogle().UseApple());
 ```
 
 **Supabase Auth Integration**
 
 ```csharp
-var builder = WebApplication.CreateBuilder(args);
+server.UseAuth<SupabaseAuthProvider>(c => c.UseEmailPassword().UseGoogle().UseApple());
+```
 
-// Add Supabase authentication
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.Authority = builder.Configuration["Supabase:ProjectUrl"];
-    options.Audience = "authenticated";
-});
+**Microsoft Entra Integration**
 
-// Add Ivy services
-builder.Services.AddIvy();
-
-var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseIvy();
-app.Run();
+```csharp
+server.UseAuth<MicrosoftEntraAuthProvider>(c => c.UseMicrosoftEntra());
 ```
 
 ## Authentication Flow
 
-### OAuth2 Flow (Auth0, Supabase, Authelia)
+### OAuth2 Flow (Auth0, Supabase, Microsoft Entra)
 
 1. User visits your application
 2. User clicks "Login" and is redirected to the identity provider
@@ -225,11 +196,11 @@ app.Run();
 5. Your application exchanges the code for an access token
 6. The access token is used to authenticate API requests
 
-### Basic Auth Flow
+### Email/Password Flow (Basic Auth, Authelia)
 
 1. User visits your application
 2. Browser prompts for username/password
-3. Credentials are validated against your configuration
+3. Credentials are validated
 4. If valid, user is authenticated for the session
 
 ## Troubleshooting
