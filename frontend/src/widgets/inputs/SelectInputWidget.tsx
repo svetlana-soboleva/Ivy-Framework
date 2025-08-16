@@ -177,6 +177,51 @@ const useSelectValueHandler = (
   );
 };
 
+// Helper component for ToggleGroupItem with validation
+const ToggleOptionItem: React.FC<{
+  option: Option;
+  isSelected: boolean;
+  invalid?: string;
+}> = ({ option, isSelected, invalid }) => {
+  const isInvalid = !!invalid && isSelected;
+
+  const toggleItem = (
+    <ToggleGroupItem
+      key={option.value}
+      value={option.value.toString()}
+      aria-label={option.label}
+      className={cn(
+        'px-3 py-2 hover:text-foreground',
+        isInvalid
+          ? cn(
+              inputStyles.invalidInput,
+              'bg-destructive/10 border-destructive text-destructive'
+            )
+          : isSelected
+            ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
+            : undefined
+      )}
+    >
+      {option.label}
+    </ToggleGroupItem>
+  );
+
+  if (isInvalid) {
+    return (
+      <TooltipProvider key={option.value}>
+        <Tooltip>
+          <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
+          <TooltipContent className="bg-popover text-popover-foreground shadow-md">
+            <div className="max-w-xs sm:max-w-sm">{invalid}</div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return toggleItem;
+};
+
 const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   id,
   value,
@@ -189,30 +234,36 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   nullable = false,
   'data-testid': dataTestId,
 }) => {
-  const validOptions = options.filter(
-    option => option.value != null && option.value.toString().trim() !== ''
+  const validOptions = useMemo(
+    () =>
+      options.filter(
+        option => option.value != null && option.value.toString().trim() !== ''
+      ),
+    [options]
   );
 
-  // Handle both single and multiple selection
-  let selectedValues: (string | number)[] = [];
-  if (selectMany) {
-    if (Array.isArray(value)) {
-      selectedValues = value;
-    } else if (value != null && value.toString().trim() !== '') {
-      selectedValues = value
-        .toString()
-        .split(separator)
-        .map(v => v.trim());
+  const selectedValues = useMemo(() => {
+    let values: (string | number)[] = [];
+    if (selectMany) {
+      if (Array.isArray(value)) {
+        values = value;
+      } else if (value != null && value.toString().trim() !== '') {
+        values = value
+          .toString()
+          .split(separator)
+          .map(v => v.trim());
+      }
+    } else {
+      const stringValue =
+        value != null && value.toString().trim() !== ''
+          ? value.toString()
+          : undefined;
+      if (stringValue !== undefined) {
+        values = [stringValue];
+      }
     }
-  } else {
-    const stringValue =
-      value != null && value.toString().trim() !== ''
-        ? value.toString()
-        : undefined;
-    if (stringValue !== undefined) {
-      selectedValues = [stringValue];
-    }
-  }
+    return values;
+  }, [value, selectMany, separator]);
 
   const hasValue = selectedValues.length > 0;
 
@@ -224,7 +275,6 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
     selectMany
   );
 
-  // Outer container
   const container = (
     <div
       className={cn(
@@ -245,37 +295,14 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
             >
               {validOptions.map(option => {
                 const isSelected = selectedValues.includes(option.value);
-                const isInvalid = !!invalid && isSelected;
-                const toggleItem = (
-                  <ToggleGroupItem
+                return (
+                  <ToggleOptionItem
                     key={option.value}
-                    value={option.value.toString()}
-                    aria-label={option.label}
-                    className={cn(
-                      'px-3 py-2 hover:text-foreground',
-                      isInvalid
-                        ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
-                        : isSelected
-                          ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
-                          : undefined
-                    )}
-                  >
-                    {option.label}
-                  </ToggleGroupItem>
+                    option={option}
+                    isSelected={isSelected}
+                    invalid={invalid}
+                  />
                 );
-                if (isInvalid) {
-                  return (
-                    <TooltipProvider key={option.value}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
-                        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                          <div className="max-w-60">{invalid}</div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  );
-                }
-                return toggleItem;
               })}
             </ToggleGroup>
           ) : (
@@ -290,37 +317,14 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
               {validOptions.map(option => {
                 const isSelected =
                   selectedValues[0] === option.value.toString();
-                const isInvalid = !!invalid && isSelected;
-                const toggleItem = (
-                  <ToggleGroupItem
+                return (
+                  <ToggleOptionItem
                     key={option.value}
-                    value={option.value.toString()}
-                    aria-label={option.label}
-                    className={cn(
-                      'px-3 py-2 hover:text-foreground',
-                      isInvalid
-                        ? `${inputStyles.invalidInput} !bg-destructive/10 !border-destructive !text-destructive`
-                        : isSelected
-                          ? 'data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground'
-                          : undefined
-                    )}
-                  >
-                    {option.label}
-                  </ToggleGroupItem>
+                    option={option}
+                    isSelected={isSelected}
+                    invalid={invalid}
+                  />
                 );
-                if (isInvalid) {
-                  return (
-                    <TooltipProvider key={option.value}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>{toggleItem}</TooltipTrigger>
-                        <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                          <div className="max-w-60">{invalid}</div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  );
-                }
-                return toggleItem;
               })}
             </ToggleGroup>
           )}
@@ -477,8 +481,12 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   nullable = false,
   'data-testid': dataTestId,
 }) => {
-  const validOptions = options.filter(
-    option => option.value != null && option.value.toString().trim() !== ''
+  const validOptions = useMemo(
+    () =>
+      options.filter(
+        option => option.value != null && option.value.toString().trim() !== ''
+      ),
+    [options]
   );
 
   const selectedValues = useMemo(() => {
@@ -493,21 +501,34 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
     }
     return values;
   }, [value, separator]);
+
   const handleCheckboxChange = useCallback(
     (optionValue: string | number, checked: boolean) => {
       logger.debug('Select input checkbox change', {
         id,
         optionValue,
         checked,
-        currentSelectedValues: selectedValues,
+        currentValue: value,
       });
+
+      // Calculate new values based on current value, not selectedValues state
+      let currentValues: (string | number)[] = [];
+      if (Array.isArray(value)) {
+        currentValues = value;
+      } else if (value != null && value.toString().trim() !== '') {
+        currentValues = value
+          .toString()
+          .split(separator)
+          .map(v => v.trim());
+      }
 
       let newValues: (string | number)[];
       if (checked) {
-        newValues = [...selectedValues, optionValue];
+        newValues = [...currentValues, optionValue];
       } else {
-        newValues = selectedValues.filter(v => v !== optionValue);
+        newValues = currentValues.filter(v => v !== optionValue);
       }
+
       const convertedValue = convertValuesToOriginalType(
         newValues.map(v => v.toString()),
         value,
@@ -523,7 +544,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
 
       eventHandler('OnChange', id, [convertedValue]);
     },
-    [selectedValues, value, validOptions, eventHandler, id]
+    [value, validOptions, eventHandler, id, separator]
   );
 
   const hasValues = selectedValues.length > 0;
@@ -561,13 +582,13 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                             }
                             disabled={disabled}
                             className={cn(
-                              inputStyles.invalidInput +
-                                ' !bg-red-50 !border-red-500 !text-red-900'
+                              inputStyles.invalidInput,
+                              'bg-destructive/10 border-destructive text-destructive'
                             )}
                           />
                         </TooltipTrigger>
                         <TooltipContent className="bg-popover text-popover-foreground shadow-md">
-                          <div className="max-w-60">{invalid}</div>
+                          <div className="max-w-xs sm:max-w-sm">{invalid}</div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -657,42 +678,58 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     selectMany
   );
 
-  // Handle multiselect case
-  if (selectMany) {
-    // Convert current value to array format for multiselect
-    let selectedValues: (string | number)[] = [];
-    if (Array.isArray(value)) {
-      selectedValues = value;
-    } else if (value != null && value.toString().trim() !== '') {
-      selectedValues = value
-        .toString()
-        .split(',')
-        .map(v => v.trim());
+  // Convert current value to array format for multiselect
+  const selectedValues = useMemo(() => {
+    let values: (string | number)[] = [];
+    if (selectMany) {
+      if (Array.isArray(value)) {
+        values = value;
+      } else if (value != null && value.toString().trim() !== '') {
+        values = value
+          .toString()
+          .split(',')
+          .map(v => v.trim());
+      }
     }
+    return values;
+  }, [selectMany, value]);
 
-    // Convert options to MultiSelectOption format
-    const multiSelectOptions: MultiSelectOption[] = validOptions.map(
-      option => ({
+  // Convert options to MultiSelectOption format
+  const multiSelectOptions: MultiSelectOption[] = useMemo(
+    () =>
+      validOptions.map(option => ({
         label: option.label,
         value: option.value.toString(),
         disable: false,
-      })
-    );
+      })),
+    [validOptions]
+  );
 
-    // Convert selected values to MultiSelectOption format
-    const selectedMultiSelectOptions: MultiSelectOption[] = selectedValues.map(
-      val => {
-        const option = validOptions.find(
-          opt => opt.value.toString() === val.toString()
-        );
+  // Create lookup map for efficient option finding
+  const optionsLookup = useMemo(() => {
+    const map = new Map<string, Option>();
+    validOptions.forEach(option => {
+      map.set(option.value.toString(), option);
+    });
+    return map;
+  }, [validOptions]);
+
+  // Convert selected values to MultiSelectOption format
+  const selectedMultiSelectOptions: MultiSelectOption[] = useMemo(
+    () =>
+      selectedValues.map(val => {
+        const option = optionsLookup.get(val.toString());
         return {
           label: option?.label || val.toString(),
           value: val.toString(),
           disable: false,
         };
-      }
-    );
+      }),
+    [selectedValues, optionsLookup]
+  );
 
+  // Handle multiselect case
+  if (selectMany) {
     const handleMultiSelectChange = (
       newSelectedOptions: MultiSelectOption[]
     ) => {
