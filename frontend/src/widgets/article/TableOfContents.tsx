@@ -112,7 +112,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
     };
   }, [show, articleRef]);
 
-  // Handle active heading highlighting
+  // Handle active heading highlighting and auto-scroll
   useEffect(() => {
     if (!articleRef.current || tocItems.length === 0) return;
 
@@ -138,6 +138,20 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 
     return () => observer.disconnect();
   }, [tocItems, articleRef]);
+
+  // Auto-scroll TOC to show active heading
+  useEffect(() => {
+    if (!activeId) return;
+
+    const activeElement = document.querySelector(`a[href="#${activeId}"]`);
+    if (activeElement) {
+      activeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+      });
+    }
+  }, [activeId]);
 
   if (!show) return null;
 

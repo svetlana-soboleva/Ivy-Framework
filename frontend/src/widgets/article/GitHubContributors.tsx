@@ -155,7 +155,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   const hasMoreContributors = remainingCount > 0;
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       <div className="text-body mb-4 flex items-center gap-2">
         <Users className="w-4 h-4" />
         Contributors
