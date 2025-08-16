@@ -26,11 +26,8 @@ interface GitHubContributorsProps {
 const IVY_TEAM_MEMBERS: Record<string, string> = {
   ArtemKhvorostianyi: 'Engineer',
   rorychatt: 'Founding Engineer',
-  nielsbosma: 'Engineer',
+  nielsbosma: 'CEO',
   zachwolfe: 'Engineer',
-  sudipto80: 'Engineer',
-  OliverMidbrink: 'Engineer',
-  SkillfulSunshine: 'Engineer',
   // Add more team members as needed
 };
 
@@ -119,7 +116,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       })
       .catch(err => {
         console.error('Failed to fetch contributors:', err);
-        setError('Failed to load contributors');
+        setError(err.message || 'Failed to load contributors');
       })
       .finally(() => {
         setLoading(false);
