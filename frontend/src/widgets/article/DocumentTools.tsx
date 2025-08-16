@@ -8,6 +8,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Download } from 'lucide-react';
 import React from 'react';
+import { useEventHandler } from '../../components/event-handler/hooks';
+import { logger } from '../../lib/logger';
 
 interface DocumentToolsProps {
   articleRef: React.RefObject<HTMLElement | null>;
@@ -21,6 +23,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   title = 'document',
 }) => {
   const { toast } = useToast();
+  const eventHandler = useEventHandler();
   const extractCleanText = (): string => {
     if (!articleRef.current) return '';
 
@@ -55,74 +58,342 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     return textContent;
   };
 
-  const extractMarkdownContent = (): string => {
+  const extractMarkdownContent = async (): Promise<string> => {
     if (!articleRef.current) return '';
 
     const articleElement = articleRef.current;
     let markdownContent = '';
 
-    // Extract headings and content in markdown format
-    const elements = articleElement.querySelectorAll(
-      'h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, code'
+    // Find all tab groups and force load content from backend by triggering proper events
+    const tabGroups = articleElement.querySelectorAll('[role="tablist"]');
+    const originalActiveTab = articleElement.querySelector(
+      '[role="tab"][aria-selected="true"], [role="tab"][data-state="active"]'
     );
 
-    elements.forEach(element => {
-      const tagName = element.tagName.toLowerCase();
-      const text = element.textContent || '';
+    if (tabGroups.length > 0) {
+      markdownContent += '\n## All Tabs Content\n\n';
+
+      // For each tab group, trigger backend events to load all tabs
+      for (const tabList of Array.from(tabGroups)) {
+        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+
+        // Find the parent tab widget to get its ID for the event handler
+        const tabWidget = tabList.closest('[id]');
+        const tabWidgetId = tabWidget?.id;
+
+        if (tabWidgetId) {
+          logger.info(
+            `Found tab widget ID: ${tabWidgetId} with ${tabs.length} tabs`
+          );
+
+          // Trigger OnSelect event for each tab to load from backend
+          for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
+            const tabElement = tabs[tabIndex] as HTMLElement;
+            const tabLabel =
+              tabElement.textContent?.trim() || `Tab ${tabIndex}`;
+
+            try {
+              logger.info(
+                `Triggering OnSelect for tab ${tabIndex} (${tabLabel})`
+              );
+              eventHandler('OnSelect', tabWidgetId, [tabIndex]);
+              // Wait for backend fetch and React render
+              await new Promise(resolve => setTimeout(resolve, 500));
+
+              // Check if content was loaded
+              const activePanel = articleElement.querySelector(
+                '[role="tabpanel"]:not([hidden])'
+              );
+              const hasContent =
+                activePanel && activePanel.textContent?.trim().length > 0;
+              logger.info(
+                `Tab ${tabIndex} content loaded: ${hasContent ? 'Yes' : 'No'}`
+              );
+            } catch (error) {
+              logger.warn(
+                `Failed to trigger tab loading for ${tabLabel}:`,
+                error
+              );
+              // Fallback to clicking the tab
+              tabElement.click();
+              await new Promise(resolve => setTimeout(resolve, 300));
+
+              const activePanel = articleElement.querySelector(
+                '[role="tabpanel"]:not([hidden])'
+              );
+              const hasContent =
+                activePanel && activePanel.textContent?.trim().length > 0;
+              logger.info(
+                `Tab ${tabIndex} content after click: ${hasContent ? 'Yes' : 'No'}`
+              );
+            }
+          }
+        } else {
+          logger.warn('No tab widget ID found, falling back to DOM clicking');
+          // Fallback to DOM clicking if we can't find the widget ID
+          for (const tab of tabs) {
+            const tabElement = tab as HTMLElement;
+            tabElement.click();
+            await new Promise(resolve => setTimeout(resolve, 300));
+          }
+        }
+      }
+
+      // Now extract content from ALL loaded tabs sequentially
+      for (const tabList of Array.from(tabGroups)) {
+        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+
+        for (let i = 0; i < tabs.length; i++) {
+          const tab = tabs[i] as HTMLElement;
+          const tabLabel = tab.textContent?.trim() || `Tab ${i + 1}`;
+
+          // Click this tab to make its panel visible for extraction
+          tab.click();
+
+          // Wait for panel to become active
+          await new Promise(resolve => setTimeout(resolve, 100));
+
+          const activePanel = articleElement.querySelector(
+            '[role="tabpanel"]:not([hidden]), [role="tabpanel"][data-state="active"]'
+          );
+
+          if (activePanel) {
+            markdownContent += `### ${tabLabel}\n\n`;
+
+            const codeBlocks = activePanel.querySelectorAll('pre, code');
+
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(codeBlock => {
+                const code = codeBlock.textContent?.trim();
+                if (code && code.length > 10) {
+                  markdownContent += `\`\`\`\n${code}\n\`\`\`\n\n`;
+                }
+              });
+            } else {
+              const panelText = activePanel.textContent?.trim();
+              if (panelText && panelText.length > 10) {
+                markdownContent += `${panelText}\n\n`;
+              }
+            }
+          }
+        }
+      }
+
+      // Restore original active tab by finding its index and triggering the proper event
+      if (originalActiveTab && originalActiveTab instanceof HTMLElement) {
+        const originalTabList = originalActiveTab.closest('[role="tablist"]');
+        if (originalTabList) {
+          const allTabs = Array.from(
+            originalTabList.querySelectorAll('[role="tab"]')
+          );
+          const originalIndex = allTabs.indexOf(originalActiveTab);
+
+          const tabWidget = originalTabList.closest('[id]');
+          const tabWidgetId = tabWidget?.id;
+
+          if (tabWidgetId && originalIndex >= 0) {
+            try {
+              eventHandler('OnSelect', tabWidgetId, [originalIndex]);
+              await new Promise(resolve => setTimeout(resolve, 300));
+            } catch {
+              // Fallback to clicking
+              originalActiveTab.click();
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          } else {
+            originalActiveTab.click();
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        }
+      }
+    }
+
+    // Now work with a clone for the rest of the content extraction
+    const clone = articleElement.cloneNode(true) as HTMLElement;
+
+    // Remove UI elements but keep all content - IMPORTANT: Don't remove tab content
+    const elementsToRemove = [
+      'nav',
+      'button:not([data-copy-button])',
+      '.toc',
+      '.table-of-contents',
+      '.navigation',
+      '.breadcrumb',
+      '.pagination',
+      '.sidebar',
+      '[data-testid="copy-button"]',
+    ];
+
+    elementsToRemove.forEach(selector => {
+      const elements = clone.querySelectorAll(selector);
+      elements.forEach(el => el.remove());
+    });
+
+    // Make all tab content visible for extraction by temporarily overriding display styles
+    const hiddenElements = clone.querySelectorAll(
+      '[style*="display: none"], [style*="display:none"], .hidden, [hidden]'
+    );
+    const originalStyles = new Map<Element, string>();
+
+    hiddenElements.forEach(element => {
+      // Store original style for restoration (though we won't restore since this is a clone)
+      originalStyles.set(element, element.getAttribute('style') || '');
+
+      // Temporarily make visible for extraction
+      if (element instanceof HTMLElement) {
+        element.style.display = 'block';
+        element.style.visibility = 'visible';
+        element.removeAttribute('hidden');
+        element.classList.remove('hidden');
+      }
+    });
+
+    // Get ALL content elements in document order - much more comprehensive
+    const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, {
+      acceptNode: node => {
+        const element = node as Element;
+        const tagName = element.tagName.toLowerCase();
+
+        // Accept all content elements
+        if (
+          [
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'p',
+            'div',
+            'section',
+            'article',
+            'ul',
+            'ol',
+            'li',
+            'blockquote',
+            'pre',
+            'code',
+            'table',
+            'thead',
+            'tbody',
+            'tr',
+            'th',
+            'td',
+            'dl',
+            'dt',
+            'dd',
+          ].includes(tagName)
+        ) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_SKIP;
+      },
+    });
+
+    const processedElements = new Set<Element>();
+    let currentElement: Element | null;
+
+    while ((currentElement = walker.nextNode() as Element)) {
+      // Skip if we've already processed this element or its parent
+      if (processedElements.has(currentElement)) continue;
+
+      const tagName = currentElement.tagName.toLowerCase();
+      const text = currentElement.textContent?.trim() || '';
+
+      // Skip empty elements
+      if (!text && !['table', 'ul', 'ol'].includes(tagName)) continue;
 
       switch (tagName) {
         case 'h1':
-          markdownContent += `# ${text}\n\n`;
-          break;
         case 'h2':
-          markdownContent += `## ${text}\n\n`;
-          break;
         case 'h3':
-          markdownContent += `### ${text}\n\n`;
-          break;
         case 'h4':
-          markdownContent += `#### ${text}\n\n`;
-          break;
         case 'h5':
-          markdownContent += `##### ${text}\n\n`;
+        case 'h6': {
+          const level = parseInt(tagName[1]);
+          markdownContent += `${'#'.repeat(level)} ${text}\n\n`;
+          processedElements.add(currentElement);
           break;
-        case 'h6':
-          markdownContent += `###### ${text}\n\n`;
-          break;
+        }
+
         case 'p':
-          if (text.trim()) {
+          if (text && !currentElement.closest('li, td, th')) {
             markdownContent += `${text}\n\n`;
+            processedElements.add(currentElement);
           }
           break;
-        case 'ul': {
-          const liItems = element.querySelectorAll('li');
-          liItems.forEach(li => {
-            markdownContent += `- ${li.textContent || ''}\n`;
-          });
-          markdownContent += '\n';
+
+        case 'div':
+        case 'section':
+        case 'article': {
+          // Only process if it's a direct content container, not nested
+          if (!currentElement.closest('p, li, td, th') && text) {
+            // Check if it contains mostly just text (not other block elements)
+            const childBlocks = currentElement.querySelectorAll(
+              'h1, h2, h3, h4, h5, h6, p, div, section, ul, ol, table'
+            );
+            if (childBlocks.length === 0) {
+              markdownContent += `${text}\n\n`;
+              processedElements.add(currentElement);
+            }
+          }
           break;
         }
-        case 'ol': {
-          const olItems = element.querySelectorAll('li');
-          olItems.forEach((li, index) => {
-            markdownContent += `${index + 1}. ${li.textContent || ''}\n`;
-          });
-          markdownContent += '\n';
+
+        case 'ul':
+        case 'ol':
+          if (!processedElements.has(currentElement)) {
+            markdownContent += extractListToMarkdown(currentElement);
+            processedElements.add(currentElement);
+          }
           break;
-        }
-        case 'blockquote':
-          markdownContent += `> ${text}\n\n`;
+
+        case 'table':
+          if (!processedElements.has(currentElement)) {
+            markdownContent += extractTableToMarkdown(
+              currentElement as HTMLTableElement
+            );
+            processedElements.add(currentElement);
+          }
           break;
+
         case 'pre':
-          markdownContent += `\`\`\`\n${text}\n\`\`\`\n\n`;
+          if (!processedElements.has(currentElement)) {
+            const codeElement = currentElement.querySelector('code');
+            const codeText = codeElement
+              ? codeElement.textContent
+              : currentElement.textContent;
+            markdownContent += `\`\`\`\n${codeText || ''}\n\`\`\`\n\n`;
+            processedElements.add(currentElement);
+          }
           break;
+
         case 'code':
-          if (!element.closest('pre')) {
-            markdownContent = markdownContent.replace(/(.*)$/, `$1\`${text}\``);
+          // Only process inline code (not inside pre)
+          if (
+            !currentElement.closest('pre') &&
+            !processedElements.has(currentElement)
+          ) {
+            // This is tricky - we'll skip standalone code elements to avoid duplication
+            // They're usually handled by their parent elements
+          }
+          break;
+
+        case 'blockquote':
+          if (!processedElements.has(currentElement)) {
+            markdownContent += `> ${text}\n\n`;
+            processedElements.add(currentElement);
+          }
+          break;
+
+        case 'dl':
+          if (!processedElements.has(currentElement)) {
+            markdownContent += extractDefinitionListToMarkdown(currentElement);
+            processedElements.add(currentElement);
           }
           break;
       }
-    });
+    }
 
     // Add source attribution if available
     if (documentSource) {
@@ -132,11 +403,84 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     return markdownContent.trim();
   };
 
+  // Helper function to extract table as markdown
+  const extractTableToMarkdown = (table: HTMLTableElement): string => {
+    let tableMarkdown = '\n';
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    if (rows.length === 0) return '';
+
+    rows.forEach((row, rowIndex) => {
+      const cells = Array.from(row.querySelectorAll('td, th'));
+      const cellTexts = cells.map(cell =>
+        (cell.textContent || '').trim().replace(/\|/g, '\\|')
+      );
+
+      if (cellTexts.some(text => text.length > 0)) {
+        tableMarkdown += `| ${cellTexts.join(' | ')} |\n`;
+
+        // Add separator row after header
+        if (rowIndex === 0 && row.querySelector('th')) {
+          tableMarkdown += `| ${cellTexts.map(() => '---').join(' | ')} |\n`;
+        }
+      }
+    });
+
+    return tableMarkdown + '\n';
+  };
+
+  // Helper function to extract lists as markdown
+  const extractListToMarkdown = (list: Element): string => {
+    const items = Array.from(list.querySelectorAll(':scope > li')); // Direct children only
+    const isOrdered = list.tagName.toLowerCase() === 'ol';
+    let listMarkdown = '\n';
+
+    items.forEach((item, index) => {
+      const text = item.textContent?.trim() || '';
+      if (text) {
+        const prefix = isOrdered ? `${index + 1}. ` : '- ';
+        listMarkdown += `${prefix}${text}\n`;
+      }
+    });
+
+    return listMarkdown + '\n';
+  };
+
+  // Helper function to extract definition lists as markdown
+  const extractDefinitionListToMarkdown = (dl: Element): string => {
+    let dlMarkdown = '\n';
+    const children = Array.from(dl.children);
+
+    for (let i = 0; i < children.length; i++) {
+      const element = children[i];
+      const tagName = element.tagName.toLowerCase();
+      const text = element.textContent?.trim() || '';
+
+      if (tagName === 'dt' && text) {
+        dlMarkdown += `**${text}**\n`;
+      } else if (tagName === 'dd' && text) {
+        dlMarkdown += `: ${text}\n\n`;
+      }
+    }
+
+    return dlMarkdown;
+  };
+
   const copyTextContent = async () => {
     try {
+      // Show loading state
+      toast({
+        title: 'Loading Content...',
+        description: 'Fetching all tab content from backend...',
+      });
+
+      const markdownContent = await extractMarkdownContent();
       const textContent = extractCleanText();
 
-      if (!textContent.trim()) {
+      const attribution = documentSource ? `\n\nSource: ${documentSource}` : '';
+      const fullContent = markdownContent + '\n\n' + textContent + attribution;
+
+      if (!fullContent.trim()) {
         toast({
           title: 'Copy Failed',
           description: 'No content found to copy',
@@ -145,13 +489,10 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
         return;
       }
 
-      const attribution = documentSource ? `\n\nSource: ${documentSource}` : '';
-      const finalContent = textContent + attribution;
-
-      await navigator.clipboard.writeText(finalContent);
+      await navigator.clipboard.writeText(fullContent);
       toast({
         title: 'Copied!',
-        description: 'Document text copied to clipboard',
+        description: 'Complete document including all tabs copied to clipboard',
       });
     } catch {
       try {
@@ -216,9 +557,15 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     return `ivy-document-${timestamp}`;
   };
 
-  const saveAsMarkdown = () => {
+  const saveAsMarkdown = async () => {
     try {
-      const markdownContent = extractMarkdownContent();
+      // Show loading state
+      toast({
+        title: 'Extracting Content...',
+        description: 'Fetching all tab content from backend...',
+      });
+
+      const markdownContent = await extractMarkdownContent();
 
       if (!markdownContent.trim()) {
         toast({
@@ -241,6 +588,11 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+
+      toast({
+        title: 'Export Complete!',
+        description: `Downloaded ${fileName}.md with complete content including all tabs`,
+      });
     } catch {
       toast({
         title: 'Download Failed',
