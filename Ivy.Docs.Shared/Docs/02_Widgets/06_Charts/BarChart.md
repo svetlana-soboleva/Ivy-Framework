@@ -108,7 +108,7 @@ here is done for the `Blueberry` column.
 
 <WidgetDocs Type="Ivy.BarChart" ExtensionTypes="Ivy.BarChartExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Charts/BarChart.cs"/>
 
-## More Examples
+## Examples
 
 `BarChart` handles negative and double values. The following shows a demonstration of these
 where TIOBE index is shown for some programming languages over the last five years.

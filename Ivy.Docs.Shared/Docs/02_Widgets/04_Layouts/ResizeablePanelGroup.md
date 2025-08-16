@@ -283,7 +283,7 @@ public class NestedLayoutView : ViewBase
 
 <WidgetDocs Type="Ivy.ResizeablePanelGroup" ExtensionTypes="Ivy.ResizeablePanelsExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/ResizeablePanelGroup.cs"/>
 
-## Advanced Examples
+## Examples
 
 ### Multi-Directional Resizing
 

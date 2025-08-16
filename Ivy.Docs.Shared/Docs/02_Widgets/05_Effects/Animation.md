@@ -336,7 +336,7 @@ Layout.Wrap().Gap(4).Align(Align.Center)
 
 <WidgetDocs Type="Ivy.Animation" ExtensionTypes="Ivy.AnimationExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Effects/Animation.cs"/>
 
-## Advanced Examples
+## Examples
 
 Interactive buttons with various animation effects. Click any button to see the animation:
 

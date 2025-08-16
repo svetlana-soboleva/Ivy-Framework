@@ -77,7 +77,7 @@ Layout.Horizontal()
     | Text.Literal("Plain Text").WithTooltip("Even plain text can have tooltips")
 ```
 
-## Advanced Examples
+## Examples
 
 ### Tooltips with Icons
 

@@ -54,7 +54,7 @@ client.UploadFiles(async files => {
 3. **Async Operations**: Use async/await for operations that might take time.
 4. **State Management**: Use clients in combination with state management for reactive updates.
 
-## Interactive Examples
+## Examples
 
 ### Form Submission with Toast Feedback
 
