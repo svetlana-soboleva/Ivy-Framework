@@ -1,4 +1,4 @@
-import { Users } from 'lucide-react';
+import { Users, ExternalLink } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface Contributor {
@@ -6,6 +6,8 @@ interface Contributor {
   avatar_url: string;
   html_url: string;
   contributions: number;
+  role?: string;
+  isIvyMember?: boolean;
 }
 
 interface GitHubCommit {
@@ -19,6 +21,13 @@ interface GitHubCommit {
 interface GitHubContributorsProps {
   documentSource?: string;
 }
+
+// Ivy team members with their roles
+const IVY_TEAM_MEMBERS: Record<string, string> = {
+  ArtemKhvorostianyi: 'Engineer',
+  RoryChatt: 'Founding Engineer',
+  // Add more team members as needed
+};
 
 export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   documentSource,
@@ -45,7 +54,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         const repo = pathParts[2];
         const filePath = pathParts.slice(5).join('/');
 
-        return `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(filePath)}&per_page=5`;
+        return `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(filePath)}&per_page=20`;
       } catch {
         return null;
       }
@@ -60,7 +69,15 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
     fetch(apiUrl)
       .then(response => {
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`);
+          if (response.status === 403) {
+            throw new Error(
+              'GitHub API rate limit exceeded. Please try again later.'
+            );
+          } else if (response.status === 404) {
+            throw new Error('Repository or file not found.');
+          } else {
+            throw new Error(`GitHub API error: ${response.status}`);
+          }
         }
         return response.json();
       })
@@ -74,19 +91,24 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
             if (contributorMap.has(login)) {
               contributorMap.get(login)!.contributions += 1;
             } else {
+              const isIvyMember = login in IVY_TEAM_MEMBERS;
               contributorMap.set(login, {
                 login: commit.author.login,
                 avatar_url: commit.author.avatar_url,
                 html_url: commit.author.html_url,
                 contributions: 1,
+                role: isIvyMember
+                  ? IVY_TEAM_MEMBERS[login]
+                  : 'Open Source Contributor',
+                isIvyMember,
               });
             }
           }
         });
 
-        const sortedContributors = Array.from(contributorMap.values())
-          .sort((a, b) => b.contributions - a.contributions)
-          .slice(0, 5);
+        const sortedContributors = Array.from(contributorMap.values()).sort(
+          (a, b) => b.contributions - a.contributions
+        );
 
         setContributors(sortedContributors);
       })
@@ -101,6 +123,10 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
   if (!documentSource) return null;
 
+  const displayedContributors = contributors.slice(0, 3);
+  const remainingCount = contributors.length - 3;
+  const hasMoreContributors = remainingCount > 0;
+
   return (
     <div className="mt-8">
       <div className="text-body mb-4 flex items-center gap-2">
@@ -109,52 +135,84 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       </div>
 
       {loading && (
-        <div className="flex flex-col gap-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
-              <div className="flex-1">
-                <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+        <div className="border border-border rounded-lg p-4">
+          <div className="flex flex-col gap-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-muted rounded animate-pulse w-1/2 mb-1"></div>
+                  <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
-      {error && <div className="text-sm text-muted-foreground">{error}</div>}
+      {error && (
+        <div className="border border-border rounded-lg p-4">
+          <div className="text-sm text-muted-foreground">{error}</div>
+        </div>
+      )}
 
       {!loading && !error && contributors.length === 0 && (
-        <div className="text-sm text-muted-foreground">
-          No contributors found
+        <div className="border border-border rounded-lg p-4">
+          <div className="text-sm text-muted-foreground">
+            No contributors found
+          </div>
         </div>
       )}
 
       {!loading && !error && contributors.length > 0 && (
-        <div className="flex flex-col gap-3">
-          {contributors.map(contributor => (
-            <a
-              key={contributor.login}
-              href={contributor.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 hover:bg-muted rounded-md p-2 transition-colors"
-            >
-              <img
-                src={contributor.avatar_url}
-                alt={contributor.login}
-                className="w-8 h-8 rounded-full"
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium truncate">
-                  {contributor.login}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {contributor.contributions} commit
-                  {contributor.contributions !== 1 ? 's' : ''}
-                </div>
+        <div className="border border-border rounded-lg overflow-hidden">
+          {/* Contributors list with scrollable area */}
+          <div className="max-h-64 overflow-y-auto">
+            <div className="p-4 space-y-3">
+              {displayedContributors.map(contributor => (
+                <a
+                  key={contributor.login}
+                  href={contributor.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 hover:bg-muted/50 rounded-md p-2 -m-2 transition-colors group"
+                >
+                  <img
+                    src={contributor.avatar_url}
+                    alt={contributor.login}
+                    className="w-8 h-8 rounded-full flex-shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                      {contributor.login}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {contributor.role}
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider and "and X more" link */}
+          {hasMoreContributors && (
+            <>
+              <div className="border-t border-border"></div>
+              <div className="p-4">
+                <a
+                  href={`${documentSource.replace('/blob/', '/commits/')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+                >
+                  and {remainingCount} more
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
-            </a>
-          ))}
+            </>
+          )}
         </div>
       )}
     </div>
