@@ -751,7 +751,10 @@ export const TabsLayoutWidget = ({
             style={activeStyle}
           />
           {/* Tabs */}
-          <div className="relative flex space-x-[6px] items-center">
+          <div
+            className="relative flex space-x-[6px] items-center"
+            role="tablist"
+          >
             {orderedTabWidgets.map((tabWidget, index) => {
               if (!React.isValidElement(tabWidget)) return null;
               const props = tabWidget.props as Partial<TabWidgetProps>;
@@ -763,6 +766,9 @@ export const TabsLayoutWidget = ({
                   ref={el => {
                     tabRefs.current[index] = el;
                   }}
+                  role="tab"
+                  aria-selected={index === activeIndex}
+                  tabIndex={0}
                   className={cn(
                     'px-3 py-1.5 cursor-pointer transition-colors duration-300 h-[26px]',
                     index === activeIndex
@@ -798,6 +804,8 @@ export const TabsLayoutWidget = ({
             return (
               <div
                 key={id}
+                role="tabpanel"
+                aria-hidden={activeTabId !== id}
                 className={cn(
                   'h-full overflow-auto',
                   activeTabId === id ? 'block' : 'hidden',

@@ -8,7 +8,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Download } from 'lucide-react';
 import React from 'react';
-import { useEventHandler } from '../../components/event-handler/hooks';
 import { logger } from '../../lib/logger';
 
 interface DocumentToolsProps {
@@ -23,7 +22,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   title = 'document',
 }) => {
   const { toast } = useToast();
-  const eventHandler = useEventHandler();
   const extractCleanText = (): string => {
     if (!articleRef.current) return '';
 
@@ -59,15 +57,87 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   };
 
   const extractMarkdownContent = async (): Promise<string> => {
-    if (!articleRef.current) return '';
+    logger.info('🔍 extractMarkdownContent started');
+
+    if (!articleRef.current) {
+      logger.info('❌ No articleRef.current');
+      return '';
+    }
 
     const articleElement = articleRef.current;
     let markdownContent = '';
 
-    // Find all tab groups and force load content from backend by triggering proper events
-    const tabGroups = articleElement.querySelectorAll('[role="tablist"]');
-    const originalActiveTab = articleElement.querySelector(
+    // Search for tabs with proper ARIA roles OR Radix-generated attributes
+    logger.info('🔍 Searching for tabs...');
+
+    let tabGroups = articleElement.querySelectorAll('[role="tablist"]');
+    logger.info(`📋 Article [role="tablist"]: ${tabGroups.length}`);
+
+    // Also look for Radix tabs (they might use different attributes)
+    const radixTabLists = articleElement.querySelectorAll('[data-orientation]');
+    logger.info(`🎛️ Article [data-orientation]: ${radixTabLists.length}`);
+
+    // Look for any element that contains tab-like buttons
+    const tabContainers = articleElement.querySelectorAll('div');
+    let possibleTabContainers = 0;
+    Array.from(tabContainers).forEach(container => {
+      const buttons = container.querySelectorAll('button, div[role="tab"]');
+      if (buttons.length >= 2) {
+        const hasTabLikeText = Array.from(buttons).some(btn => {
+          const text = btn.textContent?.trim().toLowerCase() || '';
+          return (
+            text.includes('demo') ||
+            text.includes('code') ||
+            text.includes('example')
+          );
+        });
+        if (hasTabLikeText) {
+          possibleTabContainers++;
+          if (possibleTabContainers <= 3) {
+            logger.info(
+              `🎯 Possible tab container:`,
+              container.className,
+              Array.from(buttons).map(b => b.textContent?.trim())
+            );
+          }
+        }
+      }
+    });
+    logger.info(`📦 Possible tab containers: ${possibleTabContainers}`);
+
+    // If no standard tabs found, search entire document
+    if (tabGroups.length === 0) {
+      logger.info('🌐 Searching entire document...');
+      tabGroups = document.querySelectorAll('[role="tablist"]');
+      logger.info(`📋 Document [role="tablist"]: ${tabGroups.length}`);
+
+      const docRadixTabs = document.querySelectorAll('[data-orientation]');
+      logger.info(`🎛️ Document [data-orientation]: ${docRadixTabs.length}`);
+
+      // If we found Radix tabs but no standard ones, use them
+      if (tabGroups.length === 0 && docRadixTabs.length > 0) {
+        logger.info('✅ Using Radix tabs from document');
+        tabGroups = docRadixTabs;
+      }
+    }
+
+    logger.info(`🎯 Final tab groups: ${tabGroups.length}`);
+
+    // Find the currently active tab
+    let originalActiveTab = articleElement.querySelector(
       '[role="tab"][aria-selected="true"], [role="tab"][data-state="active"]'
+    );
+
+    // If not found in article, search document
+    if (!originalActiveTab) {
+      originalActiveTab = document.querySelector(
+        '[role="tab"][aria-selected="true"], [role="tab"][data-state="active"]'
+      );
+    }
+
+    logger.info(
+      `📌 Original active tab:`,
+      originalActiveTab?.textContent?.trim()
     );
 
     if (tabGroups.length > 0) {
@@ -77,65 +147,34 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       for (const tabList of Array.from(tabGroups)) {
         const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
 
-        // Find the parent tab widget to get its ID for the event handler
-        const tabWidget = tabList.closest('[id]');
-        const tabWidgetId = tabWidget?.id;
+        logger.info(`🔄 Processing tab group with ${tabs.length} tabs`);
 
-        if (tabWidgetId) {
+        // Force backend loading by actually clicking each tab (simulating real user behavior)
+        for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
+          const tabElement = tabs[tabIndex] as HTMLElement;
+          const tabLabel = tabElement.textContent?.trim() || `Tab ${tabIndex}`;
+
           logger.info(
-            `Found tab widget ID: ${tabWidgetId} with ${tabs.length} tabs`
+            `Opening tab ${tabIndex} (${tabLabel}) to force backend load...`
           );
 
-          // Trigger OnSelect event for each tab to load from backend
-          for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
-            const tabElement = tabs[tabIndex] as HTMLElement;
-            const tabLabel =
-              tabElement.textContent?.trim() || `Tab ${tabIndex}`;
+          // Actually click the tab - this triggers the real backend loading
+          tabElement.click();
 
-            try {
-              logger.info(
-                `Triggering OnSelect for tab ${tabIndex} (${tabLabel})`
-              );
-              eventHandler('OnSelect', tabWidgetId, [tabIndex]);
-              // Wait for backend fetch and React render
-              await new Promise(resolve => setTimeout(resolve, 500));
+          // Wait for backend to respond and cache the content (longer wait)
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
-              // Check if content was loaded
-              const activePanel = articleElement.querySelector(
-                '[role="tabpanel"]:not([hidden])'
-              );
-              const hasContent =
-                activePanel && activePanel.textContent?.trim().length > 0;
-              logger.info(
-                `Tab ${tabIndex} content loaded: ${hasContent ? 'Yes' : 'No'}`
-              );
-            } catch (error) {
-              logger.warn(
-                `Failed to trigger tab loading for ${tabLabel}:`,
-                error
-              );
-              // Fallback to clicking the tab
-              tabElement.click();
-              await new Promise(resolve => setTimeout(resolve, 300));
+          // Check if content was loaded
+          const activePanel = articleElement.querySelector(
+            '[role="tabpanel"]:not([hidden])'
+          );
+          const hasContent =
+            activePanel && (activePanel.textContent?.trim().length || 0) > 20;
+          const contentLength = activePanel?.textContent?.trim().length || 0;
 
-              const activePanel = articleElement.querySelector(
-                '[role="tabpanel"]:not([hidden])'
-              );
-              const hasContent =
-                activePanel && activePanel.textContent?.trim().length > 0;
-              logger.info(
-                `Tab ${tabIndex} content after click: ${hasContent ? 'Yes' : 'No'}`
-              );
-            }
-          }
-        } else {
-          logger.warn('No tab widget ID found, falling back to DOM clicking');
-          // Fallback to DOM clicking if we can't find the widget ID
-          for (const tab of tabs) {
-            const tabElement = tab as HTMLElement;
-            tabElement.click();
-            await new Promise(resolve => setTimeout(resolve, 300));
-          }
+          logger.info(
+            `Tab ${tabIndex} (${tabLabel}): Content loaded = ${hasContent ? 'Yes' : 'No'} (${contentLength} chars)`
+          );
         }
       }
 
@@ -179,32 +218,11 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
         }
       }
 
-      // Restore original active tab by finding its index and triggering the proper event
+      // Restore original active tab by clicking it
       if (originalActiveTab && originalActiveTab instanceof HTMLElement) {
-        const originalTabList = originalActiveTab.closest('[role="tablist"]');
-        if (originalTabList) {
-          const allTabs = Array.from(
-            originalTabList.querySelectorAll('[role="tab"]')
-          );
-          const originalIndex = allTabs.indexOf(originalActiveTab);
-
-          const tabWidget = originalTabList.closest('[id]');
-          const tabWidgetId = tabWidget?.id;
-
-          if (tabWidgetId && originalIndex >= 0) {
-            try {
-              eventHandler('OnSelect', tabWidgetId, [originalIndex]);
-              await new Promise(resolve => setTimeout(resolve, 300));
-            } catch {
-              // Fallback to clicking
-              originalActiveTab.click();
-              await new Promise(resolve => setTimeout(resolve, 100));
-            }
-          } else {
-            originalActiveTab.click();
-            await new Promise(resolve => setTimeout(resolve, 100));
-          }
-        }
+        logger.info('🔄 Restoring original active tab...');
+        originalActiveTab.click();
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
     }
 
