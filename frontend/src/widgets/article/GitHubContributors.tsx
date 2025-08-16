@@ -25,7 +25,12 @@ interface GitHubContributorsProps {
 // Ivy team members with their roles
 const IVY_TEAM_MEMBERS: Record<string, string> = {
   ArtemKhvorostianyi: 'Engineer',
-  RoryChatt: 'Founding Engineer',
+  rorychatt: 'Founding Engineer',
+  nielsbosma: 'Engineer',
+  zachwolfe: 'Engineer',
+  sudipto80: 'Engineer',
+  OliverMidbrink: 'Engineer',
+  SkillfulSunshine: 'Engineer',
   // Add more team members as needed
 };
 
@@ -135,7 +140,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       </div>
 
       {loading && (
-        <div className="border border-border rounded-lg p-4">
+        <div className="p-4">
           <div className="flex flex-col gap-3">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -151,13 +156,13 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       )}
 
       {error && (
-        <div className="border border-border rounded-lg p-4">
+        <div className="p-4">
           <div className="text-sm text-muted-foreground">{error}</div>
         </div>
       )}
 
       {!loading && !error && contributors.length === 0 && (
-        <div className="border border-border rounded-lg p-4">
+        <div className="p-4">
           <div className="text-sm text-muted-foreground">
             No contributors found
           </div>
@@ -165,7 +170,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       )}
 
       {!loading && !error && contributors.length > 0 && (
-        <div className="border border-border rounded-lg overflow-hidden">
+        <div className="overflow-hidden">
           {/* Contributors list with scrollable area */}
           <div className="max-h-64 overflow-y-auto">
             <div className="p-4 space-y-3">
@@ -196,22 +201,19 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
             </div>
           </div>
 
-          {/* Divider and "and X more" link */}
+          {/* "and X more" link */}
           {hasMoreContributors && (
-            <>
-              <div className="border-t border-border"></div>
-              <div className="p-4">
-                <a
-                  href={`${documentSource.replace('/blob/', '/commits/')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
-                >
-                  and {remainingCount} more
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-            </>
+            <div className="px-4 pb-4">
+              <a
+                href={`${documentSource.replace('/blob/', '/commits/')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+              >
+                and {remainingCount} more
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           )}
         </div>
       )}
