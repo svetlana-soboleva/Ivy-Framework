@@ -31,6 +31,30 @@ const IVY_TEAM_MEMBERS: Record<string, string> = {
   // Add more team members as needed
 };
 
+// Helper function to generate correct commits URL for main branch
+const getCommitsUrl = (githubUrl: string): string => {
+  try {
+    const url = new URL(githubUrl);
+    const pathParts = url.pathname.split('/');
+
+    // Expected format: /owner/repo/blob/branch/path/to/file
+    if (pathParts.length >= 6 && pathParts[3] === 'blob') {
+      const owner = pathParts[1];
+      const repo = pathParts[2];
+      const filePath = pathParts.slice(5).join('/');
+
+      // Generate commits URL for main branch with specific file path
+      return `https://github.com/${owner}/${repo}/commits/main/${filePath}`;
+    }
+  } catch (error) {
+    // If URL parsing fails, return the original URL as fallback
+    console.warn('Failed to parse GitHub URL for commits link:', error);
+  }
+
+  // Fallback to original behavior if parsing fails
+  return githubUrl.replace('/blob/', '/commits/');
+};
+
 export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   documentSource,
 }) => {
@@ -56,7 +80,8 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         const repo = pathParts[2];
         const filePath = pathParts.slice(5).join('/');
 
-        return `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(filePath)}&per_page=20`;
+        // Always fetch contributors from the main branch, regardless of the source URL branch
+        return `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(filePath)}&sha=main&per_page=20`;
       } catch {
         return null;
       }
@@ -202,7 +227,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
           {hasMoreContributors && (
             <div className="px-4 pb-4">
               <a
-                href={`${documentSource.replace('/blob/', '/commits/')}`}
+                href={getCommitsUrl(documentSource)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
