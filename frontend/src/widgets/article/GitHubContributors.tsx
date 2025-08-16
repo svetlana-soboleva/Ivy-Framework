@@ -27,7 +27,7 @@ const IVY_TEAM_MEMBERS: Record<string, string> = {
   ArtemKhvorostianyi: 'Engineer',
   rorychatt: 'Founding Engineer',
   nielsbosma: 'CEO',
-  zachwolfe: 'Engineer',
+  zachwolfe: 'Software Developer',
   // Add more team members as needed
 };
 
