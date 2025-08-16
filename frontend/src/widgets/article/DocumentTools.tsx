@@ -1,13 +1,12 @@
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { logger } from '@/lib/logger';
-import { Copy, Download, MoreVertical } from 'lucide-react';
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import { Copy, Download } from 'lucide-react';
 import React from 'react';
 
 interface DocumentToolsProps {
@@ -21,6 +20,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   documentSource,
   title = 'document',
 }) => {
+  const { toast } = useToast();
   const extractCleanText = (): string => {
     if (!articleRef.current) return '';
 
@@ -48,9 +48,9 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
     // Clean up extra whitespace and normalize line breaks
     textContent = textContent
-      .replace(/\n\s*\n\s*\n/g, '\n\n') // Replace multiple newlines with double newlines
-      .replace(/^\s+|\s+$/g, '') // Trim start and end
-      .replace(/[ \t]+/g, ' '); // Normalize spaces
+      .replace(/\n\s*\n\s*\n/g, '\n\n')
+      .replace(/^\s+|\s+$/g, '')
+      .replace(/[ \t]+/g, ' ');
 
     return textContent;
   };
@@ -117,7 +117,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
           markdownContent += `\`\`\`\n${text}\n\`\`\`\n\n`;
           break;
         case 'code':
-          // Only add inline code if not already inside a pre block
           if (!element.closest('pre')) {
             markdownContent = markdownContent.replace(/(.*)$/, `$1\`${text}\``);
           }
@@ -137,28 +136,47 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     try {
       const textContent = extractCleanText();
 
-      // Add source attribution
+      if (!textContent.trim()) {
+        toast({
+          title: 'Copy Failed',
+          description: 'No content found to copy',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       const attribution = documentSource ? `\n\nSource: ${documentSource}` : '';
       const finalContent = textContent + attribution;
 
       await navigator.clipboard.writeText(finalContent);
-
-      // TODO: Add toast notification
-      logger.info('Text content copied to clipboard');
-    } catch (error) {
-      console.error('Failed to copy text:', error);
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = extractCleanText();
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+      toast({
+        title: 'Copied!',
+        description: 'Document text copied to clipboard',
+      });
+    } catch {
+      try {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = extractCleanText();
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        toast({
+          title: 'Copied!',
+          description: 'Document text copied to clipboard',
+        });
+      } catch {
+        toast({
+          title: 'Copy Failed',
+          description: 'Failed to copy text to clipboard',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
   const generateFileName = (): string => {
-    // If we have a meaningful title, use it
     if (title && title !== 'document') {
       return title
         .toLowerCase()
@@ -166,7 +184,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
         .replace(/[^a-z0-9-]/g, '');
     }
 
-    // Try to extract title from the first H1 in the document
     if (articleRef.current) {
       const firstHeading = articleRef.current.querySelector('h1');
       if (firstHeading?.textContent) {
@@ -174,11 +191,10 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
           .toLowerCase()
           .replace(/\s+/g, '-')
           .replace(/[^a-z0-9-]/g, '')
-          .substring(0, 50); // Limit length
+          .substring(0, 50);
       }
     }
 
-    // Try to extract filename from documentSource URL
     if (documentSource) {
       try {
         const url = new URL(documentSource);
@@ -186,31 +202,34 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
         const fileName = pathParts[pathParts.length - 1];
 
         if (fileName && fileName.includes('.')) {
-          // Remove extension and use the base name
           return fileName
             .split('.')[0]
             .toLowerCase()
             .replace(/[^a-z0-9-]/g, '-');
         }
       } catch {
-        logger.error(
-          'Failed to generate file name from document source',
-          documentSource
-        );
+        // Ignore URL parsing errors
       }
     }
 
-    // Final fallback with timestamp
-    const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const timestamp = new Date().toISOString().split('T')[0];
     return `ivy-document-${timestamp}`;
   };
 
   const saveAsMarkdown = () => {
     try {
       const markdownContent = extractMarkdownContent();
-      const fileName = generateFileName();
 
-      // Create blob and download
+      if (!markdownContent.trim()) {
+        toast({
+          title: 'Export Failed',
+          description: 'No content found to export',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const fileName = generateFileName();
       const blob = new Blob([markdownContent], { type: 'text/markdown' });
       const url = URL.createObjectURL(blob);
 
@@ -220,43 +239,52 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       document.body.appendChild(link);
       link.click();
 
-      // Cleanup
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-
-      logger.info(`Markdown file downloaded: ${fileName}.md`);
-    } catch (error) {
-      console.error('Failed to save markdown file:', error);
+    } catch {
+      toast({
+        title: 'Download Failed',
+        description: 'Failed to save document',
+        variant: 'destructive',
+      });
     }
   };
 
   return (
-    <div className="mt-8">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="justify-start w-full h-auto p-0 font-normal hover:bg-transparent"
-          >
-            <div className="text-body flex items-center gap-2">
-              <MoreVertical className="w-4 h-4" />
-              Document Tools
-            </div>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-48">
-          <DropdownMenuItem onClick={copyTextContent}>
-            <Copy className="w-4 h-4 mr-2" />
-            Copy text content
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={saveAsMarkdown}>
-            <Download className="w-4 h-4 mr-2" />
-            Save as Markdown
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <TooltipProvider>
+      <div className="flex gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={copyTextContent}
+              className="h-8 px-2"
+            >
+              <Copy className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Copy document text</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={saveAsMarkdown}
+              className="h-8 px-2"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Download as Markdown</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   );
 };
