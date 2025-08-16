@@ -1,4 +1,5 @@
 import { useEventHandler } from '@/components/event-handler';
+import { GitHubContributors } from '@/components/GitHubContributors';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { InternalLink } from '@/types/widgets';
@@ -28,6 +29,7 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
   const articleRef = useRef<HTMLElement>(null);
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeId, setActiveId] = useState<string>('');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Extract headings and manage loading state
@@ -121,6 +123,33 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
     };
   }, [showToc]);
 
+  // Handle active heading highlighting
+  useEffect(() => {
+    if (!articleRef.current || tocItems.length === 0) return;
+
+    const articleElement = articleRef.current;
+
+    // Find all heading elements in the DOM
+    const elements = Array.from(
+      articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    );
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -80% 0px' }
+    );
+
+    elements.forEach(element => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [tocItems]);
+
   return (
     <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative mt-8 ">
       <div className="flex gap-8 flex-grow">
@@ -186,36 +215,70 @@ export const ArticleWidget: React.FC<ArticleWidgetProps> = ({
             </footer>
           )}
         </article>
-        {showToc && (
+        {(showToc || documentSource) && (
           <div className="hidden lg:block w-64">
-            {isLoading ? (
-              <div className="sticky top-8 w-64">
-                <div className="text-body mb-4">Table of Contents</div>
-                <ScrollArea>
-                  <div className="flex flex-col gap-4">
-                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
-                  </div>
-                </ScrollArea>
-              </div>
-            ) : tocItems.length > 0 ? (
-              <TableOfContents
-                className="sticky top-8"
-                articleRef={articleRef}
-                tocItems={tocItems}
-              />
-            ) : (
-              <div className="sticky top-8 w-64">
-                <div className="text-body mb-4">Table of Contents</div>
-                <div className="text-sm text-muted-foreground">
-                  No headings found
-                </div>
-              </div>
-            )}
+            <div className="sticky top-8 w-64">
+              {showToc && (
+                <>
+                  {isLoading ? (
+                    <>
+                      <div className="text-body mb-4">Table of Contents</div>
+                      <ScrollArea>
+                        <div className="flex flex-col gap-4">
+                          <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+                          <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
+                          <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
+                          <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
+                          <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
+                          <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
+                        </div>
+                      </ScrollArea>
+                    </>
+                  ) : tocItems.length > 0 ? (
+                    <>
+                      <div className="text-body mb-4">Table of Contents</div>
+                      <ScrollArea>
+                        <nav className="relative">
+                          {tocItems.map(heading => (
+                            <a
+                              key={heading.id}
+                              href={`#${heading.id}`}
+                              className={cn(
+                                'block text-sm py-1 hover:text-foreground transition-colors',
+                                heading.level === 1
+                                  ? 'pl-0'
+                                  : `pl-${(heading.level - 1) * 4}`,
+                                activeId === heading.id
+                                  ? 'text-foreground'
+                                  : 'text-muted-foreground'
+                              )}
+                              onClick={e => {
+                                e.preventDefault();
+                                document
+                                  .getElementById(heading.id)
+                                  ?.scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
+                              }}
+                            >
+                              {heading.text}
+                            </a>
+                          ))}
+                        </nav>
+                      </ScrollArea>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-body mb-4">Table of Contents</div>
+                      <div className="text-sm text-muted-foreground">
+                        No headings found
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+              <GitHubContributors documentSource={documentSource} />
+            </div>
           </div>
         )}
       </div>
@@ -227,72 +290,4 @@ type TocItem = {
   id: string;
   text: string;
   level: number;
-};
-const TableOfContents = ({
-  className,
-  articleRef,
-  tocItems,
-}: {
-  className?: string;
-  articleRef: React.RefObject<HTMLElement | null>;
-  tocItems: TocItem[];
-}) => {
-  const [activeId, setActiveId] = useState<string>('');
-
-  useEffect(() => {
-    if (!articleRef.current || tocItems.length === 0) return;
-
-    const articleElement = articleRef.current;
-
-    // Find all heading elements in the DOM
-    const elements = Array.from(
-      articleElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
-    );
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: '0px 0px -80% 0px' }
-    );
-
-    elements.forEach(element => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, [articleRef, tocItems]);
-
-  return (
-    <div className={cn('w-64 relative', className)}>
-      <div className="text-body mb-4">Table of Contents</div>
-      <ScrollArea>
-        <nav className="relative">
-          {tocItems.map(heading => (
-            <a
-              key={heading.id}
-              href={`#${heading.id}`}
-              className={cn(
-                'block text-sm py-1 hover:text-foreground transition-colors',
-                heading.level === 1 ? 'pl-0' : `pl-${(heading.level - 1) * 4}`,
-                activeId === heading.id
-                  ? 'text-foreground'
-                  : 'text-muted-foreground'
-              )}
-              onClick={e => {
-                e.preventDefault();
-                document.getElementById(heading.id)?.scrollIntoView({
-                  behavior: 'smooth',
-                });
-              }}
-            >
-              {heading.text}
-            </a>
-          ))}
-        </nav>
-      </ScrollArea>
-    </div>
-  );
 };
