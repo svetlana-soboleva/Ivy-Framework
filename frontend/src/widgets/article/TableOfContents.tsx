@@ -144,34 +144,27 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 
   if (isLoading) {
     return (
-      <>
-        <div className="text-body mb-4">Table of Contents</div>
-        <ScrollArea>
-          <div className="flex flex-col gap-4">
-            <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
-          </div>
-        </ScrollArea>
-      </>
+      <ScrollArea>
+        <div className="flex flex-col gap-4">
+          <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+          <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
+          <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
+          <div className="h-3 bg-muted rounded animate-pulse w-2/3"></div>
+          <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
+          <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
+        </div>
+      </ScrollArea>
     );
   }
 
   if (tocItems.length === 0) {
     return (
-      <>
-        <div className="text-body mb-4">Table of Contents</div>
-        <div className="text-sm text-muted-foreground">No headings found</div>
-      </>
+      <div className="text-sm text-muted-foreground">No headings found</div>
     );
   }
 
   return (
     <>
-      <div className="text-body mb-4">Table of Contents</div>
       <ScrollArea>
         <nav className="relative">
           {tocItems.map(heading => (
