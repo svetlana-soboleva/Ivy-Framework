@@ -1,4 +1,3 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import React, { useEffect, useState, useRef } from 'react';
 
@@ -144,8 +143,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 
   if (isLoading) {
     return (
-      <ScrollArea>
-        <div className="flex flex-col gap-4">
+      <div className="flex-1 min-h-48 overflow-hidden">
+        <div className="flex flex-col gap-4 pr-2">
           <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
           <div className="h-3 bg-muted rounded animate-pulse w-full"></div>
           <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
@@ -153,7 +152,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           <div className="h-3 bg-muted rounded animate-pulse w-4/5"></div>
           <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
         </div>
-      </ScrollArea>
+      </div>
     );
   }
 
@@ -164,32 +163,30 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   }
 
   return (
-    <>
-      <ScrollArea>
-        <nav className="relative">
-          {tocItems.map(heading => (
-            <a
-              key={heading.id}
-              href={`#${heading.id}`}
-              className={cn(
-                'block text-sm py-1 hover:text-foreground transition-colors',
-                heading.level === 1 ? 'pl-0' : `pl-${(heading.level - 1) * 4}`,
-                activeId === heading.id
-                  ? 'text-foreground'
-                  : 'text-muted-foreground'
-              )}
-              onClick={e => {
-                e.preventDefault();
-                document.getElementById(heading.id)?.scrollIntoView({
-                  behavior: 'smooth',
-                });
-              }}
-            >
-              {heading.text}
-            </a>
-          ))}
-        </nav>
-      </ScrollArea>
-    </>
+    <div className="flex-1 min-h-48 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+      <nav className="relative pr-2">
+        {tocItems.map(heading => (
+          <a
+            key={heading.id}
+            href={`#${heading.id}`}
+            className={cn(
+              'block text-sm py-1 hover:text-foreground transition-colors',
+              heading.level === 1 ? 'pl-0' : `pl-${(heading.level - 1) * 4}`,
+              activeId === heading.id
+                ? 'text-foreground'
+                : 'text-muted-foreground'
+            )}
+            onClick={e => {
+              e.preventDefault();
+              document.getElementById(heading.id)?.scrollIntoView({
+                behavior: 'smooth',
+              });
+            }}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    </div>
   );
 };

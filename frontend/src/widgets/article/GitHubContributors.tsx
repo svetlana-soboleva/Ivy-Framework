@@ -162,39 +162,45 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       </div>
 
       {loading && (
-        <div className="p-4">
-          <div className="flex flex-col gap-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
-                <div className="flex-1">
-                  <div className="h-4 bg-muted rounded animate-pulse w-1/2 mb-1"></div>
-                  <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+        <div className="flex-shrink-0 min-h-40">
+          <div className="p-4">
+            <div className="flex flex-col gap-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-muted rounded animate-pulse w-1/2 mb-1"></div>
+                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="p-4">
-          <div className="text-sm text-muted-foreground">{error}</div>
+        <div className="flex-shrink-0 min-h-40">
+          <div className="p-4">
+            <div className="text-sm text-muted-foreground">{error}</div>
+          </div>
         </div>
       )}
 
       {!loading && !error && contributors.length === 0 && (
-        <div className="p-4">
-          <div className="text-sm text-muted-foreground">
-            No contributors found
+        <div className="flex-shrink-0 min-h-40">
+          <div className="p-4">
+            <div className="text-sm text-muted-foreground">
+              No contributors found
+            </div>
           </div>
         </div>
       )}
 
       {!loading && !error && contributors.length > 0 && (
-        <div className="overflow-hidden">
+        <div className="flex-shrink-0 min-h-40 overflow-hidden">
           {/* Contributors list with scrollable area */}
-          <div className="max-h-64 overflow-y-auto">
+          <div className="h-full overflow-y-auto">
             <div className="p-4 space-y-3">
               {displayedContributors.map(contributor => (
                 <a
