@@ -8,7 +8,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Download } from 'lucide-react';
 import React from 'react';
-import { logger } from '../../lib/logger';
 
 interface DocumentToolsProps {
   articleRef: React.RefObject<HTMLElement | null>;
@@ -57,71 +56,18 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   };
 
   const extractMarkdownContent = async (): Promise<string> => {
-    logger.info('🔍 extractMarkdownContent started');
-
-    if (!articleRef.current) {
-      logger.info('❌ No articleRef.current');
-      return '';
-    }
+    if (!articleRef.current) return '';
 
     const articleElement = articleRef.current;
     let markdownContent = '';
 
-    // Search for tabs with proper ARIA roles OR Radix-generated attributes
-    logger.info('🔍 Searching for tabs...');
-
+    // Search for tabs with proper ARIA roles
     let tabGroups = articleElement.querySelectorAll('[role="tablist"]');
-    logger.info(`📋 Article [role="tablist"]: ${tabGroups.length}`);
 
-    // Also look for Radix tabs (they might use different attributes)
-    const radixTabLists = articleElement.querySelectorAll('[data-orientation]');
-    logger.info(`🎛️ Article [data-orientation]: ${radixTabLists.length}`);
-
-    // Look for any element that contains tab-like buttons
-    const tabContainers = articleElement.querySelectorAll('div');
-    let possibleTabContainers = 0;
-    Array.from(tabContainers).forEach(container => {
-      const buttons = container.querySelectorAll('button, div[role="tab"]');
-      if (buttons.length >= 2) {
-        const hasTabLikeText = Array.from(buttons).some(btn => {
-          const text = btn.textContent?.trim().toLowerCase() || '';
-          return (
-            text.includes('demo') ||
-            text.includes('code') ||
-            text.includes('example')
-          );
-        });
-        if (hasTabLikeText) {
-          possibleTabContainers++;
-          if (possibleTabContainers <= 3) {
-            logger.info(
-              `🎯 Possible tab container:`,
-              container.className,
-              Array.from(buttons).map(b => b.textContent?.trim())
-            );
-          }
-        }
-      }
-    });
-    logger.info(`📦 Possible tab containers: ${possibleTabContainers}`);
-
-    // If no standard tabs found, search entire document
+    // If no tabs in article scope, search entire document
     if (tabGroups.length === 0) {
-      logger.info('🌐 Searching entire document...');
       tabGroups = document.querySelectorAll('[role="tablist"]');
-      logger.info(`📋 Document [role="tablist"]: ${tabGroups.length}`);
-
-      const docRadixTabs = document.querySelectorAll('[data-orientation]');
-      logger.info(`🎛️ Document [data-orientation]: ${docRadixTabs.length}`);
-
-      // If we found Radix tabs but no standard ones, use them
-      if (tabGroups.length === 0 && docRadixTabs.length > 0) {
-        logger.info('✅ Using Radix tabs from document');
-        tabGroups = docRadixTabs;
-      }
     }
-
-    logger.info(`🎯 Final tab groups: ${tabGroups.length}`);
 
     // Find the currently active tab
     let originalActiveTab = articleElement.querySelector(
@@ -135,10 +81,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       );
     }
 
-    logger.info(
-      `📌 Original active tab:`,
-      originalActiveTab?.textContent?.trim()
-    );
+    const extractedTabPanels: Element[] = []; // Track which panels we extracted
 
     if (tabGroups.length > 0) {
       markdownContent += '\n## All Tabs Content\n\n';
@@ -147,34 +90,15 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       for (const tabList of Array.from(tabGroups)) {
         const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
 
-        logger.info(`🔄 Processing tab group with ${tabs.length} tabs`);
-
         // Force backend loading by actually clicking each tab (simulating real user behavior)
         for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
           const tabElement = tabs[tabIndex] as HTMLElement;
-          const tabLabel = tabElement.textContent?.trim() || `Tab ${tabIndex}`;
-
-          logger.info(
-            `Opening tab ${tabIndex} (${tabLabel}) to force backend load...`
-          );
 
           // Actually click the tab - this triggers the real backend loading
           tabElement.click();
 
-          // Wait for backend to respond and cache the content (longer wait)
+          // Wait for backend to respond and cache the content
           await new Promise(resolve => setTimeout(resolve, 1000));
-
-          // Check if content was loaded
-          const activePanel = articleElement.querySelector(
-            '[role="tabpanel"]:not([hidden])'
-          );
-          const hasContent =
-            activePanel && (activePanel.textContent?.trim().length || 0) > 20;
-          const contentLength = activePanel?.textContent?.trim().length || 0;
-
-          logger.info(
-            `Tab ${tabIndex} (${tabLabel}): Content loaded = ${hasContent ? 'Yes' : 'No'} (${contentLength} chars)`
-          );
         }
       }
 
@@ -197,6 +121,9 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
           );
 
           if (activePanel) {
+            // Track this panel so we can remove it from regular extraction
+            extractedTabPanels.push(activePanel);
+
             markdownContent += `### ${tabLabel}\n\n`;
 
             const codeBlocks = activePanel.querySelectorAll('pre, code');
@@ -220,7 +147,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
       // Restore original active tab by clicking it
       if (originalActiveTab && originalActiveTab instanceof HTMLElement) {
-        logger.info('🔄 Restoring original active tab...');
         originalActiveTab.click();
         await new Promise(resolve => setTimeout(resolve, 300));
       }
@@ -228,6 +154,24 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
     // Now work with a clone for the rest of the content extraction
     const clone = articleElement.cloneNode(true) as HTMLElement;
+
+    // Remove only the specific tab panels we extracted content from
+    if (extractedTabPanels.length > 0) {
+      extractedTabPanels.forEach(extractedPanel => {
+        // Find the corresponding panel in the clone using text content matching
+        const panelText = extractedPanel.textContent?.trim().substring(0, 100);
+        const matchingClonePanels = clone.querySelectorAll('[role="tabpanel"]');
+
+        Array.from(matchingClonePanels).forEach(clonePanel => {
+          const clonePanelText = clonePanel.textContent
+            ?.trim()
+            .substring(0, 100);
+          if (clonePanelText === panelText) {
+            clonePanel.remove();
+          }
+        });
+      });
+    }
 
     // Remove UI elements but keep all content - IMPORTANT: Don't remove tab content
     const elementsToRemove = [
