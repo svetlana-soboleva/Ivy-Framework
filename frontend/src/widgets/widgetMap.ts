@@ -34,7 +34,6 @@ export const widgetMap = {
   'Ivy.Box': Primitives.BoxWidget,
   'Ivy.Embed': React.lazy(() => import('@/widgets/primitives/EmbedWidget')),
   'Ivy.Callout': Primitives.CalloutWidget,
-  'Ivy.Article': Primitives.ArticleWidget,
   'Ivy.Kbd': Primitives.KbdWidget,
   'Ivy.Empty': Primitives.EmptyWidget,
   'Ivy.Avatar': Primitives.AvatarWidget,
@@ -44,6 +43,7 @@ export const widgetMap = {
   'Ivy.AppHost': Primitives.AppHostWidget,
 
   // Widgets
+  'Ivy.Article': Widgets.ArticleWidget,
   'Ivy.Button': Widgets.ButtonWidget,
   'Ivy.Progress': Widgets.ProgressWidget,
   'Ivy.Tooltip': Widgets.TooltipWidget,
