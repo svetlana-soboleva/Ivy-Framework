@@ -19,7 +19,9 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeId, setActiveId] = useState<string>('');
+  const [isManualScrolling, setIsManualScrolling] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const manualScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Extract headings and manage loading state
   useEffect(() => {
@@ -109,6 +111,9 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (manualScrollTimeoutRef.current) {
+        clearTimeout(manualScrollTimeoutRef.current);
+      }
     };
   }, [show, articleRef]);
 
@@ -139,9 +144,9 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
     return () => observer.disconnect();
   }, [tocItems, articleRef]);
 
-  // Auto-scroll TOC to show active heading
+  // Auto-scroll TOC to show active heading (but not during manual scrolling)
   useEffect(() => {
-    if (!activeId) return;
+    if (!activeId || isManualScrolling) return;
 
     const activeElement = document.querySelector(`a[href="#${activeId}"]`);
     if (activeElement) {
@@ -151,7 +156,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
         inline: 'nearest',
       });
     }
-  }, [activeId]);
+  }, [activeId, isManualScrolling]);
 
   if (!show) return null;
 
@@ -192,9 +197,24 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
             )}
             onClick={e => {
               e.preventDefault();
+
+              // Set manual scrolling mode to prevent TOC auto-scroll interference
+              setIsManualScrolling(true);
+
+              // Clear any existing timeout
+              if (manualScrollTimeoutRef.current) {
+                clearTimeout(manualScrollTimeoutRef.current);
+              }
+
+              // Scroll to the target element
               document.getElementById(heading.id)?.scrollIntoView({
                 behavior: 'smooth',
               });
+
+              // Re-enable auto-scroll after scrolling is likely complete
+              manualScrollTimeoutRef.current = setTimeout(() => {
+                setIsManualScrolling(false);
+              }, 1000);
             }}
           >
             {heading.text}
