@@ -19,6 +19,7 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Globalization;
 global using Ivy;
 global using Ivy.Widgets.Internal;
+global using Ivy.Views.Forms;
 global using Ivy.Views.Tables;
 global using Ivy.Views.Blades;
 global using Ivy.Docs.Shared.Helpers;
