@@ -23,7 +23,7 @@ public class BasicFooterExample : ViewBase
             | new FooterLayout(
                 footer: new Button("Save", _ => client.Toast("Content saved!"))
                     .Variant(ButtonVariant.Primary),
-                content: Layout.Vertical().Gap(3)
+                content: Layout.Vertical()
                     | Text.P("This is the main content area that demonstrates how content can scroll independently above the footer.")
         );
     }
@@ -45,15 +45,15 @@ public class FormWithFooterExample : ViewBase
         var email = UseState("john.doe@example.com");
         var bio = UseState("Software developer with 5+ years of experience...");
         
-        return Layout.Vertical().Gap(4)
+        return Layout.Vertical()
             | new Card("Form Header")
             | new FooterLayout(
-                footer: Layout.Horizontal().Gap(2).Align(Align.Right)
+                footer: Layout.Horizontal().Align(Align.Right)
                     | new Button("Cancel", _ => client.Toast("Cancelled"))
                     | new Button("Submit", _ => client.Toast("Form submitted"))
                         .Variant(ButtonVariant.Primary),
-                content: Layout.Vertical().Gap(4)
-                    | new Card(Layout.Vertical().Gap(3)
+                content: Layout.Vertical()
+                    | new Card(Layout.Vertical()
                         | new TextInput(firstName, "First Name")
                         | new TextInput(lastName, "Last Name")
                         | new TextInput(email, "Email Address")
@@ -76,18 +76,18 @@ public class SheetWithFooterExample : ViewBase
         var title = UseState("Getting Started with Ivy Framework");
         var content = UseState("Write your article content here...");
         
-        return Layout.Vertical().Gap(4)
+        return Layout.Vertical()
             | new Card("Sheet Header")
                     | Layout.Vertical()
                         | Text.H1("Article Editor")
                         | Text.Small("Create and edit your articles with ease").Color(Colors.Gray)
             | new FooterLayout(
-                footer: Layout.Horizontal().Gap(2).Align(Align.Right)
+                footer: Layout.Horizontal().Align(Align.Right)
                     | new Button("Save Draft", _ => client.Toast("Draft saved"))
                     | new Button("Publish", _ => client.Toast("Published!"))
                         .Variant(ButtonVariant.Primary),
-                content: Layout.Vertical().Gap(4)
-                    | new Card(Layout.Vertical().Gap(3)
+                content: Layout.Vertical()
+                    | new Card(Layout.Vertical()
                         | new TextInput(title, "Article Title")
                         | new TextInput(content, "Article Content").Variant(TextInputs.Textarea)
                     ).Title("Article Details")
@@ -104,6 +104,10 @@ public class SheetWithFooterExample : ViewBase
 
 Create sophisticated footers with various components:
 
+<Callout type="tip">
+Use FooterLayout for multi-step forms, long questionnaires, and data entry interfaces.
+</Callout>
+
 ```csharp demo-tabs
 public class ComplexFooterExample : ViewBase
 {
@@ -112,31 +116,26 @@ public class ComplexFooterExample : ViewBase
         var client = UseService<IClientProvider>();
         var docTitle = UseState("Project Proposal");
         var summary = UseState("This project aims to...");
-        var details = UseState("The implementation will use...");
         
-        return Layout.Vertical().Gap(4)
+        return Layout.Vertical()
             | new Card("Project Header")
                     | Layout.Vertical()
                         | Text.H1("Document Editor")
                         | Text.Small("Comprehensive project management tool").Color(Colors.Gray)
             | new FooterLayout(
-                footer: Layout.Horizontal().Gap(2).Align(Align.Right)
+                footer: Layout.Horizontal().Align(Align.Right)
                     | new Badge("Draft").Variant(BadgeVariant.Secondary)
                     | new Button("Save Draft", _ => client.Toast("Draft saved"))
                     | new Button("Submit", _ => client.Toast("Submitted for review"))
                         .Variant(ButtonVariant.Primary),
-                content: Layout.Vertical().Gap(4)
-                    | new Card(Layout.Vertical().Gap(3)
+                content: Layout.Vertical()
+                    | new Card(Layout.Vertical()
                         | new TextInput(docTitle, "Document Title")
                         | new TextInput(summary, "Executive Summary").Variant(TextInputs.Textarea)
                     ).Title("Document Information")
-                    | new Card(Layout.Vertical().Gap(3)
-                        | new TextInput(details, "Technical Details").Variant(TextInputs.Textarea)
-                    ).Title("Technical Specifications")
-                    | new Card("• All required fields are completed\n• Technical specifications are accurate\n• Timeline is realistic and achievable")
-                        .Title("Review Checklist")
             );
     }
 }
 ```
 
+<WidgetDocs Type="Ivy.FooterLayout" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FooterLayout.cs"/>
