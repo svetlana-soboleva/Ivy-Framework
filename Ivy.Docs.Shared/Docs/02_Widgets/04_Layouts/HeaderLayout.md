@@ -4,7 +4,7 @@
 HeaderLayout provides a fixed header area above scrollable content, perfect for toolbars, navigation, and persistent controls that should remain visible while users scroll through content.
 </Ingress>
 
-The `HeaderLayout` widget creates a layout with a fixed header section at the top and a scrollable content area below. This pattern is commonly used for applications that need persistent navigation, toolbars, or status information while allowing the main content to scroll independently.
+The `HeaderLayout` widget creates a layout with a fixed header section at the top and a scrollable content area below. Perfect for applications that need persistent navigation, toolbars, or status information while allowing the main content to scroll independently.
 
 ## Basic Usage
 
@@ -15,19 +15,13 @@ public class BasicHeaderExample : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical(
-new HeaderLayout(
-                header: new Card("Fixed Header Content")
-                    .Title("Header Area")
-                    .Height(Size.Units(30)),
-                content: new Card(
-                    Layout.Vertical().Gap(2)
-                        | Text.P("This is scrollable content area.")
-                        | Text.P("The header above will remain fixed while this content scrolls.")
-                        | Text.P("You can add as much content as needed here.")
-                ).Height(Size.Units(50))
-            )
-        ).Height(Size.Units(100));
+        return new HeaderLayout(
+            header: new Card("Fixed Header Content")
+                .Title("Header Area"),
+            content: Layout.Vertical().Gap(4)
+                | Text.P("The header above remains fixed while content scrolls.")
+                | Text.P("Add as much content as needed.")
+        );
     }
 }
 ```
@@ -47,7 +41,7 @@ public class ToolbarExample : ViewBase
         var searchText = UseState("");
         
         var toolbar = new Card(
-            Layout.Horizontal().Gap(2).Padding(2)
+            Layout.Horizontal().Gap(4)
                 | searchText.ToTextInput()
                     .Placeholder("Search items...")
                     .Variant(TextInputs.Search)
@@ -63,17 +57,12 @@ public class ToolbarExample : ViewBase
                     .Icon(Icons.Download)
                     .Variant(ButtonVariant.Ghost)
                     .HandleClick(_ => client.Toast("Export clicked"))
-        ).Height(Size.Units(20));
+        );
 
-        var content = new Card(
-            Layout.Vertical().Gap(2)
-                | new Card("Item 1 - This is some sample content").Height(Size.Units(20))
-                | new Card("Item 2 - More content that will scroll").Height(Size.Units(20))
-        ).Height(Size.Units(50));
-
-        return Layout.Vertical(
-            new HeaderLayout(toolbar, content)
-        ).Height(Size.Units(90));
+        var content = Layout.Vertical().Gap(4)
+            | new Card("Item 1 - This is some sample content")
+            | new Card("Item 2 - More content that will scroll");
+        return new HeaderLayout(toolbar, content);
     }
 }
 ```
@@ -90,36 +79,39 @@ public class DashboardHeaderExample : ViewBase
         var client = UseService<IClientProvider>();
         
         var dashboardHeader = new Card(
-            Layout.Horizontal().Gap(2).Padding(1)
-                | Text.H4("Analytics Dashboard")
+            Layout.Horizontal().Gap(4)
+                | Text.P("Analytics Dashboard")
                 | new Spacer()
-                | Layout.Horizontal().Gap(1)
+                | Layout.Horizontal().Gap(3)
                     | new Badge("Live")
                     | new Button("Refresh")
                         .Icon(Icons.RefreshCw)
                         .Variant(ButtonVariant.Outline)
                         .HandleClick(_ => client.Toast("Refreshing data..."))
-        ).Height(Size.Units(20));
+        );
 
-        var dashboardContent = new Card(
-            Layout.Vertical().Gap(1)
-                | Layout.Horizontal().Gap(1)
-                    | new Card(
-                        Layout.Vertical().Gap(0)
-                            | Text.Small("Users")
-                            | Text.H3("12.3K").Color(Colors.Primary)
-                    ).Height(Size.Units(25))
-                    | new Card(
-                        Layout.Vertical().Gap(0)
-                            | Text.Small("Revenue")
-                            | Text.H3("$54K").Color(Colors.Primary)
-                    ).Height(Size.Units(25))
-                | new Card("Chart Area").Height(Size.Units(20))
-        ).Height(Size.Units(85));
+        var dashboardContent = Layout.Grid().Columns(3).Rows(2).Gap(4)
+            | new Card(
+                Layout.Vertical().Gap(2)
+                    | Text.Small("Users")
+                    | Text.Label("12.3K").Color(Colors.Primary)
+            ).GridColumn(1).GridRow(1)
+            | new Card(
+                Layout.Vertical().Gap(2)
+                    | Text.Small("Revenue")
+                    | Text.Label("$54K").Color(Colors.Primary)
+            ).GridColumn(2).GridRow(1)
+            | new Card(
+                Layout.Vertical().Gap(2)
+                    | Text.Small("Growth")
+                    | Text.Label("+23%").Color(Colors.Primary)
+            ).GridColumn(3).GridRow(1)
+            | new Card("Chart Area - Interactive dashboard content")
+                .GridColumn(1).GridRow(2).GridColumnSpan(2)
+            | new Card("Performance Metrics - System health status")
+                .GridColumn(3).GridRow(2);
 
-        return Layout.Vertical(
-            new HeaderLayout(dashboardHeader, dashboardContent)
-        ).Height(Size.Units(120));
+        return new HeaderLayout(dashboardHeader, dashboardContent);
     }
 }
 ```
@@ -137,7 +129,7 @@ public class NavigationHeaderExample : ViewBase
         var currentSection = UseState("introduction");
         
         var navHeader = new Card(
-            Layout.Horizontal().Gap(1).Padding(1)
+            Layout.Horizontal().Gap(3)
                 | new Button("Intro")
                     .Variant(currentSection.Value == "introduction" ? ButtonVariant.Primary : ButtonVariant.Ghost)
                     .HandleClick(_ => {
@@ -150,38 +142,51 @@ public class NavigationHeaderExample : ViewBase
                         currentSection.Value = "getting-started";
                         client.Toast("Navigated to Getting Started");
                     })
+                | new Button("Advanced")
+                    .Variant(currentSection.Value == "advanced" ? ButtonVariant.Primary : ButtonVariant.Ghost)
+                    .HandleClick(_ => {
+                        currentSection.Value = "advanced";
+                        client.Toast("Navigated to Advanced");
+                    })
                 | new Spacer()
                 | new Button("Export").Icon(Icons.Download).Variant(ButtonVariant.Outline)
-        ).Height(Size.Units(18));
+        );
 
         object GetSectionContent()
         {
-            object content = currentSection.Value switch
+            return currentSection.Value switch
             {
-                "introduction" => Layout.Vertical().Gap(1)
-                    | Text.H3("Introduction")
-                    | Text.P("Welcome to our comprehensive guide.")
-                    | new Card("Key concepts highlighted here").Height(Size.Units(15)),
+                "introduction" => Layout.Vertical().Gap(4)
+                    | Text.Label("Introduction")
+                    | Text.P("Welcome to our comprehensive guide. This section covers the fundamental concepts you need to understand.")
+                    | new Card("Key concepts highlighted here")
+                    | new Card("Getting familiar with the framework")
+                    | new Card("Understanding core principles")
+                    | Text.P("Continue reading to learn more about the framework's capabilities."),
                 
-                "getting-started" => Layout.Vertical().Gap(1)
-                    | Text.H3("Getting Started")
-                    | Text.P("Follow these steps to get started.")
-                    | new Card("npm install ivy-framework").Height(Size.Units(15)),
+                "getting-started" => Layout.Vertical().Gap(4)
+                    | Text.Label("Getting Started")
+                    | Text.P("Follow these steps to get started quickly with your first project.")
+                    | new Card("Step 1: Install the framework")
+                    | new Card("Step 2: Create your first app")
+                    | new Card("Step 3: Build and run")
+                    | Text.Code("npm install ivy-framework")
+                    | Text.P("Once installed, you can start building amazing applications."),
                 
-                "advanced" => Layout.Vertical().Gap(1)
-                    | Text.H3("Advanced Topics")
-                    | Text.P("Advanced usage patterns and techniques.")
-                    | new Card("Advanced features").Height(Size.Units(15)),
+                "advanced" => Layout.Vertical().Gap(4)
+                    | Text.Label("Advanced Topics")
+                    | Text.P("Advanced usage patterns and techniques for experienced developers.")
+                    | new Card("Custom components and widgets")
+                    | new Card("Performance optimization techniques")
+                    | new Card("Advanced state management")
+                    | new Card("Integration with external services")
+                    | Text.P("These topics require a solid understanding of the framework basics."),
                 
-                _ => (object)Text.P("Section not found")
+                _ => Text.P("Section not found")
             };
-            
-            return new Card(content).Height(Size.Units(60));
         }
 
-        return Layout.Vertical(
-            new HeaderLayout(navHeader, GetSectionContent())
-        ).Height(Size.Units(95));
+        return new HeaderLayout(navHeader, GetSectionContent());
     }
 }
 ```
@@ -201,32 +206,38 @@ public class FormHeaderExample : ViewBase
         var bio = UseState("Software developer with 5 years of experience...");
 
         var formHeader = new Card(
-            Layout.Horizontal().Gap(1).Padding(1)
-                | Text.H4("Edit Profile")
+            Layout.Horizontal().Gap(4)
+                | Text.Label("Edit Profile")
                 | new Spacer()
-                | new Button("Cancel").Variant(ButtonVariant.Ghost)
-                | new Button("Save").Variant(ButtonVariant.Primary)
-                    .HandleClick(_ => client.Toast("Profile saved!"))
-        ).Height(Size.Units(18));
+                | Layout.Horizontal().Gap(2)
+                    | new Button("Cancel").Variant(ButtonVariant.Ghost)
+                    | new Button("Save").Variant(ButtonVariant.Primary)
+                        .HandleClick(_ => client.Toast("Profile saved!"))
+        );
 
-        var formContent = new Card(
-            Layout.Vertical().Gap(1)
-                | new Card(
-                    Layout.Vertical().Gap(1)
-                        | Text.Small("Personal Information")
-                        | name.ToTextInput().Placeholder("Full Name")
-                        | email.ToTextInput().Placeholder("Email")
-                ).Height(Size.Units(35))
-                | new Card(
-                    Layout.Vertical().Gap(1)
-                        | Text.Small("Preferences")
-                        | new BoolInput<bool>(UseState(true)).Label("Email notifications")
-                ).Height(Size.Units(25))
-        ).Height(Size.Units(75));
+        var formContent = Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Vertical().Gap(3)
+                    | Text.Small("Personal Information")
+                    | name.ToTextInput().Placeholder("Full Name")
+                    | email.ToTextInput().Placeholder("Email")
+                    | bio.ToTextInput().Placeholder("Bio").Variant(TextInputs.Textarea)
+            )
+            | new Card(
+                Layout.Vertical().Gap(3)
+                    | Text.Small("Account Settings")
+                    | new BoolInput<bool>(UseState(true)).Label("Email notifications")
+                    | new BoolInput<bool>(UseState(false)).Label("SMS notifications")
+                    | new BoolInput<bool>(UseState(true)).Label("Marketing emails")
+            )
+            | new Card(
+                Layout.Vertical().Gap(3)
+                    | Text.Small("Privacy")
+                    | new BoolInput<bool>(UseState(true)).Label("Profile visibility")
+                    | new BoolInput<bool>(UseState(false)).Label("Show online status")
+            );
 
-        return Layout.Vertical(
-            new HeaderLayout(formHeader, formContent)
-        ).Height(Size.Units(110));
+        return new HeaderLayout(formHeader, formContent);
     }
 }
 ```
