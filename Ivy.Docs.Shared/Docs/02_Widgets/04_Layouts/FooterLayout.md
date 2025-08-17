@@ -18,7 +18,7 @@ public class BasicFooterExample : ViewBase
         var client = UseService<IClientProvider>();
         
         return Layout.Vertical()
-            | new Card("Header Section")
+            | new Card("Main Section")
                     | Text.H2("Welcome to Ivy Framework")
             | new FooterLayout(
                 footer: new Button("Save", _ => client.Toast("Content saved!"))
@@ -100,13 +100,17 @@ public class SheetWithFooterExample : ViewBase
 }
 ```
 
-## Complex Footer with Multiple Elements
-
-Create sophisticated footers with various components:
-
 <Callout type="tip">
 Use FooterLayout for multi-step forms, long questionnaires, and data entry interfaces.
 </Callout>
+
+<WidgetDocs Type="Ivy.FooterLayout" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FooterLayout.cs"/>
+
+## Examples
+
+## Complex Footer with Multiple Elements
+
+Create sophisticated footers with various components:
 
 ```csharp demo-tabs
 public class ComplexFooterExample : ViewBase
@@ -137,5 +141,3 @@ public class ComplexFooterExample : ViewBase
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.FooterLayout" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FooterLayout.cs"/>
