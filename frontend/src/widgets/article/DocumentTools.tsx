@@ -22,38 +22,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 }) => {
   const { toast } = useToast();
 
-  // Convert GitHub blob URL to raw URL
-  const getRawMarkdownUrl = (githubUrl: string): string => {
-    // Convert from: https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy.Docs.Shared/Docs/...
-    // To: https://raw.githubusercontent.com/Ivy-Interactive/Ivy-Framework/main/Ivy.Docs.Shared/Docs/...
-    return githubUrl
-      .replace('github.com', 'raw.githubusercontent.com')
-      .replace('/blob/', '/');
-  };
-
-  // Fetch raw markdown content from GitHub
-  const fetchRawMarkdown = async (): Promise<string> => {
-    if (!documentSource) {
-      throw new Error('No document source available');
-    }
-
-    try {
-      const rawUrl = getRawMarkdownUrl(documentSource);
-      const response = await fetch(rawUrl);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch markdown: ${response.status} ${response.statusText}`
-        );
-      }
-
-      return await response.text();
-    } catch (error) {
-      console.error('Error fetching markdown:', error);
-      throw new Error('Failed to fetch markdown content from source');
-    }
-  };
-
   const copyTextContent = async () => {
     try {
       // Show loading state
@@ -372,39 +340,39 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     try {
       // Show loading state
       toast({
-        title: 'Loading Content...',
-        description: 'Fetching markdown from source...',
+        title: 'Preparing Download...',
+        description: 'Extracting API sections...',
       });
 
-      const markdownContent = await fetchRawMarkdown();
+      // Extract the same content that gets copied
+      const apiContent = extractApiSections();
 
-      if (!markdownContent.trim()) {
+      if (!apiContent.trim()) {
         toast({
-          title: 'Export Failed',
-          description: 'No content found to export',
+          title: 'Download Failed',
+          description: 'No API content found to download',
           variant: 'destructive',
         });
         return;
       }
 
-      const fileName = generateFileName();
-      const blob = new Blob([markdownContent], { type: 'text/markdown' });
+      // Create and download the file
+      const blob = new Blob([apiContent], { type: 'text/markdown' });
       const url = URL.createObjectURL(blob);
-
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${fileName}.md`;
+      link.download = generateFileName();
       document.body.appendChild(link);
       link.click();
-
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
       toast({
-        title: 'Export Complete!',
-        description: `Downloaded ${fileName}.md with markdown source content`,
+        title: 'Downloaded!',
+        description: 'API sections saved as markdown file',
       });
     } catch (error) {
+      console.error('Error downloading markdown:', error);
       toast({
         title: 'Download Failed',
         description:
@@ -447,7 +415,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Download markdown source</p>
+            <p>Download API sections as markdown</p>
           </TooltipContent>
         </Tooltip>
       </div>
