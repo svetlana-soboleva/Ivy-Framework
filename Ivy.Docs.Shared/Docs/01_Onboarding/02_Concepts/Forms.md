@@ -105,6 +105,7 @@ public class FormExample : ViewBase
 ```
 
 **Key State Management Benefits:**
+
 - **Automatic Updates**: Form inputs automatically update `model.Value`
 - **Real-time Access**: Read current form data anytime via `model.Value`
 - **Type Safety**: All form data is strongly typed
@@ -345,7 +346,3 @@ Avoid manually creating form layouts. Always use `.ToForm()` on your state objec
 </Callout>
 
 This comprehensive forms system makes it easy to build robust, user-friendly data collection interfaces in your Ivy applications.
-
-## API Reference
-
-<WidgetDocs Type="Ivy.FormBuilder" ExtensionTypes="Ivy.Views.Forms.FormExtensions;Ivy.Views.Forms.UseFormExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Views/Forms/FormBuilder.cs"/>
