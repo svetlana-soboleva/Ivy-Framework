@@ -108,7 +108,7 @@ Use FooterLayout for multi-step forms, long questionnaires, and data entry inter
 
 ## Examples
 
-## Complex Footer with Multiple Elements
+### Complex Footer with Multiple Elements
 
 Create sophisticated footers with various components:
 
