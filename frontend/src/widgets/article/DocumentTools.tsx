@@ -21,351 +21,246 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
   title = 'document',
 }) => {
   const { toast } = useToast();
-  const extractCleanText = (): string => {
-    if (!articleRef.current) return '';
 
-    const articleElement = articleRef.current;
-    const clone = articleElement.cloneNode(true) as HTMLElement;
-
-    // Remove navigation elements, buttons, and other UI components
-    const elementsToRemove = [
-      'nav',
-      'button',
-      '.toc',
-      '.table-of-contents',
-      '.navigation',
-      '.breadcrumb',
-      '.pagination',
-    ];
-
-    elementsToRemove.forEach(selector => {
-      const elements = clone.querySelectorAll(selector);
-      elements.forEach(el => el.remove());
-    });
-
-    // Get clean text content
-    let textContent = clone.textContent || '';
-
-    // Clean up extra whitespace and normalize line breaks
-    textContent = textContent
-      .replace(/\n\s*\n\s*\n/g, '\n\n')
-      .replace(/^\s+|\s+$/g, '')
-      .replace(/[ \t]+/g, ' ');
-
-    return textContent;
+  // Convert GitHub blob URL to raw URL
+  const getRawMarkdownUrl = (githubUrl: string): string => {
+    // Convert from: https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy.Docs.Shared/Docs/...
+    // To: https://raw.githubusercontent.com/Ivy-Interactive/Ivy-Framework/main/Ivy.Docs.Shared/Docs/...
+    return githubUrl
+      .replace('github.com', 'raw.githubusercontent.com')
+      .replace('/blob/', '/');
   };
 
-  const extractMarkdownContent = async (): Promise<string> => {
+  // Fetch raw markdown content from GitHub
+  const fetchRawMarkdown = async (): Promise<string> => {
+    if (!documentSource) {
+      throw new Error('No document source available');
+    }
+
+    try {
+      const rawUrl = getRawMarkdownUrl(documentSource);
+      const response = await fetch(rawUrl);
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch markdown: ${response.status} ${response.statusText}`
+        );
+      }
+
+      return await response.text();
+    } catch (error) {
+      console.error('Error fetching markdown:', error);
+      throw new Error('Failed to fetch markdown content from source');
+    }
+  };
+
+  const copyTextContent = async () => {
+    try {
+      // Show loading state
+      toast({
+        title: 'Loading Content...',
+        description: 'Extracting API sections from page...',
+      });
+
+      // Extract API sections from the rendered page
+      const apiContent = extractApiSections();
+
+      if (!apiContent.trim()) {
+        toast({
+          title: 'Copy Failed',
+          description: 'No API content found to copy',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(apiContent);
+      toast({
+        title: 'Copied!',
+        description: 'API sections copied to clipboard',
+      });
+    } catch (error) {
+      try {
+        // Fallback: try to copy text content from the page
+        if (articleRef.current) {
+          const textContent = articleRef.current.textContent || '';
+          if (textContent.trim()) {
+            await navigator.clipboard.writeText(textContent);
+            toast({
+              title: 'Copied!',
+              description: 'Document text copied to clipboard (fallback)',
+            });
+            return;
+          }
+        }
+
+        toast({
+          title: 'Copy Failed',
+          description:
+            error instanceof Error ? error.message : 'Failed to copy content',
+          variant: 'destructive',
+        });
+      } catch {
+        toast({
+          title: 'Copy Failed',
+          description: 'Failed to copy text to clipboard',
+          variant: 'destructive',
+        });
+      }
+    }
+  };
+
+  // Extract API sections from the rendered page
+  const extractApiSections = (): string => {
     if (!articleRef.current) return '';
 
     const articleElement = articleRef.current;
-    let markdownContent = '';
+    let apiContent = '';
 
-    // Search for tabs with proper ARIA roles
-    let tabGroups = articleElement.querySelectorAll('[role="tablist"]');
-
-    // If no tabs in article scope, search entire document
-    if (tabGroups.length === 0) {
-      tabGroups = document.querySelectorAll('[role="tablist"]');
-    }
-
-    // Find the currently active tab
-    let originalActiveTab = articleElement.querySelector(
-      '[role="tab"][aria-selected="true"], [role="tab"][data-state="active"]'
-    );
-
-    // If not found in article, search document
-    if (!originalActiveTab) {
-      originalActiveTab = document.querySelector(
-        '[role="tab"][aria-selected="true"], [role="tab"][data-state="active"]'
-      );
-    }
-
-    const extractedTabPanels: Element[] = []; // Track which panels we extracted
-
-    if (tabGroups.length > 0) {
-      markdownContent += '\n## All Tabs Content\n\n';
-
-      // For each tab group, trigger backend events to load all tabs
-      for (const tabList of Array.from(tabGroups)) {
-        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
-
-        // Force backend loading by actually clicking each tab (simulating real user behavior)
-        for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
-          const tabElement = tabs[tabIndex] as HTMLElement;
-
-          // Actually click the tab - this triggers the real backend loading
-          tabElement.click();
-
-          // Wait for backend to respond and cache the content
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-      }
-
-      // Now extract content from ALL loaded tabs sequentially
-      for (const tabList of Array.from(tabGroups)) {
-        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
-
-        for (let i = 0; i < tabs.length; i++) {
-          const tab = tabs[i] as HTMLElement;
-          const tabLabel = tab.textContent?.trim() || `Tab ${i + 1}`;
-
-          // Click this tab to make its panel visible for extraction
-          tab.click();
-
-          // Wait for panel to become active
-          await new Promise(resolve => setTimeout(resolve, 100));
-
-          const activePanel = articleElement.querySelector(
-            '[role="tabpanel"]:not([hidden]), [role="tabpanel"][data-state="active"]'
-          );
-
-          if (activePanel) {
-            // Track this panel so we can remove it from regular extraction
-            extractedTabPanels.push(activePanel);
-
-            markdownContent += `### ${tabLabel}\n\n`;
-
-            const codeBlocks = activePanel.querySelectorAll('pre, code');
-
-            if (codeBlocks.length > 0) {
-              codeBlocks.forEach(codeBlock => {
-                const code = codeBlock.textContent?.trim();
-                if (code && code.length > 10) {
-                  markdownContent += `\`\`\`\n${code}\n\`\`\`\n\n`;
-                }
-              });
-            } else {
-              const panelText = activePanel.textContent?.trim();
-              if (panelText && panelText.length > 10) {
-                markdownContent += `${panelText}\n\n`;
-              }
-            }
-          }
-        }
-      }
-
-      // Restore original active tab by clicking it
-      if (originalActiveTab && originalActiveTab instanceof HTMLElement) {
-        originalActiveTab.click();
-        await new Promise(resolve => setTimeout(resolve, 300));
-      }
-    }
-
-    // Now work with a clone for the rest of the content extraction
-    const clone = articleElement.cloneNode(true) as HTMLElement;
-
-    // Remove only the specific tab panels we extracted content from
-    if (extractedTabPanels.length > 0) {
-      extractedTabPanels.forEach(extractedPanel => {
-        // Find the corresponding panel in the clone using text content matching
-        const panelText = extractedPanel.textContent?.trim().substring(0, 100);
-        const matchingClonePanels = clone.querySelectorAll('[role="tabpanel"]');
-
-        Array.from(matchingClonePanels).forEach(clonePanel => {
-          const clonePanelText = clonePanel.textContent
-            ?.trim()
-            .substring(0, 100);
-          if (clonePanelText === panelText) {
-            clonePanel.remove();
-          }
-        });
-      });
-    }
-
-    // Remove UI elements but keep all content - IMPORTANT: Don't remove tab content
-    const elementsToRemove = [
-      'nav',
-      'button:not([data-copy-button])',
-      '.toc',
-      '.table-of-contents',
-      '.navigation',
-      '.breadcrumb',
-      '.pagination',
-      '.sidebar',
-      '[data-testid="copy-button"]',
+    // Look for API-related sections
+    const apiSelectors = [
+      'h1, h2, h3, h4, h5, h6', // Headings
+      'p', // Paragraphs
+      'ul, ol', // Lists
+      'table', // Tables
+      'pre, code', // Code blocks
+      'div[class*="api"]', // Divs with "api" in class
+      'section[class*="api"]', // Sections with "api" in class
+      '[data-testid*="api"]', // Elements with "api" in test ID
     ];
 
-    elementsToRemove.forEach(selector => {
-      const elements = clone.querySelectorAll(selector);
-      elements.forEach(el => el.remove());
-    });
-
-    // Make all tab content visible for extraction by temporarily overriding display styles
-    const hiddenElements = clone.querySelectorAll(
-      '[style*="display: none"], [style*="display:none"], .hidden, [hidden]'
+    // Find all elements that might contain API content
+    const apiElements = articleElement.querySelectorAll(
+      apiSelectors.join(', ')
     );
-    const originalStyles = new Map<Element, string>();
 
-    hiddenElements.forEach(element => {
-      // Store original style for restoration (though we won't restore since this is a clone)
-      originalStyles.set(element, element.getAttribute('style') || '');
-
-      // Temporarily make visible for extraction
-      if (element instanceof HTMLElement) {
-        element.style.display = 'block';
-        element.style.visibility = 'visible';
-        element.removeAttribute('hidden');
-        element.classList.remove('hidden');
-      }
-    });
-
-    // Get ALL content elements in document order - much more comprehensive
-    const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, {
-      acceptNode: node => {
-        const element = node as Element;
-        const tagName = element.tagName.toLowerCase();
-
-        // Accept all content elements
-        if (
-          [
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'p',
-            'div',
-            'section',
-            'article',
-            'ul',
-            'ol',
-            'li',
-            'blockquote',
-            'pre',
-            'code',
-            'table',
-            'thead',
-            'tbody',
-            'tr',
-            'th',
-            'td',
-            'dl',
-            'dt',
-            'dd',
-          ].includes(tagName)
-        ) {
-          return NodeFilter.FILTER_ACCEPT;
-        }
-        return NodeFilter.FILTER_SKIP;
-      },
-    });
-
+    // Process elements in document order
     const processedElements = new Set<Element>();
-    let currentElement: Element | null;
 
-    while ((currentElement = walker.nextNode() as Element)) {
-      // Skip if we've already processed this element or its parent
-      if (processedElements.has(currentElement)) continue;
+    apiElements.forEach(element => {
+      if (processedElements.has(element)) return;
 
-      const tagName = currentElement.tagName.toLowerCase();
-      const text = currentElement.textContent?.trim() || '';
+      const tagName = element.tagName.toLowerCase();
+      const text = element.textContent?.trim() || '';
 
       // Skip empty elements
-      if (!text && !['table', 'ul', 'ol'].includes(tagName)) continue;
+      if (!text && !['table', 'ul', 'ol'].includes(tagName)) return;
 
-      switch (tagName) {
-        case 'h1':
-        case 'h2':
-        case 'h3':
-        case 'h4':
-        case 'h5':
-        case 'h6': {
-          const level = parseInt(tagName[1]);
-          markdownContent += `${'#'.repeat(level)} ${text}\n\n`;
-          processedElements.add(currentElement);
-          break;
-        }
-
-        case 'p':
-          if (text && !currentElement.closest('li, td, th')) {
-            markdownContent += `${text}\n\n`;
-            processedElements.add(currentElement);
+      // Check if this element is part of an API section
+      if (isApiSection(element)) {
+        switch (tagName) {
+          case 'h1':
+          case 'h2':
+          case 'h3':
+          case 'h4':
+          case 'h5':
+          case 'h6': {
+            const level = parseInt(tagName[1]);
+            apiContent += `${'#'.repeat(level)} ${text}\n\n`;
+            processedElements.add(element);
+            break;
           }
-          break;
 
-        case 'div':
-        case 'section':
-        case 'article': {
-          // Only process if it's a direct content container, not nested
-          if (!currentElement.closest('p, li, td, th') && text) {
-            // Check if it contains mostly just text (not other block elements)
-            const childBlocks = currentElement.querySelectorAll(
-              'h1, h2, h3, h4, h5, h6, p, div, section, ul, ol, table'
-            );
-            if (childBlocks.length === 0) {
-              markdownContent += `${text}\n\n`;
-              processedElements.add(currentElement);
+          case 'p':
+            if (text && !element.closest('li, td, th')) {
+              apiContent += `${text}\n\n`;
+              processedElements.add(element);
             }
-          }
-          break;
+            break;
+
+          case 'ul':
+          case 'ol':
+            if (!processedElements.has(element)) {
+              apiContent += extractListToMarkdown(element);
+              processedElements.add(element);
+            }
+            break;
+
+          case 'table':
+            if (!processedElements.has(element)) {
+              apiContent += extractTableToMarkdown(element as HTMLTableElement);
+              processedElements.add(element);
+            }
+            break;
+
+          case 'pre':
+            if (!processedElements.has(element)) {
+              const codeElement = element.querySelector('code');
+              const codeText = codeElement
+                ? codeElement.textContent
+                : element.textContent;
+              apiContent += `\`\`\`\n${codeText || ''}\n\`\`\`\n\n`;
+              processedElements.add(element);
+            }
+            break;
+
+          case 'code':
+            // Only process inline code (not inside pre)
+            if (!element.closest('pre') && !processedElements.has(element)) {
+              // Skip standalone code elements to avoid duplication
+            }
+            break;
         }
-
-        case 'ul':
-        case 'ol':
-          if (!processedElements.has(currentElement)) {
-            markdownContent += extractListToMarkdown(currentElement);
-            processedElements.add(currentElement);
-          }
-          break;
-
-        case 'table':
-          if (!processedElements.has(currentElement)) {
-            markdownContent += extractTableToMarkdown(
-              currentElement as HTMLTableElement
-            );
-            processedElements.add(currentElement);
-          }
-          break;
-
-        case 'pre':
-          if (!processedElements.has(currentElement)) {
-            const codeElement = currentElement.querySelector('code');
-            const codeText = codeElement
-              ? codeElement.textContent
-              : currentElement.textContent;
-            markdownContent += `\`\`\`\n${codeText || ''}\n\`\`\`\n\n`;
-            processedElements.add(currentElement);
-          }
-          break;
-
-        case 'code':
-          // Only process inline code (not inside pre)
-          if (
-            !currentElement.closest('pre') &&
-            !processedElements.has(currentElement)
-          ) {
-            // This is tricky - we'll skip standalone code elements to avoid duplication
-            // They're usually handled by their parent elements
-          }
-          break;
-
-        case 'blockquote':
-          if (!processedElements.has(currentElement)) {
-            markdownContent += `> ${text}\n\n`;
-            processedElements.add(currentElement);
-          }
-          break;
-
-        case 'dl':
-          if (!processedElements.has(currentElement)) {
-            markdownContent += extractDefinitionListToMarkdown(currentElement);
-            processedElements.add(currentElement);
-          }
-          break;
       }
-    }
+    });
 
-    // Add source attribution if available
-    if (documentSource) {
-      markdownContent += `\n---\n*Source: [${documentSource}](${documentSource})*\n`;
-    }
-
-    return markdownContent.trim();
+    return apiContent.trim();
   };
 
-  // Helper function to extract table as markdown
+  // Check if an element is part of an API section
+  const isApiSection = (element: Element): boolean => {
+    // Check if the element or its ancestors contain API-related content
+    const apiKeywords = [
+      'constructor',
+      'supported types',
+      'properties',
+      'events',
+      'api',
+      'interface',
+      'class',
+      'method',
+      'parameter',
+      'return',
+      'example',
+      'usage',
+    ];
+
+    // Check the element itself
+    const elementText = element.textContent?.toLowerCase() || '';
+    if (apiKeywords.some(keyword => elementText.includes(keyword))) {
+      return true;
+    }
+
+    // Check parent elements
+    let parent = element.parentElement;
+    while (parent) {
+      const parentText = parent.textContent?.toLowerCase() || '';
+      if (apiKeywords.some(keyword => parentText.includes(keyword))) {
+        return true;
+      }
+      parent = parent.parentElement;
+    }
+
+    // Check for specific API section indicators
+    const apiIndicators = [
+      '[class*="api"]',
+      '[class*="constructor"]',
+      '[class*="properties"]',
+      '[class*="events"]',
+      '[data-testid*="api"]',
+      'h1, h2, h3, h4, h5, h6', // Headings often indicate section boundaries
+    ];
+
+    return apiIndicators.some(selector => {
+      try {
+        return element.matches(selector) || element.closest(selector);
+      } catch {
+        return false;
+      }
+    });
+  };
+
+  // Helper function to extract table as markdown with better cleaning
   const extractTableToMarkdown = (table: HTMLTableElement): string => {
     let tableMarkdown = '\n';
     const rows = Array.from(table.querySelectorAll('tr'));
@@ -374,9 +269,34 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
     rows.forEach((row, rowIndex) => {
       const cells = Array.from(row.querySelectorAll('td, th'));
-      const cellTexts = cells.map(cell =>
-        (cell.textContent || '').trim().replace(/\|/g, '\\|')
-      );
+      const cellTexts = cells.map(cell => {
+        // Clean up the cell content by removing CSS styles and data attributes
+        let cellText = cell.textContent || '';
+
+        // Remove CSS style blocks that might be embedded
+        cellText = cellText.replace(/\{[^}]*\}/g, '');
+
+        // Remove data attributes that might be in the text
+        cellText = cellText.replace(/\[data-[^\]]*\]/g, '');
+
+        // Remove any remaining CSS selectors
+        cellText = cellText.replace(/[a-zA-Z-]+\s*\{[^}]*\}/g, '');
+
+        // Remove webkit scrollbar and other CSS pseudo-elements
+        cellText = cellText.replace(/::-webkit-scrollbar[^;]*;?/g, '');
+        cellText = cellText.replace(/::-moz-scrollbar[^;]*;?/g, '');
+        cellText = cellText.replace(/::-ms-scrollbar[^;]*;?/g, '');
+        cellText = cellText.replace(/::scrollbar[^;]*;?/g, '');
+
+        // Remove any remaining CSS rules
+        cellText = cellText.replace(/[a-zA-Z-]+\s*:\s*[^;]*;?/g, '');
+
+        // Clean up extra whitespace and normalize
+        cellText = cellText.trim().replace(/\s+/g, ' ');
+
+        // Escape pipe characters for markdown tables
+        return cellText.replace(/\|/g, '\\|');
+      });
 
       if (cellTexts.some(text => text.length > 0)) {
         tableMarkdown += `| ${cellTexts.join(' | ')} |\n`;
@@ -406,77 +326,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     });
 
     return listMarkdown + '\n';
-  };
-
-  // Helper function to extract definition lists as markdown
-  const extractDefinitionListToMarkdown = (dl: Element): string => {
-    let dlMarkdown = '\n';
-    const children = Array.from(dl.children);
-
-    for (let i = 0; i < children.length; i++) {
-      const element = children[i];
-      const tagName = element.tagName.toLowerCase();
-      const text = element.textContent?.trim() || '';
-
-      if (tagName === 'dt' && text) {
-        dlMarkdown += `**${text}**\n`;
-      } else if (tagName === 'dd' && text) {
-        dlMarkdown += `: ${text}\n\n`;
-      }
-    }
-
-    return dlMarkdown;
-  };
-
-  const copyTextContent = async () => {
-    try {
-      // Show loading state
-      toast({
-        title: 'Loading Content...',
-        description: 'Fetching all tab content from backend...',
-      });
-
-      const markdownContent = await extractMarkdownContent();
-      const textContent = extractCleanText();
-
-      const attribution = documentSource ? `\n\nSource: ${documentSource}` : '';
-      const fullContent = markdownContent + '\n\n' + textContent + attribution;
-
-      if (!fullContent.trim()) {
-        toast({
-          title: 'Copy Failed',
-          description: 'No content found to copy',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      await navigator.clipboard.writeText(fullContent);
-      toast({
-        title: 'Copied!',
-        description: 'Complete document including all tabs copied to clipboard',
-      });
-    } catch {
-      try {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = extractCleanText();
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        toast({
-          title: 'Copied!',
-          description: 'Document text copied to clipboard',
-        });
-      } catch {
-        toast({
-          title: 'Copy Failed',
-          description: 'Failed to copy text to clipboard',
-          variant: 'destructive',
-        });
-      }
-    }
   };
 
   const generateFileName = (): string => {
@@ -523,11 +372,11 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     try {
       // Show loading state
       toast({
-        title: 'Extracting Content...',
-        description: 'Fetching all tab content from backend...',
+        title: 'Loading Content...',
+        description: 'Fetching markdown from source...',
       });
 
-      const markdownContent = await extractMarkdownContent();
+      const markdownContent = await fetchRawMarkdown();
 
       if (!markdownContent.trim()) {
         toast({
@@ -553,12 +402,15 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
       toast({
         title: 'Export Complete!',
-        description: `Downloaded ${fileName}.md with complete content including all tabs`,
+        description: `Downloaded ${fileName}.md with markdown source content`,
       });
-    } catch {
+    } catch (error) {
       toast({
         title: 'Download Failed',
-        description: 'Failed to save document',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Failed to download markdown',
         variant: 'destructive',
       });
     }
@@ -579,7 +431,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Copy document text</p>
+            <p>Copy API sections</p>
           </TooltipContent>
         </Tooltip>
 
@@ -595,7 +447,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Download as Markdown</p>
+            <p>Download markdown source</p>
           </TooltipContent>
         </Tooltip>
       </div>
