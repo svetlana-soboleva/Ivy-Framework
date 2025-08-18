@@ -743,13 +743,22 @@
   * {
     @apply border-border;
   }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
   body {
     @apply bg-background text-foreground;
   }
-}
 
-#root {
-  @apply p-4;
+  #root {
+    height: 100vh;
+    width: 100vw;
+    overflow: auto;
+  }
 }
 
 :has(> .remove-parent-padding) {
