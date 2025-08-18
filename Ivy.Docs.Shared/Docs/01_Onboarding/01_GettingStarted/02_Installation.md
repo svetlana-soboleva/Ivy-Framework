@@ -14,6 +14,11 @@ Run the following command in your terminal to install Ivy as a global tool:
 >dotnet tool install -g Ivy.Console
 ```
 
+<Callout Type="tip">
+If you're using a specific operating system, read the instructions in your terminal after installing Ivy.Console.
+You can always see all available commands by using `ivy --help`.
+</Callout>
+
 This will install Ivy globally on your machine. You can now use the `ivy` command in your terminal.
 
 ## 2. Create a New Ivy Project
@@ -25,6 +30,4 @@ Use the Ivy CLI to scaffold a new project:
 >dotnet watch
 ```
 
-<Callout Type="tip">
-You can always see all available commands by using `ivy --help`.
-</Callout>
+For more terminal usage, check out the [CLI section](../03_CLI/01_Overview.md).
