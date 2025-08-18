@@ -566,83 +566,6 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     }
   };
 
-  const openInChatGPT = async () => {
-    try {
-      toast({
-        title: 'Preparing Content...',
-        description: 'Extracting content for ChatGPT...',
-      });
-
-      const markdownContent = await extractMarkdownContent();
-      const textContent = extractCleanText();
-      const fullContent = markdownContent + '\n\n' + textContent;
-
-      if (!fullContent.trim()) {
-        toast({
-          title: 'Export Failed',
-          description: 'No content found to export',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      // Encode the content for URL
-      const encodedContent = encodeURIComponent(fullContent);
-      const chatGPTUrl = `https://chat.openai.com/?q=${encodedContent}`;
-
-      window.open(chatGPTUrl, '_blank');
-
-      toast({
-        title: 'Opening ChatGPT',
-        description: 'Content prepared and opening in new tab',
-      });
-    } catch {
-      toast({
-        title: 'Failed to Open',
-        description: 'Could not prepare content for ChatGPT',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const openInClaude = async () => {
-    try {
-      toast({
-        title: 'Preparing Content...',
-        description: 'Extracting content for Claude...',
-      });
-
-      const markdownContent = await extractMarkdownContent();
-      const textContent = extractCleanText();
-      const fullContent = markdownContent + '\n\n' + textContent;
-
-      if (!fullContent.trim()) {
-        toast({
-          title: 'Export Failed',
-          description: 'No content found to export',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      // Copy to clipboard and open Claude
-      await navigator.clipboard.writeText(fullContent);
-      window.open('https://claude.ai/chat', '_blank');
-
-      toast({
-        title: 'Opening Claude',
-        description:
-          'Content copied to clipboard and opening Claude in new tab',
-      });
-    } catch {
-      toast({
-        title: 'Failed to Open',
-        description: 'Could not prepare content for Claude',
-        variant: 'destructive',
-      });
-    }
-  };
-
   return (
     <TooltipProvider>
       <div className="flex">
@@ -672,11 +595,11 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
               Download as Markdown
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={openInChatGPT}>
+            <DropdownMenuItem disabled>
               <ExternalLink className="w-4 h-4 mr-2" />
               Open in ChatGPT
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={openInClaude}>
+            <DropdownMenuItem disabled>
               <ExternalLink className="w-4 h-4 mr-2" />
               Open in Claude
             </DropdownMenuItem>
