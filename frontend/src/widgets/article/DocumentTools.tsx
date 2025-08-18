@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Download } from 'lucide-react';
+import { Copy, Download, ChevronDown, ExternalLink } from 'lucide-react';
 import React from 'react';
 
 interface DocumentToolsProps {
@@ -386,38 +388,43 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
   return (
     <TooltipProvider>
-      <div className="flex gap-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={copyTextContent}
-              className="h-8 px-2"
-            >
-              <Copy className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Copy API sections</p>
-          </TooltipContent>
-        </Tooltip>
+      <div className="flex">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={copyTextContent}
+          className="h-8 px-2 flex items-center gap-1 rounded-r-none border-r border-border/50"
+        >
+          <Copy className="w-4 h-4" />
+          <span className="text-xs">Copy Page</span>
+        </Button>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              onClick={saveAsMarkdown}
-              className="h-8 px-2"
+              className="h-8 px-1 flex items-center gap-1 rounded-l-none"
             >
-              <Download className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Download API sections as markdown</p>
-          </TooltipContent>
-        </Tooltip>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem onClick={saveAsMarkdown}>
+              <Download className="w-4 h-4 mr-2" />
+              Download as Markdown
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled>
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open in ChatGPT
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open in Claude
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </TooltipProvider>
   );

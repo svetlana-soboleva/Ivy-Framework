@@ -17,9 +17,9 @@ import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import CopyToClipboardButton from '@/components/CopyToClipboardButton';
-import './CodeInputWidget.css';
 import { cpp } from '@codemirror/lang-cpp';
 import { dbml } from './dbml-language';
+import { createIvyCodeTheme } from './theme';
 
 interface CodeInputWidgetProps {
   id: string;
@@ -45,6 +45,7 @@ const languageExtensions = {
   Css: css,
   Json: json,
   Dbml: dbml,
+  Text: undefined,
 };
 
 export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
@@ -99,7 +100,10 @@ export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({
     const lang = language
       ? languageExtensions[language as keyof typeof languageExtensions]
       : undefined;
-    return lang ? [typeof lang === 'function' ? lang() : lang] : [];
+    const langExtension = lang
+      ? [typeof lang === 'function' ? lang() : lang]
+      : [];
+    return [...langExtension, createIvyCodeTheme()];
   }, [language]);
 
   return (

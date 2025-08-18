@@ -14,7 +14,8 @@ public enum Languages
     Html,
     Css,
     Json,
-    Dbml
+    Dbml,
+    Text,
 }
 
 public record Code : WidgetBase<Code>
