@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Download } from 'lucide-react';
+import { Copy, Download, ChevronDown, ExternalLink } from 'lucide-react';
 import React from 'react';
 
 interface DocumentToolsProps {
@@ -564,40 +566,122 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     }
   };
 
+  const openInChatGPT = async () => {
+    try {
+      toast({
+        title: 'Preparing Content...',
+        description: 'Extracting content for ChatGPT...',
+      });
+
+      const markdownContent = await extractMarkdownContent();
+      const textContent = extractCleanText();
+      const fullContent = markdownContent + '\n\n' + textContent;
+
+      if (!fullContent.trim()) {
+        toast({
+          title: 'Export Failed',
+          description: 'No content found to export',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Encode the content for URL
+      const encodedContent = encodeURIComponent(fullContent);
+      const chatGPTUrl = `https://chat.openai.com/?q=${encodedContent}`;
+
+      window.open(chatGPTUrl, '_blank');
+
+      toast({
+        title: 'Opening ChatGPT',
+        description: 'Content prepared and opening in new tab',
+      });
+    } catch {
+      toast({
+        title: 'Failed to Open',
+        description: 'Could not prepare content for ChatGPT',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const openInClaude = async () => {
+    try {
+      toast({
+        title: 'Preparing Content...',
+        description: 'Extracting content for Claude...',
+      });
+
+      const markdownContent = await extractMarkdownContent();
+      const textContent = extractCleanText();
+      const fullContent = markdownContent + '\n\n' + textContent;
+
+      if (!fullContent.trim()) {
+        toast({
+          title: 'Export Failed',
+          description: 'No content found to export',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Copy to clipboard and open Claude
+      await navigator.clipboard.writeText(fullContent);
+      window.open('https://claude.ai/chat', '_blank');
+
+      toast({
+        title: 'Opening Claude',
+        description:
+          'Content copied to clipboard and opening Claude in new tab',
+      });
+    } catch {
+      toast({
+        title: 'Failed to Open',
+        description: 'Could not prepare content for Claude',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <TooltipProvider>
-      <div className="flex gap-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={copyTextContent}
-              className="h-8 px-2"
-            >
-              <Copy className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Copy document text</p>
-          </TooltipContent>
-        </Tooltip>
+      <div className="flex">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={copyTextContent}
+          className="h-8 px-2 flex items-center gap-1 rounded-r-none border-r border-border/50"
+        >
+          <Copy className="w-4 h-4" />
+          <span className="text-xs">Copy Page</span>
+        </Button>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              onClick={saveAsMarkdown}
-              className="h-8 px-2"
+              className="h-8 px-1 flex items-center gap-1 rounded-l-none"
             >
-              <Download className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Download as Markdown</p>
-          </TooltipContent>
-        </Tooltip>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem onClick={saveAsMarkdown}>
+              <Download className="w-4 h-4 mr-2" />
+              Download as Markdown
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={openInChatGPT}>
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open in ChatGPT
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openInClaude}>
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open in Claude
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </TooltipProvider>
   );
