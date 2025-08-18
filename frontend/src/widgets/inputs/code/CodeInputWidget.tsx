@@ -45,6 +45,7 @@ const languageExtensions = {
   Css: css,
   Json: json,
   Dbml: dbml,
+  Text: undefined,
 };
 
 export const CodeInputWidget: React.FC<CodeInputWidgetProps> = ({

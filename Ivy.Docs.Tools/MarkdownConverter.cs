@@ -292,7 +292,8 @@ public static class MarkdownConverter
             "css" => "Languages.Css",
             "json" => "Languages.Json",
             "dbml" => "Languages.Dbml",
-            _ => "Languages.Csharp"
+            "text" => "Languages.Text",
+            _ => "Languages.Text"
         };
     }
 

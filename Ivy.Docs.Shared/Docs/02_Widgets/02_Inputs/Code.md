@@ -158,6 +158,22 @@ public class TypeScriptDemo : ViewBase
 }
 ```
 
+```csharp demo-tabs
+public class PlainTextDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var tsCode = UseState("Here is some plain text, with no syntax highlighting whatsoever.\nUnlike the TextInput widget, this uses a monospaced font, which\nmakes some types of text easier to read. For example:\n\n  +----------------------------+\n  |                            |\n  |       ASCII Diagrams       |\n  |                            |\n  +----------------------------+");
+        return Layout.Vertical()
+                    | Text.H3("Plain Text")
+                    | tsCode.ToCodeInput()
+                        .Width(Size.Auto())
+                        .Height(Size.Auto())
+                        .Language(Languages.Text);
+    }
+}
+```
+
 ## Styling Options
 
 ### Invalid State
