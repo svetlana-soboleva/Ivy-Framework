@@ -16,10 +16,12 @@ public class BasicFloatingPanelView : ViewBase
     public override object? Build()
     {
         var showPanel = UseState(false);
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panel", onClick: _ => showPanel.Set(true))
-                | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panel", onClick: _ => showPanel.Set(true))
+                    | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+            ).Width(Size.Full())
             | (showPanel.Value ? new FloatingPanel(
                 new Button("Floating Action")
                     .Icon(Icons.Plus)
@@ -29,6 +31,10 @@ public class BasicFloatingPanelView : ViewBase
     }
 }
 ```
+
+<Callout Type="tip">
+Floating panels automatically use a high z-index (50) to ensure they appear above other content. Be mindful of layering when using multiple floating elements.
+</Callout>
 
 ## Alignment Options
 
@@ -49,10 +55,12 @@ public class CornerAlignmentView : ViewBase
             .Large()
             .BorderRadius(BorderRadius.Full);
 
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panels", onClick: _ => showPanels.Set(true))
-                | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panels", onClick: _ => showPanels.Set(true))
+                    | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+            ).Width(Size.Full())
             | (showPanels.Value ? new Fragment()
                 | new FloatingPanel(floatingButton, Align.TopLeft)
                 | new FloatingPanel(floatingButton, Align.TopRight)
@@ -78,10 +86,12 @@ public class EdgeCenterAlignmentView : ViewBase
             .Large()
             .BorderRadius(BorderRadius.Full);
 
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panels", onClick: _ => showPanels.Set(true))
-                | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panels", onClick: _ => showPanels.Set(true))
+                    | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+            ).Width(Size.Full())
             | (showPanels.Value ? new Fragment()
                 | new FloatingPanel(floatingButton, Align.TopCenter)
                 | new FloatingPanel(floatingButton, Align.BottomCenter)
@@ -103,10 +113,12 @@ public class CenterAlignmentView : ViewBase
     {
         var showPanel = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panel", onClick: _ => showPanel.Set(true))
-                | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panel", onClick: _ => showPanel.Set(true))
+                    | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+            ).Width(Size.Full())
             | (showPanel.Value ? new FloatingPanel(
                 new Card(
                     Layout.Vertical()
@@ -135,10 +147,12 @@ public class BasicOffsetView : ViewBase
     {
         var showPanels = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panels", onClick: _ => showPanels.Set(true))
-                | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panels", onClick: _ => showPanels.Set(true))
+                    | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+            ).Width(Size.Full())
             | (showPanels.Value ? new Fragment()
                 | new FloatingPanel(
                     new Button("Default Position")
@@ -176,10 +190,12 @@ public class ConvenienceOffsetView : ViewBase
     {
         var showPanels = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panels", onClick: _ => showPanels.Set(true))
-                | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panels", onClick: _ => showPanels.Set(true))
+                    | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+            ).Width(Size.Full())
             | (showPanels.Value ? new Fragment()
                 | new FloatingPanel(
                     new Button("Top Offset")
@@ -229,10 +245,12 @@ public class NavigationPanelView : ViewBase
     {
         var showPanel = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panel", onClick: _ => showPanel.Set(true))
-                | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panel", onClick: _ => showPanel.Set(true))
+                    | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+            ).Width(Size.Full())
             | (showPanel.Value ? new FloatingPanel(
                 Layout.Vertical().Gap(2)
                     | new Button("Home")
@@ -268,10 +286,12 @@ public class ActionPanelView : ViewBase
     {
         var showPanel = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panel", onClick: _ => showPanel.Set(true))
-                | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panel", onClick: _ => showPanel.Set(true))
+                    | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
+            ).Width(Size.Full())
             | (showPanel.Value ? new FloatingPanel(
                 Layout.Horizontal().Gap(2)
                     | new Button("New")
@@ -292,6 +312,10 @@ public class ActionPanelView : ViewBase
 }
 ```
 
+<Callout Type="tip">
+Ensure floating panels don't interfere with content readability and provide clear visual hierarchy. Use appropriate contrast and sizing for interactive elements.
+</Callout>
+
 ## Practical Examples
 
 ### Back to Top Button
@@ -305,10 +329,12 @@ public class BackToTopView : ViewBase
     {
         var showButton = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Button", onClick: _ => showButton.Set(true))
-                | new Button("Hide Button", onClick: _ => showButton.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Button", onClick: _ => showButton.Set(true))
+                    | new Button("Hide Button", onClick: _ => showButton.Set(false))
+            ).Width(Size.Full())
             | (showButton.Value ? new FloatingPanel(
                 new Button("↑ Top")
                     .Icon(Icons.ArrowUp)
@@ -332,10 +358,12 @@ public class FloatingSearchView : ViewBase
     {
         var showSearchBar = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Search Bar", onClick: _ => showSearchBar.Set(true))
-                | new Button("Hide Search Bar", onClick: _ => showSearchBar.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Search Bar", onClick: _ => showSearchBar.Set(true))
+                    | new Button("Hide Search Bar", onClick: _ => showSearchBar.Set(false))
+            ).Width(Size.Full())
             | (showSearchBar.Value ? new FloatingPanel(
                 new Card(
                     Layout.Horizontal().Gap(2)
@@ -361,10 +389,12 @@ public class MultiPanelView : ViewBase
     {
         var showPanels = UseState(false);
         
-        return new Fragment()
-            | Layout.Horizontal().Gap(2).Width(Size.Fit())
-                | new Button("Show Panels", onClick: _ => showPanels.Set(true))
-                | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+        return Layout.Vertical().Gap(4)
+            | new Card(
+                Layout.Horizontal().Gap(2).Align(Align.Center)
+                    | new Button("Show Panels", onClick: _ => showPanels.Set(true))
+                    | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
+            ).Width(Size.Full())
             | (showPanels.Value ? new Fragment()
                 | new FloatingPanel(
                     new Button("Menu")
@@ -403,23 +433,5 @@ public class MultiPanelView : ViewBase
     }
 }
 ```
-
-## Best Practices
-
-### Z-Index Management
-
-Floating panels automatically use a high z-index (50) to ensure they appear above other content. Be mindful of layering when using multiple floating elements.
-
-### Responsive Considerations
-
-Floating panels maintain their fixed positioning regardless of screen size. Consider using responsive design principles and testing on different screen sizes.
-
-### Accessibility
-
-Ensure floating panels don't interfere with content readability and provide clear visual hierarchy. Use appropriate contrast and sizing for interactive elements.
-
-### Performance
-
-While floating panels are lightweight, avoid creating too many simultaneously as they all remain in the DOM regardless of scroll position.
 
 <WidgetDocs Type="Ivy.FloatingPanel" ExtensionTypes="Ivy.FloatingLayerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FloatingPanel.cs"/>
