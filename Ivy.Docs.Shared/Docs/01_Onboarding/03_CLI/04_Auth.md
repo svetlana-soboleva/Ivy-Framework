@@ -8,18 +8,18 @@ The `ivy auth` commands allow you to add and configure authentication providers 
 
 ## Supported Authentication Providers
 
-Ivy supports the following authentication providers:
+Ivy supports the following authentication providers. Click on any provider for detailed setup instructions:
 
 ### Identity Providers
 
-- **Auth0** - Universal authentication platform
-- **Supabase Auth** - Built-in authentication for Supabase
-- **Microsoft Entra** - Identity and access management from Microsoft
-- **Authelia** - Open-source identity provider
+- **[Auth0](04_Authentication_Providers/Auth0.md)** - Universal authentication platform with social logins
+- **[Supabase Auth](04_Authentication_Providers/Supabase.md)** - Built-in authentication for Supabase with magic links
+- **[Microsoft Entra](04_Authentication_Providers/MicrosoftEntra.md)** - Enterprise identity and access management
+- **[Authelia](04_Authentication_Providers/Authelia.md)** - Open-source identity provider with MFA
 
 ### Basic Authentication
 
-- **Basic Auth** - Simple username/password authentication
+- **[Basic Auth](04_Authentication_Providers/BasicAuth.md)** - Simple username/password authentication
 
 ### Basic Usage
 
@@ -66,77 +66,15 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 2. **Provider Configuration**: Enter the necessary configuration details
 3. **Integration Setup**: Ivy will automatically configure your project
 
-### Authentication Provider Configuration
+### Provider-Specific Setup
 
-**Auth0** - Universal authentication platform that supports multiple identity providers.
+For detailed setup instructions, configuration steps, and security best practices for each authentication provider, see the dedicated provider pages:
 
-**Setup Process**
-
-```terminal
->ivy auth add --provider Auth0
-```
-
-**Required Configuration** - Domain (e.g., `your-project.auth0.com`), Client ID, and Client Secret.
-
-**Connection String Format**
-
-```text
-Domain=your-domain.auth0.com;ClientId=your-client-id;ClientSecret=your-client-secret
-```
-
-**Auth0 Application Setup** - Create an application in your Auth0 dashboard, set the callback URL to `https://your-project.com/callback`, configure allowed logout URLs, and note your Domain, Client ID, and Client Secret.
-
-**Supabase Auth** - Built-in authentication for Supabase projects.
-
-**Setup Process**
-
-```terminal
->ivy auth add --provider Supabase
-```
-
-**Required Configuration** - Project URL, Anon Key, and optionally Service Role Key for admin operations.
-
-**Connection String Format**
-
-```text
-ProjectUrl=https://your-project.supabase.co;AnonKey=your-anon-key;ServiceRoleKey=your-service-role-key
-```
-
-**Supabase Project Setup** - Create a project in Supabase, go to Settings > API, copy your Project URL and anon key, and optionally copy your service role key for admin operations.
-
-**Authelia** - Open-source identity provider that can integrate with various authentication systems.
-
-**Setup Process**
-
-```terminal
->ivy auth add --provider Authelia
-```
-
-**Required Configuration** - Base URL, Client ID, and Client Secret.
-
-**Connection String Format**
-
-```text
-BaseUrl=https://auth.your-domain.com;ClientId=your-client-id;ClientSecret=your-client-secret
-```
-
-**Authelia Setup** - Install and configure Authelia, create an OAuth2 client for your application, configure the redirect URIs, and note your Base URL, Client ID, and Client Secret.
-
-**Basic Auth** - Simple username/password authentication.
-
-**Setup Process**
-
-```terminal
->ivy auth add --provider Basic
-```
-
-**Required Configuration** - Username and Password.
-
-**Connection String Format**
-
-```text
-Username=admin;Password=secure-password
-```
+- **[Auth0 Setup Guide](04_Authentication_Providers/Auth0.md)** - Universal authentication with social logins, MFA, and enterprise integrations
+- **[Supabase Auth Setup Guide](04_Authentication_Providers/Supabase.md)** - Email/password, magic links, social auth, and Row Level Security integration
+- **[Microsoft Entra Setup Guide](04_Authentication_Providers/MicrosoftEntra.md)** - Enterprise SSO, conditional access, and Microsoft Graph integration
+- **[Authelia Setup Guide](04_Authentication_Providers/Authelia.md)** - Self-hosted identity provider with LDAP, MFA, and forward auth
+- **[Basic Auth Setup Guide](04_Authentication_Providers/BasicAuth.md)** - Simple HTTP basic authentication for development and internal tools
 
 ### Security and Secrets Management
 
