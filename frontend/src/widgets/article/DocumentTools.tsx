@@ -24,13 +24,48 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 }) => {
   const { toast } = useToast();
 
+  // Function to load all tabs by clicking through them
+  const loadAllTabs = async (): Promise<void> => {
+    if (!articleRef.current) return;
+
+    // Find all tab elements with aria-role="tab"
+    const tabs = articleRef.current.querySelectorAll('[role="tab"]');
+
+    if (tabs.length === 0) return;
+
+    // Click through each tab and wait for content to load
+    for (const tab of Array.from(tabs)) {
+      try {
+        // Check if tab is not already selected
+        const isSelected = tab.getAttribute('aria-selected') === 'true';
+
+        if (!isSelected && tab instanceof HTMLElement) {
+          // Click the tab
+          tab.click();
+
+          // Wait a bit for content to load
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      } catch (error) {
+        console.warn('Failed to click tab:', error);
+      }
+    }
+
+    // Wait a bit more for all content to be fully rendered
+    await new Promise(resolve => setTimeout(resolve, 200));
+  };
+
   const copyTextContent = async () => {
     try {
       // Show loading state
       toast({
         title: 'Loading Content...',
-        description: 'Extracting API sections from page...',
+        description:
+          'Loading all tabs and extracting API sections from page...',
       });
+
+      // First, click through all unloaded tabs to ensure content is loaded
+      await loadAllTabs();
 
       // Extract API sections from the rendered page
       const apiContent = extractApiSections();
@@ -116,6 +151,9 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       // Skip empty elements
       if (!text && !['table', 'ul', 'ol'].includes(tagName)) return;
 
+      // Skip elements that are inside already processed containers
+      if (isInsideProcessedElement(element, processedElements)) return;
+
       // Check if this element is part of an API section
       if (isApiSection(element)) {
         switch (tagName) {
@@ -148,8 +186,19 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
           case 'table':
             if (!processedElements.has(element)) {
-              apiContent += extractTableToMarkdown(element as HTMLTableElement);
+              const { tableMarkdown, usedCodeBlocks } =
+                extractTableWithAssociatedContent(
+                  element as HTMLTableElement,
+                  articleElement
+                );
+              apiContent += tableMarkdown;
               processedElements.add(element);
+              // Mark all child elements as processed to avoid duplication
+              markChildrenAsProcessed(element, processedElements);
+              // Mark used code blocks as processed
+              usedCodeBlocks.forEach(codeBlock =>
+                processedElements.add(codeBlock)
+              );
             }
             break;
 
@@ -161,12 +210,17 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
                 : element.textContent;
               apiContent += `\`\`\`\n${codeText || ''}\n\`\`\`\n\n`;
               processedElements.add(element);
+              // Mark child code elements as processed
+              if (codeElement) processedElements.add(codeElement);
             }
             break;
 
           case 'code':
-            // Only process inline code (not inside pre)
-            if (!element.closest('pre') && !processedElements.has(element)) {
+            // Only process inline code (not inside pre, table, or other containers)
+            if (
+              !element.closest('pre, table, ul, ol') &&
+              !processedElements.has(element)
+            ) {
               // Skip standalone code elements to avoid duplication
             }
             break;
@@ -175,6 +229,30 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     });
 
     return apiContent.trim();
+  };
+
+  // Helper function to check if an element is inside an already processed container
+  const isInsideProcessedElement = (
+    element: Element,
+    processedElements: Set<Element>
+  ): boolean => {
+    let parent = element.parentElement;
+    while (parent) {
+      if (processedElements.has(parent)) {
+        return true;
+      }
+      parent = parent.parentElement;
+    }
+    return false;
+  };
+
+  // Helper function to mark all child elements as processed
+  const markChildrenAsProcessed = (
+    container: Element,
+    processedElements: Set<Element>
+  ): void => {
+    const allChildren = container.querySelectorAll('*');
+    allChildren.forEach(child => processedElements.add(child));
   };
 
   // Check if an element is part of an API section
@@ -230,55 +308,100 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     });
   };
 
-  // Helper function to extract table as markdown with better cleaning
-  const extractTableToMarkdown = (table: HTMLTableElement): string => {
+  // Enhanced function to extract table with associated content (like code blocks that follow)
+  const extractTableWithAssociatedContent = (
+    table: HTMLTableElement,
+    articleElement: HTMLElement
+  ): { tableMarkdown: string; usedCodeBlocks: Element[] } => {
     let tableMarkdown = '\n';
     const rows = Array.from(table.querySelectorAll('tr'));
+    const usedCodeBlocks: Element[] = [];
 
-    if (rows.length === 0) return '';
+    if (rows.length === 0) return { tableMarkdown: '', usedCodeBlocks: [] };
 
-    rows.forEach((row, rowIndex) => {
+    // First, extract the basic table structure
+    const tableData: string[][] = [];
+
+    rows.forEach(row => {
       const cells = Array.from(row.querySelectorAll('td, th'));
       const cellTexts = cells.map(cell => {
-        // Clean up the cell content by removing CSS styles and data attributes
         let cellText = cell.textContent || '';
-
-        // Remove CSS style blocks that might be embedded
+        // Basic cleaning
         cellText = cellText.replace(/\{[^}]*\}/g, '');
-
-        // Remove data attributes that might be in the text
         cellText = cellText.replace(/\[data-[^\]]*\]/g, '');
-
-        // Remove any remaining CSS selectors
         cellText = cellText.replace(/[a-zA-Z-]+\s*\{[^}]*\}/g, '');
-
-        // Remove webkit scrollbar and other CSS pseudo-elements
         cellText = cellText.replace(/::-webkit-scrollbar[^;]*;?/g, '');
-        cellText = cellText.replace(/::-moz-scrollbar[^;]*;?/g, '');
-        cellText = cellText.replace(/::-ms-scrollbar[^;]*;?/g, '');
-        cellText = cellText.replace(/::scrollbar[^;]*;?/g, '');
-
-        // Remove any remaining CSS rules
         cellText = cellText.replace(/[a-zA-Z-]+\s*:\s*[^;]*;?/g, '');
-
-        // Clean up extra whitespace and normalize
         cellText = cellText.trim().replace(/\s+/g, ' ');
-
-        // Escape pipe characters for markdown tables
         return cellText.replace(/\|/g, '\\|');
       });
+      tableData.push(cellTexts);
+    });
 
-      if (cellTexts.some(text => text.length > 0)) {
-        tableMarkdown += `| ${cellTexts.join(' | ')} |\n`;
+    // Look for code blocks that might contain the missing table data
+    const codeBlocks = Array.from(
+      articleElement.querySelectorAll('pre code, code')
+    );
+    const codeValues: { text: string; element: Element }[] = [];
 
-        // Add separator row after header
-        if (rowIndex === 0 && row.querySelector('th')) {
-          tableMarkdown += `| ${cellTexts.map(() => '---').join(' | ')} |\n`;
+    // Find code blocks that appear after this table
+    const tablePosition = Array.from(
+      articleElement.querySelectorAll('*')
+    ).indexOf(table);
+
+    codeBlocks.forEach(codeBlock => {
+      const codePosition = Array.from(
+        articleElement.querySelectorAll('*')
+      ).indexOf(codeBlock);
+      if (codePosition > tablePosition) {
+        const codeText = codeBlock.textContent?.trim();
+        if (codeText && codeText.length > 0 && codeText.length < 200) {
+          // Reasonable length for table values
+          codeValues.push({ text: codeText, element: codeBlock });
         }
       }
     });
 
-    return tableMarkdown + '\n';
+    // Try to populate empty cells with code values
+    if (codeValues.length > 0 && tableData.length > 1) {
+      let codeIndex = 0;
+
+      // Skip header row, start from data rows
+      for (
+        let rowIndex = 1;
+        rowIndex < tableData.length && codeIndex < codeValues.length;
+        rowIndex++
+      ) {
+        const row = tableData[rowIndex];
+
+        // For each empty cell in "Default Value" and "Setters" columns (typically columns 2 and 3)
+        for (
+          let colIndex = 2;
+          colIndex < row.length && codeIndex < codeValues.length;
+          colIndex++
+        ) {
+          if (!row[colIndex] || row[colIndex].trim() === '') {
+            row[colIndex] = codeValues[codeIndex].text;
+            usedCodeBlocks.push(codeValues[codeIndex].element);
+            codeIndex++;
+          }
+        }
+      }
+    }
+
+    // Generate the markdown table
+    tableData.forEach((row, rowIndex) => {
+      if (row.some(text => text.length > 0)) {
+        tableMarkdown += `| ${row.join(' | ')} |\n`;
+
+        // Add separator row after header
+        if (rowIndex === 0 && rows[0]?.querySelector('th')) {
+          tableMarkdown += `| ${row.map(() => '---').join(' | ')} |\n`;
+        }
+      }
+    });
+
+    return { tableMarkdown: tableMarkdown + '\n', usedCodeBlocks };
   };
 
   // Helper function to extract lists as markdown
@@ -343,8 +466,11 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       // Show loading state
       toast({
         title: 'Preparing Download...',
-        description: 'Extracting API sections...',
+        description: 'Loading all tabs and extracting API sections...',
       });
+
+      // First, click through all unloaded tabs to ensure content is loaded
+      await loadAllTabs();
 
       // Extract the same content that gets copied
       const apiContent = extractApiSections();
@@ -363,7 +489,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = generateFileName();
+      link.download = `${generateFileName()}.md`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
