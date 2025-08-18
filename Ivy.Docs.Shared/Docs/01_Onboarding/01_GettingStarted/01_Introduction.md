@@ -133,12 +133,10 @@ graph LR
 graph LR
     A[Your Code] --> B[ivy init]
     B --> C[ivy run]
-    C --> D[Deploy Anywhere]
+    C --> H[Docker-first deployment]
     
-    E[One Command] --> D
     F[Rich CLI] --> B
     G[Unit Tests] --> A
-    H[Docker First] --> D
     
 ```
 
