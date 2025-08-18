@@ -103,7 +103,13 @@ Ready to try Ivy? The fastest way to get started is:
 >dotnet watch
 ```
 
+You can install Ivy with a simple command, check its version to verify if it installed correctly and initialize your first project.
+
 That's it! You'll have a running Ivy application with hot reloading enabled.
+
+<Callout Type="tip">
+If you want to use Ivy agent features, you will need an Ivy account https://ivy.app/auth/sign-up
+</Callout>
 
 ## What's Next
 

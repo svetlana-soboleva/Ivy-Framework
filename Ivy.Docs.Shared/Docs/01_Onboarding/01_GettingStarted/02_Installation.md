@@ -24,3 +24,7 @@ Use the Ivy CLI to scaffold a new project:
 >ivy init --namespace Acme.InternalProject
 >dotnet watch
 ```
+
+<Callout Type="tip">
+You can always see all available commands by using `ivy --help`.
+</Callout>
