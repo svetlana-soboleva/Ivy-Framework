@@ -30,7 +30,7 @@ public class DbmlEditorApp : ViewBase
             """;
 
         var dbml = this.UseState(sampleDbml);
-        return Layout.Horizontal().RemoveParentPadding().Height(Size.Screen())
+        return Layout.Horizontal().RemoveParentPadding().Height(Size.Full())
                | dbml.ToCodeInput().Width(90).Height(Size.Full()).Language(Languages.Dbml)
                | new DbmlCanvas(dbml.Value).Width(Size.Grow())
             ;
