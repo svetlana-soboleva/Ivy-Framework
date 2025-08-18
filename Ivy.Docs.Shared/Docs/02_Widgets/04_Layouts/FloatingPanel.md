@@ -16,20 +16,10 @@ public class BasicFloatingPanelView : ViewBase
     public override object? Build()
     {
         var showPanel = UseState(false);
-        
         return new Fragment()
-            | Text.H1("Basic Floating Panel")
-            | Text.Block("Toggle the floating panel visibility:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panel", onClick: _ => showPanel.Set(true))
                 | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
-            | Layout.Vertical().Gap(2)
-                | Enumerable.Range(1, 20).Select(i => 
-                    new Box($"Content Section {i}")
-                        .Width(Size.Units(50))
-                        .Height(Size.Units(8))
-                        .Color(Colors.Blue)
-                )
             | (showPanel.Value ? new FloatingPanel(
                 new Button("Floating Action")
                     .Icon(Icons.Plus)
@@ -60,9 +50,7 @@ public class CornerAlignmentView : ViewBase
             .BorderRadius(BorderRadius.Full);
 
         return new Fragment()
-            | Text.H1("Corner Alignments")
-            | Text.Block("Toggle the floating panels in each corner:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panels", onClick: _ => showPanels.Set(true))
                 | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
             | (showPanels.Value ? new Fragment()
@@ -91,9 +79,7 @@ public class EdgeCenterAlignmentView : ViewBase
             .BorderRadius(BorderRadius.Full);
 
         return new Fragment()
-            | Text.H1("Edge Center Alignments")
-            | Text.Block("Toggle the floating panels centered on each edge:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panels", onClick: _ => showPanels.Set(true))
                 | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
             | (showPanels.Value ? new Fragment()
@@ -118,9 +104,7 @@ public class CenterAlignmentView : ViewBase
         var showPanel = UseState(false);
         
         return new Fragment()
-            | Text.H1("Center Alignment")
-            | Text.Block("Toggle the centered floating panel:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panel", onClick: _ => showPanel.Set(true))
                 | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
             | (showPanel.Value ? new FloatingPanel(
@@ -130,7 +114,7 @@ public class CenterAlignmentView : ViewBase
                         | Text.Block("This panel is positioned")
                         | Text.Block("in the center of the screen")
                         | new Button("Close", onClick: _ => showPanel.Set(false)).Secondary()
-                ).Width(Size.Units(25))
+                ).Width(Size.Auto())
             , Align.Center) : null);
     }
 }
@@ -152,9 +136,7 @@ public class BasicOffsetView : ViewBase
         var showPanels = UseState(false);
         
         return new Fragment()
-            | Text.H1("Basic Offset")
-            | Text.Block("Toggle floating panels with different offset values:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panels", onClick: _ => showPanels.Set(true))
                 | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
             | (showPanels.Value ? new Fragment()
@@ -169,14 +151,14 @@ public class BasicOffsetView : ViewBase
                         .Icon(Icons.ArrowDownLeft)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
-                , Align.TopRight)
+                , Align.BottomLeft)
                     .Offset(new Thickness(0, 20, 0, 0)) // 20 units down from top
                 | new FloatingPanel(
                     new Button("Custom Offset")
                         .Icon(Icons.Move)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
-                , Align.BottomLeft)
+                , Align.BottomRight)
                     .Offset(new Thickness(10, 0, 0, 10)) // 10 units from left and bottom
             : null);
     }
@@ -195,9 +177,7 @@ public class ConvenienceOffsetView : ViewBase
         var showPanels = UseState(false);
         
         return new Fragment()
-            | Text.H1("Convenience Offset Methods")
-            | Text.Block("Toggle panels using convenience methods for quick positioning:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panels", onClick: _ => showPanels.Set(true))
                 | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
             | (showPanels.Value ? new Fragment()
@@ -207,28 +187,28 @@ public class ConvenienceOffsetView : ViewBase
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.TopRight)
-                    .OffsetTop(30) // 30 units down from top
+                    .OffsetTop(30) 
                 | new FloatingPanel(
                     new Button("Left Offset")
                         .Icon(Icons.ArrowLeft)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.TopRight)
-                    .OffsetLeft(20) // 20 units left from right edge
+                    .OffsetLeft(30) 
                 | new FloatingPanel(
                     new Button("Right Offset")
                         .Icon(Icons.ArrowRight)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.TopLeft)
-                    .OffsetRight(15) // 15 units right from left edge
+                    .OffsetRight(30) 
                 | new FloatingPanel(
                     new Button("Bottom Offset")
                         .Icon(Icons.ArrowDown)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.BottomLeft)
-                    .OffsetBottom(25) // 25 units up from bottom
+                    .OffsetBottom(30) 
             : null);
     }
 }
@@ -250,9 +230,7 @@ public class NavigationPanelView : ViewBase
         var showPanel = UseState(false);
         
         return new Fragment()
-            | Text.H1("Floating Navigation Panel")
-            | Text.Block("Toggle the floating navigation panel:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panel", onClick: _ => showPanel.Set(true))
                 | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
             | (showPanel.Value ? new FloatingPanel(
@@ -291,9 +269,7 @@ public class ActionPanelView : ViewBase
         var showPanel = UseState(false);
         
         return new Fragment()
-            | Text.H1("Floating Action Panel")
-            | Text.Block("Toggle the horizontal action panel:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panel", onClick: _ => showPanel.Set(true))
                 | new Button("Hide Panel", onClick: _ => showPanel.Set(false))
             | (showPanel.Value ? new FloatingPanel(
@@ -330,18 +306,9 @@ public class BackToTopView : ViewBase
         var showButton = UseState(false);
         
         return new Fragment()
-            | Text.H1("Back to Top Button")
-            | Text.Block("Toggle the floating back-to-top button:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Button", onClick: _ => showButton.Set(true))
                 | new Button("Hide Button", onClick: _ => showButton.Set(false))
-            | Layout.Vertical().Gap(2)
-                | Enumerable.Range(1, 30).Select(i => 
-                    new Box($"Section {i}")
-                        .Width(Size.Units(60))
-                        .Height(Size.Units(6))
-                        .Color(Colors.Green)
-                )
             | (showButton.Value ? new FloatingPanel(
                 new Button("↑ Top")
                     .Icon(Icons.ArrowUp)
@@ -366,18 +333,9 @@ public class FloatingSearchView : ViewBase
         var showSearchBar = UseState(false);
         
         return new Fragment()
-            | Text.H1("Floating Search Bar")
-            | Text.Block("Toggle the floating search bar:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Search Bar", onClick: _ => showSearchBar.Set(true))
                 | new Button("Hide Search Bar", onClick: _ => showSearchBar.Set(false))
-            | Layout.Vertical().Gap(2)
-                | Enumerable.Range(1, 25).Select(i => 
-                    new Box($"Content Block {i}")
-                        .Width(Size.Units(55))
-                        .Height(Size.Units(8))
-                        .Color(Colors.Purple)
-                )
             | (showSearchBar.Value ? new FloatingPanel(
                 new Card(
                     Layout.Horizontal().Gap(2)
@@ -404,9 +362,7 @@ public class MultiPanelView : ViewBase
         var showPanels = UseState(false);
         
         return new Fragment()
-            | Text.H1("Multiple Floating Panels")
-            | Text.Block("Toggle multiple floating panels positioned strategically:")
-            | Layout.Horizontal().Gap(2)
+            | Layout.Horizontal().Gap(2).Width(Size.Fit())
                 | new Button("Show Panels", onClick: _ => showPanels.Set(true))
                 | new Button("Hide Panels", onClick: _ => showPanels.Set(false))
             | (showPanels.Value ? new Fragment()
@@ -440,7 +396,7 @@ public class MultiPanelView : ViewBase
                             | Text.Block("Quick Actions")
                             | new Button("Save").Small().Primary()
                             | new Button("Share").Small().Secondary()
-                    ).Width(Size.Units(15))
+                    ).Width(Size.Units(40))
                 , Align.Left)
                     .Offset(new Thickness(10, 0, 0, 0))
             : null);
