@@ -22,6 +22,11 @@ Get started with Ivy CLI in just a few commands:
 >ivy deploy
 ```
 
+<Callout Type="tip">
+If you're using a specific operating system, read the instructions in your terminal after installing Ivy.Console.
+You can always see all available commands by using `ivy --help`.
+</Callout>
+
 ## Key Features
 
 ### 🗄️ Database Support
