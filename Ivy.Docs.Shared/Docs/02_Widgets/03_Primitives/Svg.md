@@ -85,6 +85,13 @@ public class BasicShapesView : ViewBase
 }
 ```
 
+<Callout Type="Tip">
+The `Svg` widget has the following properties:
+- Content (string): The SVG markup content to render
+- Width (Size): The width of the SVG container (defaults to Auto)
+- Height (Size): The height of the SVG container (defaults to Auto)
+</Callout>
+
 ### Simple Icons
 
 Create basic icons with minimal SVG:
@@ -171,12 +178,11 @@ public class SimpleIconsView : ViewBase
 }
 ```
 
-<Callout Type="Tip">
-The `Svg` widget has the following properties:
-- Content (string): The SVG markup content to render
-- Width (Size): The width of the SVG container (defaults to Auto)
-- Height (Size): The height of the SVG container (defaults to Auto)
+<Callout Type="Warning">
+For better icon management, consider using the comprehensive icon library available in Ivy Icons instead of custom SVG implementations.
 </Callout>
+
+To explore the available icons, visit the [Ivy Icons](../../03_ApiReference/IvyShared/Icons.md) page.
 
 ### Progress Bar
 
@@ -262,6 +268,12 @@ public class ProgressBarView : ViewBase
     }
 }
 ```
+
+<Callout Type="Warning">
+For better progress bar management, consider using the comprehensive progress bar library available in Ivy Progress instead of custom SVG implementations.
+</Callout>
+
+To explore the available progress bars, visit the [Ivy Progress](../../02_Widgets/01_Common/Progress.md) page.
 
 ### Simple Chart
 
@@ -349,5 +361,11 @@ public class SimpleChartView : ViewBase
     }
 }
 ```
+
+<Callout Type="Warning">
+For better chart management, consider using the comprehensive chart library available in Ivy Charts instead of custom SVG implementations.
+</Callout>
+
+To explore the available charts, visit the [Ivy Charts](../../02_Widgets/06_Charts/BarChart.md) page.
 
 <WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/>
