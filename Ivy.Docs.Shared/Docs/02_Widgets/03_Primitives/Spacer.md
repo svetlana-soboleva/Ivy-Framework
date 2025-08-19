@@ -24,7 +24,7 @@ public class BasicSpacerView : ViewBase
 }
 ```
 
-## Flexible Spacing
+### Flexible Spacing
 
 Use `Spacer` with `Size.Grow()` to push elements to opposite sides:
 
@@ -41,7 +41,12 @@ public class FlexibleSpacerView : ViewBase
 }
 ```
 
-## Header Layout with Spacing
+<Callout Type="tip">
+The `Spacer().Width(Size.Grow())` pattern is essential for creating responsive layouts. It makes the spacer take up all available horizontal space, effectively pushing elements to opposite sides.
+Without `Size.Grow()`, the spacer would only take up minimal space, and elements wouldn't be pushed to the edges.
+</Callout>
+
+### Header Layout with Spacing
 
 Create navigation headers with proper spacing:
 
@@ -74,7 +79,7 @@ public class HeaderSpacerView : ViewBase
 }
 ```
 
-## Height-Based Spacing
+### Height-Based Spacing
 
 Add vertical spacing with specific heights:
 
@@ -93,7 +98,11 @@ public class HeightSpacerView : ViewBase
 }
 ```
 
-## Form Layout with Spacing
+<Callout Type="info">
+When using `Spacer().Height()` or `Spacer().Width()`, the values represent units in the Ivy Framework's spacing system, not pixels. The framework automatically converts these units to appropriate spacing based on the current theme and design system.
+</Callout>
+
+### Form Layout with Spacing
 
 Organize form elements with consistent spacing:
 
@@ -128,7 +137,11 @@ public class FormSpacerView : ViewBase
 }
 ```
 
-## Dashboard Grid with Spacing
+<WidgetDocs Type="Ivy.Spacer" ExtensionTypes="Ivy.SpacerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Spacer.cs"/>
+
+## Examples
+
+### Dashboard Grid with Spacing
 
 Create responsive dashboard layouts with proper spacing:
 
@@ -172,5 +185,3 @@ public class DashboardSpacerView : ViewBase
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.Spacer" ExtensionTypes="Ivy.SpacerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Spacer.cs"/> 
