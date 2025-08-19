@@ -79,7 +79,7 @@ server.UseAuth<Auth0AuthProvider>(c => c.UseEmailPassword());
 
 **Social Logins**
 ```csharp
-server.UseAuth<Auth0AuthProvider>(c => 
+server.UseAuth<Auth0AuthProvider>(c =>
     c.UseGoogle()
      .UseApple()
      .UseFacebook()
@@ -89,7 +89,7 @@ server.UseAuth<Auth0AuthProvider>(c =>
 
 **Enterprise Connections**
 ```csharp
-server.UseAuth<Auth0AuthProvider>(c => 
+server.UseAuth<Auth0AuthProvider>(c =>
     c.UseMicrosoftEntra()
      .UseActiveDirectory()
      .UseSAML()
@@ -152,11 +152,11 @@ public class UserProfileApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         return Card(
             Text($"Welcome, {user.Name}!"),
             Text($"Email: {user.Email}"),
-            user.IsEmailVerified 
+            user.IsEmailVerified
                 ? Badge("Verified", Colors.Green)
                 : Badge("Unverified", Colors.Orange),
             Button("Logout", LogoutAsync)
@@ -175,12 +175,12 @@ public class AdminApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (!user.HasRole("admin"))
         {
             return Error("Access denied. Admin role required.");
         }
-        
+
         return AdminDashboard();
     }
 }
@@ -246,18 +246,18 @@ public class LoginApp : AppBase
             )
         );
     }
-    
+
     private async Task LoginWithEmail()
     {
         // Ivy handles the Auth0 redirect automatically
         await LoginAsync("email");
     }
-    
+
     private async Task LoginWithGoogle()
     {
         await LoginAsync("google");
     }
-    
+
     private async Task LoginWithApple()
     {
         await LoginAsync("apple");
@@ -267,7 +267,7 @@ public class LoginApp : AppBase
 
 ## Related Documentation
 
-- [Authentication Overview](../04_Auth.md)
+- [Authentication Overview](01_Overview.md)
 - [Supabase Authentication](Supabase.md)
 - [Microsoft Entra Provider](MicrosoftEntra.md)
 - [User Management](../../02_Concepts/Services.md)

@@ -68,7 +68,7 @@ Connections/
 If using TNS names, ensure your `tnsnames.ora` file is properly configured:
 
 ```text
-MYDB = 
+MYDB =
   (DESCRIPTION =
     (ADDRESS = (PROTOCOL = TCP)(HOST = oracle-server)(PORT = 1521))
     (CONNECT_DATA =
@@ -166,7 +166,7 @@ public class EmployeeApp : AppBase<Employee>
                 Text($"Name: {employee.FirstName} {employee.LastName}"),
                 Text($"Department: {employee.Department}"),
                 Text($"Hire Date: {employee.HireDate:yyyy-MM-dd}"),
-                employee.IsActive 
+                employee.IsActive
                     ? Badge("Active", Colors.Green)
                     : Badge("Inactive", Colors.Red)
             )
@@ -192,7 +192,7 @@ When migrating to/from Oracle:
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [SQL Server Provider](SqlServer.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [Enterprise Features](../../02_Concepts/Services.md)

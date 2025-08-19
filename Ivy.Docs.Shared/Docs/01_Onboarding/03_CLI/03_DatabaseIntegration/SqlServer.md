@@ -122,7 +122,7 @@ public class EmployeeApp : AppBase<Employee>
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [MySQL Provider](MySQL.md)
 - [SQLite Provider](SQLite.md)

@@ -87,7 +87,7 @@ server.UseAuth<SupabaseAuthProvider>(c => c.UseMagicLink());
 
 **Social Logins**
 ```csharp
-server.UseAuth<SupabaseAuthProvider>(c => 
+server.UseAuth<SupabaseAuthProvider>(c =>
     c.UseGoogle()
      .UseApple()
      .UseFacebook()
@@ -184,7 +184,7 @@ public class UserProfileApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         return Card(
             Text($"Welcome, {user.Email}!"),
             Text($"Display Name: {user.UserMetadata?.DisplayName}"),
@@ -207,7 +207,7 @@ public class ChatApp : AppBase
         return Task.FromResult<IView>(
             // Subscribe to real-time messages for authenticated user
             RealtimeView("messages", (messages) =>
-                List(messages.Select(msg => 
+                List(messages.Select(msg =>
                     Card(
                         Text(msg.Content),
                         Text($"By: {msg.UserEmail}")
@@ -239,17 +239,17 @@ public class DashboardApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (user == null)
         {
             return Redirect("/login");
         }
-        
+
         return Card(
             Text($"User ID: {user.Id}"),
             Text($"Email: {user.Email}"),
             Text($"Phone: {user.Phone ?? "Not provided"}"),
-            user.IsEmailConfirmed 
+            user.IsEmailConfirmed
                 ? Badge("Email Verified", Colors.Green)
                 : Badge("Email Not Verified", Colors.Orange),
             Button("Sign Out", SignOutAsync)
@@ -273,10 +273,10 @@ DECLARE
 BEGIN
   -- Get user role from your custom table
   SELECT role INTO user_role FROM public.user_roles WHERE user_id = (event->>'user_id')::uuid;
-  
+
   claims := event->'claims';
   claims := jsonb_set(claims, '{user_role}', to_jsonb(user_role));
-  
+
   RETURN jsonb_set(event, '{claims}', claims);
 END;
 $$;
@@ -340,46 +340,46 @@ public class AuthApp : AppBase
         return Task.FromResult<IView>(
             Card(
                 Text("Welcome! Please sign in to continue."),
-                
+
                 Form(
                     TextInput("Email", "email"),
                     TextInput("Password", "password", isPassword: true),
                     Button("Sign In", HandleSignIn),
                     Button("Sign Up", HandleSignUp)
                 ),
-                
+
                 Separator(),
-                
+
                 Text("Or continue with:"),
                 Button("Google", () => LoginWithProvider("google")),
                 Button("GitHub", () => LoginWithProvider("github")),
-                
+
                 Separator(),
-                
+
                 Button("Send Magic Link", HandleMagicLink)
             )
         );
     }
-    
+
     private async Task HandleSignIn()
     {
         var email = GetFormValue("email");
         var password = GetFormValue("password");
         await SignInAsync(email, password);
     }
-    
+
     private async Task HandleSignUp()
     {
         var email = GetFormValue("email");
         var password = GetFormValue("password");
         await SignUpAsync(email, password);
     }
-    
+
     private async Task LoginWithProvider(string provider)
     {
         await LoginAsync(provider);
     }
-    
+
     private async Task HandleMagicLink()
     {
         var email = GetFormValue("email");
@@ -398,12 +398,12 @@ public class UserPostsApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         // Query posts using RLS - only user's posts will be returned
         var posts = await DatabaseContext.Posts
             .Where(p => p.UserId == user.Id)
             .ToListAsync();
-        
+
         return View(
             Text($"Your Posts ({posts.Count})"),
             List(posts.Select(post =>
@@ -421,7 +421,7 @@ public class UserPostsApp : AppBase
 
 ## Related Documentation
 
-- [Authentication Overview](../04_Auth.md)
-- [Supabase Database Provider](../03_Database_Providers/Supabase.md)
+- [Authentication Overview](01_Overview.md)
+- [Supabase Database Provider](../03_DatabaseIntegration/Supabase.md)
 - [Auth0 Provider](Auth0.md)
 - [Real-time Features](../../02_Concepts/TasksAndObservables.md)

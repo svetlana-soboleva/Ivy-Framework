@@ -53,7 +53,7 @@ Server=localhost;Database=mydb;Uid=user;Pwd=pass;Pooling=true;MinimumPoolSize=1;
 
 Ivy automatically configures:
 - **MySql.EntityFrameworkCore** or **Pomelo.EntityFrameworkCore.MySql** package
-- **Connection strings** stored in .NET User Secrets  
+- **Connection strings** stored in .NET User Secrets
 - **DbContext** with MariaDB provider configuration
 
 ### Generated Files
@@ -146,7 +146,7 @@ public class CustomerApp : AppBase<Customer>
                 Text($"Customer: {customer.Name}"),
                 Text($"Email: {customer.Email}"),
                 Text($"Registration: {customer.CreatedAt:yyyy-MM-dd}"),
-                customer.IsActive 
+                customer.IsActive
                     ? Badge("Active", Colors.Green)
                     : Badge("Inactive", Colors.Red)
             )
@@ -157,7 +157,7 @@ public class CustomerApp : AppBase<Customer>
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [MySQL Provider](MySQL.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)

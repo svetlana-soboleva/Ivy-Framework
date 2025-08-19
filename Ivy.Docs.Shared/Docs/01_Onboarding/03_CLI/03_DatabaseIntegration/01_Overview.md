@@ -12,16 +12,16 @@ Ivy supports the following database providers. Click on any provider for detaile
 
 ### Relational Databases
 
-- **[SQL Server](03_Database_Providers/SqlServer.md)** - Microsoft's enterprise database
-- **[PostgreSQL](03_Database_Providers/PostgreSQL.md)** - Advanced open-source database
-- **[MySQL](03_Database_Providers/MySQL.md)** - Popular open-source database
-- **[MariaDB](03_Database_Providers/MariaDB.md)** - MySQL fork with enhanced features
-- **[SQLite](03_Database_Providers/SQLite.md)** - Lightweight file-based database
-- **[Oracle](03_Database_Providers/Oracle.md)** - Enterprise database system
+- **[SQL Server](SqlServer.md)** - Microsoft's enterprise database
+- **[PostgreSQL](PostgreSQL.md)** - Advanced open-source database
+- **[MySQL](MySQL.md)** - Popular open-source database
+- **[MariaDB](MariaDB.md)** - MySQL fork with enhanced features
+- **[SQLite](SQLite.md)** - Lightweight file-based database
+- **[Oracle](Oracle.md)** - Enterprise database system
 
 ### Cloud Databases
 
-- **[Supabase](03_Database_Providers/Supabase.md)** - Open-source Firebase alternative with PostgreSQL
+- **[Supabase](Supabase.md)** - Open-source Firebase alternative with PostgreSQL
 - **Google Spanner** - Globally distributed database *(Coming Soon)*
 - **Snowflake** - Cloud data platform *(Coming Soon)*
 
@@ -122,13 +122,13 @@ Ivy automatically configures:
 
 For detailed setup instructions, connection string formats, and advanced configuration for each database provider, see the dedicated provider pages:
 
-- **[SQL Server Setup Guide](03_Database_Providers/SqlServer.md)** - Enterprise database with Windows/SQL authentication
-- **[PostgreSQL Setup Guide](03_Database_Providers/PostgreSQL.md)** - Advanced features, JSON support, and performance optimization
-- **[MySQL Setup Guide](03_Database_Providers/MySQL.md)** - Popular open-source database configuration
-- **[MariaDB Setup Guide](03_Database_Providers/MariaDB.md)** - Enhanced MySQL fork with additional features
-- **[SQLite Setup Guide](03_Database_Providers/SQLite.md)** - Zero-configuration file-based database
-- **[Oracle Setup Guide](03_Database_Providers/Oracle.md)** - Enterprise-grade database with advanced security
-- **[Supabase Setup Guide](03_Database_Providers/Supabase.md)** - PostgreSQL with real-time capabilities and authentication
+- **[SQL Server Setup Guide](SqlServer.md)** - Enterprise database with Windows/SQL authentication
+- **[PostgreSQL Setup Guide](PostgreSQL.md)** - Advanced features, JSON support, and performance optimization
+- **[MySQL Setup Guide](MySQL.md)** - Popular open-source database configuration
+- **[MariaDB Setup Guide](MariaDB.md)** - Enhanced MySQL fork with additional features
+- **[SQLite Setup Guide](SQLite.md)** - Zero-configuration file-based database
+- **[Oracle Setup Guide](Oracle.md)** - Enterprise-grade database with advanced security
+- **[Supabase Setup Guide](Supabase.md)** - PostgreSQL with real-time capabilities and authentication
 
 ### Security and Secrets Management
 

@@ -91,6 +91,6 @@ Most Ivy commands require authentication. Use `ivy login` to authenticate with y
 For detailed information on each feature, see the specific documentation files:
 
 - [Init.md](Init.md) - Project initialization guide
-- [Db.md](Db.md) - Database integration guide
-- [Auth.md](Auth.md) - Authentication setup guide
+- [DatabaseIntegration/01_Overview.md](DatabaseIntegration/01_Overview.md) - Database integration guide
+- [Authentication/01_Overview.md](Authentication/01_Overview.md) - Authentication setup guide
 - [Deploy.md](Deploy.md) - Deployment guide

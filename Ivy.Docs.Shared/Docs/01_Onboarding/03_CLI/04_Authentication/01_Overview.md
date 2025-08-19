@@ -12,14 +12,14 @@ Ivy supports the following authentication providers. Click on any provider for d
 
 ### Identity Providers
 
-- **[Auth0](04_Authentication_Providers/Auth0.md)** - Universal authentication platform with social logins
-- **[Supabase Auth](04_Authentication_Providers/Supabase.md)** - Built-in authentication for Supabase with magic links
-- **[Microsoft Entra](04_Authentication_Providers/MicrosoftEntra.md)** - Enterprise identity and access management
-- **[Authelia](04_Authentication_Providers/Authelia.md)** - Open-source identity provider with MFA
+- **[Auth0](Auth0.md)** - Universal authentication platform with social logins
+- **[Supabase Auth](Supabase.md)** - Built-in authentication for Supabase with magic links
+- **[Microsoft Entra](MicrosoftEntra.md)** - Enterprise identity and access management
+- **[Authelia](Authelia.md)** - Open-source identity provider with MFA
 
 ### Basic Authentication
 
-- **[Basic Auth](04_Authentication_Providers/BasicAuth.md)** - Simple username/password authentication
+- **[Basic Auth](BasicAuth.md)** - Simple username/password authentication
 
 ### Basic Usage
 
@@ -70,11 +70,11 @@ When you run `ivy auth add` without specifying options, Ivy will guide you throu
 
 For detailed setup instructions, configuration steps, and security best practices for each authentication provider, see the dedicated provider pages:
 
-- **[Auth0 Setup Guide](04_Authentication_Providers/Auth0.md)** - Universal authentication with social logins, MFA, and enterprise integrations
-- **[Supabase Auth Setup Guide](04_Authentication_Providers/Supabase.md)** - Email/password, magic links, social auth, and Row Level Security integration
-- **[Microsoft Entra Setup Guide](04_Authentication_Providers/MicrosoftEntra.md)** - Enterprise SSO, conditional access, and Microsoft Graph integration
-- **[Authelia Setup Guide](04_Authentication_Providers/Authelia.md)** - Self-hosted identity provider with LDAP, MFA, and forward auth
-- **[Basic Auth Setup Guide](04_Authentication_Providers/BasicAuth.md)** - Simple HTTP basic authentication for development and internal tools
+- **[Auth0 Setup Guide](Auth0.md)** - Universal authentication with social logins, MFA, and enterprise integrations
+- **[Supabase Auth Setup Guide](Supabase.md)** - Email/password, magic links, social auth, and Row Level Security integration
+- **[Microsoft Entra Setup Guide](MicrosoftEntra.md)** - Enterprise SSO, conditional access, and Microsoft Graph integration
+- **[Authelia Setup Guide](Authelia.md)** - Self-hosted identity provider with LDAP, MFA, and forward auth
+- **[Basic Auth Setup Guide](BasicAuth.md)** - Simple HTTP basic authentication for development and internal tools
 
 ### Security and Secrets Management
 

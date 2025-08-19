@@ -57,7 +57,7 @@ server.UseAuth<BasicAuthProvider>();
 ### Custom Configuration
 
 ```csharp
-server.UseAuth<BasicAuthProvider>(c => 
+server.UseAuth<BasicAuthProvider>(c =>
     c.WithRealm("My Secure Application")
      .WithUsers(new Dictionary<string, string>
      {
@@ -96,7 +96,7 @@ Store users in a configuration file:
 ```
 
 ```csharp
-server.UseAuth<BasicAuthProvider>(c => 
+server.UseAuth<BasicAuthProvider>(c =>
     c.LoadUsersFromFile("users.json")
 );
 ```
@@ -106,7 +106,7 @@ server.UseAuth<BasicAuthProvider>(c =>
 Use hashed passwords instead of plain text:
 
 ```csharp
-server.UseAuth<BasicAuthProvider>(c => 
+server.UseAuth<BasicAuthProvider>(c =>
     c.WithHashedPasswords()
      .WithUsers(new Dictionary<string, string>
      {
@@ -128,7 +128,7 @@ public class UserManager
         { "manager", new[] { "user", "readonly" } },
         { "viewer", new[] { "readonly" } }
     };
-    
+
     public static string[] GetUserRoles(string username)
     {
         return UserRoles.TryGetValue(username, out var roles) ? roles : Array.Empty<string>();
@@ -151,7 +151,7 @@ public class UserManager
 
 ```csharp
 // Use strong password requirements
-server.UseAuth<BasicAuthProvider>(c => 
+server.UseAuth<BasicAuthProvider>(c =>
     c.WithPasswordPolicy(policy => policy
         .RequireMinimumLength(12)
         .RequireUppercase()
@@ -167,7 +167,7 @@ server.UseAuth<BasicAuthProvider>(c =>
 Implement rate limiting to prevent brute force attacks:
 
 ```csharp
-server.UseAuth<BasicAuthProvider>(c => 
+server.UseAuth<BasicAuthProvider>(c =>
     c.WithRateLimit(maxAttempts: 5, windowMinutes: 15)
 );
 ```
@@ -182,12 +182,12 @@ public class DashboardApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (user == null)
         {
             return Redirect("/login");
         }
-        
+
         return Card(
             Text($"Welcome, {user.Username}!"),
             Text($"Authentication Method: Basic Auth"),
@@ -207,12 +207,12 @@ public class AdminApp : AppBase
     {
         var user = await GetCurrentUserAsync();
         var roles = UserManager.GetUserRoles(user.Username);
-        
+
         if (!roles.Contains("admin"))
         {
             return Error("Access denied. Administrator privileges required.");
         }
-        
+
         return AdminDashboard();
     }
 }
@@ -239,7 +239,7 @@ public class PrototypeApp : AppBase
             Card(
                 Text("Prototype Dashboard"),
                 Text("This is a quick prototype with basic authentication."),
-                
+
                 Grid(
                     Card("Users", Text("5 active users")),
                     Card("Revenue", Text("$1,234")),
@@ -284,7 +284,7 @@ When you outgrow Basic Auth:
 Support multiple authentication methods:
 
 ```csharp
-server.UseAuth<MultiAuthProvider>(c => 
+server.UseAuth<MultiAuthProvider>(c =>
     c.UseBasicAuth()
      .UseAuth0()
      .UseMicrosoftEntra()
@@ -326,14 +326,14 @@ public class SimpleApp : AppBase
             Card(
                 Text("Simple Authenticated App"),
                 Text("You have successfully authenticated with Basic Auth."),
-                
+
                 Text("Available Features:"),
                 List(
                     "View dashboard",
                     "Manage settings",
                     "Export data"
                 ),
-                
+
                 Button("Dashboard", () => NavigateToDashboard()),
                 Button("Settings", () => NavigateToSettings()),
                 Button("Sign Out", () => SignOutAsync())
@@ -349,9 +349,9 @@ builder.Services.AddIvy();
 
 var app = builder.Build();
 
-app.UseIvy(server => 
+app.UseIvy(server =>
 {
-    server.UseAuth<BasicAuthProvider>(auth => 
+    server.UseAuth<BasicAuthProvider>(auth =>
         auth.WithUsers(new Dictionary<string, string>
         {
             { "admin", "secure-password" },
@@ -359,7 +359,7 @@ app.UseIvy(server =>
         })
         .WithRealm("Simple App")
     );
-    
+
     server.UseApp<SimpleApp>();
 });
 
@@ -368,7 +368,7 @@ app.Run();
 
 ## Related Documentation
 
-- [Authentication Overview](../04_Auth.md)
+- [Authentication Overview](01_Overview.md)
 - [Auth0 Provider](Auth0.md)
 - [Supabase Provider](Supabase.md)
 - [Security Best Practices](../../02_Concepts/Services.md)

@@ -175,7 +175,7 @@ public class ProfileApp : AppBase<UserProfile>
                 Avatar(profile.AvatarUrl),
                 Text($"Welcome, {profile.DisplayName}!"),
                 Text($"Member since: {profile.CreatedAt:MMMM yyyy}"),
-                profile.IsEmailVerified 
+                profile.IsEmailVerified
                     ? Badge("Verified", Colors.Green)
                     : Badge("Unverified", Colors.Orange)
             )
@@ -195,8 +195,8 @@ public class UserDataApp : AppBase
     {
         var user = await GetCurrentUserAsync(); // From Supabase Auth
         var userPosts = await GetUserPostsAsync(user.Id);
-        
-        return View(userPosts.Select(post => 
+
+        return View(userPosts.Select(post =>
             Card(
                 Text(post.Title),
                 Text(post.Content),
@@ -209,7 +209,7 @@ public class UserDataApp : AppBase
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
-- [Supabase Authentication](../04_Authentication_Providers/Supabase.md)
+- [Database Overview](01_Overview.md)
+- [Supabase Authentication](../04_Authentication/Supabase.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [Environment Variables and Secrets](../../02_Concepts/Services.md)

@@ -139,7 +139,7 @@ public class ProductApp : AppBase<Product>
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySQL.md)
 - [Supabase Provider](Supabase.md)

@@ -145,7 +145,7 @@ public class OrderApp : AppBase<Order>
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [MariaDB Provider](MariaDB.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)

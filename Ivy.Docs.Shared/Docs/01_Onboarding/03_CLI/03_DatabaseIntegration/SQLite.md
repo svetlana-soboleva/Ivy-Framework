@@ -133,7 +133,7 @@ SQLite offers unique characteristics:
 - **Cross-platform** - works the same everywhere
 
 ### Production Considerations
-- **Concurrent writes** are limited compared to server databases  
+- **Concurrent writes** are limited compared to server databases
 - **No network access** - database must be on same machine
 - **Backup strategy** should include file-level backups
 - **Consider server databases** for high-concurrency applications
@@ -170,7 +170,7 @@ SQLite is often used for development and then migrated to a server database for 
 
 ## Related Documentation
 
-- [Database Overview](../03_Db.md)
+- [Database Overview](01_Overview.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySQL.md)

@@ -59,7 +59,7 @@ Before configuring Ivy, set up your application in the Microsoft Entra admin cen
 
 Note the following from your app registration:
 - **Tenant ID**: Found in the Overview section
-- **Client ID (Application ID)**: Found in the Overview section  
+- **Client ID (Application ID)**: Found in the Overview section
 - **Client Secret**: The value you just created
 
 ## Connection String Format
@@ -96,7 +96,7 @@ Configure which account types can sign in:
 
 **Single Tenant (Organization only)**
 ```csharp
-server.UseAuth<MicrosoftEntraAuthProvider>(c => 
+server.UseAuth<MicrosoftEntraAuthProvider>(c =>
     c.UseMicrosoftEntra()
      .WithTenant("your-tenant-id")
 );
@@ -104,7 +104,7 @@ server.UseAuth<MicrosoftEntraAuthProvider>(c =>
 
 **Multi-tenant (Any organization)**
 ```csharp
-server.UseAuth<MicrosoftEntraAuthProvider>(c => 
+server.UseAuth<MicrosoftEntraAuthProvider>(c =>
     c.UseMicrosoftEntra()
      .WithAuthority("https://login.microsoftonline.com/organizations")
 );
@@ -112,7 +112,7 @@ server.UseAuth<MicrosoftEntraAuthProvider>(c =>
 
 **Multi-tenant + Personal accounts**
 ```csharp
-server.UseAuth<MicrosoftEntraAuthProvider>(c => 
+server.UseAuth<MicrosoftEntraAuthProvider>(c =>
     c.UseMicrosoftEntra()
      .WithAuthority("https://login.microsoftonline.com/common")
 );
@@ -179,7 +179,7 @@ public class UserProfileApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         return Card(
             Text($"Welcome, {user.Name}!"),
             Text($"Email: {user.Email}"),
@@ -204,12 +204,12 @@ public class AdminApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (!user.IsInRole("Global Administrator"))
         {
             return Error("Access denied. Administrator role required.");
         }
-        
+
         return AdminDashboard();
     }
 }
@@ -229,7 +229,7 @@ public class EmailApp : AppBase
             .Request()
             .Top(10)
             .GetAsync();
-        
+
         return List(messages.Select(msg =>
             Card(
                 Text($"From: {msg.From?.EmailAddress?.Name}"),
@@ -290,7 +290,7 @@ When running on Azure, use managed identity:
 
 ```csharp
 // Configure managed identity in Azure
-server.UseAuth<MicrosoftEntraAuthProvider>(c => 
+server.UseAuth<MicrosoftEntraAuthProvider>(c =>
     c.UseManagedIdentity()
 );
 ```
@@ -332,7 +332,7 @@ public class WorkspaceApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (user == null)
         {
             return Card(
@@ -340,25 +340,25 @@ public class WorkspaceApp : AppBase
                 Button("Sign in with Microsoft", () => LoginAsync("microsoft"))
             );
         }
-        
+
         return Card(
             Text($"Welcome back, {user.GivenName}!"),
             Text($"Organization: {user.CompanyName}"),
-            
+
             Tabs(
                 Tab("Profile", await BuildProfileTab()),
                 Tab("Calendar", await BuildCalendarTab()),
                 Tab("Email", await BuildEmailTab())
             ),
-            
+
             Button("Sign Out", SignOutAsync)
         );
     }
-    
+
     private async Task<IView> BuildProfileTab()
     {
         var user = await GetCurrentUserAsync();
-        
+
         return Card(
             Text($"Display Name: {user.DisplayName}"),
             Text($"Job Title: {user.JobTitle}"),
@@ -371,7 +371,7 @@ public class WorkspaceApp : AppBase
 
 ## Related Documentation
 
-- [Authentication Overview](../04_Auth.md)
+- [Authentication Overview](01_Overview.md)
 - [Auth0 Provider](Auth0.md)
 - [Authelia Provider](Authelia.md)
 - [Enterprise Features](../../02_Concepts/Services.md)

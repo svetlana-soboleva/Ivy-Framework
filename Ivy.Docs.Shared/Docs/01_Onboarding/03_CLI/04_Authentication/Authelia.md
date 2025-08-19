@@ -105,7 +105,7 @@ identity_providers:
       -----BEGIN RSA PRIVATE KEY-----
       # Your RSA private key here
       -----END RSA PRIVATE KEY-----
-    
+
     clients:
       - id: ivy-app
         description: Ivy Application
@@ -135,7 +135,7 @@ users:
     groups:
       - admins
       - users
-  
+
   jane:
     displayname: "Jane Smith"
     password: '$argon2id$v=19$m=65536,t=3,p=4$...'
@@ -169,7 +169,7 @@ server.UseAuth<AutheliaAuthProvider>(c => c.UseAuthelia());
 ### Custom Configuration
 
 ```csharp
-server.UseAuth<AutheliaAuthProvider>(c => 
+server.UseAuth<AutheliaAuthProvider>(c =>
     c.UseAuthelia()
      .WithScopes("openid", "profile", "email", "groups")
      .WithAdditionalClaims("groups", "preferred_username")
@@ -208,7 +208,7 @@ access_control:
   rules:
     - domain: "admin.yourdomain.com"
       policy: two_factor
-    - domain: "*.yourdomain.com"  
+    - domain: "*.yourdomain.com"
       policy: one_factor
 ```
 
@@ -275,7 +275,7 @@ public class UserProfileApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         return Card(
             Text($"Welcome, {user.Name}!"),
             Text($"Email: {user.Email}"),
@@ -299,12 +299,12 @@ public class AdminApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (!user.Groups?.Contains("admins") == true)
         {
             return Error("Access denied. Admin group membership required.");
         }
-        
+
         return AdminDashboard();
     }
 }
@@ -383,7 +383,7 @@ http:
       tls:
         certResolver: letsencrypt
       service: authelia
-  
+
   services:
     authelia:
       loadBalancer:
@@ -413,7 +413,7 @@ public class SecureApp : AppBase
     public async override Task<IView> BuildAsync()
     {
         var user = await GetCurrentUserAsync();
-        
+
         if (user == null)
         {
             return Card(
@@ -422,25 +422,25 @@ public class SecureApp : AppBase
                 Button("Sign In", () => LoginAsync("authelia"))
             );
         }
-        
+
         var canAccess = await CheckAccess(user);
         if (!canAccess)
         {
             return Error("Access denied. Insufficient permissions.");
         }
-        
+
         return Card(
             Text($"Welcome to Secure App, {user.Name}!"),
             Text($"Your groups: {string.Join(", ", user.Groups ?? new string[0])}"),
-            
+
             user.Groups?.Contains("admins") == true
                 ? Button("Admin Panel", () => NavigateToAdmin())
                 : Empty(),
-            
+
             Button("Sign Out", SignOutAsync)
         );
     }
-    
+
     private async Task<bool> CheckAccess(IUser user)
     {
         // Implement your access control logic
@@ -451,7 +451,7 @@ public class SecureApp : AppBase
 
 ## Related Documentation
 
-- [Authentication Overview](../04_Auth.md)
+- [Authentication Overview](01_Overview.md)
 - [Auth0 Provider](Auth0.md)
 - [Microsoft Entra Provider](MicrosoftEntra.md)
 - [Basic Authentication](BasicAuth.md)
