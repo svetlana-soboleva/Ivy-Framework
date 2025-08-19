@@ -41,6 +41,10 @@ flowchart TD
 
 The `UseMemo` hook caches the result of a computation and only recomputes it when its dependencies change.
 
+<Callout type="Tip">
+`UseMemo` hook stores only most recent dependencies when comparing values
+</Callout>
+
 ### How UseMemo Works
 
 ```mermaid
