@@ -166,14 +166,14 @@ public class BasicOffsetView : ViewBase
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.BottomLeft)
-                    .Offset(new Thickness(0, 20, 0, 0)) // 20 units down from top
+                    .Offset(new Thickness(0, 20, 0, 0))  // 20 units up from bottom edge
                 | new FloatingPanel(
                     new Button("Custom Offset")
                         .Icon(Icons.Move)
                         .Large()
                         .BorderRadius(BorderRadius.Full)
                 , Align.BottomRight)
-                    .Offset(new Thickness(10, 0, 0, 10)) // 10 units from left and bottom
+                    .Offset(new Thickness(10, 0, 0, 10)) // Thickness(left, top, right, bottom): 10 from left edge, 10 from bottom edge
             : null);
     }
 }
@@ -316,7 +316,9 @@ public class ActionPanelView : ViewBase
 Ensure floating panels don't interfere with content readability and provide clear visual hierarchy. Use appropriate contrast and sizing for interactive elements.
 </Callout>
 
-## Practical Examples
+<WidgetDocs Type="Ivy.FloatingPanel" ExtensionTypes="Ivy.FloatingLayerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FloatingPanel.cs"/>
+
+## Examples
 
 ### Back to Top Button
 
@@ -336,7 +338,7 @@ public class BackToTopView : ViewBase
                     | new Button("Hide Button", onClick: _ => showButton.Set(false))
             ).Width(Size.Full())
             | (showButton.Value ? new FloatingPanel(
-                new Button("↑ Top")
+                new Button("Top")
                     .Icon(Icons.ArrowUp)
                     .Large()
                     .BorderRadius(BorderRadius.Full)
@@ -433,5 +435,3 @@ public class MultiPanelView : ViewBase
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.FloatingPanel" ExtensionTypes="Ivy.FloatingLayerExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Layouts/FloatingPanel.cs"/>
