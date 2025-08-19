@@ -31,10 +31,6 @@ flowchart TD
     F --> I["Cache computed values<br/>• Data filtering<br/>• Complex calculations<br/>• Derived state"]
     G --> J["Prevent child re-renders<br/>• Event handlers<br/>• Stable function references<br/>• Effect dependencies"]
     H --> K["Component-level optimization<br/>• List items<br/>• Heavy UI components<br/>• Custom widgets"]
-    
-    style F fill:#e1f5fe
-    style G fill:#f3e5f5
-    style H fill:#e8f5e8
 ```
 
 ## UseMemo Hook
@@ -494,68 +490,6 @@ var doubled = UseMemo(() => count.Value * 2, count);
 var doubled = count.Value * 2;
 ```
 
-### Performance Impact Visualization
-
-```mermaid
-xychart-beta
-    title "Render Performance: With vs Without Memoization"
-    x-axis ["1st Render", "2nd Render", "3rd Render", "4th Render", "5th Render"]
-    y-axis "Render Time (ms)" 0 --> 120
-    
-    line "Without Memoization" [100, 95, 105, 98, 102]
-    line "With UseMemo" [100, 15, 12, 18, 14]
-    line "With IMemoized" [100, 8, 5, 10, 6]
-```
-
-### Memory vs Performance Trade-off
-
-```mermaid
-quadrantChart
-    title "Memoization Strategy Selection"
-    x-axis "Low Memory Usage" --> "High Memory Usage"
-    y-axis "Low Performance Gain" --> "High Performance Gain"
-    
-    quadrant-1 "Optimal Zone"
-    quadrant-2 "Consider Alternatives"
-    quadrant-3 "Don't Memoize"
-    quadrant-4 "Acceptable Trade-off"
-    
-    "Simple calculations": [0.2, 0.1]
-    "UseMemo for filtering": [0.6, 0.8]
-    "UseCallback for handlers": [0.3, 0.7]
-    "IMemoized components": [0.7, 0.9]
-    "Large object caching": [0.9, 0.6]
-    "Frequent dependency changes": [0.4, 0.2]
-```
-
-### Measuring Performance
-
-Use Ivy's built-in performance tools to measure the impact of memoization:
-
-```csharp
-public class PerformanceTestView : ViewBase
-{
-    public override object? Build()
-    {
-        // Enable performance monitoring in development
-        #if DEBUG
-        var renderTime = UseState<TimeSpan?>(null);
-        var startTime = DateTime.UtcNow;
-        
-        UseEffect(() => 
-        {
-            renderTime.Set(DateTime.UtcNow - startTime);
-        });
-        #endif
-        
-        // Your component logic here
-        return Layout.Vertical(
-            // Your UI
-        );
-    }
-}
-```
-
 ## Common Pitfalls and Solutions
 
 ### Memoization Troubleshooting Guide
@@ -581,9 +515,6 @@ flowchart TD
     
     G -->|Yes| H["✅ Great! Your memoization is working"]
     G -->|No| I["Consider alternative approaches<br/>or seek help in community"]
-    
-    style H fill:#e8f5e8
-    style I fill:#fff3e0
 ```
 
 ### 1. Unstable Dependencies
