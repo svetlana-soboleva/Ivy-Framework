@@ -109,16 +109,16 @@ public class ExpensiveCalculationView : ViewBase
 
 Use memoization when:
 
-1. You have expensive computations that don't need to be redone on every render
-2. You want to prevent unnecessary re-renders of child components
-3. You're dealing with complex data transformations
+- You have expensive computations that don't need to be redone on every render
+- You want to prevent unnecessary re-renders of child components
+- You're dealing with complex data transformations
 
 ### Best Practices
 
-1. **Dependency Array**: Always specify the dependencies that should trigger a recomputation
-2. **Expensive Operations**: Only memoize truly expensive operations
-3. **Clean Dependencies**: Keep the dependency array minimal and focused
-4. **Avoid Side Effects**: Memoized functions should be pure and not have side effects
+- **Dependency Array**: Always specify the dependencies that should trigger a recomputation
+- **Expensive Operations**: Only memoize truly expensive operations
+- **Clean Dependencies**: Keep the dependency array minimal and focused
+- **Avoid Side Effects**: Memoized functions should be pure and not have side effects
 
 ### Examples
 
@@ -212,9 +212,9 @@ public class ParentView : ViewBase
 
 Use `UseCallback` when:
 
-1. **Passing callbacks to child components** - Prevents unnecessary re-renders
-2. **Callbacks are dependencies of other hooks** - Ensures stable references
-3. **Event handlers with expensive setup** - Avoids recreating handlers on every render
+- **Passing callbacks to child components** - Prevents unnecessary re-renders
+- **Callbacks are dependencies of other hooks** - Ensures stable references
+- **Event handlers with expensive setup** - Avoids recreating handlers on every render
 
 ### UseCallback Examples
 
@@ -436,64 +436,63 @@ stateDiagram-v2
 
 ### Best Practices for IMemoized
 
-1. **Include all relevant props** - Any value that affects rendering should be in `GetMemoValues()`
-2. **Exclude volatile values** - Don't include timestamps or random values unless they affect the UI
-3. **Use with .Key()** - Always provide a stable key when rendering memoized components in lists
-4. **Keep it simple** - Only memoize components with expensive rendering logic
+- **Include all relevant props** - Any value that affects rendering should be in `GetMemoValues()`
+- **Exclude volatile values** - Don't include timestamps or random values unless they affect the UI
+- **Use with .Key()** - Always provide a stable key when rendering memoized components in lists
+- **Keep it simple** - Only memoize components with expensive rendering logic
 
 ## Performance Considerations
 
 ### Memory vs Speed Trade-offs
 
-1. **Memory Usage**: Memoization caches values in memory. Consider the size of cached data:
+- **Memory Usage**: Memoization caches values in memory. Consider the size of cached data:
 
-   ```csharp
-   // Good: Small computed value
-   var total = UseMemo(() => items.Value.Sum(x => x.Price), items);
-   
-   // Caution: Large object that might consume significant memory
-   var processedData = UseMemo(() => 
-       items.Value.Select(ProcessLargeItem).ToList(), items);
-   ```
+- **Cache Invalidation**: Ensure dependencies are stable and don't change unnecessarily:
 
-2. **Cache Invalidation**: Ensure dependencies are stable and don't change unnecessarily:
+- **Dependency Granularity**: Use specific dependencies rather than entire objects:
 
-   ```csharp
-   // Bad: Object created on every render
-   var config = new { threshold: 100 };
-   var filtered = UseMemo(() => FilterItems(items.Value, config), items, config);
-   
-   // Good: Stable dependency
-   var threshold = UseState(100);
-   var filtered = UseMemo(() => 
-       FilterItems(items.Value, threshold.Value), items, threshold);
-   ```
+```csharp
+// Good: Small computed value
+var total = UseMemo(() => items.Value.Sum(x => x.Price), items);
 
-3. **Dependency Granularity**: Use specific dependencies rather than entire objects:
+// Caution: Large object that might consume significant memory
+var processedData = UseMemo(() => 
+    items.Value.Select(ProcessLargeItem).ToList(), items);
+```
 
-   ```csharp
-   // Less efficient: Depends on entire user object
-   var greeting = UseMemo(() => $"Hello, {user.Value.Name}!", user);
-   
-   // More efficient: Depends only on the name
-   var userName = user.Value.Name;
-   var greeting = UseMemo(() => $"Hello, {userName}!", userName);
-   ```
+```csharp
+// Bad: Object created on every render
+var config = new { threshold: 100 };
+var filtered = UseMemo(() => FilterItems(items.Value, config), items, config);
+
+// Good: Stable dependency
+var threshold = UseState(100);
+var filtered = UseMemo(() => 
+    FilterItems(items.Value, threshold.Value), items, threshold);
+```
+
+```csharp
+// Less efficient: Depends on entire user object
+var greeting = UseMemo(() => $"Hello, {user.Value.Name}!", user);
+
+// More efficient: Depends only on the name
+var userName = user.Value.Name;
+var greeting = UseMemo(() => $"Hello, {userName}!", userName);
+```
 
 ### When NOT to Memoize
 
-1. **Simple computations**: Don't memoize trivial operations
+- **Simple computations**: Don't memoize trivial operations
+- **Frequently changing dependencies**: If dependencies change often, memoization provides no benefit
+- **Small component trees**: In simple UIs, the overhead might outweigh benefits
 
-   ```csharp
-   // Unnecessary memoization
-   var doubled = UseMemo(() => count.Value * 2, count);
-   
-   // Just compute directly
-   var doubled = count.Value * 2;
-   ```
+```csharp
+// Unnecessary memoization
+var doubled = UseMemo(() => count.Value * 2, count);
 
-2. **Frequently changing dependencies**: If dependencies change often, memoization provides no benefit
-3. **Small component trees**: In simple UIs, the overhead might outweigh benefits
+// Just compute directly
+var doubled = count.Value * 2;
+```
 
 ### Performance Impact Visualization
 
@@ -707,50 +706,6 @@ return Layout.Vertical(
 return Layout.Vertical(
     items.Value.Select(item => new ItemComponent(item).Key(item.Id))
 );
-```
-
-## Advanced Patterns
-
-### Conditional Memoization
-
-Sometimes you only want to memoize under certain conditions:
-
-```csharp
-public class ConditionalMemoView : ViewBase
-{
-    public override object? Build()
-    {
-        var items = UseState(new List<Item>());
-        var enableOptimization = UseState(true);
-        
-        // Only memoize when optimization is enabled and list is large
-        var processedItems = enableOptimization.Value && items.Value.Count > 100
-            ? UseMemo(() => ProcessItems(items.Value), items)
-            : ProcessItems(items.Value);
-            
-        return new ItemList(processedItems);
-    }
-}
-```
-
-### Memoization with Custom Equality
-
-For complex objects, you might need custom equality logic:
-
-```csharp
-public class CustomEqualityView : ViewBase
-{
-    public override object? Build()
-    {
-        var user = UseState<User>();
-        
-        // Memoize based on specific user properties
-        var userSummary = UseMemo(() => CreateUserSummary(user.Value), 
-            user.Value.Id, user.Value.Name, user.Value.Email); // Specific properties
-            
-        return new UserSummaryCard(userSummary);
-    }
-}
 ```
 
 ## See Also
