@@ -121,13 +121,20 @@ public class AdvancedSpacingView : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Horizontal().Gap(4)
-            | new Box("Uniform Padding")
-                .Padding(new Thickness(8))
-                .Width(Size.Fraction(1/2f))
-            | new Box("Horizontal/Vertical")
-                .Padding(new Thickness(16, 8))
-                .Width(Size.Fraction(1/2f));
+        return Layout.Vertical().Gap(8)
+            | Layout.Horizontal().Gap(4)
+                | new Box("No Padding")
+                    .Width(Size.Fraction(1/2f))
+                | new Box("Uniform Padding (8)")
+                    .Padding(new Thickness(8))
+                    .Width(Size.Fraction(1/2f))
+            | Layout.Horizontal().Gap(4)
+                | new Box("Horizontal/Vertical (16,8)")
+                    .Padding(new Thickness(16, 8))
+                    .Width(Size.Fraction(1/2f))
+                | new Box("Asymmetric (24,12,6,18)")
+                    .Padding(new Thickness(24, 12, 6, 18))
+                    .Width(Size.Fraction(1/2f));
     }
 }
 ```
@@ -210,15 +217,12 @@ public class ColorExamplesView : ViewBase
     public override object? Build()
     {
         return Layout.Vertical().Gap(4)
-            | new Box("Primary Color").Color(Colors.Primary).Padding(8)
-            | new Box("Success").Color(Colors.Green).Padding(8)
-            | new Box("Warning").Color(Colors.Yellow).Padding(8)
-            | new Box("Error").Color(Colors.Red).Padding(8)
-            | new Box("Info").Color(Colors.Blue).Padding(8)
-            | new Box("Secondary").Color(Colors.Secondary).Padding(8);
+            | new Box("Primary Color").Color(Colors.Primary).Padding(8);
     }
 }
 ```
+
+For more colors, look at the [Ivy Colors page](../../03_ApiReference/IvyShared/Colors.md)
 
 <WidgetDocs Type="Ivy.Box" ExtensionTypes="Ivy.BoxExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Box.cs"/>
 
