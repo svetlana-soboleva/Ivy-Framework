@@ -2,124 +2,106 @@
 
 The `Svg` widget renders scalable vector graphics directly in your app. SVGs are resolution-independent and perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
 
+## Basic Usage
+
+The simplest way to create an SVG is to pass SVG markup as a string:
+
+```csharp demo-tabs 
+public class SimpleSvgView : ViewBase
+{
+    public override object? Build()
+    {
+        var simpleCircle = """
+            <svg width="100" height="100">
+                <circle cx="50" cy="50" r="40" fill="blue" />
+            </svg>
+            """;
+            
+        return new Svg(simpleCircle);
+    }
+}
+```
+
 ## Basic Shapes
 
-Create simple geometric shapes with SVG:
+Create simple geometric shapes:
 
 ```csharp demo-tabs 
 public class BasicShapesView : ViewBase
 {
     public override object? Build()
     {
-        var basicShapes = """
-            <svg width="200" height="150" viewBox="0 0 200 150">
-                <rect x="10" y="10" width="40" height="40" fill="#3b82f6" />
-                <circle cx="80" cy="30" r="20" fill="#ef4444" />
-                <ellipse cx="130" cy="30" rx="25" ry="15" fill="#10b981" />
-                <line x1="10" y1="70" x2="190" y2="70" stroke="#f59e0b" stroke-width="3" />
-                <polygon points="10,120 30,100 50,120 30,140" fill="#8b5cf6" />
-                <path d="M 60 100 L 80 120 L 100 100 L 120 120 L 140 100" 
-                      stroke="#06b6d4" stroke-width="2" fill="none" />
+        var shapes = """
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <rect x="10" y="10" width="30" height="30" fill="red" />
+                <circle cx="70" cy="25" r="15" fill="green" />
+                <ellipse cx="120" cy="25" rx="20" ry="12" fill="blue" />
+                <line x1="10" y1="60" x2="190" y2="60" stroke="orange" stroke-width="3" />
             </svg>
             """;
             
-        return new Svg(basicShapes);
+        return new Svg(shapes);
     }
 }
 ```
 
-## Progress Indicators
-
-Create animated progress circles and bars:
+More shape examples:
 
 ```csharp demo-tabs 
-public class ProgressIndicatorsView : ViewBase
+public class MoreShapesView : ViewBase
 {
     public override object? Build()
     {
-        string GetCircleProgress(int percentage)
-        {
-            var radius = 40;
-            var circumference = 2 * Math.PI * radius;
-            var dashOffset = circumference * (1 - percentage / 100.0);
+        var moreShapes = """
+            <svg width="300" height="150" viewBox="0 0 300 150">
+                <!-- Triangles -->
+                <polygon points="20,120 40,80 60,120" fill="purple" />
+                <polygon points="80,120 100,80 120,120" fill="teal" />
+                
+                <!-- Stars -->
+                <polygon points="150,80 155,95 170,95 157,105 162,120 150,110 138,120 143,105 130,95 145,95" fill="gold" />
+                
+                <!-- Arcs -->
+                <path d="M 200 50 A 25 25 0 0 1 250 100" stroke="brown" stroke-width="4" fill="none" />
+                <path d="M 200 100 A 25 25 0 0 0 250 150" stroke="brown" stroke-width="4" fill="none" />
+            </svg>
+            """;
             
-            return $"""
-                <svg width="100" height="100" viewBox="0 0 100 100">
-                  <circle 
-                    cx="50" 
-                    cy="50" 
-                    r="{radius}" 
-                    fill="none" 
-                    stroke="#e5e7eb" 
-                    stroke-width="8" 
-                  />
-                  <circle 
-                    cx="50" 
-                    cy="50" 
-                    r="{radius}" 
-                    fill="none" 
-                    stroke="#3b82f6" 
-                    stroke-width="8" 
-                    stroke-dasharray="{circumference}" 
-                    stroke-dashoffset="{dashOffset}" 
-                    transform="rotate(-90 50 50)" 
-                    stroke-linecap="round" 
-                  />
-                  <text 
-                    x="50" 
-                    y="60" 
-                    text-anchor="middle" 
-                    font-size="20" 
-                    font-weight="bold" 
-                    fill="#3b82f6"
-                  >
-                    {percentage}%
-                  </text>
-                </svg>
-                """;
-        }
-         
-        return Layout.Horizontal().Gap(4)
-            | new Svg(GetCircleProgress(25))
-            | new Svg(GetCircleProgress(50))
-            | new Svg(GetCircleProgress(75))
-            | new Svg(GetCircleProgress(90));
+        return new Svg(moreShapes);
     }
 }
 ```
 
-## Icons and Symbols
+## Simple Icons
 
-Create custom icons and symbols:
+Create basic icons with minimal SVG:
 
 ```csharp demo-tabs 
-public class CustomIconsView : ViewBase
+public class SimpleIconsView : ViewBase
 {
     public override object? Build()
     {
         var icons = new[]
         {
-            // Home icon
+            // Plus icon - thicker and more visible
             """
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9,22 9,12 15,12 15,22"/>
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <rect x="11" y="5" width="2" height="14" fill="black"/>
+                <rect x="5" y="11" width="14" height="2" fill="black"/>
             </svg>
             """,
             
-            // Settings icon
+            // Check icon
             """
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <polyline points="20,6 9,17 4,12" stroke="green" stroke-width="3" fill="none"/>
             </svg>
             """,
             
-            // User icon
+            // Heart icon
             """
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="red"/>
             </svg>
             """
         };
@@ -130,124 +112,195 @@ public class CustomIconsView : ViewBase
 }
 ```
 
-## Data Visualization
-
-Create simple charts and data visualizations:
+Additional icon examples:
 
 ```csharp demo-tabs 
-public class DataVisualizationView : ViewBase
+public class MoreIconsView : ViewBase
 {
     public override object? Build()
     {
-        var barChart = """
-            <svg width="300" height="200" viewBox="0 0 300 200">
-                <rect x="20" y="160" width="30" height="40" fill="#3b82f6" />
-                <rect x="60" y="140" width="30" height="60" fill="#ef4444" />
-                <rect x="100" y="120" width="30" height="80" fill="#10b981" />
-                <rect x="140" y="100" width="30" height="100" fill="#f59e0b" />
-                <rect x="180" y="80" width="30" height="120" fill="#8b5cf6" />
-                <rect x="220" y="60" width="30" height="140" fill="#06b6d4" />
-                
-                <text x="35" y="195" text-anchor="middle" font-size="12">A</text>
-                <text x="75" y="195" text-anchor="middle" font-size="12">B</text>
-                <text x="115" y="195" text-anchor="middle" font-size="12">C</text>
-                <text x="155" y="195" text-anchor="middle" font-size="12">D</text>
-                <text x="195" y="195" text-anchor="middle" font-size="12">E</text>
-                <text x="235" y="195" text-anchor="middle" font-size="12">F</text>
+        var moreIcons = new[]
+        {
+            // Arrow right
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <polyline points="9,18 15,12 9,6" stroke="blue" stroke-width="3" fill="none"/>
             </svg>
-            """;
+            """,
             
-        return new Svg(barChart);
+            // Square with X
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" fill="none" stroke="red" stroke-width="2"/>
+                <line x1="9" y1="9" x2="15" y2="15" stroke="red" stroke-width="2"/>
+                <line x1="15" y1="9" x2="9" y2="15" stroke="red" stroke-width="2"/>
+            </svg>
+            """,
+            
+            // Circle with dot
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="green" stroke-width="2"/>
+                <circle cx="12" cy="12" r="3" fill="green"/>
+            </svg>
+            """
+        };
+        
+        return Layout.Horizontal().Gap(4)
+            | moreIcons.Select(icon => new Svg(icon));
     }
 }
 ```
 
-## Interactive Elements
+## Progress Bar
 
-Create SVG elements with hover effects and animations:
+Create a simple horizontal progress bar:
 
 ```csharp demo-tabs 
-public class InteractiveElementsView : ViewBase
+public class ProgressBarView : ViewBase
 {
     public override object? Build()
     {
-        var interactiveSvg = """
-            <svg width="200" height="200" viewBox="0 0 200 200">
+        string GetProgressBar(int percentage)
+        {
+            return $"""
+                <svg width="200" height="20" viewBox="0 0 200 20">
+                    <rect width="200" height="20" fill="#e5e7eb" rx="10"/>
+                    <rect width="{percentage * 2}" height="20" fill="#3b82f6" rx="10"/>
+                    <text x="100" y="14" text-anchor="middle" font-size="12" fill="black">{percentage}%</text>
+                </svg>
+                """;
+        }
+         
+        return Layout.Vertical().Gap(2)
+            | new Svg(GetProgressBar(25))
+            | new Svg(GetProgressBar(50))
+            | new Svg(GetProgressBar(75));
+    }
+}
+```
+
+Different progress bar styles:
+
+```csharp demo-tabs 
+public class ProgressBarStylesView : ViewBase
+{
+    public override object? Build()
+    {
+        var styles = new[]
+        {
+            // Vertical progress bar
+            """
+            <svg width="30" height="100" viewBox="0 0 30 100">
+                <rect x="5" y="10" width="20" height="80" fill="#e5e7eb" rx="10"/>
+                <rect x="5" y="50" width="20" height="40" fill="#10b981" rx="10"/>
+            </svg>
+            """,
+            
+            // Striped progress bar
+            """
+            <svg width="200" height="20" viewBox="0 0 200 20">
+                <rect width="200" height="20" fill="#e5e7eb" rx="10"/>
+                <rect width="120" height="20" fill="#f59e0b" rx="10"/>
+                <rect width="120" height="20" fill="url(#stripes)" rx="10"/>
                 <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                    </linearGradient>
-                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
-                    </filter>
+                    <pattern id="stripes" patternUnits="userSpaceOnUse" width="10" height="20">
+                        <line x1="0" y1="0" x2="0" y2="20" stroke="white" stroke-width="2" opacity="0.3"/>
+                    </pattern>
                 </defs>
-                
-                <circle cx="100" cy="100" r="60" fill="url(#grad1)" filter="url(#shadow)" />
-                <text x="100" y="110" text-anchor="middle" font-size="24" font-weight="bold" fill="white">Hover Me</text>
-                
-                <g opacity="0.7">
-                    <circle cx="50" cy="50" r="8" fill="#ef4444" />
-                    <circle cx="150" cy="50" r="8" fill="#10b981" />
-                    <circle cx="50" cy="150" r="8" fill="#f59e0b" />
-                    <circle cx="150" cy="150" r="8" fill="#8b5cf6" />
-                </g>
             </svg>
-            """;
+            """,
             
-        return new Svg(interactiveSvg);
+            // Circular progress indicator
+            """
+            <svg width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="25" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+                <circle cx="30" cy="30" r="25" fill="none" stroke="#8b5cf6" stroke-width="5" 
+                        stroke-dasharray="157" stroke-dashoffset="78" transform="rotate(-90 30 30)"/>
+            </svg>
+            """
+        };
+        
+        return Layout.Horizontal().Gap(4)
+            | styles.Select(style => new Svg(style));
     }
 }
 ```
 
-## Complex Graphics
+## Simple Chart
 
-Create more complex SVG graphics with multiple elements:
+Create a basic bar chart:
 
 ```csharp demo-tabs 
-public class ComplexGraphicsView : ViewBase
+public class SimpleChartView : ViewBase
 {
     public override object? Build()
     {
-        var complexSvg = """
-            <svg width="400" height="300" viewBox="0 0 400 300">
-                <!-- Background -->
-                <rect width="400" height="300" fill="#f8fafc" />
-                
-                <!-- Mountains -->
-                <polygon points="0,300 100,200 200,250 300,150 400,200 400,300" fill="#64748b" />
-                <polygon points="0,300 50,220 100,200 150,230 200,250 250,200 300,150 350,180 400,200 400,300" fill="#475569" />
-                
-                <!-- Sun -->
-                <circle cx="350" cy="50" r="30" fill="#fbbf24" />
-                <g opacity="0.6">
-                    <line x1="320" y1="20" x2="300" y2="10" stroke="#fbbf24" stroke-width="3" />
-                    <line x1="380" y1="20" x2="400" y2="10" stroke="#fbbf24" stroke-width="3" />
-                    <line x1="320" y1="80" x2="300" y2="90" stroke="#fbbf24" stroke-width="3" />
-                    <line x1="380" y1="80" x2="400" y2="90" stroke="#fbbf24" stroke-width="3" />
-                </g>
-                
-                <!-- Trees -->
-                <g fill="#059669">
-                    <polygon points="50,300 70,250 90,300" />
-                    <polygon points="60,300 80,250 100,300" />
-                    <polygon points="70,300 90,250 110,300" />
-                </g>
-                
-                <!-- House -->
-                <rect x="150" y="200" width="100" height="80" fill="#dc2626" />
-                <polygon points="150,200 200,150 250,200" fill="#991b1b" />
-                <rect x="170" y="220" width="20" height="30" fill="#1e40af" />
-                <rect x="210" y="220" width="20" height="30" fill="#1e40af" />
-                <rect x="190" y="240" width="20" height="40" fill="#92400e" />
-                
-                <!-- Road -->
-                <rect x="0" y="280" width="400" height="20" fill="#6b7280" />
-                <line x1="0" y1="290" x2="400" y2="290" stroke="white" stroke-width="2" stroke-dasharray="10,10" />
+        var chart = """
+            <svg width="300" height="150" viewBox="0 0 300 150">
+                <rect x="20" y="120" width="40" height="30" fill="#3b82f6" />
+                <rect x="70" y="100" width="40" height="50" fill="#ef4444" />
+                <rect x="120" y="80" width="40" height="70" fill="#10b981" />
+                <rect x="170" y="60" width="40" height="90" fill="#f59e0b" />
+                <rect x="220" y="40" width="40" height="110" fill="#8b5cf6" />
             </svg>
             """;
             
-        return new Svg(complexSvg);
+        return new Svg(chart);
+    }
+}
+```
+
+More chart types:
+
+```csharp demo-tabs 
+public class MoreChartsView : ViewBase
+{
+    public override object? Build()
+    {
+        var charts = new[]
+        {
+            // Pie chart
+            """
+            <svg width="150" height="150" viewBox="0 0 150 150">
+                <circle cx="75" cy="75" r="60" fill="none" stroke="#3b82f6" stroke-width="60" 
+                        stroke-dasharray="113 226" transform="rotate(-90 75 75)"/>
+                <circle cx="75" cy="75" r="60" fill="none" stroke="#ef4444" stroke-width="60" 
+                        stroke-dasharray="113 113" transform="rotate(23 75 75)"/>
+                <circle cx="75" cy="75" r="60" fill="none" stroke="#10b981" stroke-width="60" 
+                        stroke-dasharray="226 113" transform="rotate(113 75 75)"/>
+            </svg>
+            """,
+            
+            // Line chart
+            """
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <polyline points="20,80 60,60 100,40 140,70 180,20" 
+                          fill="none" stroke="#3b82f6" stroke-width="3"/>
+                <circle cx="20" cy="80" r="3" fill="#3b82f6"/>
+                <circle cx="60" cy="60" r="3" fill="#3b82f6"/>
+                <circle cx="100" cy="40" r="3" fill="#3b82f6"/>
+                <circle cx="140" cy="70" r="3" fill="#3b82f6"/>
+                <circle cx="180" cy="20" r="3" fill="#3b82f6"/>
+            </svg>
+            """,
+            
+            // Stacked bars
+            """
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <rect x="20" y="60" width="30" height="20" fill="#3b82f6"/>
+                <rect x="20" y="40" width="30" height="20" fill="#ef4444"/>
+                <rect x="20" y="20" width="30" height="20" fill="#10b981"/>
+                
+                <rect x="60" y="50" width="30" height="30" fill="#3b82f6"/>
+                <rect x="60" y="30" width="30" height="20" fill="#ef4444"/>
+                <rect x="60" y="10" width="30" height="20" fill="#10b981"/>
+            </svg>
+            """
+        };
+        
+        return Layout.Horizontal().Gap(4)
+            | charts.Select(chart => new Svg(chart));
     }
 }
 ```
@@ -262,10 +315,10 @@ The `Svg` widget has the following properties:
 
 ## Best Practices
 
-1. **Use viewBox**: Always include a `viewBox` attribute for responsive scaling
-2. **Optimize paths**: Use simplified path data when possible for better performance
-3. **Accessibility**: Include `aria-label` or `title` elements for screen readers
-4. **Responsive design**: Use relative units and viewBox for responsive behavior
-5. **Performance**: Keep SVG files small and avoid unnecessary elements
+1. **Keep it simple**: Start with basic shapes and build up complexity gradually
+2. **Use viewBox**: Include a `viewBox` attribute for responsive scaling
+3. **Minimize markup**: Use the simplest SVG elements needed
+4. **Test rendering**: Verify your SVG displays correctly in different browsers
+5. **Optimize paths**: Use simple path data when possible
 
 <WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/>
