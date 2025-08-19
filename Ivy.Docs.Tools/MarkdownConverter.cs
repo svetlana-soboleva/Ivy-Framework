@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
@@ -95,9 +96,9 @@ public static class MarkdownConverter
         codeBuilder.AppendLine();
         codeBuilder.Append($"[App(order:{appMeta.Order}");
         codeBuilder.Append(appMeta.Icon != null ? $", icon:Icons.{appMeta.Icon}" : "");
-        codeBuilder.Append(appMeta.Title != null ? $", title:\"{appMeta.Title}\"" : "");
+        codeBuilder.Append(appMeta.Title != null ? $", title:{FormatLiteral(appMeta.Title)}" : "");
         codeBuilder.Append(appMeta.GroupExpanded ? ", groupExpanded:true" : "");
-        codeBuilder.Append(documentSource != null ? $", documentSource:\"{documentSource}\"" : "");
+        codeBuilder.Append(documentSource != null ? $", documentSource:{FormatLiteral(documentSource)}" : "");
         codeBuilder.AppendLine(")]");
         codeBuilder.AppendLine($"public class {className}(bool onlyBody = false) : {appMeta.ViewBase}");
         codeBuilder.AppendLine("{");
@@ -253,7 +254,7 @@ public static class MarkdownConverter
         string typeName = xml.Attribute("Type")?.Value ?? throw new Exception("WidgetDocs block must have a Type attribute.");
         string? extensionTypes = xml.Attribute("ExtensionTypes")?.Value;
         string? sourceUrl = xml.Attribute("SourceUrl")?.Value;
-        codeBuilder.AppendTab(3).AppendLine($"""| new WidgetDocsView("{typeName}", {(!string.IsNullOrEmpty(extensionTypes) ? $"\"{extensionTypes}\"" : "null")}, {(!string.IsNullOrEmpty(sourceUrl) ? $"\"{sourceUrl}\"" : "null")})""");
+        codeBuilder.AppendTab(3).AppendLine($"""| new WidgetDocsView("{typeName}", {(!string.IsNullOrEmpty(extensionTypes) ? FormatLiteral(extensionTypes) : "null")}, {(!string.IsNullOrEmpty(sourceUrl) ? FormatLiteral(sourceUrl) : "null")})""");
     }
 
     private static void HandleCalloutBlock(StringBuilder codeBuilder, XElement xml)
@@ -315,11 +316,11 @@ StringBuilder viewBuilder, HashSet<string> usedClassNames)
             {
                 if (line.StartsWith('>'))
                 {
-                    codeBuilder.AppendTab(4).AppendLine($".AddCommand(\"{line.TrimStart('>').Trim()}\")");
+                    codeBuilder.AppendTab(4).AppendLine($".AddCommand({FormatLiteral(line.TrimStart('>').Trim())})");
                 }
                 else
                 {
-                    codeBuilder.AppendTab(4).AppendLine($".AddOutput(\"{line.Trim()}\")");
+                    codeBuilder.AppendTab(4).AppendLine($".AddOutput({FormatLiteral(line.Trim())})");
                 }
             }
         }
@@ -458,9 +459,11 @@ StringBuilder viewBuilder, HashSet<string> usedClassNames)
         }
         else
         {
-            sb.AppendTab(tabs).AppendLine($"{prepend}\"{rawMarkdown}\"{append}");
+            sb.AppendTab(tabs).AppendLine($"{prepend}{FormatLiteral(rawMarkdown)}{append}");
         }
     }
+
+    private static string FormatLiteral(string literal) => SymbolDisplay.FormatLiteral(literal, true);
 
     private static string RemoveFirstAndLastLine(string input) => string.Join(Environment.NewLine,
         input.Split('\n').Skip(1).SkipLast(1).Select(e => e.TrimEnd('\r')));
