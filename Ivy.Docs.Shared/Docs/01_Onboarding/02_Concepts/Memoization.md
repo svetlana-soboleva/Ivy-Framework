@@ -38,7 +38,7 @@ flowchart TD
 The `UseMemo` hook caches the result of a computation and only recomputes it when its dependencies change.
 
 <Callout type="Tip">
-`UseMemo` hook stores only most recent dependencies when comparing values
+`UseMemo` hook stores only the most recent dependency values for comparison; older values are discarded.
 </Callout>
 
 ### How UseMemo Works
@@ -175,7 +175,7 @@ public class DashboardView : ViewBase
 The `UseCallback` hook memoizes callback functions, preventing unnecessary re-renders when the callback is passed as a prop to child components.
 
 <Callout type="Tip">
-`UseCallback` is similar to `UseMemo`, but instead of storing the result of a function, it stores the function itself. The function runs only when you call it
+`UseCallback` memoizes the function reference itself, while `UseMemo` memoizes the result of calling a function. The memoized callback is only executed when you invoke it.
 </Callout>
 
 ### How UseCallback Works
@@ -523,7 +523,7 @@ stateDiagram-v2
 
 - **Memory Usage**: Memoization caches values in memory. Consider the size of cached data:
 
-- **Cache Invalidation**: Ensure dependencies are stable and don't change unnecessarily:
+- **Cache Invalidation**: If dependencies change too often or are unstable, cached results will be invalidated frequently, reducing the effectiveness of memoization. Ensure dependencies are stable and don't change unnecessarily:
 
 - **Dependency Granularity**: Use specific dependencies rather than entire objects:
 
