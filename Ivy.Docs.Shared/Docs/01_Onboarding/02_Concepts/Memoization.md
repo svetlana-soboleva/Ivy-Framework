@@ -603,7 +603,7 @@ flowchart TD
 
 ```csharp
 // Bad: New array created on every render
-var result = UseMemo(() => ProcessData(data.Value), [data.Value, new[] { "option1", "option2" }]);
+var result = UseMemo(() => ProcessData(data.Value), data.Value, new[] { "option1", "option2" });
 ```
 
 **Solution**: Use stable references
