@@ -175,7 +175,7 @@ public class DashboardView : ViewBase
 The `UseCallback` hook memoizes callback functions, preventing unnecessary re-renders when the callback is passed as a prop to child components.
 
 <Callout type="Tip">
-`UseCallback` is similar to `UseMemo`, but instead of storing the result of a function, it stores the function itself. The function runs only when you call it
+`UseCallback` memoizes the function reference itself, while `UseMemo` memoizes the result of calling a function. The memoized callback is only executed when you invoke it.
 </Callout>
 
 ### How UseCallback Works
