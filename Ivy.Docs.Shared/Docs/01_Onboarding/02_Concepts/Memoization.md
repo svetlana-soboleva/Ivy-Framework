@@ -174,6 +174,43 @@ public class DashboardView : ViewBase
 
 The `UseCallback` hook memoizes callback functions, preventing unnecessary re-renders when the callback is passed as a prop to child components.
 
+<Callout type="Tip">
+`UseCallback` is similar to `UseMemo`, but instead of storing the result of a function, it stores the function itself. The function runs only when you call it
+</Callout>
+
+### How UseCallback Works
+
+```mermaid
+sequenceDiagram
+    participant C as Component
+    participant CB as UseCallback Hook
+    participant S as UseState Storage
+    
+    Note over C,S: First Render
+    C->>CB: UseCallback(() => handleClick(), [dep1, dep2])
+    CB->>S: UseState(new CallbackRef(callback, deps))
+    S-->>CB: Create new CallbackRef with callback
+    CB->>S: Store CallbackRef(callback, [dep1, dep2])
+    CB-->>C: Return callback function
+    
+    Note over C,S: Subsequent Render (deps unchanged)
+    C->>CB: UseCallback(() => handleClick(), [dep1, dep2])
+    CB->>S: Get stored CallbackRef
+    S-->>CB: Return CallbackRef(cachedCallback, [dep1, dep2])
+    CB->>CB: AreDependenciesEqual([dep1, dep2], [dep1, dep2])
+    Note right of CB: Dependencies equal!<br/>Return same function reference
+    CB-->>C: Return cached callback (same reference)
+    
+    Note over C,S: Subsequent Render (deps changed)
+    C->>CB: UseCallback(() => handleClick(), [dep1_new, dep2])
+    CB->>S: Get stored CallbackRef
+    S-->>CB: Return CallbackRef(oldCallback, [dep1, dep2])
+    CB->>CB: AreDependenciesEqual([dep1, dep2], [dep1_new, dep2])
+    Note right of CB: Dependencies changed!<br/>Create new function reference
+    CB->>S: Update CallbackRef(newCallback, [dep1_new, dep2])
+    CB-->>C: Return new callback function
+```
+
 ### Basic UseCallback Usage
 
 ```csharp
@@ -299,6 +336,49 @@ public class DataFetcherView : ViewBase
 ## Component Memoization with IMemoized
 
 The `IMemoized` interface allows entire components to be memoized, preventing re-renders when their props haven't changed.
+
+### How IMemoized Works
+
+```mermaid
+sequenceDiagram
+    participant P as Parent Component
+    participant WT as WidgetTree
+    participant C as IMemoized Component
+    participant H as Hash Calculator
+    
+    Note over P,H: First Render
+    P->>WT: Render child component
+    WT->>C: Check if implements IMemoized
+    C-->>WT: Yes, implements IMemoized
+    WT->>C: Call GetMemoValues()
+    C-->>WT: Return [prop1, prop2, prop3]
+    WT->>H: CalculateMemoizedHashCode(viewId, memoValues)
+    H->>H: Hash viewId + each prop (string/valuetype/json)
+    H-->>WT: Return computed hash
+    WT->>C: Call Build() - component renders
+    WT->>WT: Store TreeNode with memoizedHashCode
+    
+    Note over P,H: Subsequent Render (props unchanged)
+    P->>WT: Render child component
+    WT->>C: Call GetMemoValues()
+    C-->>WT: Return [prop1, prop2, prop3] (same values)
+    WT->>H: CalculateMemoizedHashCode(viewId, memoValues)
+    H-->>WT: Return same hash
+    WT->>WT: Compare: previousHash == currentHash
+    Note right of WT: Hash matches!<br/>Skip Build() call
+    WT-->>P: Reuse previous TreeNode (no re-render)
+    
+    Note over P,H: Subsequent Render (props changed)
+    P->>WT: Render child component
+    WT->>C: Call GetMemoValues()
+    C-->>WT: Return [prop1_new, prop2, prop3] (changed values)
+    WT->>H: CalculateMemoizedHashCode(viewId, memoValues)
+    H-->>WT: Return different hash
+    WT->>WT: Compare: previousHash != currentHash
+    Note right of WT: Hash changed!<br/>Need to re-render
+    WT->>C: Call Build() - component re-renders
+    WT->>WT: Update TreeNode with new hash
+```
 
 ### Basic Implementation
 
