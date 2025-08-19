@@ -1,12 +1,16 @@
 # Svg
 
+<Ingress>
+Create beautiful, scalable vector graphics directly in your app with the `Svg` widget. Perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
+</Ingress>
+
 The `Svg` widget renders scalable vector graphics directly in your app. SVGs are resolution-independent and perfect for icons, illustrations, charts, and other graphics that need to scale without losing quality.
 
 ## Basic Usage
 
 The simplest way to create an SVG is to pass SVG markup as a string:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SimpleSvgView : ViewBase
 {
     public override object? Build()
@@ -22,11 +26,11 @@ public class SimpleSvgView : ViewBase
 }
 ```
 
-## Basic Shapes
+### Basic Shapes
 
 Create simple geometric shapes:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class BasicShapesView : ViewBase
 {
     public override object? Build()
@@ -40,25 +44,13 @@ public class BasicShapesView : ViewBase
             </svg>
             """;
             
-        return new Svg(shapes);
-    }
-}
-```
-
-More shape examples:
-
-```csharp demo-tabs 
-public class MoreShapesView : ViewBase
-{
-    public override object? Build()
-    {
         var moreShapes = """
             <svg width="300" height="150" viewBox="0 0 300 150">
                 <!-- Triangles -->
                 <polygon points="20,120 40,80 60,120" fill="purple" />
                 <polygon points="80,120 100,80 120,120" fill="teal" />
                 
-                <!-- Stars -->
+                <!-- Simple Star -->
                 <polygon points="150,80 155,95 170,95 157,105 162,120 150,110 138,120 143,105 130,95 145,95" fill="gold" />
                 
                 <!-- Arcs -->
@@ -67,27 +59,48 @@ public class MoreShapesView : ViewBase
             </svg>
             """;
             
-        return new Svg(moreShapes);
+        var advancedShapes = """
+            <svg width="300" height="100" viewBox="0 0 300 100">
+                <!-- Hexagon -->
+                <polygon points="25,50 35,30 55,30 65,50 55,70 35,70" fill="pink" />
+                
+                <!-- Diamond -->
+                <polygon points="100,30 120,50 100,70 80,50" fill="cyan" />
+                
+                <!-- Cross -->
+                <rect x="140" y="35" width="30" height="30" fill="lime" />
+                <rect x="155" y="20" width="30" height="30" fill="lime" />
+                
+                <!-- Wave -->
+                <path d="M 200 30 Q 220 10 240 30 T 280 30" stroke="navy" stroke-width="3" fill="none" />
+                <path d="M 200 50 Q 220 30 240 50 T 280 50" stroke="navy" stroke-width="3" fill="none" />
+            </svg>
+            """;
+            
+        return Layout.Vertical().Gap(4)
+            | new Svg(shapes)
+            | new Svg(moreShapes)
+            | new Svg(advancedShapes);
     }
 }
 ```
 
-## Simple Icons
+### Simple Icons
 
 Create basic icons with minimal SVG:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SimpleIconsView : ViewBase
 {
     public override object? Build()
     {
         var icons = new[]
         {
-            // Plus icon - thicker and more visible
+            // Plus icon - much thicker and visible
             """
             <svg width="24" height="24" viewBox="0 0 24 24">
-                <rect x="11" y="5" width="2" height="14" fill="black"/>
-                <rect x="5" y="11" width="14" height="2" fill="black"/>
+                <rect x="10" y="5" width="4" height="14" fill="green"/>
+                <rect x="5" y="10" width="14" height="4" fill="green"/>
             </svg>
             """,
             
@@ -103,24 +116,8 @@ public class SimpleIconsView : ViewBase
             <svg width="24" height="24" viewBox="0 0 24 24">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="red"/>
             </svg>
-            """
-        };
-        
-        return Layout.Horizontal().Gap(4)
-            | icons.Select(icon => new Svg(icon));
-    }
-}
-```
-
-Additional icon examples:
-
-```csharp demo-tabs 
-public class MoreIconsView : ViewBase
-{
-    public override object? Build()
-    {
-        var moreIcons = new[]
-        {
+            """,
+            
             // Arrow right
             """
             <svg width="24" height="24" viewBox="0 0 24 24">
@@ -143,20 +140,49 @@ public class MoreIconsView : ViewBase
                 <circle cx="12" cy="12" r="10" fill="none" stroke="green" stroke-width="2"/>
                 <circle cx="12" cy="12" r="3" fill="green"/>
             </svg>
+            """,
+            
+            // Simple Star
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9" fill="gold"/>
+            </svg>
+            """,
+            
+            // Lightning bolt
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10" fill="orange"/>
+            </svg>
+            """,
+            
+            // Lock icon
+            """
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <rect x="5" y="11" width="14" height="10" fill="gray"/>
+                <circle cx="12" cy="7" r="4" fill="gray"/>
+            </svg>
             """
         };
         
-        return Layout.Horizontal().Gap(4)
-            | moreIcons.Select(icon => new Svg(icon));
+        return Layout.Horizontal().Gap(2)
+            | icons.Select(icon => new Svg(icon));
     }
 }
 ```
 
-## Progress Bar
+<Callout Type="Tip">
+The `Svg` widget has the following properties:
+- Content (string): The SVG markup content to render
+- Width (Size): The width of the SVG container (defaults to Auto)
+- Height (Size): The height of the SVG container (defaults to Auto)
+</Callout>
+
+### Progress Bar
 
 Create a simple horizontal progress bar:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class ProgressBarView : ViewBase
 {
     public override object? Build()
@@ -171,34 +197,15 @@ public class ProgressBarView : ViewBase
                 </svg>
                 """;
         }
-         
-        return Layout.Vertical().Gap(2)
-            | new Svg(GetProgressBar(25))
-            | new Svg(GetProgressBar(50))
-            | new Svg(GetProgressBar(75));
-    }
-}
-```
-
-Different progress bar styles:
-
-```csharp demo-tabs 
-public class ProgressBarStylesView : ViewBase
-{
-    public override object? Build()
-    {
-        var styles = new[]
-        {
-            // Vertical progress bar
-            """
+        
+        var verticalBar = """
             <svg width="30" height="100" viewBox="0 0 30 100">
                 <rect x="5" y="10" width="20" height="80" fill="#e5e7eb" rx="10"/>
                 <rect x="5" y="50" width="20" height="40" fill="#10b981" rx="10"/>
             </svg>
-            """,
+            """;
             
-            // Striped progress bar
-            """
+        var stripedBar = """
             <svg width="200" height="20" viewBox="0 0 200 20">
                 <rect width="200" height="20" fill="#e5e7eb" rx="10"/>
                 <rect width="120" height="20" fill="#f59e0b" rx="10"/>
@@ -209,29 +216,58 @@ public class ProgressBarStylesView : ViewBase
                     </pattern>
                 </defs>
             </svg>
-            """,
+            """;
             
-            // Circular progress indicator
-            """
+        var circularProgress = """
             <svg width="60" height="60" viewBox="0 0 60 60">
                 <circle cx="30" cy="30" r="25" fill="none" stroke="#e5e7eb" stroke-width="5"/>
                 <circle cx="30" cy="30" r="25" fill="none" stroke="#8b5cf6" stroke-width="5" 
                         stroke-dasharray="157" stroke-dashoffset="78" transform="rotate(-90 30 30)"/>
             </svg>
-            """
-        };
-        
-        return Layout.Horizontal().Gap(4)
-            | styles.Select(style => new Svg(style));
+            """;
+            
+        var gradientBar = """
+            <svg width="200" height="20" viewBox="0 0 200 20">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect width="200" height="20" fill="#e5e7eb" rx="10"/>
+                <rect width="150" height="20" fill="url(#grad1)" rx="10"/>
+            </svg>
+            """;
+            
+        var animatedBar = """
+            <svg width="200" height="20" viewBox="0 0 200 20">
+                <rect width="200" height="20" fill="#e5e7eb" rx="10"/>
+                <rect width="80" height="20" fill="#ef4444" rx="10">
+                    <animate attributeName="width" values="80;160;80" dur="3s" repeatCount="indefinite"/>
+                </rect>
+            </svg>
+            """;
+         
+        return Layout.Vertical().Gap(4)
+            | new Svg(GetProgressBar(25))
+            | new Svg(GetProgressBar(50))
+            | new Svg(GetProgressBar(75))
+            | Layout.Horizontal().Gap(4)
+                | new Svg(verticalBar)
+                | new Svg(stripedBar)
+                | new Svg(circularProgress)
+            | Layout.Horizontal().Gap(4)
+                | new Svg(gradientBar)
+                | new Svg(animatedBar);
     }
 }
 ```
 
-## Simple Chart
+### Simple Chart
 
 Create a basic bar chart:
 
-```csharp demo-tabs 
+```csharp demo-tabs
 public class SimpleChartView : ViewBase
 {
     public override object? Build()
@@ -246,22 +282,7 @@ public class SimpleChartView : ViewBase
             </svg>
             """;
             
-        return new Svg(chart);
-    }
-}
-```
-
-More chart types:
-
-```csharp demo-tabs 
-public class MoreChartsView : ViewBase
-{
-    public override object? Build()
-    {
-        var charts = new[]
-        {
-            // Pie chart
-            """
+        var pieChart = """
             <svg width="150" height="150" viewBox="0 0 150 150">
                 <circle cx="75" cy="75" r="60" fill="none" stroke="#3b82f6" stroke-width="60" 
                         stroke-dasharray="113 226" transform="rotate(-90 75 75)"/>
@@ -270,10 +291,9 @@ public class MoreChartsView : ViewBase
                 <circle cx="75" cy="75" r="60" fill="none" stroke="#10b981" stroke-width="60" 
                         stroke-dasharray="226 113" transform="rotate(113 75 75)"/>
             </svg>
-            """,
+            """;
             
-            // Line chart
-            """
+        var lineChart = """
             <svg width="200" height="100" viewBox="0 0 200 100">
                 <polyline points="20,80 60,60 100,40 140,70 180,20" 
                           fill="none" stroke="#3b82f6" stroke-width="3"/>
@@ -283,10 +303,9 @@ public class MoreChartsView : ViewBase
                 <circle cx="140" cy="70" r="3" fill="#3b82f6"/>
                 <circle cx="180" cy="20" r="3" fill="#3b82f6"/>
             </svg>
-            """,
+            """;
             
-            // Stacked bars
-            """
+        var stackedBars = """
             <svg width="200" height="100" viewBox="0 0 200 100">
                 <rect x="20" y="60" width="30" height="20" fill="#3b82f6"/>
                 <rect x="20" y="40" width="30" height="20" fill="#ef4444"/>
@@ -296,29 +315,39 @@ public class MoreChartsView : ViewBase
                 <rect x="60" y="30" width="30" height="20" fill="#ef4444"/>
                 <rect x="60" y="10" width="30" height="20" fill="#10b981"/>
             </svg>
-            """
-        };
-        
-        return Layout.Horizontal().Gap(4)
-            | charts.Select(chart => new Svg(chart));
+            """;
+            
+        var areaChart = """
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <path d="M 20 80 L 60 60 L 100 40 L 140 70 L 180 20 L 180 100 L 20 100 Z" 
+                      fill="#3b82f6" opacity="0.3"/>
+                <polyline points="20,80 60,60 100,40 140,70 180,20" 
+                          fill="none" stroke="#3b82f6" stroke-width="2"/>
+            </svg>
+            """;
+            
+        var scatterPlot = """
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <circle cx="30" cy="70" r="4" fill="#ef4444"/>
+                <circle cx="60" cy="50" r="4" fill="#10b981"/>
+                <circle cx="90" cy="30" r="4" fill="#f59e0b"/>
+                <circle cx="120" cy="60" r="4" fill="#8b5cf6"/>
+                <circle cx="150" cy="20" r="4" fill="#06b6d4"/>
+                <circle cx="180" cy="80" r="4" fill="#ec4899"/>
+            </svg>
+            """;
+            
+        return Layout.Vertical().Gap(4)
+            | new Svg(chart)
+            | Layout.Horizontal().Gap(4)
+                | new Svg(pieChart)
+                | new Svg(lineChart)
+                | new Svg(stackedBars)
+            | Layout.Horizontal().Gap(4)
+                | new Svg(areaChart)
+                | new Svg(scatterPlot);
     }
 }
 ```
-
-## Properties
-
-The `Svg` widget has the following properties:
-
-- **Content** (string): The SVG markup content to render
-- **Width** (Size): The width of the SVG container (defaults to Auto)
-- **Height** (Size): The height of the SVG container (defaults to Auto)
-
-## Best Practices
-
-1. **Keep it simple**: Start with basic shapes and build up complexity gradually
-2. **Use viewBox**: Include a `viewBox` attribute for responsive scaling
-3. **Minimize markup**: Use the simplest SVG elements needed
-4. **Test rendering**: Verify your SVG displays correctly in different browsers
-5. **Optimize paths**: Use simple path data when possible
 
 <WidgetDocs Type="Ivy.Svg" ExtensionTypes="Ivy.SvgExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Svg.cs"/>
