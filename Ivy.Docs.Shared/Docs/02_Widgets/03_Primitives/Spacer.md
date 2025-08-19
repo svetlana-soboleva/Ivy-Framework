@@ -18,7 +18,7 @@ public class BasicSpacerView : ViewBase
         return Layout.Vertical()
             | new Card("Spacer after First element")
             | new Spacer()
-            | new Card("Second Element with no spacer")
+            | new Card("Second Element with no Spacer")
             | new Card("Third Element");
     }
 }
