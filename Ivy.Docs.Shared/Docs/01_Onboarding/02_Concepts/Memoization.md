@@ -523,7 +523,7 @@ stateDiagram-v2
 
 - **Memory Usage**: Memoization caches values in memory. Consider the size of cached data:
 
-- **Cache Invalidation**: Ensure dependencies are stable and don't change unnecessarily:
+- **Cache Invalidation**: If dependencies change too often or are unstable, cached results will be invalidated frequently, reducing the effectiveness of memoization. Ensure dependencies are stable and don't change unnecessarily:
 
 - **Dependency Granularity**: Use specific dependencies rather than entire objects:
 
