@@ -1,5 +1,9 @@
 # Xml
 
+<Ingress>
+Display and interact with XML data in your Ivy applications with syntax highlighting, collapsible nodes, and real-time validation. Perfect for configuration files, API responses, and data feeds.
+</Ingress>
+
 The `Xml` widget displays XML data in a formatted, syntax-highlighted view. It's useful for displaying configuration files, data feeds, and other XML-structured content.
 
 ## Basic Usage
@@ -25,7 +29,25 @@ public class BasicXmlExample : ViewBase
 }
 ```
 
-## Using XObject
+### Using Text Helper
+
+You can also use the `Text.Xml()` helper method for displaying XML content inline with other text elements.
+
+```csharp demo-tabs
+public class TextHelperExample : ViewBase
+{
+    public override object? Build()
+    {
+        return Layout.Vertical().Gap(4)
+            | Text.P("Here's an example XML configuration:")
+            | Text.Xml("<config><setting>value</setting></config>")
+            | Text.P("You can also use it with state variables:")
+            | Text.Xml(UseState("<root><item>dynamic</item></root>"));
+    }
+}
+```
+
+### Using XObject
 
 You can also pass `XObject` instances directly to the Xml widget, which will automatically convert them to their string representation.
 
@@ -59,7 +81,7 @@ public class XObjectXmlExample : ViewBase
 }
 ```
 
-## Configuration File Viewer
+### Configuration File Viewer
 
 This example demonstrates how to display configuration files with proper XML formatting and structure.
 
@@ -101,7 +123,7 @@ public class ConfigFileViewer : ViewBase
 }
 ```
 
-## RSS Feed Display
+### RSS Feed Display
 
 Demonstrates how to display RSS feed content with proper XML structure and formatting.
 
@@ -145,7 +167,7 @@ public class RssFeedViewer : ViewBase
 }
 ```
 
-## SOAP Message Display
+### SOAP Message Display
 
 Shows how to display SOAP messages and web service responses.
 
@@ -179,25 +201,7 @@ public class SoapMessageViewer : ViewBase
 }
 ```
 
-## Using Text Helper
-
-You can also use the `Text.Xml()` helper method for displaying XML content inline with other text elements.
-
-```csharp demo-tabs
-public class TextHelperExample : ViewBase
-{
-    public override object? Build()
-    {
-        return Layout.Vertical().Gap(4)
-            | Text.P("Here's an example XML configuration:")
-            | Text.Xml("<config><setting>value</setting></config>")
-            | Text.P("You can also use it with state variables:")
-            | Text.Xml(UseState("<root><item>dynamic</item></root>"));
-    }
-}
-```
-
-## Interactive XML Editor
+### Interactive XML Editor
 
 This example shows how to create an interactive XML editor with real-time preview.
 
