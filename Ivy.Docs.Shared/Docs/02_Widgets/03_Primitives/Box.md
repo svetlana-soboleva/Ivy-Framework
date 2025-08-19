@@ -15,8 +15,7 @@ public class BasicBoxExample : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical().Gap(4)
-            | new Box("Simple content");
+        return new Box("Simple content");
     }
 }
 ```
