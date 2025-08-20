@@ -8,67 +8,34 @@ The `AsyncSelectInput` widget provides a select dropdown that loads options asyn
 
 ## Basic Usage
 
-Here's a simple example of an `AsyncSelectInput` that fetches categories from a database:
+Here's a simple example of an `AsyncSelectInput` that fetches categories:
 
 ```csharp demo-tabs
 public class AsyncSelectBasicDemo : ViewBase
 {
-    // Use consistent GUIDs for demo purposes
-    private static readonly Guid ElectronicsId = Guid.NewGuid();
-    private static readonly Guid ClothingId = Guid.NewGuid();
-    private static readonly Guid BooksId = Guid.NewGuid();
-    private static readonly Guid HomeGardenId = Guid.NewGuid();
-    private static readonly Guid SportsId = Guid.NewGuid();
+    private static readonly string[] Categories = { "Electronics", "Clothing", "Books", "Home & Garden", "Sports" };
 
     public override object? Build()
     {
-        var guidState = this.UseState<Guid?>(default(Guid?));
-        var selectedCategoryName = this.UseState<string>("No category selected");
+        var selectedCategory = this.UseState<string?>(default(string?));
 
-        async Task<Option<Guid?>[]> QueryCategories(string query)
+        async Task<Option<string>[]> QueryCategories(string query)
         {
-            // Simulate database results with consistent IDs
-            var categories = new[]
-            {
-                new { Id = ElectronicsId, Name = "Electronics" },
-                new { Id = ClothingId, Name = "Clothing" },
-                new { Id = BooksId, Name = "Books" },
-                new { Id = HomeGardenId, Name = "Home & Garden" },
-                new { Id = SportsId, Name = "Sports" }
-            };
-            
-            return categories
-                .Where(e => e.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
-                .Select(e => new Option<Guid?>(e.Name, e.Id))
+            return Categories
+                .Where(c => c.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .Select(c => new Option<string>(c))
                 .ToArray();
         }
 
-        async Task<Option<Guid?>?> LookupCategory(Guid? id)
+        async Task<Option<string>?> LookupCategory(string? category)
         {
-            if (id == null) return null;
-            
-            // Simulate database lookup with consistent IDs
-            var categories = new[]
-            {
-                new { Id = ElectronicsId, Name = "Electronics" },
-                new { Id = ClothingId, Name = "Clothing" },
-                new { Id = BooksId, Name = "Books" },
-                new { Id = HomeGardenId, Name = "Home & Garden" },
-                new { Id = SportsId, Name = "Sports" }
-            };
-            
-            var category = categories.FirstOrDefault(c => c.Id == id);
-            if (category != null)
-            {
-                selectedCategoryName.Set(category.Name);
-            }
-            return category != null ? new Option<Guid?>(category.Name, category.Id) : null;
+            return category != null ? new Option<string>(category) : null;
         }
 
         return Layout.Vertical()
             | Text.Label("Select a category:")
-            | guidState.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder: "Select Category")
-            | Text.Small($"Selected: {selectedCategoryName.Value}");
+            | selectedCategory.ToAsyncSelectInput(QueryCategories, LookupCategory, "Search categories...")
+            | Text.Small($"Selected: {selectedCategory.Value ?? "None"}");
     }
 }
 ```
@@ -242,14 +209,14 @@ public class AdvancedQueryDemo : ViewBase
     private static readonly Guid AliceId = Guid.NewGuid();
     private static readonly Guid CharlieId = Guid.NewGuid();
 
-    // Create a static lookup dictionary for quick access
-    private static readonly Dictionary<Guid, User> UserLookup = new()
+    // Single source of user data
+    private static readonly User[] Users = new[]
     {
-        { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
-        { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
-        { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false } },
-        { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
-        { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
+        new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+        new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+        new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
+        new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+        new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
     };
 
     public override object? Build()
@@ -260,35 +227,17 @@ public class AdvancedQueryDemo : ViewBase
         // Update display when selection changes
         this.UseEffect(() =>
         {
-            if (selectedUser.Value != default(Guid) && UserLookup.ContainsKey(selectedUser.Value))
-            {
-                var user = UserLookup[selectedUser.Value];
-                selectedUserInfo.Set($"{user.Name} - {user.Email} ({user.Department})");
-            }
-            else
-            {
-                selectedUserInfo.Set("No user selected");
-            }
+            var user = Users.FirstOrDefault(u => u.Id == selectedUser.Value);
+            selectedUserInfo.Set(user != null ? $"{user.Name} - {user.Email} ({user.Department})" : "No user selected");
         }, [selectedUser]);
 
         async Task<Option<Guid>[]> QueryUsers(string query)
         {
-            
-            // Simulate user database with consistent IDs
-            var users = new[]
-            {
-                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
-                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
-            };
-
             if (string.IsNullOrEmpty(query))
-                return users.Where(u => u.IsActive).Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
+                return Users.Where(u => u.IsActive).Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
 
             var queryLower = query.ToLowerInvariant();
-            return users
+            return Users
                 .Where(u => u.IsActive && 
                            (u.Name.ToLowerInvariant().Contains(queryLower) || 
                             u.Email.ToLowerInvariant().Contains(queryLower) ||
@@ -300,29 +249,13 @@ public class AdvancedQueryDemo : ViewBase
 
         async Task<Option<Guid>?> LookupUser(Guid id)
         {
-            // In real app, fetch from database
-            var users = new[]
-            {
-                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
-                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
-            };
-            
-            var user = users.FirstOrDefault(u => u.Id == id);
+            var user = Users.FirstOrDefault(u => u.Id == id);
             return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
         }
 
-        // Create a custom AsyncSelectInput that handles state updates
         var customAsyncSelect = new AsyncSelectInputView<Guid>(
             selectedUser.Value,
-            e => 
-            {
-                // This is called when a selection is made
-                selectedUser.Set(e.Value);
-                Console.WriteLine($"Selection changed to: {e.Value}");
-            },
+            e => selectedUser.Set(e.Value),
             QueryUsers,
             LookupUser,
             placeholder: "Search by name, email, or department..."
@@ -331,8 +264,7 @@ public class AdvancedQueryDemo : ViewBase
         return Layout.Vertical()
             | Text.Label("Search and select a user:")
             | customAsyncSelect
-            | Text.Small($"Selected: {selectedUserInfo.Value}")
-            | Text.Small($"Debug - Raw value: {selectedUser.Value.ToString()}");
+            | Text.Small($"Selected: {selectedUserInfo.Value}");
     }
 }
 ```
@@ -507,14 +439,14 @@ public class UserSearchDemo : ViewBase
     private static readonly Guid AliceId = Guid.NewGuid();
     private static readonly Guid CharlieId = Guid.NewGuid();
 
-    // Create a static lookup dictionary for quick access
-    private static readonly Dictionary<Guid, User> UserLookup = new()
+    // Single source of user data
+    private static readonly User[] Users = new[]
     {
-        { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
-        { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
-        { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true } },
-        { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
-        { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
+        new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+        new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+        new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
+        new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+        new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
     };
 
     public override object? Build()
@@ -522,49 +454,20 @@ public class UserSearchDemo : ViewBase
         var selectedUser = this.UseState<Guid>(default(Guid));
         var selectedUserDetails = this.UseState<string>("No user selected");
 
-        // Create a static lookup dictionary for quick access
-        var userLookup = new Dictionary<Guid, User>
-        {
-            { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
-            { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
-            { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true } },
-            { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
-            { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
-        };
-
         // Update display when selection changes
         this.UseEffect(() =>
         {
-            if (selectedUser.Value != default(Guid) && userLookup.ContainsKey(selectedUser.Value))
-            {
-                var user = userLookup[selectedUser.Value];
-                selectedUserDetails.Set($"{user.Name} - {user.Email} - {user.Department}");
-            }
-            else
-            {
-                selectedUserDetails.Set("No user selected");
-            }
+            var user = Users.FirstOrDefault(u => u.Id == selectedUser.Value);
+            selectedUserDetails.Set(user != null ? $"{user.Name} - {user.Email} - {user.Department}" : "No user selected");
         }, [selectedUser]);
 
-        // Category query and lookup
         async Task<Option<Guid>[]> QueryUsers(string query)
         {
-            
-            // Simulate user database with consistent IDs
-            var users = new[]
-            {
-                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
-                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
-            };
-            
             if (string.IsNullOrEmpty(query))
-                return users.Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
+                return Users.Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
             
             var queryLower = query.ToLowerInvariant();
-            return users
+            return Users
                 .Where(u => u.IsActive && 
                            (u.Name.ToLowerInvariant().Contains(queryLower) || 
                             u.Email.ToLowerInvariant().Contains(queryLower) ||
@@ -576,28 +479,13 @@ public class UserSearchDemo : ViewBase
 
         async Task<Option<Guid>?> LookupUser(Guid id)
         {
-            var users = new[]
-            {
-                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
-                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
-            };
-            
-            var user = users.FirstOrDefault(u => u.Id == id);
+            var user = Users.FirstOrDefault(u => u.Id == id);
             return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
         }
 
-        // Create a custom AsyncSelectInput that handles state updates
         var customAsyncSelect = new AsyncSelectInputView<Guid>(
             selectedUser.Value,
-            e => 
-            {
-                // This is called when a selection is made
-                selectedUser.Set(e.Value);
-                Console.WriteLine($"Selection changed to: {e.Value}");
-            },
+            e => selectedUser.Set(e.Value),
             QueryUsers,
             LookupUser,
             placeholder: "Search users by name, email, or department..."
@@ -606,8 +494,7 @@ public class UserSearchDemo : ViewBase
         return Layout.Vertical()
             | Text.H2("User Search")
             | customAsyncSelect
-            | Text.Small($"Selected: {selectedUserDetails.Value}")
-            | Text.Small($"Debug - Raw value: {selectedUser.Value.ToString()}");
+            | Text.Small($"Selected: {selectedUserDetails.Value}");
     }
 }
 ```
