@@ -81,125 +81,9 @@ public class XObjectXmlExample : ViewBase
 }
 ```
 
-### Configuration File Viewer
+<WidgetDocs Type="Ivy.Xml" ExtensionTypes="Ivy.XmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Xml.cs"/>
 
-This example demonstrates how to display configuration files with proper XML formatting and structure.
-
-```csharp demo-tabs
-public class ConfigFileViewer : ViewBase
-{
-    public override object? Build()
-    {
-        var configXml = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <configuration>
-              <appSettings>
-                <add key="environment" value="production" />
-                <add key="logLevel" value="info" />
-                <add key="maxConnections" value="100" />
-                <add key="timeout" value="30" />
-              </appSettings>
-              <connectionStrings>
-                <add name="mainDb" 
-                     connectionString="Server=db.example.com;Database=maindb;User Id=admin;Password=****;" />
-                <add name="reportingDb" 
-                     connectionString="Server=reports.example.com;Database=reports;User Id=reporter;Password=****;" />
-              </connectionStrings>
-              <security>
-                <authentication mode="Forms">
-                  <forms loginUrl="~/login" timeout="30" />
-                </authentication>
-                <authorization>
-                  <deny users="?" />
-                  <allow roles="admin,editor" />
-                </authorization>
-              </security>
-            </configuration>
-            """;
-            
-        return Layout.Vertical().Gap(4)
-            | new Xml(configXml);
-    }
-}
-```
-
-### RSS Feed Display
-
-Demonstrates how to display RSS feed content with proper XML structure and formatting.
-
-```csharp demo-tabs
-public class RssFeedViewer : ViewBase
-{
-    public override object? Build()
-    {
-        var rssXml = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <rss version="2.0">
-              <channel>
-                <title>Tech Blog</title>
-                <link>https://example.com/blog</link>
-                <description>Latest technology news and insights</description>
-                <language>en-us</language>
-                <lastBuildDate>Mon, 15 Jan 2024 10:00:00 GMT</lastBuildDate>
-                <item>
-                  <title>Getting Started with Ivy Framework</title>
-                  <link>https://example.com/blog/ivy-framework</link>
-                  <description>Learn how to build modern web applications with Ivy Framework</description>
-                  <pubDate>Mon, 15 Jan 2024 09:00:00 GMT</pubDate>
-                  <category>Development</category>
-                  <category>Framework</category>
-                </item>
-                <item>
-                  <title>Advanced C# Features</title>
-                  <link>https://example.com/blog/advanced-csharp</link>
-                  <description>Explore advanced C# language features and best practices</description>
-                  <pubDate>Sun, 14 Jan 2024 15:30:00 GMT</pubDate>
-                  <category>Development</category>
-                  <category>C#</category>
-                </item>
-              </channel>
-            </rss>
-            """;
-            
-        return Layout.Vertical().Gap(4)
-            | new Xml(rssXml);
-    }
-}
-```
-
-### SOAP Message Display
-
-Shows how to display SOAP messages and web service responses.
-
-```csharp demo-tabs
-public class SoapMessageViewer : ViewBase
-{
-    public override object? Build()
-    {
-        var soapXml = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-              <soap:Header>
-                <AuthHeader xmlns="http://example.com/auth">
-                  <Username>john.doe</Username>
-                  <Token>abc123def456</Token>
-                </AuthHeader>
-              </soap:Header>
-              <soap:Body>
-                <GetUserRequest xmlns="http://example.com/users">
-                  <UserId>12345</UserId>
-                  <IncludeProfile>true</IncludeProfile>
-                  <IncludePermissions>false</IncludePermissions>
-                </GetUserRequest>
-              </soap:Body>
-            </soap:Envelope>
-            """;
-            
-        return Layout.Vertical().Gap(4)
-            | new Xml(soapXml);
-    }
-}
-```
+## Examples
 
 ### Interactive XML Editor
 
@@ -256,5 +140,3 @@ public class InteractiveXmlEditor : ViewBase
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.Xml" ExtensionTypes="Ivy.XmlExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Xml.cs"/>
