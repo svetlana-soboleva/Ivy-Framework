@@ -142,52 +142,7 @@ public class ErrorCalloutView : ViewBase
 }
 ```
 
-## Custom Icons
-
-Override the default variant icons with custom ones for more specific messaging:
-
-```csharp demo-tabs
-public class CustomIconCalloutView : ViewBase
-{
-    public override object? Build()
-    {
-        return Layout.Vertical().Gap(4)
-            | Callout.Info("New features available!", "What's New").Icon(Icons.Sparkles)
-            | Callout.Success("Backup completed successfully!", "Backup Status").Icon(Icons.Database)
-            | Callout.Warning("Maintenance scheduled for tonight", "System Notice").Icon(Icons.Wrench)
-            | Callout.Error("Security alert detected", "Security Warning").Icon(Icons.Shield)
-            | Callout.Info("Download in progress...", "File Transfer").Icon(Icons.Download)
-            | Callout.Success("Integration connected successfully!", "Connection Status").Icon(Icons.Link);
-    }
-}
-```
-
-## Using Extensions
-
-The Callout widget provides fluent extension methods for easy customization:
-
-```csharp demo-tabs
-public class ExtensionCalloutView : ViewBase
-{
-    public override object? Build()
-    {
-        return Layout.Vertical().Gap(4)
-            | Callout.Info("Basic message")
-                .Title("Custom Title")
-                .Icon(Icons.Star)
-            | Callout.Warning("Warning message")
-                .Description("This is a detailed warning description that explains the issue.")
-                .Variant(CalloutVariant.Error)
-                .Icon(Icons.TriangleAlert)
-            | Callout.Success("Success message")
-                .Title("Operation Complete")
-                .Description("Your request has been processed successfully.")
-                .Icon(Icons.Check);
-    }
-}
-```
-
-## Complex Content
+### Complex Content
 
 Callouts can contain rich content beyond simple text:
 
@@ -225,9 +180,9 @@ public class ComplexContentCalloutView : ViewBase
 }
 ```
 
-## Form Integration
+### Form Integration
 
-Use callouts within forms to provide context and validation feedback:
+Use callouts to contain forms and provide context:
 
 ```csharp demo-tabs
 public class FormCalloutView : ViewBase
@@ -238,23 +193,37 @@ public class FormCalloutView : ViewBase
         var passwordState = UseState("");
         
         return Layout.Vertical().Gap(4)
-            | Callout.Info("All fields marked with * are required. Your information will be kept secure.", "Form Guidelines")
-            | Layout.Vertical().Gap(2)
-                | Text.Label("Email Address *")
-                | new TextInput(emailState, placeholder: "Enter your email")
-                | Callout.Warning("Please use your work email address for business communications.", "Email Policy")
-            | Layout.Vertical().Gap(2)
-                | Text.Label("Password *")
-                | new TextInput(passwordState, placeholder: "Enter your password", variant: TextInputs.Password)
-                | Callout.Info("Password must be at least 8 characters with uppercase, lowercase, and numbers.", "Password Requirements")
-            | Layout.Horizontal().Gap(2)
-                | new Button("Submit", variant: ButtonVariant.Primary)
-                | new Button("Cancel", variant: ButtonVariant.Secondary);
+            | new Callout(
+                Layout.Vertical().Gap(2)
+                    | Text.P("All fields marked with * are required. Your information will be kept secure.")
+                    | Text.Label("Email Address *")
+                    | new TextInput(emailState, placeholder: "Enter your email"),
+                "Form Guidelines",
+                CalloutVariant.Info)
+            | new Callout(
+                Layout.Vertical().Gap(2)
+                    | Text.P("Please use your work email address for business communications.")
+                    | Text.Label("Password *")
+                    | new TextInput(passwordState, placeholder: "Enter your password", variant: TextInputs.Password),
+                "Email Policy",
+                CalloutVariant.Warning)
+            | new Callout(
+                Layout.Vertical().Gap(2)
+                    | Text.P("Password must be at least 8 characters with uppercase, lowercase, and numbers.")
+                    | Layout.Horizontal().Gap(2)
+                        | new Button("Submit", variant: ButtonVariant.Primary)
+                        | new Button("Cancel", variant: ButtonVariant.Secondary),
+                "Password Requirements",
+                CalloutVariant.Info);
     }
 }
 ```
 
-## Dashboard Notifications
+<WidgetDocs Type="Ivy.Callout" ExtensionTypes="Ivy.CalloutExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Callout.cs"/>
+
+## Examples
+
+### Dashboard Notifications
 
 Create informative dashboard notifications with callouts:
 
@@ -278,32 +247,22 @@ public class DashboardCalloutView : ViewBase
 }
 ```
 
-## Responsive Layouts
+### Custom Icons
 
-Callouts work well in various layout configurations:
+Override the default variant icons with custom ones for more specific messaging:
 
 ```csharp demo-tabs
-public class ResponsiveCalloutView : ViewBase
+public class CustomIconCalloutView : ViewBase
 {
     public override object? Build()
     {
         return Layout.Vertical().Gap(4)
-            | Text.H3("Horizontal Layout")
-            | Layout.Horizontal().Gap(4)
-                | Callout.Info("Left column info", "Column 1")
-                | Callout.Success("Right column success", "Column 2")
-            | Text.H3("Grid Layout")
-            | Layout.Grid(2).Gap(4)
-                | Callout.Warning("Grid cell 1", "Grid Layout")
-                | Callout.Error("Grid cell 2", "Grid Layout")
-            | Text.H3("Compact Horizontal Layout")
-            | Layout.Horizontal().Gap(2)
-                | Callout.Info("Compact", "Small").Icon(Icons.Info)
-                | Callout.Success("Compact", "Small").Icon(Icons.Check)
-                | Callout.Warning("Compact", "Small").Icon(Icons.TriangleAlert)
-                | Callout.Error("Compact", "Small").Icon(Icons.X);
+            | Callout.Info("New features available!", "What's New").Icon(Icons.Sparkles)
+            | Callout.Success("Backup completed successfully!", "Backup Status").Icon(Icons.Database)
+            | Callout.Warning("Maintenance scheduled for tonight", "System Notice").Icon(Icons.Wrench)
+            | Callout.Error("Security alert detected", "Security Warning").Icon(Icons.Shield)
+            | Callout.Info("Download in progress...", "File Transfer").Icon(Icons.Download)
+            | Callout.Success("Integration connected successfully!", "Connection Status").Icon(Icons.Link);
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.Callout" ExtensionTypes="Ivy.CalloutExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Callout.cs"/>
