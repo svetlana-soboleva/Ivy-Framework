@@ -164,7 +164,6 @@ public class MultiSelectDataTypesDemo : ViewBase
         var guidOptions = new[]{Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()}.ToOptions();
         
         return Layout.Vertical()
-            | Text.H2("Multi-Select with Different Data Types")
             | Layout.Grid().Columns(3)
                 | Text.InlineCode("String Array")
                 | Text.InlineCode("Integer Array")
@@ -247,7 +246,6 @@ public class DynamicOptionsDemo : ViewBase
         var skillOptions = CategoryOptions[selectedCategory.Value].ToOptions();
         
         return Layout.Vertical()
-            | Text.H2("Skills Assessment")
             | Layout.Grid().Columns(2)
                 | Text.Label("Category:")
                 | selectedCategory.ToSelectInput(categoryOptions)
@@ -258,7 +256,7 @@ public class DynamicOptionsDemo : ViewBase
                     .Variant(SelectInputs.List)
                     .Placeholder("Select your skills...")
             
-            | Text.H3("Selected Skills:")
+            | Text.P("Selected Skills:")
             | Text.Block(string.Join(", ", selectedSkills.Value));
     }
 }
@@ -335,8 +333,6 @@ public class NullableSelectDemo : ViewBase
 Use Select for single choice dropdowns, List for multiple selection with checkboxes, and Toggle for visual button-based selection. The List variant is particularly useful for forms where users need to select multiple options.
 </Callout>
 
-## API Reference
-
 <WidgetDocs Type="Ivy.SelectInput" ExtensionTypes="Ivy.SelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/SelectInput.cs"/>
 
 ## Examples
@@ -397,7 +393,6 @@ public class CoffeeShopDemo: ViewBase
         var orderSummary = BuildOrderSummary(coffee.Value, coffeeSize.Value, selectedCondiments.Value);
         
         return Layout.Vertical()
-                | Text.H2("Coffee Shop Ordering")
                 | Layout.Grid().Columns(2)
                     | Text.Label("Coffee Type:")
                     | coffee.ToSelectInput(CoffeeAccompaniments.Keys.ToOptions())
@@ -407,8 +402,7 @@ public class CoffeeShopDemo: ViewBase
                     
                     | Text.Label("Condiments:")
                     | condimentMenu
-                
-                | Text.H3("Your Order:")
+                    
                 | new Icon(Icons.Coffee) 
                 | Text.Block(orderSummary);
     }

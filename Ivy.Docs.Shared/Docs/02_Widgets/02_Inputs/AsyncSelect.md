@@ -492,7 +492,6 @@ public class UserSearchDemo : ViewBase
         );
 
         return Layout.Vertical()
-            | Text.H2("User Search")
             | customAsyncSelect
             | Text.Small($"Selected: {selectedUserDetails.Value}");
     }
