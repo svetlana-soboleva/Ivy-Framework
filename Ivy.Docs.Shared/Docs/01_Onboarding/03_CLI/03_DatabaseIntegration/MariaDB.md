@@ -1,3 +1,7 @@
+---
+title: MariaDB
+---
+
 # MariaDB Database Provider
 
 <Ingress>

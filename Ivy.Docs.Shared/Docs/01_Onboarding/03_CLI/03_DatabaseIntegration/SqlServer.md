@@ -1,3 +1,7 @@
+---
+title: SQL Server
+---
+
 # SQL Server Database Provider
 
 <Ingress>

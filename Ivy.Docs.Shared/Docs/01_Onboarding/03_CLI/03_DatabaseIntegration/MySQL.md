@@ -1,3 +1,7 @@
+---
+title: MySQL
+---
+
 # MySQL Database Provider
 
 <Ingress>

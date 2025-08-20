@@ -1,3 +1,7 @@
+---
+title: PostgreSQL
+---
+
 # PostgreSQL Database Provider
 
 <Ingress>

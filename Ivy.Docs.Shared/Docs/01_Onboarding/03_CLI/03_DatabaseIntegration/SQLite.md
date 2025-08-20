@@ -1,3 +1,7 @@
+---
+title: SQLite
+---
+
 # SQLite Database Provider
 
 <Ingress>
