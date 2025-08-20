@@ -105,10 +105,13 @@ public class CustomInputsExample : ViewBase
     {
         var product = UseState(() => new ProductModel("", "", 0.0m, "{}", new(), DateTime.Now));
         
+        // Create sample tag options for the multi-select
+        var tagOptions = new[] { "Electronics", "Clothing", "Books", "Home", "Sports", "Food" }.ToOptions();
+        
         return product.ToForm()
             .Builder(m => m.Description, s => s.ToTextAreaInput())
             .Builder(m => m.JsonConfig, s => s.ToCodeInput().Language(Languages.Json))
-            .Builder(m => m.Tags, s => s.ToSelectInput().List())
+            .Builder(m => m.Tags, s => s.ToSelectInput(tagOptions))
             .Builder(m => m.ReleaseDate, s => s.ToDateTimeInput())
             .Label(m => m.Description, "Product Description")
             .Label(m => m.JsonConfig, "Configuration (JSON)")
@@ -468,35 +471,27 @@ public class DynamicConfigurationExample : ViewBase
         string Email,
         string Password,
         bool IsAdmin,
-        string Role,
-        List<string> Permissions
+        string Role
     );
 
     public override object? Build()
     {
-        var user = UseState(() => new UserModel("", "", "", false, "", new()));
+        var user = UseState(() => new UserModel("", "", "", false, ""));
         var isEditMode = UseState(false);
-        var currentUser = UseState(() => new UserModel("admin", "admin@example.com", "", true, "Admin", new()));
+        var currentUser = UseState(() => new UserModel("admin", "admin@example.com", "", true, "Admin"));
         
-        var formBuilder = user.ToForm();
-        
-        // Configure form based on edit mode and current user permissions
-        if (isEditMode.Value)
-        {
-            formBuilder.Remove(m => m.Username); // Can't change username in edit mode
-        }
-        
-        if (!currentUser.Value.IsAdmin)
-        {
-            formBuilder.Remove(m => m.IsAdmin); // Only admins can change admin status
-            formBuilder.Remove(m => m.Role);    // Only admins can change roles
-        }
+        // Build the form with conditional field visibility instead of removal
+        var form = user.ToForm()
+            .Visible(m => m.Username, m => !isEditMode.Value) // Hide username in edit mode
+            .Visible(m => m.IsAdmin, m => currentUser.Value.IsAdmin) // Only show admin field to admins
+            .Visible(m => m.Role, m => currentUser.Value.IsAdmin) // Only show role field to admins
+            .Required(m => m.Email, m => m.Password);
         
         return Layout.Vertical()
             | Layout.Horizontal()
                 | new Button("New User").HandleClick(_ => isEditMode.Set(false))
                 | new Button("Edit User").HandleClick(_ => isEditMode.Set(true))
-            | formBuilder
+            | form
             | Layout.Horizontal()
                 | new Button(isEditMode.Value ? "Update User" : "Create User")
                 | new Button("Cancel").Variant(ButtonVariant.Outline);
@@ -597,7 +592,43 @@ public class DialogFormExample : ViewBase
 }
 ```
 
-## Integration Examples
+## Migration from Manual Forms
+
+If you're currently using manual form layouts, migrate to `.ToForm()`:
+
+```csharp
+// ❌ Don't do this - manual form layout
+var form = new Form(
+    new TextInput(name),
+    new TextInput(email),
+    new Button("Submit")
+);
+
+// ✅ Do this instead - use .ToForm()
+var model = UseState(() => new UserModel("", ""));
+return model.ToForm()
+    .Required(m => m.Name, m => m.Email);
+```
+
+<Callout Type="warning">
+Avoid manually creating form layouts. Always use `.ToForm()` on your state objects for better state management, validation, and type safety.
+</Callout>
+
+## Best Practices
+
+1. **Always use `.ToForm()`** - Never manually create form layouts
+2. **Define clear models** - Use C# records or classes with appropriate types
+3. **Leverage automatic scaffolding** - Let Ivy determine input types based on property types
+4. **Use validation** - Add custom validation for business rules
+5. **Group related fields** - Use `.Group()` for logical organization
+6. **Handle form states** - Use `.UseForm()` for proper submission handling
+7. **Provide helpful labels** - Use `.Label()` and `.Description()` for better UX
+
+This comprehensive forms system makes it easy to build robust, user-friendly data collection interfaces in your Ivy applications.
+
+<WidgetDocs Type="Ivy.Form" ExtensionTypes="Ivy.Views.Forms.FormsExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Forms/Form.cs"/>
+
+## Examples
 
 ### Forms with Data Tables
 
@@ -617,19 +648,21 @@ public class CrudFormExample : ViewBase
     {
         var products = UseState(() => new ProductModel[0]);
         var selectedProduct = UseState<ProductModel?>(() => null);
+        var editingProduct = UseState<ProductModel?>(() => null);
+        var isCreateDialogOpen = UseState(false);
         var isEditDialogOpen = UseState(false);
         
         var addProduct = (Event<Button> e) =>
         {
-            var newProduct = new ProductModel("New Product", "", 0.0m, "");
-            var updatedProducts = products.Value.Append(newProduct).ToArray();
-            products.Set(updatedProducts);
+            editingProduct.Set(new ProductModel("", "", 0.0m, ""));
+            isCreateDialogOpen.Set(true);
         };
         
         var editProduct = (Event<Button> e) =>
         {
             if (selectedProduct.Value != null)
             {
+                editingProduct.Set(selectedProduct.Value);
                 isEditDialogOpen.Set(true);
             }
         };
@@ -644,12 +677,71 @@ public class CrudFormExample : ViewBase
             }
         };
         
+        // Create dialog content for new product
+        var createDialog = isCreateDialogOpen.Value && editingProduct.Value != null
+            ? new Dialog(
+                _ => isCreateDialogOpen.Set(false),
+                new DialogHeader("Create New Product"),
+                new DialogBody(
+                    Layout.Vertical()
+                        | Text.Block("Fill in the product details")
+                        | editingProduct.ToForm()
+                            .Required(m => m.Name, m => m.Price, m => m.Category)
+                ),
+                new DialogFooter(
+                    new Button("Cancel", _ => isCreateDialogOpen.Set(false), variant: ButtonVariant.Outline),
+                    new Button("Create Product", _ => {
+                        if (editingProduct.Value != null)
+                        {
+                            var updatedProducts = products.Value.Append(editingProduct.Value).ToArray();
+                            products.Set(updatedProducts);
+                            isCreateDialogOpen.Set(false);
+                        }
+                    })
+                )
+            ).Width(Size.Units(500))
+            : null;
+        
+        // Create dialog content for editing product
+        var editDialog = isEditDialogOpen.Value && editingProduct.Value != null
+            ? new Dialog(
+                _ => isEditDialogOpen.Set(false),
+                new DialogHeader("Edit Product"),
+                new DialogBody(
+                    Layout.Vertical()
+                        | Text.Block("Update product information")
+                        | editingProduct.ToForm()
+                            .Required(m => m.Name, m => m.Price, m => m.Category)
+                ),
+                new DialogFooter(
+                    new Button("Cancel", _ => isEditDialogOpen.Set(false), variant: ButtonVariant.Outline),
+                    new Button("Update Product", _ => {
+                        if (editingProduct.Value != null && selectedProduct.Value != null)
+                        {
+                            var updatedProducts = products.Value.Select(p => 
+                                p == selectedProduct.Value ? editingProduct.Value : p).ToArray();
+                            products.Set(updatedProducts);
+                            selectedProduct.Set(editingProduct.Value);
+                            isEditDialogOpen.Set(false);
+                        }
+                    })
+                )
+            ).Width(Size.Units(500))
+            : null;
+        
         return Layout.Vertical()
             | Layout.Horizontal()
                 | new Button("Add Product", addProduct)
                 | new Button("Edit Product", editProduct).Disabled(selectedProduct.Value == null)
                 | new Button("Delete Product", deleteProduct).Disabled(selectedProduct.Value == null)
                 .Variant(ButtonVariant.Destructive)
+            | Layout.Horizontal()
+                | Text.Block("Select a product to edit/delete:")
+                | new SelectInput<ProductModel?>(
+                    selectedProduct.Value,
+                    e => selectedProduct.Set(e.Value),
+                    products.Value.ToOptions()
+                ).Placeholder("Choose a product...")
             | products.Value.ToTable()
                 .Width(Size.Full())
                 .Builder(p => p.Name, f => f.Default())
@@ -657,10 +749,12 @@ public class CrudFormExample : ViewBase
                 .Builder(p => p.Price, f => f.Default())
                 .Builder(p => p.Category, f => f.Default())
             | (selectedProduct.Value != null ? 
-                selectedProduct.ToForm()
-                    .Required(m => m.Name, m => m.Price, m => m.Category)
-                    .ToDialog(isEditDialogOpen, "Edit Product", "Update product information")
-                : null!);
+                Text.Block($"Selected: {selectedProduct.Value.Name} (${selectedProduct.Value.Price})")
+                    .Color(Colors.Blue)
+                : Text.Block("No product selected")
+                    .Color(Colors.Gray))
+            | createDialog!
+            | editDialog!;
     }
 }
 ```
@@ -713,39 +807,3 @@ public class RealTimeFormExample : ViewBase
     }
 }
 ```
-
-## Migration from Manual Forms
-
-If you're currently using manual form layouts, migrate to `.ToForm()`:
-
-```csharp
-// ❌ Don't do this - manual form layout
-var form = new Form(
-    new TextInput(name),
-    new TextInput(email),
-    new Button("Submit")
-);
-
-// ✅ Do this instead - use .ToForm()
-var model = UseState(() => new UserModel("", ""));
-return model.ToForm()
-    .Required(m => m.Name, m => m.Email);
-```
-
-<Callout Type="warning">
-Avoid manually creating form layouts. Always use `.ToForm()` on your state objects for better state management, validation, and type safety.
-</Callout>
-
-## Best Practices
-
-1. **Always use `.ToForm()`** - Never manually create form layouts
-2. **Define clear models** - Use C# records or classes with appropriate types
-3. **Leverage automatic scaffolding** - Let Ivy determine input types based on property types
-4. **Use validation** - Add custom validation for business rules
-5. **Group related fields** - Use `.Group()` for logical organization
-6. **Handle form states** - Use `.UseForm()` for proper submission handling
-7. **Provide helpful labels** - Use `.Label()` and `.Description()` for better UX
-
-This comprehensive forms system makes it easy to build robust, user-friendly data collection interfaces in your Ivy applications.
-
-<WidgetDocs Type="Ivy.Widgets.Forms.Form" ExtensionTypes="Ivy.Views.Forms.FormExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Forms/Form.cs"/>
