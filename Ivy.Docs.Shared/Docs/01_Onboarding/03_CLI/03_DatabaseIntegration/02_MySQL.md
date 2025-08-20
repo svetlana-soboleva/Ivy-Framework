@@ -56,7 +56,7 @@ Server=localhost;Database=mydb;Uid=user;Pwd=pass;Pooling=true;MinimumPoolSize=1;
 ### Entity Framework Setup
 
 Ivy automatically configures:
-- **MySql.EntityFrameworkCore** or **Pomelo.EntityFrameworkCore.MySql** package
+- **Pomelo.EntityFrameworkCore.MySql** package
 - **Connection strings** stored in .NET User Secrets
 - **DbContext** with MySQL provider configuration
 

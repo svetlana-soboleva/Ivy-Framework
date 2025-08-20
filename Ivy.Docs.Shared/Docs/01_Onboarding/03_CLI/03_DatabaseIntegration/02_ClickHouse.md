@@ -56,6 +56,7 @@ Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;C
 
 Ivy automatically configures:
 - **EntityFrameworkCore.ClickHouse** package
+- Imports the `ClickHouse.EntityFrameworkCore.Extensions` namespace
 - **Connection strings** stored in .NET User Secrets
 - **DbContext** with ClickHouse provider configuration
 

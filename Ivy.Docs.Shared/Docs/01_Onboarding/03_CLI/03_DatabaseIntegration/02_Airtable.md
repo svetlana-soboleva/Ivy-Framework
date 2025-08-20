@@ -45,6 +45,7 @@ Airtable uses personal access tokens (PATs) for authentication. You can generate
 
 Ivy automatically configures:
 - **Ivy.Airtable.EFCore** package
+- Imports the `Airtable.EFCore` and `AirtableApiClient` namespaces
 - **Connection strings** stored in .NET User Secrets
 - **DbContext** with Airtable provider configuration
 
