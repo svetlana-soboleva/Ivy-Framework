@@ -22,13 +22,13 @@ Ivy supports the following database providers. Click on any provider for detaile
 ### Cloud Databases
 
 - **[Supabase](Supabase.md)** - Open-source Firebase alternative with PostgreSQL
-- **Google Spanner** - Globally distributed database *(Coming Soon)*
-- **Snowflake** - Cloud data platform *(Coming Soon)*
+- **[Google Spanner](GoogleSpanner.md)** - Globally distributed database
+- **[Snowflake](Snowflake.md)** - Cloud data platform
 
 ### Specialized Databases
 
-- **ClickHouse** - Column-oriented database for analytics *(Coming Soon)*
-- **Airtable** - Spreadsheet-database hybrid *(Coming Soon)*
+- **[ClickHouse](ClickHouse.md)** - Column-oriented database for analytics
+- **[Airtable](Airtable.md)** - Spreadsheet-database hybrid
 
 ## Basic Usage
 
