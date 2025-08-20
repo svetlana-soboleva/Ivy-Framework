@@ -22,4 +22,21 @@ new Card(
 ).Title("Card App").Description("This is a card app.").Width(Size.Units(100))
 ```
 
+## Border Customization
+
+Cards support the same border functionality as Box widgets, allowing you to customize the appearance while maintaining the default card styling when no border properties are specified.
+
+```csharp demo-below
+new Card(
+    "This card has a custom border with dashed style and primary color.",
+    new Button("Action", _ => client.Toast("Button clicked!"))
+).Title("Custom Border Card")
+ .Description("Demonstrating border customization")
+ .BorderThickness(3)
+ .BorderStyle(BorderStyle.Dashed)
+ .BorderColor(Colors.Primary)
+ .BorderRadius(BorderRadius.Rounded)
+ .Width(Size.Units(100))
+```
+
 <WidgetDocs Type="Ivy.Card" ExtensionTypes="Ivy.CardExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Card.cs"/>

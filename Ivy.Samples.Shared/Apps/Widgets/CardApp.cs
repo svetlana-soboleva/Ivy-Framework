@@ -16,7 +16,12 @@ public class CardApp : SampleBase
 
         var card2 = new Card(
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc"
-        );
+        ).Title("Card with Border")
+         .Description("This card has a custom border.")
+         .BorderThickness(3)
+         .BorderStyle(BorderStyle.Dashed)
+         .BorderColor(Colors.Primary)
+         .BorderRadius(BorderRadius.Rounded);
 
         var menu = new List(
             new ListItem("Products", onClick: _ => { }, badge: 100.ToString()),
@@ -25,7 +30,11 @@ public class CardApp : SampleBase
 
         var card3 = new Card(
             menu
-        );
+        ).Title("Menu Card")
+         .BorderThickness(2)
+         .BorderStyle(BorderStyle.Solid)
+         .BorderColor(Colors.Success)
+         .BorderRadius(BorderRadius.Full);
 
         return Layout.Vertical().Width(Size.Units(100))
                | card1
