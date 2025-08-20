@@ -8,22 +8,6 @@ Connect your Ivy application to Oracle Database with automatic Entity Framework 
 
 Oracle Database is a multi-model database management system developed by Oracle Corporation. It's widely used in enterprise environments and offers advanced features for mission-critical applications.
 
-## Setup
-
-### Adding Oracle Connection
-
-```terminal
->ivy db add --provider Oracle --name MyOracle
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Connection String**: Provide your Oracle connection string
-3. **Schema**: Specify the database schema (usually the username)
-
 ## Connection String Format
 
 ### Basic Connection String
@@ -43,23 +27,7 @@ Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CON
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **Oracle.EntityFrameworkCore** package
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with Oracle provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MyOracle/
-    ├── MyOracleContext.cs               # Entity Framework DbContext
-    ├── MyOracleContextFactory.cs        # DbContext factory
-    ├── MyOracleConnection.cs            # Connection configuration
-    └── [EntityName].cs...               # Generated entity classes
-```
+Ivy automatically configures the **Oracle.EntityFrameworkCore** package for Oracle connections.
 
 ## Advanced Configuration
 
@@ -96,7 +64,6 @@ Oracle offers enterprise-grade features:
 ## Security Best Practices
 
 - **Use encrypted connections** with SSL/TLS
-- **Store connection strings** in User Secrets or Oracle Wallet
 - **Create dedicated database users** with minimal required privileges
 - **Enable auditing** for sensitive operations
 - **Use Oracle Advanced Security** features in production
@@ -121,12 +88,6 @@ Oracle offers enterprise-grade features:
 - Verify username and password are correct
 - Check if the user account is locked or expired
 - Ensure the user has CONNECT privilege
-
-**Performance Issues**
-- Enable connection pooling in the connection string
-- Monitor Oracle AWR reports for performance bottlenecks
-- Consider using Oracle's performance tuning tools
-- Optimize SQL queries and create appropriate indexes
 
 **Character Set Issues**
 - Ensure consistent character set configuration

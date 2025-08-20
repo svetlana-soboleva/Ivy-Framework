@@ -1,7 +1,3 @@
----
-title: Snowflake
----
-
 # Snowflake Database Provider
 
 <Ingress>
@@ -11,21 +7,6 @@ Connect your Ivy application to Snowflake with automatic Entity Framework config
 ## Overview
 
 Snowflake is a cloud-based data warehousing platform that provides a single, integrated solution for data storage, processing, and analytics. Ivy offers seamless integration with Snowflake through Entity Framework Core, allowing you to leverage Snowflake's powerful data processing capabilities in your applications.
-
-## Setup
-
-### Adding Snowflake Connection
-
-```terminal
->ivy db add --provider Snowflake --name MySnowflake
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Connection String**: Provide your Snowflake connection string with account, user, password, and database information
 
 ## Connection String Format
 
@@ -57,23 +38,7 @@ account=myaccount;authenticator=externalbrowser;user=myuser;db=mydatabase;schema
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **EFCore.Snowflake** package
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with Snowflake provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MySnowflake/
-    ├── MySnowflakeContext.cs             # Entity Framework DbContext
-    ├── MySnowflakeContextFactory.cs      # DbContext factory
-    ├── MySnowflakeConnection.cs          # Connection configuration
-    └── [EntityName].cs...                # Generated entity classes
-```
+Ivy automatically configures the **EFCore.Snowflake** package for Snowflake connections.
 
 ## Advanced Configuration
 
@@ -91,7 +56,7 @@ account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;
 account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;warehouse=mywarehouse;connection_timeout=60;request_timeout=300
 ```
 
-### Snowflake-Specific Features
+## Snowflake-Specific Features
 
 Snowflake offers advanced features that Ivy can leverage:
 - **Time Travel** for accessing historical data
@@ -103,7 +68,6 @@ Snowflake offers advanced features that Ivy can leverage:
 ## Security Best Practices
 
 - **Use key pair authentication** instead of password authentication
-- **Store connection strings** in User Secrets or secure vaults
 - **Enable network policies** to restrict access
 - **Use private connectivity** (AWS PrivateLink, Azure Private Link) when possible
 - **Implement column-level security** for sensitive data

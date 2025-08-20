@@ -8,32 +8,13 @@ Connect your Ivy application to Google Cloud Spanner with automatic Entity Frame
 
 Google Cloud Spanner is a fully managed, mission-critical, relational database service that offers transactional consistency at global scale, automatic, synchronous replication for high availability, and support for schema changes without downtime. Ivy provides seamless integration with Google Cloud Spanner through Entity Framework Core.
 
-## Setup
-
-### Adding Spanner Connection
-
-```terminal
->ivy db add --provider Spanner --name MySpanner
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Project ID**: Your Google Cloud project ID
-3. **Instance ID**: The Spanner instance ID
-4. **Database ID**: The Spanner database ID
-
-If you have Google application credentials configured, Ivy will automatically fetch and display a list of accessible Spanner databases for easy selection.
-
 ## Connection String Format
 
 ```text
 Data Source=projects/{projectId}/instances/{instanceId}/databases/{databaseId}
 ```
 
-### Authentication Options
+## Authentication Options
 
 Google Cloud Spanner uses application default credentials for authentication. Before using Spanner with Ivy, ensure that you have:
 
@@ -50,23 +31,7 @@ For production environments, you'll typically use service account credentials. S
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **Google.Cloud.EntityFrameworkCore.Spanner** package
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with Spanner provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MySpanner/
-    ├── MySpannerContext.cs             # Entity Framework DbContext
-    ├── MySpannerContextFactory.cs      # DbContext factory
-    ├── MySpannerConnection.cs          # Connection configuration
-    └── [EntityName].cs...              # Generated entity classes
-```
+Ivy automatically configures the **Google.Cloud.EntityFrameworkCore.Spanner** package for Spanner connections.
 
 ## Advanced Configuration
 
@@ -83,7 +48,7 @@ Then set the emulator environment variables:
 >$(gcloud emulators spanner env-init)
 ```
 
-### Spanner-Specific Features
+## Spanner-Specific Features
 
 Spanner offers advanced features that Ivy can leverage:
 - **Interleaved tables** for parent-child relationships
@@ -95,7 +60,6 @@ Spanner offers advanced features that Ivy can leverage:
 ## Security Best Practices
 
 - **Use service accounts** with minimum required permissions
-- **Store connection information** in User Secrets or secure vaults
 - **Enable audit logging** for security monitoring
 - **Implement row-level security** where appropriate
 - **Use VPC Service Controls** to restrict access in production

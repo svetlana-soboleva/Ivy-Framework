@@ -12,22 +12,6 @@ Connect your Ivy application to SQLite with automatic Entity Framework configura
 
 SQLite is a lightweight, file-based relational database that's perfect for development, testing, and applications that need a simple, self-contained database solution. No server setup required!
 
-## Setup
-
-### Adding SQLite Connection
-
-```terminal
->ivy db add --provider Sqlite --name MySqlite
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Database File Path**: Specify the path to your SQLite database file
-3. **Create Database**: Choose whether to create the database file if it doesn't exist
-
 ## Connection String Format
 
 ```text
@@ -58,33 +42,11 @@ Data Source=data.db;Cache=Shared;Foreign Keys=True
 
 ## Configuration
 
-### Entity Framework Setup
+Ivy automatically configures the **Microsoft.EntityFrameworkCore.Sqlite** package for SQLite connections.
 
-Ivy automatically configures:
-- **Microsoft.EntityFrameworkCore.Sqlite** package
-- **Connection strings** stored appropriately (SQLite uses file paths)
-- **DbContext** with SQLite provider configuration
+Unlike other providers, SQLite connection strings are stored as file paths rather than in User Secrets.
 
-### Generated Files
-
-```text
-Connections/
-└── MySqlite/
-    ├── MySqliteContext.cs               # Entity Framework DbContext
-    ├── MySqliteContextFactory.cs        # DbContext factory
-    ├── MySqliteConnection.cs            # Connection configuration
-    └── [EntityName].cs...               # Generated entity classes
-```
-
-## Advanced Configuration
-
-### Custom Database Location
-
-```terminal
->ivy db add --provider Sqlite --connection-string "Data Source=/custom/path/myapp.db"
-```
-
-### SQLite-Specific Features
+## SQLite-Specific Features
 
 SQLite offers unique characteristics:
 - **Zero-configuration** - no server setup required
@@ -113,12 +75,10 @@ SQLite offers unique characteristics:
 
 **Database Locked Errors**
 - Close all connections properly after use
-- Use connection pooling appropriately
 - Consider using WAL mode for better concurrency
 - Check for long-running transactions
 
 **Performance Issues**
-- Enable WAL mode for concurrent access: `PRAGMA journal_mode=WAL`
 - Create appropriate indexes for your queries
 - Use `ANALYZE` to update query planner statistics
 - Consider `VACUUM` to reclaim space and optimize
@@ -139,7 +99,6 @@ SQLite offers unique characteristics:
 ### Production Considerations
 - **Concurrent writes** are limited compared to server databases
 - **No network access** - database must be on same machine
-- **Backup strategy** should include file-level backups
 - **Consider server databases** for high-concurrency applications
 
 ## Example Usage

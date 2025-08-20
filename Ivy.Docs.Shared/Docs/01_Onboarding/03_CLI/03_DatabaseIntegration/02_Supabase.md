@@ -8,22 +8,6 @@ Connect your Ivy application to Supabase with automatic Entity Framework configu
 
 Supabase is an open-source Firebase alternative that provides a PostgreSQL database with real-time capabilities, authentication, and storage. Ivy integrates seamlessly with Supabase's PostgreSQL backend.
 
-## Setup
-
-### Adding Supabase Connection
-
-```terminal
->ivy db add --provider Supabase --name MySupabase
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Supabase Project URL**: Your project's API URL
-3. **Database Connection Details**: Host, database name, username, and password
-
 ## Connection String Format
 
 ```text
@@ -54,23 +38,7 @@ Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Passwor
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **Npgsql.EntityFrameworkCore.PostgreSQL** package (since Supabase uses PostgreSQL)
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with PostgreSQL provider configuration optimized for Supabase
-
-### Generated Files
-
-```text
-Connections/
-└── MySupabase/
-    ├── MySupabaseContext.cs             # Entity Framework DbContext
-    ├── MySupabaseContextFactory.cs      # DbContext factory
-    ├── MySupabaseConnection.cs          # Connection configuration
-    └── [EntityName].cs...               # Generated entity classes
-```
+Ivy automatically configures the **Npgsql.EntityFrameworkCore.PostgreSQL** package for Supabase connections since Supabase uses PostgreSQL under the hood.
 
 ## Supabase-Specific Features
 
@@ -104,18 +72,9 @@ When using both Supabase database and authentication:
 ## Security Best Practices
 
 - **Use SSL connections** (enabled by default with Supabase)
-- **Store connection strings** in User Secrets or environment variables
 - **Implement Row Level Security** policies for user data isolation
 - **Use service role key** only for administrative operations
 - **Monitor database activity** through Supabase dashboard
-
-## Environment Variables
-
-For production deployments, use environment variables:
-
-```text
-export ConnectionStrings__MY_SUPABASE_CONNECTION_STRING="Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Password=your-password;SSL Mode=Require"
-```
 
 ## Troubleshooting
 
@@ -134,24 +93,10 @@ export ConnectionStrings__MY_SUPABASE_CONNECTION_STRING="Host=db.your-project-re
 **SSL Certificate Issues**
 - Use `SSL Mode=Require` in connection string
 - Ensure your system has up-to-date certificate stores
-- Check Supabase status page for any SSL issues
 
 **Rate Limiting**
 - Supabase has connection limits based on your plan
 - Implement connection pooling to optimize usage
-- Consider upgrading your Supabase plan for higher limits
-
-### Performance Optimization
-
-**Connection Pooling**
-```text
-Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Password=your-password;Pooling=true;Maximum Pool Size=10;Connection Lifetime=300
-```
-
-**Query Optimization**
-- Use indexes for frequently queried columns
-- Monitor query performance in Supabase dashboard
-- Consider using Supabase's caching features
 
 ## Migration from Local PostgreSQL
 
@@ -212,4 +157,3 @@ public class UserDataApp : AppBase
 - [Database Overview](01_Overview.md)
 - [Supabase Authentication](../04_Authentication/Supabase.md)
 - [PostgreSQL Provider](PostgreSQL.md)
-- [Environment Variables and Secrets](../../02_Concepts/Services.md)

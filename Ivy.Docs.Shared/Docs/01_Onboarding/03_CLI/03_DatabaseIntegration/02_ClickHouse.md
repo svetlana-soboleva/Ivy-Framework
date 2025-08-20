@@ -12,21 +12,6 @@ Connect your Ivy application to ClickHouse with automatic Entity Framework confi
 
 ClickHouse is an open-source column-oriented database management system designed for online analytical processing (OLAP) that allows generating analytical reports using SQL queries in real-time. Ivy provides seamless integration with ClickHouse through Entity Framework Core, enabling you to leverage its high-performance capabilities in your applications.
 
-## Setup
-
-### Adding ClickHouse Connection
-
-```terminal
->ivy db add --provider ClickHouse --name MyClickHouse
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Connection String**: Provide your ClickHouse connection string
-
 ## Connection String Format
 
 ```text
@@ -52,24 +37,7 @@ Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;C
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **EntityFrameworkCore.ClickHouse** package
-- Imports the `ClickHouse.EntityFrameworkCore.Extensions` namespace
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with ClickHouse provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MyClickHouse/
-    ├── MyClickHouseContext.cs             # Entity Framework DbContext
-    ├── MyClickHouseContextFactory.cs      # DbContext factory
-    ├── MyClickHouseConnection.cs          # Connection configuration
-    └── [EntityName].cs...                 # Generated entity classes
-```
+Ivy automatically configures the **EntityFrameworkCore.ClickHouse** package and imports the `ClickHouse.EntityFrameworkCore.Extensions` namespace for ClickHouse connections.
 
 ## Advanced Configuration
 
@@ -87,7 +55,7 @@ Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;B
 Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;Timeout=30;ConnectionTimeout=10;
 ```
 
-### ClickHouse-Specific Features
+## ClickHouse-Specific Features
 
 ClickHouse offers advanced features that Ivy can leverage:
 - **Columnar storage** for efficient data compression and query processing
@@ -99,7 +67,6 @@ ClickHouse offers advanced features that Ivy can leverage:
 ## Security Best Practices
 
 - **Use TLS/SSL** for secure connections
-- **Store connection strings** in User Secrets or secure vaults
 - **Implement IP-based access restrictions**
 - **Use a separate user** with limited permissions for application access
 - **Enable secure communication** between ClickHouse nodes in a cluster

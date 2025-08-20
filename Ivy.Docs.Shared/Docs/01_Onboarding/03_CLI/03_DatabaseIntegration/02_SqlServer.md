@@ -12,22 +12,6 @@ Connect your Ivy application to Microsoft SQL Server with automatic Entity Frame
 
 SQL Server is Microsoft's enterprise-grade relational database management system. Ivy provides seamless integration with SQL Server through Entity Framework Core.
 
-## Setup
-
-### Adding SQL Server Connection
-
-```terminal
->ivy db add --provider SqlServer --name MySqlServer
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Connection String**: Provide your SQL Server connection string
-3. **Schema**: Specify the database schema (optional, defaults to `dbo`)
-
 ## Connection String Format
 
 ```text
@@ -53,23 +37,7 @@ Server=tcp:yourserver.database.windows.net,1433;Database=mydb;User ID=username;P
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **Microsoft.EntityFrameworkCore.SqlServer** package
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with SQL Server provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MySqlServer/
-    ├── MySqlServerContext.cs             # Entity Framework DbContext
-    ├── MySqlServerContextFactory.cs      # DbContext factory
-    ├── MySqlServerConnection.cs          # Connection configuration
-    └── [EntityName].cs...                # Generated entity classes
-```
+Ivy automatically configures the **Microsoft.EntityFrameworkCore.SqlServer** package for SQL Server connections.
 
 ## Advanced Configuration
 
@@ -86,7 +54,6 @@ SQL Server supports multiple schemas. You can specify different schemas when add
 ## Security Best Practices
 
 - **Use Windows Authentication** when possible for local development
-- **Store connection strings** in User Secrets or Azure Key Vault
 - **Use Azure AD authentication** for Azure SQL Database
 - **Enable encryption** in connection strings for production
 
@@ -118,7 +85,10 @@ public class EmployeeApp : AppBase<Employee>
     public override Task<IView> BuildAsync(Employee employee)
     {
         return Task.FromResult<IView>(
-            Text($"Employee: {employee.Name}")
+            Card(
+                Text($"Employee: {employee.Name}"),
+                Text($"Department: {employee.Department}")
+            )
         );
     }
 }

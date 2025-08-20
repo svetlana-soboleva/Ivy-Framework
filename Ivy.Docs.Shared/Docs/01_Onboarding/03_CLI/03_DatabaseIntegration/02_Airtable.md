@@ -8,29 +8,13 @@ Connect your Ivy application to Airtable with automatic Entity Framework configu
 
 Airtable is a cloud-based spreadsheet-database hybrid that combines the simplicity of a spreadsheet with the power of a database. Ivy provides integration with Airtable through Entity Framework Core, allowing you to leverage Airtable's flexible data organization in your applications.
 
-## Setup
-
-### Adding Airtable Connection
-
-```terminal
->ivy db add --provider Airtable --name MyAirtable
-```
-
-### Interactive Setup
-
-When using interactive mode, Ivy will guide you through:
-
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Access Token**: Your Airtable personal access token (stored securely)
-3. **Base ID**: The ID of the Airtable base you want to connect to
-
 ## Connection String Format
 
 ```text
 BaseId=appXXXXXXXXXXXXXX;ApiKey=patXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-### Authentication
+## Authentication
 
 Airtable uses personal access tokens (PATs) for authentication. You can generate a personal access token from your Airtable account settings:
 
@@ -41,28 +25,9 @@ Airtable uses personal access tokens (PATs) for authentication. You can generate
 
 ## Configuration
 
-### Entity Framework Setup
+Ivy automatically configures the **Ivy.Airtable.EFCore** package and imports the `Airtable.EFCore` and `AirtableApiClient` namespaces for Airtable connections.
 
-Ivy automatically configures:
-- **Ivy.Airtable.EFCore** package
-- Imports the `Airtable.EFCore` and `AirtableApiClient` namespaces
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with Airtable provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MyAirtable/
-    ├── MyAirtableContext.cs             # Entity Framework DbContext
-    ├── MyAirtableContextFactory.cs      # DbContext factory
-    ├── MyAirtableConnection.cs          # Connection configuration
-    └── [EntityName].cs...               # Generated entity classes
-```
-
-## Advanced Configuration
-
-### Working with Airtable Tables
+## Working with Airtable Tables
 
 In Airtable, tables function as entities in your Entity Framework context. The Ivy implementation:
 
@@ -71,7 +36,7 @@ In Airtable, tables function as entities in your Entity Framework context. The I
 - Manages relationships between tables
 - Provides CRUD operations through the Entity Framework API
 
-### Airtable-Specific Features
+## Airtable-Specific Features
 
 Airtable offers unique features that Ivy can leverage:
 - **Rich field types** including attachments, links, and formulas
@@ -83,7 +48,6 @@ Airtable offers unique features that Ivy can leverage:
 ## Security Best Practices
 
 - **Use scoped access tokens** with minimum required permissions
-- **Store tokens** in User Secrets or secure vaults
 - **Rotate tokens** periodically for enhanced security
 - **Never expose tokens** in client-side code
 - **Create separate tokens** for development and production
