@@ -13,23 +13,29 @@ Here's a simple example of an `AsyncSelectInput` that fetches categories from a 
 ```csharp demo-tabs
 public class AsyncSelectBasicDemo : ViewBase
 {
+    // Use consistent GUIDs for demo purposes
+    private static readonly Guid ElectronicsId = Guid.NewGuid();
+    private static readonly Guid ClothingId = Guid.NewGuid();
+    private static readonly Guid BooksId = Guid.NewGuid();
+    private static readonly Guid HomeGardenId = Guid.NewGuid();
+    private static readonly Guid SportsId = Guid.NewGuid();
+
     public override object? Build()
     {
         var guidState = this.UseState<Guid?>(default(Guid?));
+        var selectedCategoryName = this.UseState<string>("No category selected");
 
         async Task<Option<Guid?>[]> QueryCategories(string query)
         {
-            // Simulate database query with delay
-            await Task.Delay(100);
             
-            // Simulate database results
+            // Simulate database results with consistent IDs
             var categories = new[]
             {
-                new { Id = Guid.NewGuid(), Name = "Electronics" },
-                new { Id = Guid.NewGuid(), Name = "Clothing" },
-                new { Id = Guid.NewGuid(), Name = "Books" },
-                new { Id = Guid.NewGuid(), Name = "Home & Garden" },
-                new { Id = Guid.NewGuid(), Name = "Sports" }
+                new { Id = ElectronicsId, Name = "Electronics" },
+                new { Id = ClothingId, Name = "Clothing" },
+                new { Id = BooksId, Name = "Books" },
+                new { Id = HomeGardenId, Name = "Home & Garden" },
+                new { Id = SportsId, Name = "Sports" }
             };
             
             return categories
@@ -41,24 +47,29 @@ public class AsyncSelectBasicDemo : ViewBase
         async Task<Option<Guid?>?> LookupCategory(Guid? id)
         {
             if (id == null) return null;
-            await Task.Delay(50);
             
-            // Simulate database lookup
+            // Simulate database lookup with consistent IDs
             var categories = new[]
             {
-                new { Id = Guid.NewGuid(), Name = "Electronics" },
-                new { Id = Guid.NewGuid(), Name = "Clothing" },
-                new { Id = Guid.NewGuid(), Name = "Books" }
+                new { Id = ElectronicsId, Name = "Electronics" },
+                new { Id = ClothingId, Name = "Clothing" },
+                new { Id = BooksId, Name = "Books" },
+                new { Id = HomeGardenId, Name = "Home & Garden" },
+                new { Id = SportsId, Name = "Sports" }
             };
             
             var category = categories.FirstOrDefault(c => c.Id == id);
+            if (category != null)
+            {
+                selectedCategoryName.Set(category.Name);
+            }
             return category != null ? new Option<Guid?>(category.Name, category.Id) : null;
         }
 
         return Layout.Vertical()
             | Text.Label("Select a category:")
             | guidState.ToAsyncSelectInput(QueryCategories, LookupCategory, placeholder: "Select Category")
-            | Text.Small($"Selected ID: {guidState.Value?.ToString() ?? "None"}");
+            | Text.Small($"Selected: {selectedCategoryName.Value}");
     }
 }
 ```
@@ -78,8 +89,6 @@ public class StringAsyncSelectDemo : ViewBase
 
         async Task<Option<string>[]> QueryCountries(string query)
         {
-            // Simulate API call with delay
-            await Task.Delay(100);
             
             var countries = new[] { "Germany", "France", "Japan", "China", "USA", "Canada", "Australia", "Brazil" };
             return countries
@@ -91,7 +100,6 @@ public class StringAsyncSelectDemo : ViewBase
         async Task<Option<string>?> LookupCountry(string country)
         {
             if (string.IsNullOrEmpty(country)) return null;
-            await Task.Delay(50);
             return new Option<string>(country);
         }
 
@@ -114,8 +122,6 @@ public class IntegerAsyncSelectDemo : ViewBase
 
         async Task<Option<int>[]> QueryYears(string query)
         {
-            await Task.Delay(100);
-            
             var currentYear = DateTime.Now.Year;
             var years = Enumerable.Range(currentYear - 100, 101).ToArray();
             
@@ -140,7 +146,6 @@ public class IntegerAsyncSelectDemo : ViewBase
 
         async Task<Option<int>?> LookupYear(int year)
         {
-            await Task.Delay(50);
             return new Option<int>(year.ToString(), year);
         }
 
@@ -173,13 +178,25 @@ public class EnumAsyncSelectDemo : ViewBase
 
     public override object? Build()
     {
-        var selectedLanguage = this.UseState<ProgrammingLanguage?>(default(ProgrammingLanguage));
+        var selectedLanguage = this.UseState(ProgrammingLanguage.CSharp);
 
         async Task<Option<ProgrammingLanguage>[]> QueryLanguages(string query)
         {
-            await Task.Delay(100);
             
-            var languages = Enum.GetValues<ProgrammingLanguage>();
+            // Create a static array of languages to avoid runtime issues
+            var languages = new[] 
+            { 
+                ProgrammingLanguage.CSharp, 
+                ProgrammingLanguage.Java, 
+                ProgrammingLanguage.Python, 
+                ProgrammingLanguage.JavaScript, 
+                ProgrammingLanguage.Go, 
+                ProgrammingLanguage.Rust, 
+                ProgrammingLanguage.FSharp, 
+                ProgrammingLanguage.Kotlin, 
+                ProgrammingLanguage.Swift, 
+                ProgrammingLanguage.TypeScript 
+            };
             
             if (string.IsNullOrEmpty(query))
                 return languages.Select(l => new Option<ProgrammingLanguage>(l.ToString(), l)).ToArray();
@@ -192,14 +209,13 @@ public class EnumAsyncSelectDemo : ViewBase
 
         async Task<Option<ProgrammingLanguage>?> LookupLanguage(ProgrammingLanguage language)
         {
-            await Task.Delay(50);
             return new Option<ProgrammingLanguage>(language.ToString(), language);
         }
 
         return Layout.Vertical()
             | Text.Label("Select a programming language:")
             | selectedLanguage.ToAsyncSelectInput(QueryLanguages, LookupLanguage, placeholder: "Search languages...")
-            | Text.Small($"Selected: {selectedLanguage.Value?.ToString() ?? "None"}");
+            | Text.Small($"Selected: {selectedLanguage.Value.ToString()}");
     }
 }
 ```
@@ -222,22 +238,53 @@ public class AdvancedQueryDemo : ViewBase
         public bool IsActive { get; init; }
     }
 
+    // Use consistent GUIDs for demo purposes
+    private static readonly Guid JohnId = Guid.NewGuid();
+    private static readonly Guid JaneId = Guid.NewGuid();
+    private static readonly Guid BobId = Guid.NewGuid();
+    private static readonly Guid AliceId = Guid.NewGuid();
+    private static readonly Guid CharlieId = Guid.NewGuid();
+
+    // Create a static lookup dictionary for quick access
+    private static readonly Dictionary<Guid, User> UserLookup = new()
+    {
+        { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
+        { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
+        { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false } },
+        { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
+        { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
+    };
+
     public override object? Build()
     {
-        var selectedUser = this.UseState<Guid?>(default(Guid));
+        var selectedUser = this.UseState<Guid>(default(Guid));
+        var selectedUserInfo = this.UseState<string>("No user selected");
+
+        // Update display when selection changes
+        this.UseEffect(() =>
+        {
+            if (selectedUser.Value != default(Guid) && UserLookup.ContainsKey(selectedUser.Value))
+            {
+                var user = UserLookup[selectedUser.Value];
+                selectedUserInfo.Set($"{user.Name} - {user.Email} ({user.Department})");
+            }
+            else
+            {
+                selectedUserInfo.Set("No user selected");
+            }
+        }, [selectedUser]);
 
         async Task<Option<Guid>[]> QueryUsers(string query)
         {
-            await Task.Delay(200); // Simulate API delay
             
-            // Simulate user database
+            // Simulate user database with consistent IDs
             var users = new[]
             {
-                new User { Id = Guid.NewGuid(), Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
-                new User { Id = Guid.NewGuid(), Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
+                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
+                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
             };
 
             if (string.IsNullOrEmpty(query))
@@ -256,22 +303,39 @@ public class AdvancedQueryDemo : ViewBase
 
         async Task<Option<Guid>?> LookupUser(Guid id)
         {
-            await Task.Delay(100);
             // In real app, fetch from database
             var users = new[]
             {
-                new User { Id = Guid.NewGuid(), Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true }
+                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = false },
+                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
             };
             
             var user = users.FirstOrDefault(u => u.Id == id);
             return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
         }
 
+        // Create a custom AsyncSelectInput that handles state updates
+        var customAsyncSelect = new AsyncSelectInputView<Guid>(
+            selectedUser.Value,
+            e => 
+            {
+                // This is called when a selection is made
+                selectedUser.Set(e.Value);
+                Console.WriteLine($"Selection changed to: {e.Value}");
+            },
+            QueryUsers,
+            LookupUser,
+            placeholder: "Search by name, email, or department..."
+        );
+
         return Layout.Vertical()
             | Text.Label("Search and select a user:")
-            | selectedUser.ToAsyncSelectInput(QueryUsers, LookupUser, placeholder: "Search by name, email, or department...")
-            | Text.Small($"Selected User ID: {selectedUser.Value?.ToString() ?? "None"}");
+            | customAsyncSelect
+            | Text.Small($"Selected: {selectedUserInfo.Value}")
+            | Text.Small($"Debug - Raw value: {selectedUser.Value.ToString()}");
     }
 }
 ```
@@ -292,7 +356,6 @@ public class ErrorHandlingDemo : ViewBase
         {
             try
             {
-                await Task.Delay(300); // Simulate network delay
                 
                 // Simulate random errors
                 if (Random.Shared.Next(10) == 0)
@@ -315,7 +378,6 @@ public class ErrorHandlingDemo : ViewBase
         {
             try
             {
-                await Task.Delay(100);
                 errorMessage.Set(default(string)); // Clear previous errors
                 return new Option<string>(item);
             }
@@ -350,7 +412,6 @@ public class StylingDemo : ViewBase
 
         async Task<Option<string>[]> QueryOptions(string query)
         {
-            await Task.Delay(100);
             var options = new[] { "Option 1", "Option 2", "Option 3" };
             return options
                 .Where(opt => opt.Contains(query, StringComparison.OrdinalIgnoreCase))
@@ -360,7 +421,6 @@ public class StylingDemo : ViewBase
 
         async Task<Option<string>?> LookupOption(string option)
         {
-            await Task.Delay(50);
             return new Option<string>(option);
         }
 
@@ -397,7 +457,6 @@ public class DebouncedQueryDemo : ViewBase
         {
             var currentCount = queryCount.Value;
             queryCount.Set(currentCount + 1);
-            await Task.Delay(500); // Simulate API call
             
             var items = new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape" };
             return items
@@ -408,7 +467,6 @@ public class DebouncedQueryDemo : ViewBase
 
         async Task<Option<string>?> LookupItem(string item)
         {
-            await Task.Delay(100);
             return new Option<string>(item);
         }
 
@@ -447,23 +505,64 @@ public class UserSearchDemo : ViewBase
         public bool IsActive { get; init; }
     }
 
+    // Use consistent GUIDs for demo purposes
+    private static readonly Guid JohnId = Guid.NewGuid();
+    private static readonly Guid JaneId = Guid.NewGuid();
+    private static readonly Guid BobId = Guid.NewGuid();
+    private static readonly Guid AliceId = Guid.NewGuid();
+    private static readonly Guid CharlieId = Guid.NewGuid();
+
+    // Create a static lookup dictionary for quick access
+    private static readonly Dictionary<Guid, User> UserLookup = new()
+    {
+        { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
+        { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
+        { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true } },
+        { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
+        { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
+    };
+
     public override object? Build()
     {
-        var selectedUser = this.UseState<Guid?>(default(Guid));
+        var selectedUser = this.UseState<Guid>(default(Guid));
+        var selectedUserDetails = this.UseState<string>("No user selected");
+
+        // Create a static lookup dictionary for quick access
+        var userLookup = new Dictionary<Guid, User>
+        {
+            { JohnId, new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true } },
+            { JaneId, new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true } },
+            { BobId, new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true } },
+            { AliceId, new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true } },
+            { CharlieId, new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true } }
+        };
+
+        // Update display when selection changes
+        this.UseEffect(() =>
+        {
+            if (selectedUser.Value != default(Guid) && userLookup.ContainsKey(selectedUser.Value))
+            {
+                var user = userLookup[selectedUser.Value];
+                selectedUserDetails.Set($"{user.Name} - {user.Email} - {user.Department}");
+            }
+            else
+            {
+                selectedUserDetails.Set("No user selected");
+            }
+        }, [selectedUser]);
 
         // Category query and lookup
         async Task<Option<Guid>[]> QueryUsers(string query)
         {
-            await Task.Delay(200); // Simulate API delay
             
-            // Simulate user database
+            // Simulate user database with consistent IDs
             var users = new[]
             {
-                new User { Id = Guid.NewGuid(), Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
+                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
+                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
             };
             
             if (string.IsNullOrEmpty(query))
@@ -482,22 +581,38 @@ public class UserSearchDemo : ViewBase
 
         async Task<Option<Guid>?> LookupUser(Guid id)
         {
-            await Task.Delay(100);
-            // Simulate database lookup
             var users = new[]
             {
-                new User { Id = Guid.NewGuid(), Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
-                new User { Id = Guid.NewGuid(), Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true }
+                new User { Id = JohnId, Name = "John Doe", Email = "john@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = JaneId, Name = "Jane Smith", Email = "jane@example.com", Department = "Design", IsActive = true },
+                new User { Id = BobId, Name = "Bob Johnson", Email = "bob@example.com", Department = "Marketing", IsActive = true },
+                new User { Id = AliceId, Name = "Alice Brown", Email = "alice@example.com", Department = "Engineering", IsActive = true },
+                new User { Id = CharlieId, Name = "Charlie Wilson", Email = "charlie@example.com", Department = "Sales", IsActive = true }
             };
             
             var user = users.FirstOrDefault(u => u.Id == id);
             return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
         }
 
+        // Create a custom AsyncSelectInput that handles state updates
+        var customAsyncSelect = new AsyncSelectInputView<Guid>(
+            selectedUser.Value,
+            e => 
+            {
+                // This is called when a selection is made
+                selectedUser.Set(e.Value);
+                Console.WriteLine($"Selection changed to: {e.Value}");
+            },
+            QueryUsers,
+            LookupUser,
+            placeholder: "Search users by name, email, or department..."
+        );
+
         return Layout.Vertical()
             | Text.H2("User Search")
-            | selectedUser.ToAsyncSelectInput(QueryUsers, LookupUser, placeholder: "Search users by name, email, or department...")
-            | Text.Small($"Selected User ID: {selectedUser.Value?.ToString() ?? "None"}");
+            | customAsyncSelect
+            | Text.Small($"Selected: {selectedUserDetails.Value}")
+            | Text.Small($"Debug - Raw value: {selectedUser.Value.ToString()}");
     }
 }
 ```
