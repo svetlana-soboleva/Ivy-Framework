@@ -64,9 +64,56 @@ public class AppRepository : IAppRepository
         Root = new AppRepositoryGroup("Root");
         Apps.Clear();
 
-        foreach (var app in _factories.SelectMany(factory => factory()))
+        //add apps to tree
+        var indexFixups = new List<(IAppRepositoryGroup, AppDescriptor)>();
+        foreach (var appDescriptor in _factories.SelectMany(factory => factory()))
         {
-            AddApp(app);
+            Apps[appDescriptor.Id] = appDescriptor;
+
+            if (appDescriptor.IsVisible || appDescriptor.IsIndex)
+            {
+                var current = Root;
+                foreach (var part in appDescriptor.Path)
+                {
+                    if (current is not IAppRepositoryGroup group)
+                    {
+                        throw new InvalidOperationException("Path is not a group.");
+                    }
+
+                    var next = group.Children.OfType<AppRepositoryGroup>().FirstOrDefault(e => e.Title == part);
+                    if (next == null)
+                    {
+                        next = new AppRepositoryGroup(part);
+                        group.Children.Add(next);
+                    }
+                    current = next;
+                }
+
+                if (current is not IAppRepositoryGroup group2)
+                {
+                    throw new InvalidOperationException("Path is not a group.");
+                }
+
+                if (appDescriptor.IsIndex)
+                {
+                    //we need to fixup this group's properties later.
+                    //doing it here could change the title and break lookup in later iterations of this loop.
+                    indexFixups.Add((group2, appDescriptor));
+                }
+                else
+                {
+                    group2.Children.Add(appDescriptor);
+                }
+            }
+        }
+
+        //fixup properties of index groups
+        foreach (var (group, appDescriptor) in indexFixups)
+        {
+            group.Order = appDescriptor.Order;
+            group.Icon = appDescriptor.Icon ?? group.Icon;
+            group.Title = appDescriptor.Title;
+            group.Expanded = appDescriptor.GroupExpanded;
         }
 
         //traverse the tree and on each leaf (nodes that are not groups) set link next and previous
@@ -129,48 +176,6 @@ public class AppRepository : IAppRepository
     public void AddFactory(Func<AppDescriptor[]> factory)
     {
         _factories.Add(factory);
-    }
-
-    private void AddApp(AppDescriptor appDescriptor)
-    {
-        Apps[appDescriptor.Id] = appDescriptor;
-
-        if (appDescriptor.IsVisible || appDescriptor.IsIndex)
-        {
-            var current = Root;
-            foreach (var part in appDescriptor.Path)
-            {
-                if (current is not IAppRepositoryGroup group)
-                {
-                    throw new InvalidOperationException("Path is not a group.");
-                }
-
-                var next = group.Children.OfType<AppRepositoryGroup>().FirstOrDefault(e => e.Title == part);
-                if (next == null)
-                {
-                    next = new AppRepositoryGroup(part);
-                    group.Children.Add(next);
-                }
-                current = next;
-            }
-
-            if (current is not IAppRepositoryGroup group2)
-            {
-                throw new InvalidOperationException("Path is not a group.");
-            }
-
-            if (appDescriptor.IsIndex)
-            {
-                group2.Order = appDescriptor.Order;
-                group2.Icon = appDescriptor.Icon ?? group2.Icon;
-                group2.Title = appDescriptor.Title;
-                group2.Expanded = appDescriptor.GroupExpanded;
-            }
-            else
-            {
-                group2.Children.Add(appDescriptor);
-            }
-        }
     }
 
     public AppDescriptor GetAppOrDefault(string? id)
