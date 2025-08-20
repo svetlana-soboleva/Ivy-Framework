@@ -69,7 +69,7 @@ public class AppRepository : IAppRepository
             AddApp(app);
         }
 
-        //traverse the tree and on each leaf (node that are not groups set link next and previous)
+        //traverse the tree and on each leaf (nodes that are not groups) set link next and previous
         if (Root is AppRepositoryGroup rootGroup)
         {
             // Get all leaf nodes in a flat list, maintaining their order
