@@ -7,10 +7,6 @@ Create dropdown menus with single or multiple selection capabilities, option gro
 The `SelectInput` widget provides a dropdown menu for selecting items from a predefined list of options. It supports single
 and multiple selections, option grouping, and custom rendering of option items.
 
-<Callout Type="tip">
-**Automatic Multi-Select Detection**: The framework automatically detects when you use a collection type (array, List, etc.) as your state and enables multiple selection. No need to manually configure this!
-</Callout>
-
 ## Basic Usage
 
 Here's a simple example of a `SelectInput` with a few options:
@@ -30,11 +26,9 @@ public class SelectVariantDemo : ViewBase
 }
 ```
 
-## Variants
-
 `SelectInput` supports three different variants for different use cases:
 
-### Select (Default)
+### Default Select
 
 The default variant renders a traditional dropdown menu. Use this when only one item should be selected:
 
@@ -97,7 +91,7 @@ public class ToggleVariantDemo : ViewBase
 ```
 
 <Callout Type="tip">
-**Automatic Multi-Select Detection**: The framework automatically detects when you use a collection type (array, List, etc.) as your state and enables multiple selection. No need to manually configure this!
+The framework automatically detects when you use a collection type (array, List, etc.) as your state and enables multiple selection. No need to manually configure this!
 </Callout>
 
 ## Multiple Selection
@@ -152,7 +146,7 @@ public class MultiSelectVariantsDemo : ViewBase
 }
 ```
 
-### Advanced Multi-Select with Different Data Types
+### Multi-Select with Different Data Types
 
 This example demonstrates multi-select with various data types:
 
@@ -205,6 +199,7 @@ public class SelectEventHandlingDemo : ViewBase
         var selectedCountry = UseState("");
         var showEuropeInfo = UseState(false);
         var showAsiaInfo = UseState(false);
+        var showAmericaInfo = UseState(false);
         
         var countries = new[]{"Germany", "France", "Japan", "China", "USA", "Canada"}.ToOptions();
         
@@ -217,11 +212,54 @@ public class SelectEventHandlingDemo : ViewBase
                         selectedCountry.Set(e.Value);
                         showEuropeInfo.Set(e.Value is "Germany" or "France");
                         showAsiaInfo.Set(e.Value is "Japan" or "China");
+                        showAmericaInfo.Set(e.Value is "USA" or "Canada");
                     }, 
                     countries)
                 | Layout.Horizontal()
                     | (showEuropeInfo.Value ? Text.Block("🇪🇺 European Union member") : null)
-                    | (showAsiaInfo.Value ? Text.Block("🌏 Asian country") : null);
+                    | (showAsiaInfo.Value ? Text.Block("🌏 Asian country") : null)
+                    | (showAmericaInfo.Value ? Text.Block("🦅 American country") : null);
+    }
+}
+```
+
+### Dynamic Options Based on Selection
+
+This example shows how to dynamically change available options based on user selection:
+
+```csharp demo-tabs
+public class DynamicOptionsDemo : ViewBase
+{
+    private static readonly Dictionary<string, string[]> CategoryOptions = new()
+    {
+        ["Programming"] = new[]{"C#", "Java", "Python", "JavaScript", "Go", "Rust"},
+        ["Design"] = new[]{"Photoshop", "Illustrator", "Figma", "Sketch", "InDesign"},
+        ["Database"] = new[]{"SQL Server", "PostgreSQL", "MySQL", "MongoDB", "Redis"},
+        ["Cloud"] = new[]{"AWS", "Azure", "GCP", "DigitalOcean", "Heroku"}
+    };
+    
+    public override object? Build()
+    {
+        var selectedCategory = UseState("Programming");
+        var selectedSkills = UseState<string[]>([]);
+        
+        var categoryOptions = CategoryOptions.Keys.ToOptions();
+        var skillOptions = CategoryOptions[selectedCategory.Value].ToOptions();
+        
+        return Layout.Vertical()
+            | Text.H2("Skills Assessment")
+            | Layout.Grid().Columns(2)
+                | Text.Label("Category:")
+                | selectedCategory.ToSelectInput(categoryOptions)
+                    .Placeholder("Choose a category...")
+                
+                | Text.Label("Skills:")
+                | selectedSkills.ToSelectInput(skillOptions)
+                    .Variant(SelectInputs.List)
+                    .Placeholder("Select your skills...")
+            
+            | Text.H3("Selected Skills:")
+            | Text.Block(string.Join(", ", selectedSkills.Value));
     }
 }
 ```
@@ -296,49 +334,6 @@ public class NullableSelectDemo : ViewBase
 <Callout Type="tip">
 Use Select for single choice dropdowns, List for multiple selection with checkboxes, and Toggle for visual button-based selection. The List variant is particularly useful for forms where users need to select multiple options.
 </Callout>
-
-## Advanced Examples
-
-### Dynamic Options Based on Selection
-
-This example shows how to dynamically change available options based on user selection:
-
-```csharp demo-tabs
-public class DynamicOptionsDemo : ViewBase
-{
-    private static readonly Dictionary<string, string[]> CategoryOptions = new()
-    {
-        ["Programming"] = new[]{"C#", "Java", "Python", "JavaScript", "Go", "Rust"},
-        ["Design"] = new[]{"Photoshop", "Illustrator", "Figma", "Sketch", "InDesign"},
-        ["Database"] = new[]{"SQL Server", "PostgreSQL", "MySQL", "MongoDB", "Redis"},
-        ["Cloud"] = new[]{"AWS", "Azure", "GCP", "DigitalOcean", "Heroku"}
-    };
-    
-    public override object? Build()
-    {
-        var selectedCategory = UseState("Programming");
-        var selectedSkills = UseState<string[]>([]);
-        
-        var categoryOptions = CategoryOptions.Keys.ToOptions();
-        var skillOptions = CategoryOptions[selectedCategory.Value].ToOptions();
-        
-        return Layout.Vertical()
-            | Text.H2("Skills Assessment")
-            | Layout.Grid().Columns(2)
-                | Text.Label("Category:")
-                | selectedCategory.ToSelectInput(categoryOptions)
-                    .Placeholder("Choose a category...")
-                
-                | Text.Label("Skills:")
-                | selectedSkills.ToSelectInput(skillOptions)
-                    .Variant(SelectInputs.List)
-                    .Placeholder("Select your skills...")
-            
-            | Text.H3("Selected Skills:")
-            | Text.Block(string.Join(", ", selectedSkills.Value));
-    }
-}
-```
 
 ## API Reference
 
