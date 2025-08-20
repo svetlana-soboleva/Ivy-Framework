@@ -15,24 +15,22 @@ Build robust forms with built-in state management, validation, and submission ha
 Do not manually create form layouts. Always use `.ToForm()` on your state objects for type safety, automatic state management, and built-in validation.
 </Callout>
 
-## Core Concepts
+## Basic Usage
 
-### The FormBuilder Pattern
+The simplest way to create a form is to call `.ToForm()` on a state object. The FormBuilder automatically scaffolds appropriate input fields based on your model's property types.
 
-Ivy forms use a builder pattern that starts with a model (typically a C# record or class) and automatically scaffolds appropriate input fields based on the property types. This approach provides several benefits:
+```csharp demo-tabs
+public class BasicFormExample : ViewBase
+{
+    public record UserModel(string Name, string Email, bool IsActive, int Age);
 
-- **Type Safety**: Your forms are strongly typed and match your data models
-- **Automatic Scaffolding**: Input types are automatically determined from property types
-- **Validation Integration**: Built-in validation based on data annotations and custom validators
-- **State Management**: Automatic state synchronization between form and model
-
-```csharp
-// Define your model
-public record UserModel(string Name, string Email, bool IsActive);
-
-// Create a form from the model
-var user = UseState(() => new UserModel("", "", true));
-var form = user.ToForm(); // Automatically creates appropriate inputs
+    public override object? Build()
+    {
+        var user = UseState(() => new UserModel("", "", false, 25));
+        
+        return user.ToForm();
+    }
+}
 ```
 
 ### Automatic Field Generation
@@ -51,260 +49,26 @@ The FormBuilder automatically maps C# types to appropriate input widgets:
 | Properties ending in "Email" | `TextInput` with email validation | Email-specific input |
 | Properties ending in "Password" | `PasswordInput` | Hidden text input |
 
-### FormBuilder Methods
+## Field Configuration
 
-The FormBuilder provides a fluent API for customizing forms:
+### Custom Labels and Descriptions
 
-#### Field Configuration
-
-- `.Label(field, label)` - Set custom field labels
-- `.Description(field, description)` - Add help text
-- `.Builder(field, inputFactory)` - Use custom input builders
-- `.Required(fields...)` - Mark fields as required
-- `.Validate<T>(field, validator)` - Add custom validation
-
-#### Layout Control
-
-- `.Place(fields...)` - Control field placement
-- `.Place(true, fields...)` - Place fields on the same row
-- `.Group(name, fields...)` - Group related fields
-- `.Remove(fields...)` - Remove fields from form
-- `.Clear()` - Remove all fields
-
-#### Visibility Control
-
-- `.Visible(field, predicate)` - Show/hide fields conditionally
-- `.Disabled(disabled, fields...)` - Enable/disable fields
-
-### State Management Integration
-
-The key advantage of `.ToForm()` is seamless bi-directional state management:
-
-```csharp
-public class FormExample : ViewBase
-{
-    public override object? Build()
-    {
-        // State manages the entire form's data
-        var model = UseState(() => new UserModel("", "", true));
-        
-        // Form automatically updates model.Value as user types
-        var form = model.ToForm()
-            .Required(m => m.Name, m => m.Email);
-            
-        // Access current form data in real-time
-        var isValid = !string.IsNullOrEmpty(model.Value.Name) && 
-                     !string.IsNullOrEmpty(model.Value.Email);
-        
-        return Layout.Vertical()
-            | Text.Block($"Current name: {model.Value.Name}")
-            | Text.Block($"Form is valid: {isValid}")
-            | form;
-    }
-}
-```
-
-**Key State Management Benefits:**
-
-- **Automatic Updates**: Form inputs automatically update `model.Value`
-- **Real-time Access**: Read current form data anytime via `model.Value`
-- **Type Safety**: All form data is strongly typed
-- **State Persistence**: Form state persists across re-renders
-- **Easy Reset**: Reset form by calling `model.Set(new Model())`
-
-## Form Validation
-
-### Built-in Validation
-
-Ivy forms provide several built-in validation mechanisms:
-
-1. **Required Fields**: Based on non-nullable types or explicit `.Required()` calls
-2. **Type Validation**: Automatic validation based on property types (e.g., email format)
-3. **Data Annotations**: Support for .NET validation attributes
-4. **Custom Validators**: Flexible validation functions
-
-### Custom Validation
-
-You can add custom validation logic to any field:
-
-```csharp
-model.ToForm()
-    .Validate<string>(m => m.Email, email => 
-        (email.Contains("@") && email.Contains("."), "Invalid email format"))
-    .Validate<int>(m => m.Age, age => 
-        (age >= 18, "Must be 18 or older"))
-```
-
-### Validation Feedback
-
-The forms system provides automatic validation feedback:
-
-- Invalid fields are visually highlighted
-- Error messages appear near the invalid fields
-- Form submission is blocked until all validation passes
-- Summary validation messages show total invalid field count
-
-## Form Submission
-
-### Basic Submission Pattern
-
-```csharp
-var formBuilder = model.ToForm();
-var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
-
-async void HandleSubmit()
-{
-    if (await onSubmit()) // Returns true if valid
-    {
-        // Form data is automatically copied to model.Value
-        client.Toast("Saved successfully!");
-    }
-    // If invalid, validation errors are shown automatically
-}
-```
-
-### Form States
-
-Forms track several important states:
-
-- **Loading**: When form submission is in progress
-- **Valid/Invalid**: Based on current validation results
-- **Dirty**: Whether the form has been modified
-- **Submitting**: During the submission process
-
-## Advanced Features
-
-### Conditional Fields
-
-Show or hide fields based on other field values:
-
-```csharp
-model.ToForm()
-    .Visible(m => m.AlternateEmail, m => m.HasAlternateEmail)
-    .Visible(m => m.CompanyName, m => m.AccountType == AccountType.Business)
-```
-
-### Dynamic Field Configuration
-
-Configure fields based on runtime conditions:
-
-```csharp
-var form = model.ToForm();
-
-if (isEditMode)
-{
-    form.Remove(m => m.Id); // Hide ID in edit mode
-}
-else
-{
-    form.Builder(m => m.Password, s => s.ToPasswordInput()); // Require password for new users
-}
-```
-
-### Forms in UI Components
-
-Forms can be embedded in various UI components:
-
-#### Inline Forms
-
-```csharp
-return Layout.Vertical()
-    | Text.H2("User Settings")
-    | model.ToForm()
-    | new Button("Save", HandleSave);
-```
-
-#### Sheet Forms
-
-```csharp
-model.ToForm().ToSheet(isOpen, "Edit User", "Update user information");
-```
-
-#### Dialog Forms
-
-```csharp
-model.ToForm().ToDialog(isOpen, "Create User", width: Size.Units(400));
-```
-
-### Form Layout Patterns
-
-#### Two-Column Layout
-
-```csharp
-model.ToForm()
-    .Place(true, m => m.FirstName, m => m.LastName)
-    .Place(true, m => m.City, m => m.State)
-```
-
-#### Grouped Fields
-
-```csharp
-model.ToForm()
-    .Group("Personal", m => m.FirstName, m => m.LastName, m => m.Email)
-    .Group("Address", m => m.Street, m => m.City, m => m.State, m => m.Zip)
-```
-
-#### Custom Field Ordering
-
-```csharp
-model.ToForm()
-    .Clear() // Remove all auto-generated fields
-    .Add(m => m.Name)
-    .Add(m => m.Email)
-    .Add(m => m.IsActive)
-```
-
-## Integration with Backend Services
-
-Forms work seamlessly with Ivy's service layer:
-
-```csharp
-public class UserFormView : ViewBase
-{
-    public override object? Build()
-    {
-        var userService = UseService<IUserService>();
-        var user = UseState(() => new UserModel("", "", true));
-        
-        var form = user.ToForm();
-        var (onSubmit, formView, validationView, loading) = form.UseForm(this.Context);
-        
-        async void HandleSave()
-        {
-            if (await onSubmit())
-            {
-                await userService.SaveUser(user.Value);
-                client.Toast("User saved successfully!");
-            }
-        }
-        
-        return Layout.Vertical()
-            | formView
-            | new Button("Save").HandleClick(new Action(HandleSave).ToEventHandler<Button>())
-                .Loading(loading).Disabled(loading)
-            | validationView;
-    }
-}
-```
-
-## Field Configuration Examples
-
-You can configure individual fields using various builder methods:
+Use `.Label()` and `.Description()` to customize field appearance and provide help text.
 
 ```csharp demo-tabs
-public record ContactModel(
-    string Name,
-    string Email,
-    string Phone,
-    string Message,
-    bool Subscribe,
-    Gender Gender = Gender.Other
-);
-
-public enum Gender { Male, Female, Other }
-
-public class ConfiguredFormDemo : ViewBase
+public class ConfiguredFormExample : ViewBase
 {
+    public record ContactModel(
+        string Name,
+        string Email,
+        string Phone,
+        string Message,
+        bool Subscribe,
+        Gender Gender = Gender.Other
+    );
+
+    public enum Gender { Male, Female, Other }
+
     public override object? Build()
     {
         var contact = UseState(() => new ContactModel("", "", "", "", false));
@@ -314,11 +78,638 @@ public class ConfiguredFormDemo : ViewBase
             .Description(m => m.Name, "Enter your full name as it appears on official documents")
             .Label(m => m.Email, "Email Address")
             .Description(m => m.Email, "We'll use this to send you updates")
-            .Builder(m => m.Phone, s => s.ToTelInput())
             .Label(m => m.Phone, "Phone Number")
-            .Builder(m => m.Message, s => s.ToTextAreaInput())
             .Label(m => m.Message, "Your Message")
             .Required(m => m.Name, m => m.Email);
+    }
+}
+```
+
+### Custom Input Builders
+
+Use `.Builder()` to specify custom input types for specific fields.
+
+```csharp demo-tabs
+public class CustomInputsExample : ViewBase
+{
+    public record ProductModel(
+        string Name,
+        string Description,
+        decimal Price,
+        string JsonConfig,
+        List<string> Tags,
+        DateTime ReleaseDate
+    );
+
+    public override object? Build()
+    {
+        var product = UseState(() => new ProductModel("", "", 0.0m, "{}", new(), DateTime.Now));
+        
+        return product.ToForm()
+            .Builder(m => m.Description, s => s.ToTextAreaInput())
+            .Builder(m => m.JsonConfig, s => s.ToCodeInput().Language(Languages.Json))
+            .Builder(m => m.Tags, s => s.ToSelectInput().List())
+            .Builder(m => m.ReleaseDate, s => s.ToDateTimeInput())
+            .Label(m => m.Description, "Product Description")
+            .Label(m => m.JsonConfig, "Configuration (JSON)")
+            .Label(m => m.Tags, "Product Tags")
+            .Label(m => m.ReleaseDate, "Release Date");
+    }
+}
+```
+
+### Required Fields
+
+Mark fields as required using `.Required()` or rely on automatic detection from non-nullable types.
+
+```csharp demo-tabs
+public class RequiredFieldsExample : ViewBase
+{
+    public record OrderModel(
+        string CustomerName,
+        string? CustomerEmail,  // Nullable - not required
+        string ShippingAddress,
+        int Quantity,
+        bool IsPriority
+    );
+
+    public override object? Build()
+    {
+        var order = UseState(() => new OrderModel("", null, "", 1, false));
+        
+        return order.ToForm()
+            .Required(m => m.CustomerEmail)  // Make email required
+            .Required(m => m.IsPriority)     // Make priority required
+            .Label(m => m.CustomerName, "Customer Name")
+            .Label(m => m.CustomerEmail, "Email Address")
+            .Label(m => m.ShippingAddress, "Shipping Address")
+            .Label(m => m.Quantity, "Quantity")
+            .Label(m => m.IsPriority, "Priority Order");
+    }
+}
+```
+
+## Layout Control
+
+### Field Placement
+
+Control field placement using `.Place()` methods for custom layouts.
+
+```csharp demo-tabs
+public class LayoutControlExample : ViewBase
+{
+    public record AddressModel(
+        string Street,
+        string City,
+        string State,
+        string ZipCode,
+        string Country
+    );
+
+    public override object? Build()
+    {
+        var address = UseState(() => new AddressModel("", "", "", "", ""));
+        
+        return address.ToForm()
+            .Place(m => m.Street)                    // First column
+            .Place(1, m => m.City, m => m.State)    // Second column, same row
+            .Place(1, m => m.ZipCode, m => m.Country) // Second column, same row
+            .Label(m => m.Street, "Street Address")
+            .Label(m => m.City, "City")
+            .Label(m => m.State, "State/Province")
+            .Label(m => m.ZipCode, "ZIP/Postal Code")
+            .Label(m => m.Country, "Country");
+    }
+}
+```
+
+### Grouped Fields
+
+Organize related fields into logical groups using `.Group()`.
+
+```csharp demo-tabs
+public class GroupedFieldsExample : ViewBase
+{
+    public record EmployeeModel(
+        string FirstName,
+        string LastName,
+        string Email,
+        string Department,
+        decimal Salary,
+        DateTime HireDate,
+        string Street,
+        string City,
+        string State
+    );
+
+    public override object? Build()
+    {
+        var employee = UseState(() => new EmployeeModel("", "", "", "", 0.0m, DateTime.Now, "", "", ""));
+        
+        return employee.ToForm()
+            .Group("Personal Information", m => m.FirstName, m => m.LastName, m => m.Email)
+            .Group("Employment", m => m.Department, m => m.Salary, m => m.HireDate)
+            .Group("Address", m => m.Street, m => m.City, m => m.State)
+            .Label(m => m.FirstName, "First Name")
+            .Label(m => m.LastName, "Last Name")
+            .Label(m => m.Email, "Email Address")
+            .Label(m => m.Department, "Department")
+            .Label(m => m.Salary, "Annual Salary")
+            .Label(m => m.HireDate, "Hire Date")
+            .Label(m => m.Street, "Street Address")
+            .Label(m => m.City, "City")
+            .Label(m => m.State, "State");
+    }
+}
+```
+
+### Field Ordering and Removal
+
+Control which fields are shown and in what order using `.Clear()`, `.Add()`, and `.Remove()`.
+
+```csharp demo-tabs
+public class FieldManagementExample : ViewBase
+{
+    public record ProductModel(
+        string Name,
+        string Description,
+        decimal Price,
+        string Category,
+        int Stock,
+        string SKU,
+        DateTime CreatedDate
+    );
+
+    public override object? Build()
+    {
+        var product = UseState(() => new ProductModel("", "", 0.0m, "", 0, "", DateTime.Now));
+        
+        return product.ToForm()
+            .Clear()                                    // Hide all auto-generated fields
+            .Add(m => m.Name)                          // Show Name first
+            .Add(m => m.Description)                   // Show Description second
+            .Add(m => m.Price)                         // Show Price third
+            .Add(m => m.Category)                      // Show Category fourth
+            .Add(m => m.Stock)                         // Show Stock last
+            .Remove(m => m.SKU)                        // Hide SKU field
+            .Remove(m => m.CreatedDate)                // Hide CreatedDate field
+            .Label(m => m.Name, "Product Name")
+            .Label(m => m.Description, "Product Description")
+            .Label(m => m.Price, "Unit Price")
+            .Label(m => m.Category, "Product Category")
+            .Label(m => m.Stock, "Available Stock");
+    }
+}
+```
+
+## Validation
+
+### Custom Validation
+
+Add custom validation logic using `.Validate()` method.
+
+```csharp demo-tabs
+public class ValidationExample : ViewBase
+{
+    public record UserModel(
+        string Username,
+        string Email,
+        string Password,
+        int Age,
+        DateTime BirthDate
+    );
+
+    public override object? Build()
+    {
+        var user = UseState(() => new UserModel("", "", "", 18, DateTime.Now));
+        
+        return user.ToForm()
+            .Validate<string>(m => m.Username, username => 
+                (username.Length >= 3, "Username must be at least 3 characters"))
+            .Validate<string>(m => m.Email, email => 
+                (email.Contains("@") && email.Contains("."), "Please enter a valid email address"))
+            .Validate<string>(m => m.Password, password => 
+                (password.Length >= 8, "Password must be at least 8 characters"))
+            .Validate<int>(m => m.Age, age => 
+                (age >= 13, "You must be at least 13 years old"))
+            .Validate<DateTime>(m => m.BirthDate, birthDate => 
+                (birthDate <= DateTime.Now, "Birth date cannot be in the future"))
+            .Required(m => m.Username, m => m.Email, m => m.Password);
+    }
+}
+```
+
+### Conditional Validation
+
+Show validation errors only when certain conditions are met.
+
+```csharp demo-tabs
+public class ConditionalValidationExample : ViewBase
+{
+    public record SubscriptionModel(
+        string Email,
+        bool IsBusiness,
+        string CompanyName,
+        string Industry,
+        int EmployeeCount
+    );
+
+    public override object? Build()
+    {
+        var subscription = UseState(() => new SubscriptionModel("", false, "", "", 0));
+        
+        return subscription.ToForm()
+            .Validate<string>(m => m.CompanyName, companyName => 
+                (subscription.Value.IsBusiness ? !string.IsNullOrEmpty(companyName) : true, 
+                 "Company name is required for business subscriptions"))
+            .Validate<string>(m => m.Industry, industry => 
+                (subscription.Value.IsBusiness ? !string.IsNullOrEmpty(industry) : true, 
+                 "Industry is required for business subscriptions"))
+            .Validate<int>(m => m.EmployeeCount, count => 
+                (subscription.Value.IsBusiness ? count > 0 : true, 
+                 "Employee count must be greater than 0 for business subscriptions"))
+            .Visible(m => m.CompanyName, m => m.IsBusiness)
+            .Visible(m => m.Industry, m => m.IsBusiness)
+            .Visible(m => m.EmployeeCount, m => m.IsBusiness)
+            .Required(m => m.Email)
+            .Required(m => m.CompanyName, m => m.Industry, m => m.EmployeeCount);
+    }
+}
+```
+
+## Form Submission
+
+### Basic Form Submission
+
+Use the `.UseForm()` method to get form submission handling.
+
+```csharp demo-tabs
+public class FormSubmissionExample : ViewBase
+{
+    public record ContactModel(string Name, string Email, string Message);
+
+    public override object? Build()
+    {
+        var contact = UseState(() => new ContactModel("", "", ""));
+        var formBuilder = contact.ToForm()
+            .Required(m => m.Name, m => m.Email, m => m.Message);
+        
+        var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
+        
+        async void HandleSubmit()
+        {
+            if (await onSubmit())
+            {
+                // Form data is automatically copied to contact.Value
+                // You can access the client service here if needed
+            }
+        }
+        
+        return Layout.Vertical()
+            | formView
+            | Layout.Horizontal()
+                | new Button("Send Message").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                    .Loading(loading).Disabled(loading)
+                | validationView;
+    }
+}
+```
+
+### Form States and Loading
+
+Handle different form states including loading and validation.
+
+```csharp demo-tabs
+public class FormStatesExample : ViewBase
+{
+    public record OrderModel(
+        string CustomerName,
+        string ProductName,
+        int Quantity,
+        decimal UnitPrice
+    );
+
+    public override object? Build()
+    {
+        var order = UseState(() => new OrderModel("", "", 1, 0.0m));
+        var formBuilder = order.ToForm()
+            .Required(m => m.CustomerName, m => m.ProductName, m => m.Quantity, m => m.UnitPrice);
+        
+        var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
+        
+        async void HandleSubmit()
+        {
+            if (await onSubmit())
+            {
+                var total = order.Value.Quantity * order.Value.UnitPrice;
+                // Handle success - you can access the client service here if needed
+            }
+        }
+        
+        return Layout.Vertical()
+            | formView
+            | Layout.Horizontal()
+                | new Button("Create Order").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                    .Loading(loading).Disabled(loading)
+                | validationView
+            | Text.Block($"Total: ${order.Value.Quantity * order.Value.UnitPrice:F2}");
+    }
+}
+```
+
+## Advanced Features
+
+### Conditional Fields
+
+Show or hide fields based on other field values using `.Visible()`.
+
+```csharp demo-tabs
+public class ConditionalFieldsExample : ViewBase
+{
+    public record AccountModel(
+        string Email,
+        string Password,
+        bool HasTwoFactor,
+        string PhoneNumber,
+        bool IsBusinessAccount,
+        string CompanyName,
+        string TaxId
+    );
+
+    public override object? Build()
+    {
+        var account = UseState(() => new AccountModel("", "", false, "", false, "", ""));
+        
+        return account.ToForm()
+            .Visible(m => m.PhoneNumber, m => m.HasTwoFactor)
+            .Visible(m => m.CompanyName, m => m.IsBusinessAccount)
+            .Visible(m => m.TaxId, m => m.IsBusinessAccount)
+            .Label(m => m.Email, "Email Address")
+            .Label(m => m.Password, "Password")
+            .Label(m => m.HasTwoFactor, "Enable Two-Factor Authentication")
+            .Label(m => m.PhoneNumber, "Phone Number (for 2FA)")
+            .Label(m => m.IsBusinessAccount, "Business Account")
+            .Label(m => m.CompanyName, "Company Name")
+            .Label(m => m.TaxId, "Tax ID")
+            .Required(m => m.Email, m => m.Password);
+    }
+}
+```
+
+### Dynamic Field Configuration
+
+Configure fields based on runtime conditions.
+
+```csharp demo-tabs
+public class DynamicConfigurationExample : ViewBase
+{
+    public record UserModel(
+        string Username,
+        string Email,
+        string Password,
+        bool IsAdmin,
+        string Role,
+        List<string> Permissions
+    );
+
+    public override object? Build()
+    {
+        var user = UseState(() => new UserModel("", "", "", false, "", new()));
+        var isEditMode = UseState(false);
+        var currentUser = UseState(() => new UserModel("admin", "admin@example.com", "", true, "Admin", new()));
+        
+        var formBuilder = user.ToForm();
+        
+        // Configure form based on edit mode and current user permissions
+        if (isEditMode.Value)
+        {
+            formBuilder.Remove(m => m.Username); // Can't change username in edit mode
+        }
+        
+        if (!currentUser.Value.IsAdmin)
+        {
+            formBuilder.Remove(m => m.IsAdmin); // Only admins can change admin status
+            formBuilder.Remove(m => m.Role);    // Only admins can change roles
+        }
+        
+        return Layout.Vertical()
+            | Layout.Horizontal()
+                | new Button("New User").HandleClick(_ => isEditMode.Set(false))
+                | new Button("Edit User").HandleClick(_ => isEditMode.Set(true))
+            | formBuilder
+            | Layout.Horizontal()
+                | new Button(isEditMode.Value ? "Update User" : "Create User")
+                | new Button("Cancel").Variant(ButtonVariant.Outline);
+    }
+}
+```
+
+## Forms in UI Components
+
+### Inline Forms
+
+Embed forms directly in your layouts.
+
+```csharp demo-tabs
+public class InlineFormExample : ViewBase
+{
+    public record SettingsModel(
+        string Theme,
+        bool Notifications,
+        string Language,
+        int RefreshInterval
+    );
+
+    public override object? Build()
+    {
+        var settings = UseState(() => new SettingsModel("Light", true, "English", 30));
+        
+        return Layout.Vertical()
+            | Text.H2("Application Settings")
+            | new Card(
+                settings.ToForm()
+                    .Label(m => m.Theme, "Theme")
+                    .Label(m => m.Notifications, "Enable Notifications")
+                    .Label(m => m.Language, "Language")
+                    .Label(m => m.RefreshInterval, "Refresh Interval (seconds)")
+            ).Title("General Settings")
+            | Layout.Horizontal()
+                | new Button("Save Settings")
+                | new Button("Reset to Defaults").Variant(ButtonVariant.Outline);
+    }
+}
+```
+
+### Sheet Forms
+
+Open forms in slide-out sheets using `.ToSheet()`.
+
+```csharp demo-tabs
+public class SheetFormExample : ViewBase
+{
+    public record ProductModel(
+        string Name,
+        string Description,
+        decimal Price,
+        string Category
+    );
+
+    public override object? Build()
+    {
+        var product = UseState(() => new ProductModel("", "", 0.0m, ""));
+        var isSheetOpen = UseState(false);
+        
+        return Layout.Vertical()
+            | new Button("Add New Product").HandleClick(_ => isSheetOpen.Set(true))
+            | product.ToForm()
+                .Required(m => m.Name, m => m.Price, m => m.Category)
+                .ToSheet(isSheetOpen, "New Product", "Fill in the product details below");
+    }
+}
+```
+
+### Dialog Forms
+
+Open forms in modal dialogs using `.ToDialog()`.
+
+```csharp demo-tabs
+public class DialogFormExample : ViewBase
+{
+    public record UserModel(
+        string FirstName,
+        string LastName,
+        string Email,
+        string Department
+    );
+
+    public override object? Build()
+    {
+        var user = UseState(() => new UserModel("", "", "", ""));
+        var isDialogOpen = UseState(false);
+        
+        return Layout.Vertical()
+            | new Button("Create User").HandleClick(_ => isDialogOpen.Set(true))
+            | user.ToForm()
+                .Required(m => m.FirstName, m => m.LastName, m => m.Email)
+                .ToDialog(isDialogOpen, "Create New User", "Please provide user information", 
+                         width: Size.Units(500));
+    }
+}
+```
+
+## Integration Examples
+
+### Forms with Data Tables
+
+Combine forms with data tables for CRUD operations.
+
+```csharp demo-tabs
+public class CrudFormExample : ViewBase
+{
+    public record ProductModel(
+        string Name,
+        string Description,
+        decimal Price,
+        string Category
+    );
+
+    public override object? Build()
+    {
+        var products = UseState(() => new ProductModel[0]);
+        var selectedProduct = UseState<ProductModel?>(() => null);
+        var isEditDialogOpen = UseState(false);
+        
+        var addProduct = (Event<Button> e) =>
+        {
+            var newProduct = new ProductModel("New Product", "", 0.0m, "");
+            var updatedProducts = products.Value.Append(newProduct).ToArray();
+            products.Set(updatedProducts);
+        };
+        
+        var editProduct = (Event<Button> e) =>
+        {
+            if (selectedProduct.Value != null)
+            {
+                isEditDialogOpen.Set(true);
+            }
+        };
+        
+        var deleteProduct = (Event<Button> e) =>
+        {
+            if (selectedProduct.Value != null)
+            {
+                var updatedProducts = products.Value.Where(p => p != selectedProduct.Value).ToArray();
+                products.Set(updatedProducts);
+                selectedProduct.Set((ProductModel?)null);
+            }
+        };
+        
+        return Layout.Vertical()
+            | Layout.Horizontal()
+                | new Button("Add Product", addProduct)
+                | new Button("Edit Product", editProduct).Disabled(selectedProduct.Value == null)
+                | new Button("Delete Product", deleteProduct).Disabled(selectedProduct.Value == null)
+                .Variant(ButtonVariant.Destructive)
+            | products.Value.ToTable()
+                .Width(Size.Full())
+                .Builder(p => p.Name, f => f.Default())
+                .Builder(p => p.Description, f => f.Text())
+                .Builder(p => p.Price, f => f.Default())
+                .Builder(p => p.Category, f => f.Default())
+            | (selectedProduct.Value != null ? 
+                selectedProduct.ToForm()
+                    .Required(m => m.Name, m => m.Price, m => m.Category)
+                    .ToDialog(isEditDialogOpen, "Edit Product", "Update product information")
+                : null!);
+    }
+}
+```
+
+### Forms with Real-time Updates
+
+Forms automatically update state, enabling real-time UI updates.
+
+```csharp demo-tabs
+public class RealTimeFormExample : ViewBase
+{
+    public record CalculatorModel(
+        decimal Number1,
+        decimal Number2,
+        string Operation
+    );
+
+    public override object? Build()
+    {
+        var calculator = UseState(() => new CalculatorModel(0, 0, "+"));
+        
+        decimal CalculateResult()
+        {
+            return calculator.Value.Operation switch
+            {
+                "+" => calculator.Value.Number1 + calculator.Value.Number2,
+                "-" => calculator.Value.Number1 - calculator.Value.Number2,
+                "*" => calculator.Value.Number1 * calculator.Value.Number2,
+                "/" => calculator.Value.Number2 != 0 ? calculator.Value.Number1 / calculator.Value.Number2 : 0,
+                _ => 0
+            };
+        }
+        
+        // Create options for the operation select input
+        var operationOptions = new[] { "+", "-", "*", "/" }.ToOptions();
+        
+        return Layout.Horizontal()
+            | new Card(
+                calculator.ToForm()
+                    .Builder(m => m.Operation, s => s.ToSelectInput(operationOptions))
+                    .Label(m => m.Number1, "First Number")
+                    .Label(m => m.Number2, "Second Number")
+                    .Label(m => m.Operation, "Operation")
+            ).Title("Calculator").Width(1/2f)
+            | new Card(
+                Layout.Vertical()
+                    | Text.H3("Result")
+                    | Text.Block($"{calculator.Value.Number1} {calculator.Value.Operation} {calculator.Value.Number2} = {CalculateResult()}")
+            ).Title("Result").Width(1/2f);
     }
 }
 ```
@@ -345,4 +736,16 @@ return model.ToForm()
 Avoid manually creating form layouts. Always use `.ToForm()` on your state objects for better state management, validation, and type safety.
 </Callout>
 
+## Best Practices
+
+1. **Always use `.ToForm()`** - Never manually create form layouts
+2. **Define clear models** - Use C# records or classes with appropriate types
+3. **Leverage automatic scaffolding** - Let Ivy determine input types based on property types
+4. **Use validation** - Add custom validation for business rules
+5. **Group related fields** - Use `.Group()` for logical organization
+6. **Handle form states** - Use `.UseForm()` for proper submission handling
+7. **Provide helpful labels** - Use `.Label()` and `.Description()` for better UX
+
 This comprehensive forms system makes it easy to build robust, user-friendly data collection interfaces in your Ivy applications.
+
+<WidgetDocs Type="Ivy.Widgets.Forms.Form" ExtensionTypes="Ivy.Views.Forms.FormExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Forms/Form.cs"/>
