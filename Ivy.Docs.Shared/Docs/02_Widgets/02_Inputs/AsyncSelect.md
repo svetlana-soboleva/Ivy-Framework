@@ -27,7 +27,6 @@ public class AsyncSelectBasicDemo : ViewBase
 
         async Task<Option<Guid?>[]> QueryCategories(string query)
         {
-            
             // Simulate database results with consistent IDs
             var categories = new[]
             {
@@ -73,8 +72,6 @@ public class AsyncSelectBasicDemo : ViewBase
     }
 }
 ```
-
-## Data Types
 
 AsyncSelectInput supports various data types. Here are examples for different scenarios:
 
@@ -397,7 +394,7 @@ public class ErrorHandlingDemo : ViewBase
 }
 ```
 
-## Styling and States
+### Styling and States
 
 Customize the `AsyncSelectInput` with various styling options:
 
@@ -482,8 +479,6 @@ public class DebouncedQueryDemo : ViewBase
 <Callout Type="tip">
 AsyncSelectInput automatically handles loading states and provides a smooth user experience. The query function is called as the user types, and the lookup function is called when displaying the selected value.
 </Callout>
-
-## API Reference
 
 <WidgetDocs Type="Ivy.AsyncSelectInput" ExtensionTypes="Ivy.AsyncSelectInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/AsyncSelectInput.cs"/>
 
