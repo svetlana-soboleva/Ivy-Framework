@@ -80,11 +80,6 @@ Configure which authentication methods to enable:
 server.UseAuth<SupabaseAuthProvider>(c => c.UseEmailPassword());
 ```
 
-**Magic Links**
-```csharp
-server.UseAuth<SupabaseAuthProvider>(c => c.UseMagicLink());
-```
-
 **Social Logins**
 ```csharp
 server.UseAuth<SupabaseAuthProvider>(c =>
