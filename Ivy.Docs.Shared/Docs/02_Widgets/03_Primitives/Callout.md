@@ -15,11 +15,7 @@ public class BasicCalloutView : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical().Gap(4)
-            | Callout.Info("This is an informational message that provides helpful context.")
-            | Callout.Success("Operation completed successfully!")
-            | Callout.Warning("Please review your input before proceeding.")
-            | Callout.Error("An error occurred while processing your request.");
+        return Callout.Info("This is an informational message that provides helpful context.");
     }
 }
 ```
@@ -59,14 +55,6 @@ public class ConstructorCalloutView : ViewBase
     }
 }
 ```
-
-<Callout Type="Tip">
-The `Callout` widget has the following properties:
-- Title (string): Optional title displayed above the description
-- Variant (CalloutVariant): The visual style variant (Info, Success, Warning, Error)
-- Icon (Icons): Optional custom icon to override the default variant icon
-- Children: The main content/description of the callout
-</Callout>
 
 ## Variants
 
