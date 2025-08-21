@@ -8,7 +8,7 @@ The `Fragment` widget is a container component that doesn't produce any HTML ele
 
 ## Basic Usage
 
-The simplest use case is grouping multiple widgets together without adding extra markup:
+Fragment groups multiple widgets without adding DOM elements. Here's the simplest example:
 
 ```csharp demo-tabs
 public class BasicFragmentView : ViewBase
@@ -16,13 +16,14 @@ public class BasicFragmentView : ViewBase
     public override object? Build()
     {
         return new Fragment(
-            Text.P("This is a simple example of using Fragment to group multiple elements.")
+            Text.H1("Welcome"),
+            Text.P("This text is grouped with the heading above.")
         );
     }
 }
 ```
 
-## Conditional Rendering
+### Conditional Rendering
 
 Fragment is excellent for conditional rendering, allowing you to show or hide content based on state:
 
@@ -31,35 +32,46 @@ public class ConditionalRenderingView : ViewBase
 {
     public override object? Build()
     {
-        var showAdminControls = UseState(false);
-        var showUserProfile = UseState(true);
+        var client = UseService<IClientProvider>();
+        var viewMode = UseState("user"); 
         
         return Layout.Vertical().Gap(4)
             | Text.H2("User Dashboard")
-            | new Fragment(
-                showAdminControls.Value
-                    ? new Fragment(
-                        Text.H3("Admin Controls"),
-                        new Button("Reset System", variant: ButtonVariant.Destructive),
-                        new Button("View Logs"),
-                        new Button("Manage Users")
-                      )
-                    : Text.Muted("Admin controls are hidden")
-              )
-            | new Fragment(
-                showUserProfile.Value
-                    ? new Fragment(
-                        Text.H3("User Profile"),
-                        new Button("Edit Profile"),
-                        new Button("Change Password")
-                      )
-                    : null
-              );
+            | (Layout.Horizontal().Gap(2)
+                | new Button("User View", _ => {
+                    viewMode.Set("user");
+                    client.Toast("Switched to user view");
+                  })
+                    .Variant(viewMode.Value == "user" ? ButtonVariant.Primary : ButtonVariant.Secondary)
+                | new Button("Admin View", _ => {
+                    viewMode.Set("admin");
+                    client.Toast("Switched to admin view");
+                  })
+                    .Variant(viewMode.Value == "admin" ? ButtonVariant.Primary : ButtonVariant.Secondary))
+            | (viewMode.Value == "admin"
+                ? new Fragment(
+                    Text.H3("Admin Controls"),
+                    Layout.Horizontal().Gap(2)
+                        | new Button("Reset System", _ => client.Toast("System reset initiated!"), variant: ButtonVariant.Destructive)
+                        | new Button("View Logs", _ => client.Toast("Opening system logs..."))
+                        | new Button("Manage Users", _ => client.Toast("User management panel opened"))
+                  )
+                : new Fragment(
+                    Text.H3("User Profile"),
+                    Layout.Horizontal().Gap(2)
+                        | new Button("Edit Profile", _ => client.Toast("Profile editor opened"))
+                        | new Button("Change Password", _ => client.Toast("Password change dialog opened"))
+                        | new Button("View Settings", _ => client.Toast("User settings displayed"))
+                  ));
     }
 }
 ```
 
-## Multiple Return Elements
+<Callout Type="tip">
+Fragment excels at conditional rendering. You can use it to show different content based on state, user roles, or any other conditions while keeping your code clean and readable.
+</Callout>
+
+### Multiple Return Elements
 
 Fragment allows you to return multiple widgets from a single view method:
 
@@ -68,37 +80,40 @@ public class MultipleElementsView : ViewBase
 {
     public override object? Build()
     {
+        var client = UseService<IClientProvider>();
         var selectedTab = UseState(0);
         var tabs = new[] { "Overview", "Details", "Settings" };
         
         return new Fragment(
-            // Header section
-            Layout.Horizontal().Gap(4)
-                | Text.H1("Application")
-                | new Button("Save", _ => {})
-                | new Button("Cancel", _ => {})
-                | new Spacer()
-                | new Button("Help", _ => {}),
-            
+            Text.H1("Application"),
+            new Spacer().Height(4),
             // Tab navigation
             Layout.Horizontal().Gap(2)
                 | tabs.Select((tab, index) => 
-                    new Button(tab, _ => selectedTab.Set(index))
+                    new Button(tab, _ => {
+                        selectedTab.Set(index);
+                        client.Toast($"Switched to {tab} tab");
+                      })
                         .Variant(selectedTab.Value == index ? ButtonVariant.Primary : ButtonVariant.Secondary)
                 ),
-            
+            new Spacer().Height(4),
             // Content area
             new Card(
                 selectedTab.Value == 0 ? Text.P("Overview content here...") :
                 selectedTab.Value == 1 ? Text.P("Details content here...") :
                 Text.P("Settings content here...")
-            ).Title("Content")
+            ).Title("Content"),
+            new Spacer().Height(4),
+            // Header section
+            Layout.Horizontal().Gap(4)
+                | new Button("Save", _ => client.Toast("Changes saved successfully!"))
+                | new Button("Cancel", _ => client.Toast("Changes cancelled"))
         );
     }
 }
 ```
 
-## Clean Component Composition
+### Clean Component Composition
 
 Fragment helps create clean, readable component compositions in complex layouts:
 
@@ -107,13 +122,14 @@ public class ComponentCompositionView : ViewBase
 {
     public override object? Build()
     {
+        var client = UseService<IClientProvider>();
         var isExpanded = UseState(false);
         
         return Layout.Vertical().Gap(4)
             | new Fragment(
+                Text.H2("Expandable Section"),
                 // Always visible header
                 Layout.Horizontal().Gap(2)
-                    | Text.H2("Expandable Section")
                     | new Spacer()
                     | new Button(
                         isExpanded.Value ? "Collapse" : "Expand",
@@ -125,15 +141,19 @@ public class ComponentCompositionView : ViewBase
                     new Separator(),
                     Text.P("This content is only visible when expanded."),
                     Layout.Horizontal().Gap(2)
-                        | new Button("Action 1", _ => {})
-                        | new Button("Action 2", _ => {})
+                        | new Button("Action 1", _ => client.Toast("Action 1 executed!"))
+                        | new Button("Action 2", _ => client.Toast("Action 2 completed"))
                 ) : null
               );
     }
 }
 ```
 
-## Advanced: Dynamic Content Generation
+<WidgetDocs Type="Ivy.Fragment" ExtensionTypes="Ivy.FragmentExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Fragment.cs"/>
+
+## Examples
+
+### Dynamic Content Generation
 
 Fragment can be used to dynamically generate content based on data:
 
@@ -142,7 +162,8 @@ public class DynamicContentView : ViewBase
 {
     public override object? Build()
     {
-        var items = UseState(() => new string[] { "Item 1", "Item 2", "Item 3", "Item 4" });
+        var client = UseService<IClientProvider>();
+        var items = UseState(() => new string[] { "Item 1", "Item 2"});
         var showDetails = UseState(false);
         
         return Layout.Vertical().Gap(4)
@@ -153,17 +174,29 @@ public class DynamicContentView : ViewBase
                     | new Button("Add Item", _ => {
                         var newItems = items.Value.Append($"Item {items.Value.Length + 1}").ToArray();
                         items.Set(newItems);
+                        client.Toast($"Added Item {newItems.Length}");
                       })
-                    | new Button("Toggle Details", _ => showDetails.Set(!showDetails.Value)),
+                    | new Button("Toggle Details", _ => {
+                        showDetails.Set(!showDetails.Value);
+                        client.Toast(showDetails.Value ? "Details hidden" : "Details shown");
+                      })
+                    | new Spacer().Width(Size.Grow())
+                    | new Button("Reset", _ => {
+                        items.Set(new string[] { "Item 1", "Item 2" });
+                        client.Toast("Table reset to default");
+                      }),
                 
                 // Dynamic list
-                items.Value.Select(item => new Fragment(
-                    new Card(item).Title("List Item"),
-                    showDetails.Value ? Text.Small($"Details for {item}") : null
-                ))
+                Layout.Vertical().Gap(2)
+                    | items.Value.Select(item => 
+                        new Card(
+                            Layout.Vertical().Gap(2)
+                                | Text.H3(item)
+                                | Text.Small("Active").Color(Colors.Green)
+                                | (showDetails.Value ? Text.Small($"Details for {item}") : Text.Small("Click 'Toggle Details' to see more"))
+                        ).Title("List Item")
+                    )
               );
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.Fragment" ExtensionTypes="Ivy.FragmentExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Fragment.cs"/>
