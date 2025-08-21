@@ -127,7 +127,7 @@ public class DynamicContentView : ViewBase
     public override object? Build()
     {
         var client = UseService<IClientProvider>();
-        var items = UseState(() => new string[] { "Item 1", "Item 2"});
+        var items = UseState(() => new string[] { "Item 1", "Item 2" });
         var showDetails = UseState(false);
         
         return Layout.Vertical().Gap(4)
