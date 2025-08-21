@@ -6,14 +6,15 @@ Perform side effects in your Ivy views with the UseEffect hook, similar to React
 
 The `UseEffect` hook is a powerful feature in Ivy that allows you to perform side effects in your views. It's similar to React's useEffect hook but adapted for Ivy's architecture and patterns.
 
-Effects are essential for handling operations that don't directly relate to rendering, such as:
+Effects are essential for handling operations that don't directly relate to rendering:
 
-- **API calls and data fetching**
-- **Timers and intervals** 
-- **Event subscriptions**
-- **Cleanup operations**
-- **Logging and analytics**
-- **File operations**
+```mermaid
+graph TD
+    A[UseEffect] --> B[API calls & Data fetching]
+    A --> C[Timers & Intervals]
+    A --> D[Event subscriptions]
+    A --> E[Cleanup operations]
+```
 
 ## Basic Usage
 
@@ -164,48 +165,37 @@ The priority is automatically determined based on the trigger type, but understa
 
 ### Data Fetching
 
+<Callout type="Info">
+You do not need to manually catch exceptions in UseEffect. Ivy has a built-in exception handling pipeline that automatically catches exceptions from effects and displays them to users via error notifications and console logging. The system wraps effect exceptions in `EffectException` and routes them through registered exception handlers.
+</Callout>
+
 ```csharp demo-below
 public class DataFetchView : ViewBase
 {
     public override object? Build()
     {
-        var data = UseState<List<Item>?>();
+        var data = UseState<List<Item>?>(null);
         var loading = UseState(true);
-        var error = UseState<string?>();
         
         UseEffect(async () =>
         {
-            try
+            loading.Set(true);
+            
+            // Simulate API call - exceptions automatically handled by Ivy
+            await Task.Delay(1500);
+            var items = new List<Item>
             {
-                loading.Set(true);
-                error.Set((string)null);
-                
-                // Simulate API call
-                await Task.Delay(1500);
-                var items = new List<Item>
-                {
-                    new("Item 1", "Description 1"),
-                    new("Item 2", "Description 2"),
-                    new("Item 3", "Description 3")
-                };
-                
-                data.Set(items);
-            }
-            catch (Exception ex)
-            {
-                error.Set(ex.Message);
-            }
-            finally
-            {
-                loading.Set(false);
-            }
+                new("Item 1", "Description 1"),
+                new("Item 2", "Description 2"),
+                new("Item 3", "Description 3")
+            };
+            
+            data.Set(items);
+            loading.Set(false);
         });
         
         if (loading.Value)
             return Text.P("Loading data...");
-            
-        if (error.Value != null)
-            return Text.Danger($"Error: {error.Value}");
             
         return Layout.Vertical(
             data.Value?.Select(item => 
@@ -444,22 +434,14 @@ UseEffect(() =>
 }, data, filter, sortOrder, pageSize); // Unnecessary dependencies
 ```
 
-### 3. Handle Errors Gracefully
+### 3. Let Ivy Handle Exceptions
 
 ```csharp
 UseEffect(async () =>
 {
-    try
-    {
-        var result = await RiskyOperation();
-        // Handle success...
-    }
-    catch (Exception ex)
-    {
-        // Handle error appropriately
-        errorState.Set(ex.Message);
-        logger.LogError(ex, "Effect failed");
-    }
+    // No need for try-catch - Ivy automatically handles exceptions
+    var result = await RiskyOperation();
+    // Handle success...
 });
 ```
 
@@ -584,26 +566,19 @@ UseEffect(() =>
 }, count); // Re-create timer when count changes
 ```
 
-### 3. Not Handling Async Properly
+### 3. Not Awaiting Async Operations
 
 ```csharp
 // Wrong: Fire-and-forget async
 UseEffect(() =>
 {
-    DoAsyncWork(); // No await, exceptions not handled
+    DoAsyncWork(); // No await - operation may not complete
 });
 
 // Correct: Proper async handling
 UseEffect(async () =>
 {
-    try
-    {
-        await DoAsyncWork();
-    }
-    catch (Exception ex)
-    {
-        // Handle error
-    }
+    await DoAsyncWork(); // Properly await the operation
 });
 ```
 
