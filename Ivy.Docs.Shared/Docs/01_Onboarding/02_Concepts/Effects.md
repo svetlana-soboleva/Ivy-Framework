@@ -169,7 +169,7 @@ The priority is automatically determined based on the trigger type, but understa
 You do not need to manually catch exceptions in UseEffect. Ivy has a built-in exception handling pipeline that automatically catches exceptions from effects and displays them to users via error notifications and console logging. The system wraps effect exceptions in `EffectException` and routes them through registered exception handlers.
 </Callout>
 
-```csharp demo-below
+```csharp demo-tabs
 public class DataFetchView : ViewBase
 {
     public override object? Build()
@@ -212,36 +212,6 @@ public class DataFetchView : ViewBase
 public record Item(string Name, string Description);
 ```
 
-### Timer and Intervals
-
-```csharp demo-below
-public class ClockEffectView : ViewBase
-{
-    public override object? Build()
-    {
-        var time = UseState(DateTime.Now);
-        var isRunning = UseState(true);
-        
-        UseEffect(() =>
-        {
-            if (!isRunning.Value) return System.Reactive.Disposables.Disposable.Empty;
-            
-            var timer = new Timer(_ => 
-            {
-                time.Set(DateTime.Now);
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-            
-            return timer; // Timer disposed when effect re-runs or component unmounts
-        }, isRunning);
-        
-        return Layout.Vertical()
-            | Text.H3($"Current Time: {time.Value:HH:mm:ss}")
-            | new Button(isRunning.Value ? "Stop" : "Start", 
-                onClick: _ => isRunning.Set(!isRunning.Value));
-    }
-}
-```
-
 ### Cleanup Operations
 
 ```csharp
@@ -275,7 +245,7 @@ public class SubscriptionView : ViewBase
 
 ### Conditional Effects
 
-```csharp
+```csharp demo-tabs
 public class ConditionalEffectView : ViewBase
 {
     public override object? Build()
@@ -306,88 +276,6 @@ public class ConditionalEffectView : ViewBase
     {
         await Task.Delay(1000);
         return $"Data fetched at {DateTime.Now:HH:mm:ss}";
-    }
-}
-```
-
-## Advanced Usage
-
-### Observable Integration
-
-Effects can work with `IObservable<T>` streams:
-
-```csharp
-public class ObservableEffectView : ViewBase
-{
-    public override object? Build()
-    {
-        var values = UseState<List<int>>(new List<int>());
-        var observable = UseService<IObservable<int>>();
-        
-        UseEffect(() =>
-        {
-            // Subscribe to observable stream
-            return observable.Subscribe(value =>
-            {
-                var currentValues = values.Value;
-                var newValues = currentValues.ToList();
-                newValues.Add(value);
-                values.Set(newValues);
-            });
-        }, observable.ToTrigger());
-        
-        return Layout.Vertical(
-            values.Value.Select(v => Text.P($"Value: {v}"))
-        );
-    }
-}
-```
-
-### Debounced Effects
-
-For handling rapid state changes:
-
-```csharp demo-below
-public class DebounceEffectView : ViewBase
-{
-    public override object? Build()
-    {
-        var searchTerm = UseState("");
-        var results = UseState<List<string>>(new List<string>());
-        var isSearching = UseState(false);
-        
-        // Immediate effect for UI feedback
-        UseEffect(() =>
-        {
-            isSearching.Set(!string.IsNullOrEmpty(searchTerm.Value));
-        }, searchTerm);
-        
-        // Debounced effect for actual search
-        UseEffect(async () =>
-        {
-            if (string.IsNullOrEmpty(searchTerm.Value))
-            {
-                results.Set(new List<string>());
-                return;
-            }
-            
-            // Simulate search API call
-            await Task.Delay(500);
-            var searchResults = new List<string>
-            {
-                $"Result 1 for '{searchTerm.Value}'",
-                $"Result 2 for '{searchTerm.Value}'",
-                $"Result 3 for '{searchTerm.Value}'"
-            };
-            
-            results.Set(searchResults);
-            isSearching.Set(false);
-        }, searchTerm.Throttle(TimeSpan.FromMilliseconds(500)).ToTrigger());
-        
-        return Layout.Vertical()
-            | searchTerm.ToTextInput(placeholder: "Search...")
-            | (isSearching.Value ? Text.Muted("Searching...") : null)
-            | Layout.Vertical(results.Value.Select(Text.P));
     }
 }
 ```
@@ -492,32 +380,6 @@ public class ComplexEffectView : ViewBase
         return /* UI */;
     }
 }
-```
-
-## Performance Considerations
-
-### Effect Execution Order
-
-Effects are executed in priority order:
-
-1. **StateChange** - Immediate effects after state updates
-2. **AfterRender** - Effects after DOM updates
-3. **AfterInit** - Initialization effects
-
-### Memory Management
-
-- Effects with disposable returns are automatically cleaned up
-- Avoid capturing large objects in effect closures
-- Use weak references for long-lived subscriptions when appropriate
-
-### Debugging Effects
-
-```csharp
-UseEffect(() =>
-{
-    Console.WriteLine($"Effect triggered at {DateTime.Now}");
-    // Your effect logic...
-}, dependency);
 ```
 
 ## Common Pitfalls
