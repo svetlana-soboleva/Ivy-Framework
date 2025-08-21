@@ -15,11 +15,7 @@ public class BasicCalloutView : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical().Gap(4)
-            | Callout.Info("This is an informational message that provides helpful context.")
-            | Callout.Success("Operation completed successfully!")
-            | Callout.Warning("Please review your input before proceeding.")
-            | Callout.Error("An error occurred while processing your request.");
+        return Callout.Info("This is an informational message that provides helpful context.");
     }
 }
 ```
@@ -59,14 +55,6 @@ public class ConstructorCalloutView : ViewBase
     }
 }
 ```
-
-<Callout Type="Tip">
-The `Callout` widget has the following properties:
-- Title (string): Optional title displayed above the description
-- Variant (CalloutVariant): The visual style variant (Info, Success, Warning, Error)
-- Icon (Icons): Optional custom icon to override the default variant icon
-- Children: The main content/description of the callout
-</Callout>
 
 ## Variants
 
@@ -185,36 +173,31 @@ public class ComplexContentCalloutView : ViewBase
 Use callouts to contain forms and provide context:
 
 ```csharp demo-tabs
+public record LoginModel(string Email = "", string Password = "");
+
 public class FormCalloutView : ViewBase
 {
     public override object? Build()
     {
-        var emailState = UseState("");
-        var passwordState = UseState("");
+        var loginModel = UseState(() => new LoginModel());
         
         return Layout.Vertical().Gap(4)
             | new Callout(
                 Layout.Vertical().Gap(2)
                     | Text.P("All fields marked with * are required. Your information will be kept secure.")
-                    | Text.Label("Email Address *")
-                    | new TextInput(emailState, placeholder: "Enter your email"),
+                    | loginModel.ToForm()
+                        .Builder(m => m.Email, s => s.ToEmailInput().Placeholder("Enter your email"))
+                        .Label(m => m.Email, "Email Address *"),
                 "Form Guidelines",
                 CalloutVariant.Info)
             | new Callout(
                 Layout.Vertical().Gap(2)
                     | Text.P("Please use your work email address for business communications.")
-                    | Text.Label("Password *")
-                    | new TextInput(passwordState, placeholder: "Enter your password", variant: TextInputs.Password),
+                    | loginModel.ToForm()
+                        .Builder(m => m.Password, s => s.ToPasswordInput().Placeholder("Enter your password"))
+                        .Label(m => m.Password, "Password *"),
                 "Email Policy",
-                CalloutVariant.Warning)
-            | new Callout(
-                Layout.Vertical().Gap(2)
-                    | Text.P("Password must be at least 8 characters with uppercase, lowercase, and numbers.")
-                    | Layout.Horizontal().Gap(2)
-                        | new Button("Submit", variant: ButtonVariant.Primary)
-                        | new Button("Cancel", variant: ButtonVariant.Secondary),
-                "Password Requirements",
-                CalloutVariant.Info);
+                CalloutVariant.Warning);
     }
 }
 ```
