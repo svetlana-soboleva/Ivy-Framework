@@ -102,12 +102,14 @@ public class ResponsiveIframeView : ViewBase
         var aspectRatio = UseState("16:9");
         var url = UseState("https://www.youtube.com/embed/dQw4w9WgXcQ");
         
+        const int baseWidth = 120;
+        
         var height = aspectRatio.Value switch
         {
-            "16:9" => Size.Units(67), // 120 * 9/16
-            "4:3" => Size.Units(90),  // 120 * 3/4
-            "1:1" => Size.Units(120),
-            _ => Size.Units(67)
+            "16:9" => Size.Units(baseWidth * 9 / 16),  // 67
+            "4:3" => Size.Units(baseWidth * 3 / 4),   // 90
+            "1:1" => Size.Units(baseWidth),           // 120
+            _ => Size.Units(baseWidth * 9 / 16)       // Default to 16:9
         };
         
         return Layout.Vertical().Gap(4)
@@ -117,7 +119,7 @@ public class ResponsiveIframeView : ViewBase
                 | new Button("4:3", onClick: _ => aspectRatio.Set("4:3"))
                 | new Button("1:1", onClick: _ => aspectRatio.Set("1:1")))
             | new Iframe(url.Value)
-                .Width(Size.Units(120))
+                .Width(Size.Units(baseWidth))
                 .Height(height);
     }
 }
