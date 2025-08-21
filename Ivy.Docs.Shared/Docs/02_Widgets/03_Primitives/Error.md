@@ -122,13 +122,15 @@ public class DataLoadingView : ViewBase
                 isLoading.Set(false);
             }
         }
-        
+
         // Initial load
         UseEffect(() => {
             _ = LoadData();
         }, []);
         
-        return Layout.Vertical()
+        return Layout.Vertical().Gap(4)
+            | Layout.Horizontal().Gap(2)
+                | new Button("Reload Data", variant: ButtonVariant.Primary).HandleClick(_ => LoadData())
             | (isLoading.Value 
                 ? "Loading..." 
                 : hasError.Value 
@@ -224,43 +226,6 @@ public class ExceptionHandlingView : ViewBase
                         .Variant(ButtonVariant.Outline)
                         .HandleClick(() => showDetails.Set(!showDetails.Value))
                 : Text.Muted("Click the button above to simulate an error"));
-    }
-}
-```
-
-### Error with Recovery Options
-
-Provide users with actions they can take to resolve errors:
-
-```csharp demo-tabs
-public class ErrorRecoveryView : ViewBase
-{
-    public override object? Build()
-    {
-        var retryCount = UseState(0);
-        var isRetrying = UseState(false);
-        
-        async Task RetryOperation()
-        {
-            isRetrying.Set(true);
-            await Task.Delay(1000); // Simulate retry
-            retryCount.Set(retryCount.Value + 1);
-            isRetrying.Set(false);
-        }
-        
-        return Layout.Vertical().Gap(4)
-            | new Error()
-                .Title("Connection Lost")
-                .Message("Your connection to the server was interrupted. This might be due to network issues or server maintenance.")
-            | Layout.Horizontal().Gap(2)
-                | new Button("Retry", variant: ButtonVariant.Primary)
-                    .HandleClick(async () => await RetryOperation())
-                    .Disabled(isRetrying.Value)
-                | new Button("Check Status", variant: ButtonVariant.Outline)
-                | new Button("Contact Support", variant: ButtonVariant.Secondary)
-            | (retryCount.Value > 0 
-                ? Text.Muted($"Retry attempts: {retryCount.Value}")
-                : null);
     }
 }
 ```
