@@ -19,15 +19,26 @@ The prompt system in Ivy supports:
 
 Here's a simple example of showing a confirmation prompt:
 
-```csharp
-var client = this.UseService<IClientProvider>();
-var result = await client.Prompt.ConfirmAsync(
-    "Delete Item",
-    "Are you sure you want to delete this item?"
-);
-if (result)
+```csharp demo-tabs
+public class BasicPromptView : ViewBase
 {
-    await DeleteItem();
+    public override object? Build()
+    {
+        var client = this.UseService<IClientProvider>();
+        
+        return new Button("Delete Item", onClick: async _ =>
+        {
+            var result = await client.Prompt.ConfirmAsync(
+                "Delete Item",
+                "Are you sure you want to delete this item?"
+            );
+            if (result)
+            {
+                // Item would be deleted here
+                client.Toast("Item deleted!", "Success");
+            }
+        });
+    }
 }
 ```
 
@@ -35,7 +46,7 @@ if (result)
 
 Get user confirmation for important actions:
 
-```csharp
+```csharp demo-tabs
 public class DeleteView : ViewBase
 {
     public override object? Build()
@@ -53,7 +64,8 @@ public class DeleteView : ViewBase
                 
                 if (confirmed)
                 {
-                    await DeleteItem();
+                    // Item would be deleted here
+                    client.Toast("Item deleted!", "Success");
                 }
             }
         );
@@ -65,7 +77,7 @@ public class DeleteView : ViewBase
 
 Collect text input from users:
 
-```csharp
+```csharp demo-tabs
 public class RenameView : ViewBase
 {
     public override object? Build()
@@ -78,12 +90,13 @@ public class RenameView : ViewBase
                 var newName = await client.Prompt.TextAsync(
                     "Rename Item",
                     "Enter new name:",
-                    defaultValue: currentName
+                    defaultValue: "Current Item Name"
                 );
                 
                 if (newName != null)
                 {
-                    await RenameItem(newName);
+                    // Item would be renamed here
+                    client.Toast($"Renamed to: {newName}", "Success");
                 }
             }
         );
@@ -95,7 +108,7 @@ public class RenameView : ViewBase
 
 Handle file selection through prompts:
 
-```csharp
+```csharp demo-tabs
 public class UploadView : ViewBase
 {
     public override object? Build()
@@ -113,7 +126,8 @@ public class UploadView : ViewBase
                 
                 if (files?.Length > 0)
                 {
-                    await UploadFiles(files);
+                    // Files would be uploaded here
+                    client.Toast($"Selected {files.Length} file(s)", "Success");
                 }
             }
         );
@@ -125,7 +139,7 @@ public class UploadView : ViewBase
 
 Create custom prompts for specific needs:
 
-```csharp
+```csharp demo-tabs
 public class CustomPromptView : ViewBase
 {
     public override object? Build()
@@ -155,7 +169,8 @@ public class CustomPromptView : ViewBase
                 
                 if (result.Confirmed)
                 {
-                    await SaveOptions(result.Data);
+                    // Options would be saved here
+                    client.Toast("Options saved!", "Success");
                 }
             }
         );
@@ -167,7 +182,7 @@ public class CustomPromptView : ViewBase
 
 Chain multiple prompts together:
 
-```csharp
+```csharp demo-tabs
 public class MultiStepView : ViewBase
 {
     public override object? Build()
@@ -201,7 +216,8 @@ public class MultiStepView : ViewBase
                 
                 if (files?.Length > 0)
                 {
-                    await ProcessFiles(name, files);
+                    // Files would be processed here
+                    client.Toast($"Processing {files.Length} files for {name}", "Success");
                 }
             }
         );
@@ -223,39 +239,38 @@ public class MultiStepView : ViewBase
 
 ### Form Validation with Prompts
 
-```csharp
+```csharp demo-tabs
 public class FormView : ViewBase
 {
     public override object? Build()
     {
         var client = this.UseService<IClientProvider>();
-        var formData = UseState(new FormData());
+        var name = UseState("");
         
-        return new Form(
-            onSubmit: async () => {
-                if (string.IsNullOrEmpty(formData.Value.Name))
+        return Layout.Vertical().Gap(4)
+            | name.ToTextInput(placeholder: "Enter your name...")
+            | new Button("Submit", onClick: async _ => {
+                if (string.IsNullOrEmpty(name.Value))
                 {
-                    var name = await client.Prompt.TextAsync(
+                    var promptedName = await client.Prompt.TextAsync(
                         "Missing Name",
                         "Please enter your name:"
                     );
                     
-                    if (name == null) return;
-                    formData.Set(v => v.Name = name);
+                    if (promptedName == null) return;
+                    name.Set(promptedName);
                 }
                 
-                await SubmitForm(formData.Value);
-            }
-        )
-        | new TextInput("Name", value: formData.Value.Name, onChange: v => formData.Set(v))
-        | new Button("Submit");
+                // Form would be submitted here
+                client.Toast($"Form submitted for {name.Value}", "Success");
+            });
     }
 }
 ```
 
 ### Confirmation with Custom Options
 
-```csharp
+```csharp demo-tabs
 public class DeleteWithOptionsView : ViewBase
 {
     public override object? Build()
@@ -286,7 +301,8 @@ public class DeleteWithOptionsView : ViewBase
                 
                 if (result.Confirmed)
                 {
-                    await DeleteWithOptions(result.Data);
+                    // Deletion with options would be performed here
+                    client.Toast("Item deleted with custom options", "Success");
                 }
             }
         );
