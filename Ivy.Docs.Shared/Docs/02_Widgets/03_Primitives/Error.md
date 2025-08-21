@@ -99,7 +99,6 @@ public class ErrorCalloutExamplesView : ViewBase
     public override object? Build()
     {
         return Layout.Vertical().Gap(4)
-            | Text.H3("Error Callouts")
             | Callout.Error("Failed to connect to the server. Please check your internet connection.")
             | Callout.Error("Invalid email format. Please enter a valid email address.", "Validation Error");
     }
@@ -111,14 +110,13 @@ public class ErrorCalloutExamplesView : ViewBase
 Use `client.Toast` for non-intrusive error notifications:
 
 ```csharp demo-tabs
-public class ErrorToastExamplesView : ViewBase
+public class ClientErrorExamplesView : ViewBase
 {
     public override object? Build()
     {
-        var client = this.UseService<IClientProvider>();
-        
-        return new Button("Show Error Toast", variant: ButtonVariant.Destructive)
-                .HandleClick(_ => client.Toast("Something went wrong!", "Error"));
+        var client = UseService<IClientProvider>();
+        return new Button("Show System Error", variant: ButtonVariant.Destructive)
+            .HandleClick(_ => client.Error(new InvalidOperationException("System configuration validation failed")));
     }
 }
 ```
@@ -214,93 +212,31 @@ public class FormValidationErrorExamplesView : ViewBase
 }
 ```
 
-## Advanced Error Handling Patterns
-
-Ivy Framework provides several advanced error handling patterns for different scenarios:
-
-### Client Error Notifications
-
-Use client error handling for system-wide error notifications:
-
-```csharp demo-tabs
-public class ClientErrorExamplesView : ViewBase
-{
-    public override object? Build()
-    {
-        var client = UseService<IClientProvider>();
-        
-        void ShowSystemError()
-        {
-            try
-            {
-                // Simulate a system error
-                throw new InvalidOperationException("System configuration validation failed. Please check your settings.");
-            }
-            catch (Exception ex)
-            {
-                // Send error to client for system-wide notification
-                client.Error(ex);
-            }
-        }
-        
-        void ShowErrorToast()
-        {
-            try
-            {
-                throw new HttpRequestException("Network request failed. Please check your internet connection.");
-            }
-            catch (Exception ex)
-            {
-                // Show as toast notification
-                client.Toast(ex);
-            }
-        }
-        
-        return Layout.Vertical().Gap(4)
-            | Text.Muted("Use client error methods for system-wide error notifications")
-            | (Layout.Horizontal().Gap(2)
-                | new Button("System Error", variant: ButtonVariant.Destructive)
-                    .HandleClick(ShowSystemError)
-                | new Button("Network Error Toast", variant: ButtonVariant.Outline)
-                    .HandleClick(ShowErrorToast))
-            | Text.Muted("These errors will be handled by the client system");
-    }
-}
-```
-
 ### Exception Handling
 
-Use the Error widget to display caught exceptions:
+Use the Error widget to display error states:
 
 ```csharp demo-tabs
 public class ExceptionHandlingView : ViewBase
 {
     public override object? Build()
     {
-        var exception = UseState<Exception?>();
+        var showError = UseState(false);
         var showDetails = UseState(false);
         
         void SimulateError()
         {
-            try
-            {
-                // Simulate an error
-                throw new InvalidOperationException("This is a simulated error for demonstration purposes");
-            }
-            catch (Exception ex)
-            {
-                exception.Set(ex);
-            }
+            showError.Set(true);
         }
         
         return Layout.Vertical().Gap(4)
             | new Button("Simulate Error", variant: ButtonVariant.Destructive).HandleClick(SimulateError)
-            | (exception.Value != null 
+            | (showError.Value 
                 ? Layout.Vertical().Gap(4)
                     | new Error()
-                        .Title(exception.Value.GetType().Name)
-                        .Message(exception.Value.Message)
-                        .StackTrace(showDetails.Value ? exception.Value.StackTrace : null)
+                        .Title("Simulated Error")
+                        .Message("This is a simulated error for demonstration purposes")
+                        .StackTrace(showDetails.Value ? "at MyApp.Views.ErrorView.SimulateError() in /src/Views/ErrorView.cs:line 15" : null)
                     | new Button(showDetails.Value ? "Hide Details" : "Show Details")
                         .Variant(ButtonVariant.Outline)
                         .HandleClick(() => showDetails.Set(!showDetails.Value))
@@ -311,74 +247,23 @@ public class ExceptionHandlingView : ViewBase
 
 ### Effect Error Handling
 
-Demonstrate how effects can throw exceptions and how to handle them:
+Demonstrate how effects can handle error states:
 
 ```csharp demo-tabs
 public class EffectErrorView : ViewBase
 {
     public override object? Build()
     {
-        var effectError = UseState<Exception?>();
-        var isLoading = UseState(false);
-        var data = UseState<string?>();
-        var shouldThrowError = UseState(false);
-        
-        async Task RunEffect()
-        {
-            try {
-                isLoading.Set(true);
-                effectError.Set((Exception?)null);
-                
-                // Simulate API call
-                await Task.Delay(1000);
-                
-                // This will throw an exception that gets wrapped in EffectException
-                if (shouldThrowError.Value) {
-                    throw new HttpRequestException($"API call failed");
-                }
-                
-                data.Set($"Data loaded successfully");
-            }
-            catch (Exception ex) {
-                // Store the effect error for display
-                effectError.Set(ex);
-            }
-            finally {
-                isLoading.Set(false);
-            }
-        }
-
-        void ToggleErrorMode()
-        {
-            shouldThrowError.Set(!shouldThrowError.Value);
-            data.Set((string?)null);
-            effectError.Set((Exception?)null);
-        }
-        
-        // Initial effect run
-        UseEffect(RunEffect);
+        var showError = UseState(false);
         
         return Layout.Vertical().Gap(4)
-            | Text.H3("Effect Error Handling")
-            | (Layout.Horizontal().Gap(2)
-                | new Button("Run Effect", variant: ButtonVariant.Primary)
-                    .HandleClick(async _ => await RunEffect())
-                    .Disabled(isLoading.Value)
-                | new Button("Toggle Error Mode", variant: ButtonVariant.Secondary)
-                    .HandleClick(_ => ToggleErrorMode()))
-            | Text.Muted($"Error Mode: {(shouldThrowError.Value ? "ON" : "OFF")}")
-            | (isLoading.Value 
-                ? Text.Muted($"Loading...")
-                : effectError.Value != null 
-                    ? Layout.Vertical().Gap(3)
-                        | new Error()
-                            .Title("Effect Exception Caught")
-                            .Message($"The effect threw an exception: {effectError.Value.Message}")
-                            .StackTrace(effectError.Value.StackTrace)
-                        | Text.Muted($"Exception Type: {effectError.Value.GetType().Name}")
-                    : data.Value != null 
-                        ? Text.Success(data.Value)
-                        : Text.Muted("Click 'Run Effect' to start"));
+            | new Button("Show Error", variant: ButtonVariant.Primary)
+                .HandleClick(_ => showError.Set(true))
+            | (showError.Value 
+                ? new Error()
+                    .Title("Effect Failed")
+                    .Message("The effect encountered an error during execution")
+                : Text.Muted("Click button to show error"));
     }
 }
 ```
@@ -402,25 +287,23 @@ public class DataLoadingView : ViewBase
         
         async Task LoadData()
         {
-            try {
-                isLoading.Set(true);
-                hasError.Set(false);
-                
-                // Simulate API call with random chance of failure
-                await Task.Delay(1000);
-                if (Random.Shared.Next(2) == 0)
-                    throw new Exception("API connection timeout");
-                    
-                data.Set(new List<string> { "Item 1", "Item 2", "Item 3" });
-            }
-            catch {
+            isLoading.Set(true);
+            hasError.Set(false);
+            
+            // Simulate API call with random chance of failure
+            await Task.Delay(1000);
+            if (Random.Shared.Next(2) == 0)
+            {
                 hasError.Set(true);
             }
-            finally {
-                isLoading.Set(false);
+            else
+            {
+                data.Set(new List<string> { "Item 1", "Item 2", "Item 3" });
             }
+            
+            isLoading.Set(false);
         }
-
+        
         // Initial load
         UseEffect(() => {
             _ = LoadData();
