@@ -10,6 +10,7 @@ global using Ivy.Core.Hooks;
 global using Ivy.Hooks;
 global using Ivy.Helpers;
 global using Ivy.Views;
+global using Ivy.Views.Forms;
 global using Ivy.Shared;
 global using Ivy.Charts;
 global using Ivy.Views.Charts;
