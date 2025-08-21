@@ -19,17 +19,17 @@ public class AsyncSelectBasicDemo : ViewBase
     {
         var selectedCategory = this.UseState<string?>(default(string?));
 
-        async Task<Option<string>[]> QueryCategories(string query)
+        Task<Option<string>[]> QueryCategories(string query)
         {
-            return Categories
+            return Task.FromResult(Categories
                 .Where(c => c.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .Select(c => new Option<string>(c))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<string>?> LookupCategory(string? category)
+        Task<Option<string>?> LookupCategory(string? category)
         {
-            return category != null ? new Option<string>(category) : null;
+            return Task.FromResult(category != null ? new Option<string>(category) : null);
         }
 
         return Layout.Vertical()
@@ -51,20 +51,19 @@ public class StringAsyncSelectDemo : ViewBase
     {
         var selectedCountry = this.UseState<string?>(default(string));
 
-        async Task<Option<string>[]> QueryCountries(string query)
+        Task<Option<string>[]> QueryCountries(string query)
         {
-            
             var countries = new[] { "Germany", "France", "Japan", "China", "USA", "Canada", "Australia", "Brazil" };
-            return countries
+            return Task.FromResult(countries
                 .Where(c => c.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .Select(c => new Option<string>(c))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<string>?> LookupCountry(string country)
+        Task<Option<string>?> LookupCountry(string country)
         {
-            if (string.IsNullOrEmpty(country)) return null;
-            return new Option<string>(country);
+            if (string.IsNullOrEmpty(country)) return Task.FromResult<Option<string>?>(null);
+            return Task.FromResult<Option<string>?>(new Option<string>(country));
         }
 
         return Layout.Vertical()
@@ -84,33 +83,33 @@ public class IntegerAsyncSelectDemo : ViewBase
     {
         var selectedYear = this.UseState<int?>(default(int));
 
-        async Task<Option<int>[]> QueryYears(string query)
+        Task<Option<int>[]> QueryYears(string query)
         {
             var currentYear = DateTime.Now.Year;
             var years = Enumerable.Range(currentYear - 100, 101).ToArray();
             
             if (string.IsNullOrEmpty(query))
-                return years.Take(20).Select(y => new Option<int>(y.ToString(), y)).ToArray();
+                return Task.FromResult(years.Take(20).Select(y => new Option<int>(y.ToString(), y)).ToArray());
             
             if (int.TryParse(query, out var yearQuery))
             {
-                return years
+                return Task.FromResult(years
                     .Where(y => y >= yearQuery && y <= yearQuery + 10)
                     .Take(20)
                     .Select(y => new Option<int>(y.ToString(), y))
-                    .ToArray();
+                    .ToArray());
             }
             
-            return years
+            return Task.FromResult(years
                 .Where(y => y.ToString().Contains(query))
                 .Take(20)
                 .Select(y => new Option<int>(y.ToString(), y))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<int>?> LookupYear(int year)
+        Task<Option<int>?> LookupYear(int year)
         {
-            return new Option<int>(year.ToString(), year);
+            return Task.FromResult<Option<int>?>(new Option<int>(year.ToString(), year));
         }
 
         return Layout.Vertical()
@@ -144,9 +143,8 @@ public class EnumAsyncSelectDemo : ViewBase
     {
         var selectedLanguage = this.UseState(ProgrammingLanguage.CSharp);
 
-        async Task<Option<ProgrammingLanguage>[]> QueryLanguages(string query)
+        Task<Option<ProgrammingLanguage>[]> QueryLanguages(string query)
         {
-            
             // Create a static array of languages to avoid runtime issues
             var languages = new[] 
             { 
@@ -163,17 +161,17 @@ public class EnumAsyncSelectDemo : ViewBase
             };
             
             if (string.IsNullOrEmpty(query))
-                return languages.Select(l => new Option<ProgrammingLanguage>(l.ToString(), l)).ToArray();
+                return Task.FromResult(languages.Select(l => new Option<ProgrammingLanguage>(l.ToString(), l)).ToArray());
             
-            return languages
+            return Task.FromResult(languages
                 .Where(l => l.ToString().Contains(query, StringComparison.OrdinalIgnoreCase))
                 .Select(l => new Option<ProgrammingLanguage>(l.ToString(), l))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<ProgrammingLanguage>?> LookupLanguage(ProgrammingLanguage language)
+        Task<Option<ProgrammingLanguage>?> LookupLanguage(ProgrammingLanguage language)
         {
-            return new Option<ProgrammingLanguage>(language.ToString(), language);
+            return Task.FromResult<Option<ProgrammingLanguage>?>(new Option<ProgrammingLanguage>(language.ToString(), language));
         }
 
         return Layout.Vertical()
@@ -231,26 +229,26 @@ public class AdvancedQueryDemo : ViewBase
             selectedUserInfo.Set(user != null ? $"{user.Name} - {user.Email} ({user.Department})" : "No user selected");
         }, [selectedUser]);
 
-        async Task<Option<Guid>[]> QueryUsers(string query)
+        Task<Option<Guid>[]> QueryUsers(string query)
         {
             if (string.IsNullOrEmpty(query))
-                return Users.Where(u => u.IsActive).Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
+                return Task.FromResult(Users.Where(u => u.IsActive).Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray());
 
             var queryLower = query.ToLowerInvariant();
-            return Users
+            return Task.FromResult(Users
                 .Where(u => u.IsActive && 
                            (u.Name.ToLowerInvariant().Contains(queryLower) || 
                             u.Email.ToLowerInvariant().Contains(queryLower) ||
                             u.Department.ToLowerInvariant().Contains(queryLower)))
                 .Take(10)
                 .Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<Guid>?> LookupUser(Guid id)
+        Task<Option<Guid>?> LookupUser(Guid id)
         {
             var user = Users.FirstOrDefault(u => u.Id == id);
-            return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
+            return Task.FromResult(user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null);
         }
 
         var customAsyncSelect = new AsyncSelectInputView<Guid>(
@@ -281,39 +279,38 @@ public class ErrorHandlingDemo : ViewBase
         var selectedItem = this.UseState<string?>(default(string));
         var errorMessage = this.UseState<string?>(default(string));
 
-        async Task<Option<string>[]> QueryWithErrors(string query)
+        Task<Option<string>[]> QueryWithErrors(string query)
         {
             try
             {
-                
                 // Simulate random errors
                 if (Random.Shared.Next(10) == 0)
                     throw new Exception("Simulated network error");
                 
                 var items = new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry" };
-                return items
+                return Task.FromResult(items
                     .Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase))
                     .Select(item => new Option<string>(item))
-                    .ToArray();
+                    .ToArray());
             }
             catch (Exception ex)
             {
                 errorMessage.Set(ex.Message);
-                return Array.Empty<Option<string>>();
+                return Task.FromResult(Array.Empty<Option<string>>());
             }
         }
 
-        async Task<Option<string>?> LookupWithErrors(string item)
+        Task<Option<string>?> LookupWithErrors(string item)
         {
             try
             {
                 errorMessage.Set(default(string)); // Clear previous errors
-                return new Option<string>(item);
+                return Task.FromResult<Option<string>?>(new Option<string>(item));
             }
             catch (Exception ex)
             {
                 errorMessage.Set($"Lookup failed: {ex.Message}");
-                return null;
+                return Task.FromResult<Option<string>?>(null);
             }
         }
 
@@ -339,18 +336,18 @@ public class StylingDemo : ViewBase
         var invalidSelect = this.UseState<string?>(default(string));
         var disabledSelect = this.UseState<string?>(default(string));
 
-        async Task<Option<string>[]> QueryOptions(string query)
+        Task<Option<string>[]> QueryOptions(string query)
         {
             var options = new[] { "Option 1", "Option 2", "Option 3" };
-            return options
+            return Task.FromResult(options
                 .Where(opt => opt.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .Select(opt => new Option<string>(opt))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<string>?> LookupOption(string option)
+        Task<Option<string>?> LookupOption(string option)
         {
-            return new Option<string>(option);
+            return Task.FromResult<Option<string>?>(new Option<string>(option));
         }
 
         return Layout.Vertical()
@@ -382,21 +379,21 @@ public class DebouncedQueryDemo : ViewBase
         var selectedItem = this.UseState<string?>(default(string));
         var queryCount = this.UseState(0);
 
-        async Task<Option<string>[]> DebouncedQuery(string query)
+        Task<Option<string>[]> DebouncedQuery(string query)
         {
             var currentCount = queryCount.Value;
             queryCount.Set(currentCount + 1);
             
             var items = new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape" };
-            return items
+            return Task.FromResult(items
                 .Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .Select(item => new Option<string>(item))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<string>?> LookupItem(string item)
+        Task<Option<string>?> LookupItem(string item)
         {
-            return new Option<string>(item);
+            return Task.FromResult<Option<string>?>(new Option<string>(item));
         }
 
         return Layout.Vertical()
@@ -461,26 +458,26 @@ public class UserSearchDemo : ViewBase
             selectedUserDetails.Set(user != null ? $"{user.Name} - {user.Email} - {user.Department}" : "No user selected");
         }, [selectedUser]);
 
-        async Task<Option<Guid>[]> QueryUsers(string query)
+        Task<Option<Guid>[]> QueryUsers(string query)
         {
             if (string.IsNullOrEmpty(query))
-                return Users.Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray();
+                return Task.FromResult(Users.Take(5).Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id)).ToArray());
             
             var queryLower = query.ToLowerInvariant();
-            return Users
+            return Task.FromResult(Users
                 .Where(u => u.IsActive && 
                            (u.Name.ToLowerInvariant().Contains(queryLower) || 
                             u.Email.ToLowerInvariant().Contains(queryLower) ||
                             u.Department.ToLowerInvariant().Contains(queryLower)))
                 .Take(10)
                 .Select(u => new Option<Guid>($"{u.Name} ({u.Department})", u.Id))
-                .ToArray();
+                .ToArray());
         }
 
-        async Task<Option<Guid>?> LookupUser(Guid id)
+        Task<Option<Guid>?> LookupUser(Guid id)
         {
             var user = Users.FirstOrDefault(u => u.Id == id);
-            return user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null;
+            return Task.FromResult(user != null ? new Option<Guid>($"{user.Name} ({user.Department})", user.Id) : null);
         }
 
         var customAsyncSelect = new AsyncSelectInputView<Guid>(
