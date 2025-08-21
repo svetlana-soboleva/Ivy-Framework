@@ -30,22 +30,22 @@ Server=localhost;Database=mydb;Uid=myuser;Pwd=mypassword;Port=3306
 Server=localhost;Database=mydb;Uid=user;Pwd=pass;SslMode=Required
 ```
 
-**Connection Pooling**
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass;Pooling=true;MinimumPoolSize=1;MaximumPoolSize=20
-```
+For all connection options, see [MySQL Connection String Options](https://dev.mysql.com/doc/connector-net/en/connector-net-connection-options.html).
 
 ## Configuration
 
 Ivy automatically configures the **Pomelo.EntityFrameworkCore.MySql** package for MySQL connections.
 
+> **Note**: When you provide a connection string, Ivy will verify that you're connecting to an actual MySQL server (not MariaDB). If it detects MariaDB instead, you'll be prompted to use the MariaDB provider.
+
 ## MySQL-Specific Features
 
-MySQL offers features that Ivy can leverage:
+Key features Ivy can leverage:
 - **JSON columns** for document storage (MySQL 5.7+)
 - **Full-text indexes** for search functionality
-- **Partitioning** for large tables
-- **Multiple storage engines** (InnoDB, MyISAM, etc.)
+- **Multiple storage engines** (InnoDB, MyISAM)
+
+See [MySQL Feature Reference](https://dev.mysql.com/doc/refman/8.0/en/features.html) for details.
 
 ## Security Best Practices
 
@@ -54,28 +54,23 @@ MySQL offers features that Ivy can leverage:
 - **Enable binary logging** for point-in-time recovery
 - **Use connection pooling** to optimize performance
 
+For more security recommendations, see [MySQL Security Guidelines](https://dev.mysql.com/doc/refman/8.0/en/security-guidelines.html).
+
 ## Troubleshooting
 
 ### Common Issues
 
-**Connection Timeout**
-- Verify MySQL server is running
-- Check that MySQL is listening on the correct port (default: 3306)
-- Ensure firewall allows connections to MySQL port
+**Connection Issues**
+- Verify server is running on port 3306
+- Check firewall settings
 
-**Authentication Failed**
-- Verify username and password are correct
-- Check MySQL user privileges: `SHOW GRANTS FOR 'username'@'host'`
-- Verify host restrictions for the MySQL user
+**Authentication Problems**
+- Verify credentials and user privileges
 
 **Character Set Issues**
-- Specify charset in connection string: `CharSet=utf8mb4`
-- Use `utf8mb4` for full UTF-8 support including emojis
+- Use `CharSet=utf8mb4` in connection string
 
-**Performance Issues**
-- Optimize MySQL configuration (`my.cnf`)
-- Consider using read replicas for read-heavy applications
-- Monitor slow query log for optimization opportunities
+See [MySQL Troubleshooting](https://dev.mysql.com/doc/refman/8.0/en/problems.html) for more help.
 
 ## Example Usage
 
@@ -103,3 +98,5 @@ public class OrderApp : AppBase<Order>
 - [MariaDB Provider](MariaDB.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)
+- [Official MySQL Documentation](https://dev.mysql.com/doc/)
+- [Pomelo.EntityFrameworkCore.MySql Documentation](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)

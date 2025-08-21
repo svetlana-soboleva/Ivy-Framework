@@ -1,6 +1,3 @@
----
-title: SQL Server
----
 
 # SQL Server Database Provider
 
@@ -20,7 +17,7 @@ Server=localhost;Database=mydb;Trusted_Connection=true;
 
 ### Authentication Options
 
-**Windows Authentication (Recommended for local development)**
+**Windows Authentication (Recommended)**
 ```text
 Server=localhost;Database=mydb;Trusted_Connection=true;
 ```
@@ -30,10 +27,7 @@ Server=localhost;Database=mydb;Trusted_Connection=true;
 Server=localhost;Database=mydb;User Id=username;Password=password;
 ```
 
-**Azure SQL Database**
-```text
-Server=tcp:yourserver.database.windows.net,1433;Database=mydb;User ID=username;Password=password;Encrypt=true;TrustServerCertificate=false;Connection Timeout=30;
-```
+For Azure SQL and authentication details, see [SQL Server Authentication documentation](https://learn.microsoft.com/en-us/sql/relational-databases/security/choose-an-authentication-mode).
 
 ## Configuration
 
@@ -47,9 +41,15 @@ Ivy automatically configures the **Microsoft.EntityFrameworkCore.SqlServer** pac
 >ivy db add --provider SqlServer --name MySqlServer --schema MyCustomSchema
 ```
 
-### Multiple Schemas
+### Schema Support
 
-SQL Server supports multiple schemas. You can specify different schemas when adding connections or configure them in the DbContext.
+SQL Server supports multiple schemas. When connecting with Ivy, you'll be prompted to select a schema from your database, or you can specify one directly using the `--schema` parameter:
+
+```terminal
+>ivy db add --provider SqlServer --name MySqlServer --schema MyCustomSchema
+```
+
+See [SQL Server Schema documentation](https://learn.microsoft.com/en-us/sql/relational-databases/security/schemas-general) for more details.
 
 ## Security Best Practices
 
@@ -61,20 +61,12 @@ SQL Server supports multiple schemas. You can specify different schemas when add
 
 ### Common Issues
 
-**Connection Timeout**
-- Increase connection timeout in connection string
-- Check network connectivity to SQL Server instance
-- Verify SQL Server is running and accepting connections
+**Connection Problems**
+- Verify server is running and network connectivity
+- Check credentials and permissions
+- Ensure firewall allows port 1433
 
-**Authentication Failures**
-- Verify credentials are correct
-- Check if Windows Authentication is properly configured
-- Ensure user has necessary database permissions
-
-**Firewall Issues**
-- Configure Windows Firewall to allow SQL Server traffic
-- Check Azure SQL Database firewall rules
-- Verify port 1433 is accessible
+For detailed troubleshooting, see [SQL Server Connection Troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/sql/connect/resolve-connectivity-errors).
 
 ## Example Usage
 
@@ -100,3 +92,5 @@ public class EmployeeApp : AppBase<Employee>
 - [PostgreSQL Provider](PostgreSQL.md)
 - [MySQL Provider](MySQL.md)
 - [SQLite Provider](SQLite.md)
+- [Official SQL Server Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
+- [Entity Framework Core for SQL Server](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)

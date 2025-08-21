@@ -21,20 +21,12 @@ account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;
 account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;warehouse=mywarehouse
 ```
 
-**OAuth Authentication**
-```text
-account=myaccount;authenticator=oauth;token=mytoken;db=mydatabase;schema=myschema;warehouse=mywarehouse
-```
-
-**Key Pair Authentication**
+**Key Pair Authentication (Recommended)**
 ```text
 account=myaccount;user=myuser;private_key_file=rsa_key.p8;private_key_file_pwd=passphrase;db=mydatabase;schema=myschema;warehouse=mywarehouse
 ```
 
-**SSO Authentication**
-```text
-account=myaccount;authenticator=externalbrowser;user=myuser;db=mydatabase;schema=myschema;warehouse=mywarehouse
-```
+For additional authentication methods (OAuth, SSO) and detailed options, see the [Snowflake Authentication documentation](https://docs.snowflake.com/en/user-guide/authentication).
 
 ## Configuration
 
@@ -44,26 +36,22 @@ Ivy automatically configures the **EFCore.Snowflake** package for Snowflake conn
 
 ### Custom Parameters
 
-Snowflake connection strings support various additional parameters:
+Common connection options include timeouts and date formatting:
 
-**Session Parameters**
 ```text
-account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;warehouse=mywarehouse;TIMESTAMP_OUTPUT_FORMAT='YYYY-MM-DD HH24:MI:SS.FF';TIMESTAMP_TYPE_MAPPING='TIMESTAMP_LTZ'
+account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;warehouse=mywarehouse;connection_timeout=60;TIMESTAMP_OUTPUT_FORMAT='YYYY-MM-DD HH24:MI:SS.FF'
 ```
 
-**Connection Parameters**
-```text
-account=myaccount;user=myuser;password=mypassword;db=mydatabase;schema=myschema;warehouse=mywarehouse;connection_timeout=60;request_timeout=300
-```
+For all available parameters, see [Snowflake Connection Parameters](https://docs.snowflake.com/en/user-guide/dotnet-driver-connection).
 
 ## Snowflake-Specific Features
 
-Snowflake offers advanced features that Ivy can leverage:
-- **Time Travel** for accessing historical data
-- **Zero-copy cloning** for data duplication
+Key features Ivy can leverage:
 - **Semi-structured data types** (JSON, Avro, Parquet)
-- **Automatic clustering** for query optimization
-- **Cross-database joins** for federated queries
+- **Time Travel** for historical data access
+- **Zero-copy cloning** and **Automatic clustering**
+
+Learn more in the [Snowflake Documentation](https://docs.snowflake.com/en/user-guide).
 
 ## Security Best Practices
 
@@ -79,17 +67,14 @@ Snowflake offers advanced features that Ivy can leverage:
 **Authentication Failed**
 - Verify username and password are correct
 - Check that your account identifier is correctly formatted
-- Ensure your IP address is not blocked by network policies
 
 **Connection Timeouts**
-- Verify warehouse is running and properly sized
+- Verify warehouse is running
 - Check network connectivity to Snowflake
-- Increase the connection timeout in your connection string
 
 **Schema Access Issues**
 - Ensure the user has appropriate permissions
 - Verify the schema exists in the specified database
-- Check that the warehouse has access to the database
 
 ## Example Usage
 
@@ -115,4 +100,6 @@ public class AnalyticsApp : AppBase<AnalyticsData>
 - [Database Overview](01_Overview.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)
-- [Snowflake Documentation](https://docs.snowflake.com/)
+- [Official Snowflake Documentation](https://docs.snowflake.com)
+- [Snowflake .NET Connector](https://docs.snowflake.com/en/developer-guide/dotnet-driver)
+- [EFCore.Snowflake Package](https://github.com/Sielnowy/EFCore.Snowflake)

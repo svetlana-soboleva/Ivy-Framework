@@ -8,7 +8,14 @@ Connect your Ivy application to Airtable with automatic Entity Framework configu
 
 Airtable is a cloud-based spreadsheet-database hybrid that combines the simplicity of a spreadsheet with the power of a database. Ivy provides integration with Airtable through Entity Framework Core, allowing you to leverage Airtable's flexible data organization in your applications.
 
-## Connection String Format
+## Connection Information
+
+When setting up Airtable with Ivy, you'll be prompted for two pieces of information:
+
+1. **Access Token**: Your Airtable personal access token (PAT)
+2. **Base ID**: The ID of your Airtable base (starts with 'app')
+
+These values will be combined into a connection string and stored in user secrets:
 
 ```text
 BaseId=appXXXXXXXXXXXXXX;ApiKey=patXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -16,12 +23,9 @@ BaseId=appXXXXXXXXXXXXXX;ApiKey=patXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ## Authentication
 
-Airtable uses personal access tokens (PATs) for authentication. You can generate a personal access token from your Airtable account settings:
+Airtable uses personal access tokens (PATs) for authentication. Generate a token from your [Airtable account page](https://airtable.com/account) in the API section.
 
-1. Go to your [Airtable account page](https://airtable.com/account)
-2. Navigate to the API section
-3. Create a personal access token with appropriate permissions
-4. Copy the token and use it when prompted during Ivy setup
+For detailed instructions, see the [Airtable Authentication documentation](https://airtable.com/developers/web/api/authenticate).
 
 ## Configuration
 
@@ -29,21 +33,16 @@ Ivy automatically configures the **Ivy.Airtable.EFCore** package and imports the
 
 ## Working with Airtable Tables
 
-In Airtable, tables function as entities in your Entity Framework context. The Ivy implementation:
-
-- Maps Airtable tables to entity classes
-- Handles Airtable's specific data types
-- Manages relationships between tables
-- Provides CRUD operations through the Entity Framework API
+Ivy maps Airtable tables to entity classes, handles Airtable's data types, and provides standard Entity Framework CRUD operations.
 
 ## Airtable-Specific Features
 
-Airtable offers unique features that Ivy can leverage:
-- **Rich field types** including attachments, links, and formulas
-- **Views** for filtered and sorted data presentation
-- **Record linking** for establishing relationships
-- **Formulas** for computed fields
-- **Attachments** for file storage
+Key features Ivy can leverage:
+- **Rich field types** (attachments, links, formulas)
+- **Record linking** for relationships
+- **Views** for filtered data presentation
+
+See [Airtable Field Types documentation](https://airtable.com/developers/web/api/field-model) for details.
 
 ## Security Best Practices
 
@@ -57,19 +56,15 @@ Airtable offers unique features that Ivy can leverage:
 ### Common Issues
 
 **Authentication Failed**
-- Verify your personal access token is correct and has not expired
-- Ensure the token has appropriate permissions
-- Check that your token has not been revoked
+- Verify token validity and permissions
 
 **Base Access Issues**
-- Confirm the Base ID is correct
-- Verify your account has access to the specified base
-- Check that the token has permission to access the specific base
+- Confirm Base ID and account access
 
 **Rate Limiting**
-- Airtable enforces API rate limits
-- Implement retry logic for rate limit errors
-- Consider caching frequently accessed data
+- Implement retry logic and caching
+
+For API limits details, see [Airtable API Limits](https://airtable.com/developers/web/api/rate-limits).
 
 ## Example Usage
 
@@ -95,4 +90,5 @@ public class ProductApp : AppBase<Product>
 - [Database Overview](01_Overview.md)
 - [SQLite Provider](SQLite.md)
 - [PostgreSQL Provider](PostgreSQL.md)
-- [Airtable API Documentation](https://airtable.com/developers/web/api/introduction)
+- [Official Airtable API Documentation](https://airtable.com/developers/web/api/introduction)
+- [Airtable .NET Client](https://github.com/ngocnicholas/airtable.net)

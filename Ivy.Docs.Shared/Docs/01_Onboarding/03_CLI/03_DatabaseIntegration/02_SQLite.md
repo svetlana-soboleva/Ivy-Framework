@@ -10,96 +10,72 @@ Connect your Ivy application to SQLite with automatic Entity Framework configura
 
 ## Overview
 
-SQLite is a lightweight, file-based relational database that's perfect for development, testing, and applications that need a simple, self-contained database solution. No server setup required!
+SQLite is a lightweight, file-based relational database that's perfect for development, testing, and applications that need a simple, self-contained database solution. No server setup required! Learn more about SQLite at the [official SQLite website](https://www.sqlite.org/).
 
-## Connection String Format
+## Database File Selection
+
+Unlike other providers, SQLite doesn't use connection strings stored in user secrets. When setting up SQLite with Ivy, you'll be prompted for the path to your database file:
+
+```terminal
+Path to database file: data.db
+```
+
+Ivy will attempt to suggest existing SQLite files in your project, but you can specify any path. 
+
+The connection string will be automatically generated as:
 
 ```text
 Data Source=data.db
 ```
+
+Ivy automatically adds the database file to your project with `<CopyToOutputDirectory>Always</CopyToOutputDirectory>` so it's included when building your project.
 
 ### Common Configurations
-
-**Relative Path**
-```text
-Data Source=data.db
-```
-
-**Absolute Path**
-```text
-Data Source=/path/to/your/database.db
-```
 
 **In-Memory Database (for testing)**
 ```text
 Data Source=:memory:
 ```
 
-**With Additional Options**
-```text
-Data Source=data.db;Cache=Shared;Foreign Keys=True
-```
+See [SQLite Connection Strings](https://www.connectionstrings.com/sqlite/) for additional options.
 
 ## Configuration
 
 Ivy automatically configures the **Microsoft.EntityFrameworkCore.Sqlite** package for SQLite connections.
 
-Unlike other providers, SQLite connection strings are stored as file paths rather than in User Secrets.
+SQLite database files are referenced directly in your project file rather than stored as connection strings in User Secrets.
 
 ## SQLite-Specific Features
 
-SQLite offers unique characteristics:
-- **Zero-configuration** - no server setup required
+Key advantages:
+- **Zero-configuration** - no server setup
 - **Cross-platform** database files
-- **ACID transactions** with rollback support
-- **Full-text search** capabilities (FTS5)
-- **JSON support** (since SQLite 3.45.0)
-- **Lightweight** - entire database in a single file
+- **Full-text search** and **JSON support**
+
+See [SQLite Features](https://www.sqlite.org/features.html) for details.
 
 ## Security Best Practices
 
-- **Secure file permissions** on database files
-- **Backup database files** regularly
-- **Use WAL mode** for better concurrency: `PRAGMA journal_mode=WAL`
-- **Enable foreign keys** for referential integrity: `PRAGMA foreign_keys=ON`
-- **Consider encryption** with SQLCipher for sensitive data
+- **Secure file permissions**
+- **Use WAL mode**: `PRAGMA journal_mode=WAL`
+- **Enable foreign keys**: `PRAGMA foreign_keys=ON`
+
+See [SQLite Security Considerations](https://www.sqlite.org/security.html) for more.
 
 ## Troubleshooting
 
 ### Common Issues
 
 **File Access Issues**
-- Verify the application has read/write permissions to the database file location
-- Check that the directory exists if using a specific path
-- Ensure the database file isn't locked by another process
+- Check read/write permissions and directory existence
+- Ensure file isn't locked by another process
 
 **Database Locked Errors**
-- Close all connections properly after use
-- Consider using WAL mode for better concurrency
-- Check for long-running transactions
+- Close connections properly and use WAL mode
 
-**Performance Issues**
-- Create appropriate indexes for your queries
-- Use `ANALYZE` to update query planner statistics
-- Consider `VACUUM` to reclaim space and optimize
+See [SQLite Troubleshooting](https://www.sqlite.org/faq.html) for more help.
 
-**Migration Issues**
-- SQLite has limited `ALTER TABLE` support
-- Some schema changes require table recreation
-- Always backup before major migrations
 
-## Development vs Production
-
-### Development Benefits
-- **No setup required** - perfect for getting started quickly
-- **Easy debugging** - database is just a file
-- **Version control friendly** - can commit small test databases
-- **Cross-platform** - works the same everywhere
-
-### Production Considerations
-- **Concurrent writes** are limited compared to server databases
-- **No network access** - database must be on same machine
-- **Consider server databases** for high-concurrency applications
 
 ## Example Usage
 
@@ -122,14 +98,6 @@ public class NoteApp : AppBase<Note>
 }
 ```
 
-## Migration Path
-
-SQLite is often used for development and then migrated to a server database for production:
-
-1. **Develop with SQLite** for quick prototyping
-2. **Export data** when ready for production
-3. **Switch provider** to PostgreSQL, SQL Server, etc.
-4. **Import data** to production database
 
 ## Related Documentation
 
@@ -137,3 +105,5 @@ SQLite is often used for development and then migrated to a server database for 
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySQL.md)
+- [Official SQLite Documentation](https://www.sqlite.org/docs.html)
+- [EF Core SQLite Provider](https://learn.microsoft.com/en-us/ef/core/providers/sqlite/)

@@ -27,13 +27,10 @@ Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;
 
 **Secure Connection with SSL**
 ```text
-Host=localhost;Port=9440;Database=default;Username=default;Password=mypassword;Ssl=true;SslCa=/path/to/ca.crt;
+Host=localhost;Port=9440;Database=default;Username=default;Password=mypassword;Ssl=true;
 ```
 
-**Connection with Compression**
-```text
-Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;Compression=true;
-```
+For all connection options, see the [ClickHouse Client Configuration](https://clickhouse.com/docs/en/interfaces/tcp).
 
 ## Configuration
 
@@ -43,26 +40,22 @@ Ivy automatically configures the **EntityFrameworkCore.ClickHouse** package and 
 
 ### Performance Settings
 
-ClickHouse connection strings support various performance parameters:
+Common performance parameters include buffering and timeouts:
 
-**Buffering and Batch Size**
 ```text
-Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;BufferSize=32768;MaxInsertBlockSize=1000000;
+Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;BufferSize=32768;ConnectionTimeout=10;
 ```
 
-**Timeouts**
-```text
-Host=localhost;Port=9000;Database=default;Username=default;Password=mypassword;Timeout=30;ConnectionTimeout=10;
-```
+For performance tuning, see the [ClickHouse Performance Tuning](https://clickhouse.com/docs/en/operations/performance-tuning) documentation.
 
 ## ClickHouse-Specific Features
 
-ClickHouse offers advanced features that Ivy can leverage:
-- **Columnar storage** for efficient data compression and query processing
-- **Vectorized query execution** for high-performance analytics
+Key features for analytics applications:
+- **Columnar storage** for efficient query processing
 - **Materialized views** for pre-computed results
-- **Approximate query processing** for fast aggregations
-- **Distributed tables** for horizontal scaling
+- **Vectorized query execution** for high performance
+
+See the [ClickHouse Features Overview](https://clickhouse.com/docs/en/about-us/distinctive-features) for details.
 
 ## Security Best Practices
 
@@ -75,21 +68,15 @@ ClickHouse offers advanced features that Ivy can leverage:
 
 ### Common Issues
 
-**Connection Refused**
-- Verify ClickHouse server is running
-- Check that ClickHouse is listening on the specified port
-- Ensure firewall allows connections to the ClickHouse port
+**Connection Issues**
+- Verify server is running and listening on the specified port
+- Check credentials and permissions
 
-**Authentication Failed**
-- Verify username and password are correct
-- Check that the user has access to the specified database
-- Ensure the user has appropriate permissions
+**Performance Issues**
+- Review table engine selection and indexing strategy
+- Consider materialized views for common queries
 
-**Query Performance Issues**
-- Review table engine selection for your use case
-- Check indexing strategy for frequently queried columns
-- Optimize schema design for analytical workloads
-- Consider using materialized views for common queries
+See the [ClickHouse Troubleshooting Guide](https://clickhouse.com/docs/en/operations/troubleshooting) for more help.
 
 ## Example Usage
 
@@ -115,4 +102,6 @@ public class AnalyticsApp : AppBase<MetricData>
 - [Database Overview](01_Overview.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [Snowflake Provider](Snowflake.md)
-- [ClickHouse Documentation](https://clickhouse.com/docs/)
+- [Official ClickHouse Documentation](https://clickhouse.com/docs/)
+- [EntityFrameworkCore.ClickHouse Package](https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse)
+- [ClickHouse.EntityFrameworkCore.Extensions Package](https://github.com/DarkWanderer/ClickHouse.EntityFrameworkCore)

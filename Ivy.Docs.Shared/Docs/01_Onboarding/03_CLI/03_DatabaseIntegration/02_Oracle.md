@@ -10,20 +10,12 @@ Oracle Database is a multi-model database management system developed by Oracle 
 
 ## Connection String Format
 
-### Basic Connection String
+### Connection String Format
 ```text
 Data Source=localhost:1521/XE;User Id=hr;Password=password;
 ```
 
-### TNS Connection String
-```text
-Data Source=MyTnsAlias;User Id=username;Password=password;
-```
-
-### Advanced Connection String
-```text
-Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));User Id=hr;Password=password;
-```
+> **Note**: While Oracle database typically supports TNS names and EZCONNECT syntax, these methods are not currently supported in Ivy's Oracle provider.
 
 ## Configuration
 
@@ -46,6 +38,8 @@ MYDB =
   )
 ```
 
+For detailed instructions on TNS configuration, see the [Oracle Net Configuration documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-tns-ora-file.html).
+
 ### Connection Pooling
 
 ```text
@@ -54,12 +48,12 @@ Data Source=localhost:1521/XE;User Id=hr;Password=password;Pooling=true;Min Pool
 
 ## Oracle-Specific Features
 
-Oracle offers enterprise-grade features:
-- **Advanced Security** - encryption, auditing, and access controls
-- **High Availability** - RAC, Data Guard, and flashback
-- **Performance** - partitioning, indexing, and materialized views
+Key enterprise features Ivy can leverage:
+- **Advanced Security** - encryption and access controls
+- **Performance** - partitioning and indexing
 - **PL/SQL** - stored procedures and functions
-- **Advanced Analytics** - window functions and statistical functions
+
+For complete features, see the [Oracle Database documentation](https://docs.oracle.com/en/database/oracle/oracle-database/index.html).
 
 ## Security Best Practices
 
@@ -74,44 +68,16 @@ Oracle offers enterprise-grade features:
 ### Common Issues
 
 **TNS: Could not resolve the connect identifier**
-- Verify TNS names are correctly configured
-- Check `ORACLE_HOME` and `TNS_ADMIN` environment variables
-- Ensure `tnsnames.ora` file is accessible
-- Test connection using `tnsping` command
+- Verify TNS names configuration and environment variables
 
-**ORA-12154: TNS:could not resolve the connect identifier specified**
-- Verify the service name or SID in the connection string
-- Check network connectivity to the Oracle server
-- Ensure Oracle listener is running on the target server
-
-**ORA-01017: invalid username/password; logon denied**
-- Verify username and password are correct
-- Check if the user account is locked or expired
-- Ensure the user has CONNECT privilege
+**Authentication Failed**
+- Check username/password and account status
 
 **Character Set Issues**
-- Ensure consistent character set configuration
-- Use `NLS_LANG` environment variable if needed
-- Consider Unicode (UTF8) character sets for international applications
+- Use `NLS_LANG` environment variable as needed
 
-## Oracle Cloud Integration
+For detailed troubleshooting, refer to [Oracle Database Error Messages](https://docs.oracle.com/en/database/oracle/oracle-database/19/errmg/index.html).
 
-### Autonomous Database
-
-For Oracle Autonomous Database, use wallet-based connections:
-
-```text
-Data Source=mydb_high;User Id=ADMIN;Password=password;
-```
-
-Ensure your Oracle Wallet is configured and accessible.
-
-### Always Free Tier
-
-Oracle Cloud offers Always Free Autonomous Database:
-- Up to 2 databases
-- 1 OCPU and 20 GB storage each
-- Perfect for development and small applications
 
 ## Example Usage
 
@@ -136,20 +102,6 @@ public class EmployeeApp : AppBase<Employee>
 }
 ```
 
-## Migration Considerations
-
-When migrating to/from Oracle:
-
-### From Other Databases
-- **Data types** may need mapping (e.g., `IDENTITY` to `SEQUENCE`)
-- **String comparisons** are case-sensitive by default
-- **Date/Time handling** differs from other databases
-- **Naming conventions** (Oracle uses uppercase by default)
-
-### To Other Databases
-- Export data using Oracle Data Pump or SQL Developer
-- Map Oracle-specific data types to target database equivalents
-- Convert PL/SQL procedures to target database stored procedures
 
 ## Related Documentation
 
@@ -157,3 +109,5 @@ When migrating to/from Oracle:
 - [SQL Server Provider](SqlServer.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [Enterprise Features](../../02_Concepts/Services.md)
+- [Official Oracle Database Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/index.html)
+- [Oracle.EntityFrameworkCore Package](https://docs.oracle.com/en/database/oracle/oracle-database/19/odpnt/EFCore.html)

@@ -10,7 +10,7 @@ Connect your Ivy application to MariaDB with automatic Entity Framework configur
 
 ## Overview
 
-MariaDB is a popular open-source relational database that started as a fork of MySQL. It offers enhanced features, improved performance, and better storage engines while maintaining MySQL compatibility.
+MariaDB is a popular open-source relational database that started as a fork of MySQL. It offers enhanced features, improved performance, and better storage engines while maintaining MySQL compatibility. For more information, visit the [MariaDB Knowledge Base](https://mariadb.com/kb/en/about-mariadb-server/).
 
 ## Connection String Format
 
@@ -30,23 +30,22 @@ Server=localhost;Database=mydb;Uid=myuser;Pwd=mypassword;Port=3306
 Server=localhost;Database=mydb;Uid=user;Pwd=pass;SslMode=Required
 ```
 
-**Connection Pooling**
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass;Pooling=true;MinimumPoolSize=1;MaximumPoolSize=20
-```
+See [MariaDB Connection Parameters](https://mariadb.com/kb/en/about-mariadb-connector-net/) for all options.
 
 ## Configuration
 
 Ivy automatically configures the **Pomelo.EntityFrameworkCore.MySql** package for MariaDB connections.
 
+> **Note**: When you provide a connection string, Ivy will verify that you're connecting to a MariaDB server (not MySQL). If it detects MySQL instead, you'll be prompted to use the MySQL provider.
+
 ## MariaDB-Specific Features
 
-MariaDB offers enhanced features over MySQL:
+Key advantages over MySQL:
 - **Advanced JSON support** with better performance
 - **Temporal tables** for data versioning
-- **Multiple storage engines** (InnoDB, Aria, ColumnStore)
-- **Virtual columns** and computed fields
-- **Improved optimizer** and performance schema
+- **Multiple storage engines** including Aria and ColumnStore
+
+See the [MariaDB Documentation](https://mariadb.com/kb/en/library/documentation/) for details.
 
 ## Security Best Practices
 
@@ -59,32 +58,18 @@ MariaDB offers enhanced features over MySQL:
 
 ### Common Issues
 
-**Connection Timeout**
-- Verify MariaDB server is running
-- Check that MariaDB is listening on the correct port (default: 3306)
-- Ensure firewall allows connections to MariaDB port
+**Connection Issues**
+- Verify server is running on port 3306
+- Check firewall settings
 
-**Authentication Failed**
-- Verify username and password are correct
-- Check MariaDB user privileges: `SHOW GRANTS FOR 'username'@'host'`
-- Verify host restrictions for the MariaDB user
+**Authentication Problems**
+- Verify credentials and user privileges
 
 **Character Set Issues**
-- Specify charset in connection string: `CharSet=utf8mb4`
-- Use `utf8mb4` for full UTF-8 support including emojis
+- Use `CharSet=utf8mb4` in connection string
 
-**Storage Engine Issues**
-- Verify the correct storage engine is being used (usually InnoDB)
-- Consider using Aria for read-heavy workloads
+See [MariaDB Troubleshooting](https://mariadb.com/kb/en/troubleshooting-connection-issues/) for help.
 
-## Migration from MySQL
-
-MariaDB maintains high compatibility with MySQL, making migration straightforward:
-
-1. **Backup your MySQL database**
-2. **Update connection strings** to point to MariaDB
-3. **Test application functionality** thoroughly
-4. **Take advantage of MariaDB-specific features** as needed
 
 ## Example Usage
 
@@ -114,3 +99,5 @@ public class CustomerApp : AppBase<Customer>
 - [MySQL Provider](MySQL.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [SQL Server Provider](SqlServer.md)
+- [Official MariaDB Documentation](https://mariadb.com/kb/en/documentation/)
+- [Pomelo.EntityFrameworkCore.MySql for MariaDB](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)

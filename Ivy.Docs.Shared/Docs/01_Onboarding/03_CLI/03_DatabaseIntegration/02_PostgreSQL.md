@@ -18,6 +18,8 @@ PostgreSQL is an advanced open-source relational database known for its reliabil
 Host=localhost;Database=mydb;Username=user;Password=pass
 ```
 
+> **Note**: Ivy also supports URI-style connection strings (e.g., `postgresql://user:password@host:port/dbname`) and will automatically convert them to the key-value format.
+
 ### Authentication Options
 
 **Standard Authentication**
@@ -30,10 +32,7 @@ Host=localhost;Database=mydb;Username=myuser;Password=mypassword;Port=5432
 Host=localhost;Database=mydb;Username=user;Password=pass;SSL Mode=Require
 ```
 
-**Connection Pooling**
-```text
-Host=localhost;Database=mydb;Username=user;Password=pass;Pooling=true;MinPoolSize=1;MaxPoolSize=20
-```
+For all connection string options, see [Npgsql Connection String Parameters](https://www.npgsql.org/doc/connection-string-parameters.html).
 
 ## Configuration
 
@@ -47,17 +46,24 @@ Ivy automatically configures the **Npgsql.EntityFrameworkCore.PostgreSQL** packa
 >ivy db add --provider Postgres --name MyPostgres --schema MyCustomSchema
 ```
 
-### Multiple Schemas
+### Schema Support
 
-PostgreSQL supports multiple schemas. You can specify different schemas when adding connections or configure them in the DbContext.
+PostgreSQL supports multiple schemas. When connecting with Ivy, you'll be prompted to select a schema from your database, or you can specify one directly using the `--schema` parameter:
+
+```terminal
+>ivy db add --provider Postgres --name MyPostgres --schema MyCustomSchema
+```
+
+Ivy will automatically detect available schemas in your PostgreSQL database and let you choose one during setup.
 
 ## PostgreSQL-Specific Features
 
-PostgreSQL offers advanced features that Ivy can leverage:
+Key features Ivy can leverage:
 - **JSONB columns** for document storage
-- **Array types** for storing collections
+- **Array types** for collections
 - **Custom data types** and enums
-- **Full-text search** capabilities
+
+See the [PostgreSQL documentation](https://www.postgresql.org/docs/current/features.html) for details.
 
 ## Security Best Practices
 
@@ -70,19 +76,14 @@ PostgreSQL offers advanced features that Ivy can leverage:
 
 ### Common Issues
 
-**Connection Refused**
-- Verify PostgreSQL server is running
-- Check that PostgreSQL is listening on the correct port (default: 5432)
-- Ensure firewall allows connections to PostgreSQL port
+**Connection Issues**
+- Verify server is running on port 5432
+- Check credentials and firewall settings
 
-**Authentication Failed**
-- Verify username and password are correct
-- Check `pg_hba.conf` authentication configuration
-- Ensure the database user exists and has appropriate permissions
+**Authentication Problems**
+- Check `pg_hba.conf` configuration
 
-**Performance Issues**
-- Optimize PostgreSQL configuration for your workload
-- Consider using read replicas for read-heavy applications
+For detailed help, see the [PostgreSQL Troubleshooting Guide](https://www.postgresql.org/docs/current/troubleshooting.html).
 
 ## Example Usage
 
@@ -108,3 +109,5 @@ public class ProductApp : AppBase<Product>
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySQL.md)
 - [Supabase Provider](Supabase.md)
+- [Official PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)

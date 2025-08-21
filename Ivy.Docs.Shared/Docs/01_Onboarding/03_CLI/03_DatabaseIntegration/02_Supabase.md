@@ -6,7 +6,7 @@ Connect your Ivy application to Supabase with automatic Entity Framework configu
 
 ## Overview
 
-Supabase is an open-source Firebase alternative that provides a PostgreSQL database with real-time capabilities, authentication, and storage. Ivy integrates seamlessly with Supabase's PostgreSQL backend.
+Supabase is an open-source Firebase alternative that provides a PostgreSQL database with real-time capabilities, authentication, and storage. Ivy integrates with Supabase using its PostgreSQL backend through the Npgsql provider. Learn more at the [Supabase website](https://supabase.com/).
 
 ## Connection String Format
 
@@ -14,60 +14,55 @@ Supabase is an open-source Firebase alternative that provides a PostgreSQL datab
 Host=your-project.supabase.co;Database=postgres;Username=postgres;Password=your-password
 ```
 
-### Getting Supabase Connection Details
+### Getting Connection Details
 
-1. **Go to your Supabase project dashboard**
-2. **Navigate to Settings > Database**
-3. **Copy the connection details:**
-   - Host: `db.your-project-ref.supabase.co`
-   - Database: `postgres`
-   - Username: `postgres`
-   - Password: Your database password
+To get your connection details:
 
-### Alternative Connection String Formats
+1. Go to your Supabase project dashboard
+2. Click the "Connect" at the top of the page to access all available connection strings
+3. Choose the appropriate connection string type:
+   - **Direct Connection**: Best for persistent servers (VMs, containers)
+   - **Supavisor Session Mode**: For persistent clients with IPv4 support
+   - **Supavisor Transaction Mode**: Ideal for serverless or edge functions
+   - **Dedicated Pooler**: For paying customers requiring high performance
 
-**With SSL (Recommended)**
+For more detailed information, see the [official Supabase documentation on connecting to Postgres](https://supabase.com/docs/guides/database/connecting-to-postgres).
+
+The URI connection string will look something like this:
+
 ```text
-Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Password=your-password;SSL Mode=Require
+postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
 ```
 
-**With Connection Pooling**
+Ivy supports both this URI-style format and the standard key-value format:
+
+**URI-style format**
 ```text
-Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Password=your-password;Pooling=true;Maximum Pool Size=20
+postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+```
+
+**Key-value format**
+```text
+Host=db.[YOUR-PROJECT-REF].supabase.co;Database=postgres;Username=postgres;Password=[YOUR-PASSWORD]
+```
+
+For either format, remember to replace `[YOUR-PASSWORD]` with your database password, which is the password you used when creating the project (not your Supabase account password).
+
+Ivy will automatically detect and convert URI-style connection strings to the key-value format.
+
+### SSL and Connection Pooling
+
+```text
+Host=db.your-project-ref.supabase.co;Database=postgres;Username=postgres;Password=your-password;SSL Mode=Require;Pooling=true
 ```
 
 ## Configuration
 
-Ivy automatically configures the **Npgsql.EntityFrameworkCore.PostgreSQL** package for Supabase connections since Supabase uses PostgreSQL under the hood.
+Ivy treats Supabase as a specialized PostgreSQL provider, using the **Npgsql.EntityFrameworkCore.PostgreSQL** package with specific configuration for Supabase compatibility. This includes handling connection string conversions and ensuring proper connection pooling settings.
 
 ## Supabase-Specific Features
 
-### Real-time Subscriptions
-
-While Entity Framework handles data access, you can also use Supabase's real-time features:
-
-```csharp
-// Subscribe to database changes (requires Supabase client library)
-var supabase = new Supabase.Client("your-url", "your-anon-key");
-await supabase.Realtime.Connect();
-```
-
-### Row Level Security (RLS)
-
-Supabase supports PostgreSQL's Row Level Security. Configure RLS policies in your Supabase dashboard:
-
-1. **Go to Authentication > Policies**
-2. **Create policies** for your tables
-3. **Test policies** in the SQL editor
-
-### Built-in Authentication Integration
-
-When using both Supabase database and authentication:
-
-```terminal
->ivy db add --provider Supabase --name MySupabase
->ivy auth add --provider Supabase
-```
+Supabase offers additional features like real-time subscriptions and Row Level Security (RLS). See the [Supabase Features documentation](https://supabase.com/docs).
 
 ## Security Best Practices
 
@@ -76,36 +71,21 @@ When using both Supabase database and authentication:
 - **Use service role key** only for administrative operations
 - **Monitor database activity** through Supabase dashboard
 
+See [Supabase Security documentation](https://supabase.com/docs/guides/database/postgres/row-level-security) for Row Level Security implementation details.
+
 ## Troubleshooting
 
 ### Common Issues
 
-**Connection Timeout**
-- Verify your Supabase project is active (not paused)
-- Check your internet connection
-- Ensure you're using the correct host URL from Settings > Database
+**Connection Problems**
+- Verify your Supabase project is active
+- Use correct host URL and credentials
 
-**Authentication Failed**
-- Verify your database password is correct
-- Check if you're using the database password (not project password)
-- Reset database password in Supabase dashboard if needed
-
-**SSL Certificate Issues**
+**SSL Issues**
 - Use `SSL Mode=Require` in connection string
-- Ensure your system has up-to-date certificate stores
 
-**Rate Limiting**
-- Supabase has connection limits based on your plan
-- Implement connection pooling to optimize usage
+For more help, see [Supabase Troubleshooting](https://supabase.com/docs/guides/database/connecting-to-postgres#troubleshooting).
 
-## Migration from Local PostgreSQL
-
-If you're migrating from local PostgreSQL to Supabase:
-
-1. **Export your local database** using `pg_dump`
-2. **Import to Supabase** using the SQL editor or `psql`
-3. **Update connection strings** to point to Supabase
-4. **Test authentication flows** if using Supabase Auth
 
 ## Example Usage
 
@@ -129,31 +109,11 @@ public class ProfileApp : AppBase<UserProfile>
 }
 ```
 
-## Combining with Supabase Auth
-
-When using both Supabase database and authentication, you can leverage user context:
-
-```csharp
-public class UserDataApp : AppBase
-{
-    public async override Task<IView> BuildAsync()
-    {
-        var user = await GetCurrentUserAsync(); // From Supabase Auth
-        var userPosts = await GetUserPostsAsync(user.Id);
-
-        return View(userPosts.Select(post =>
-            Card(
-                Text(post.Title),
-                Text(post.Content),
-                Text($"Posted: {post.CreatedAt:yyyy-MM-dd}")
-            )
-        ));
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
 - [Supabase Authentication](../04_Authentication/Supabase.md)
 - [PostgreSQL Provider](PostgreSQL.md)
+- [Official Supabase Documentation](https://supabase.com/docs)
+- [Supabase .NET SDK](https://github.com/supabase-community/supabase-csharp)
+- [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)
