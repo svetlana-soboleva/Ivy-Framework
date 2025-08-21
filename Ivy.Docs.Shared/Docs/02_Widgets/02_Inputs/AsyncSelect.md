@@ -365,46 +365,6 @@ public class StylingDemo : ViewBase
 }
 ```
 
-## Performance Considerations
-
-### Debouncing Queries
-
-Implement debouncing to avoid excessive API calls:
-
-```csharp demo-tabs
-public class DebouncedQueryDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var selectedItem = this.UseState<string?>(default(string));
-        var queryCount = this.UseState(0);
-
-        Task<Option<string>[]> DebouncedQuery(string query)
-        {
-            var currentCount = queryCount.Value;
-            queryCount.Set(currentCount + 1);
-            
-            var items = new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape" };
-            return Task.FromResult(items
-                .Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase))
-                .Select(item => new Option<string>(item))
-                .ToArray());
-        }
-
-        Task<Option<string>?> LookupItem(string item)
-        {
-            return Task.FromResult<Option<string>?>(new Option<string>(item));
-        }
-
-        return Layout.Vertical()
-            | Text.Label("AsyncSelect with query counting:")
-            | selectedItem.ToAsyncSelectInput(DebouncedQuery, LookupItem, placeholder: "Type to search...")
-            | Text.Small($"Selected: {selectedItem.Value ?? "None"}")
-            | Text.Small($"Total queries made: {queryCount.Value}");
-    }
-}
-```
-
 <Callout Type="tip">
 AsyncSelectInput automatically handles loading states and provides a smooth user experience. The query function is called as the user types, and the lookup function is called when displaying the selected value.
 </Callout>
