@@ -142,7 +142,7 @@ public class DynamicContentView : ViewBase
                       })
                     | new Button("Toggle Details", _ => {
                         showDetails.Set(!showDetails.Value);
-                        client.Toast(showDetails.Value ? "Details hidden" : "Details shown");
+                        client.Toast(!showDetails.Value ? "Details hidden" : "Details shown");
                       })
                     | new Spacer().Width(Size.Grow())
                     | new Button("Reset", _ => {
