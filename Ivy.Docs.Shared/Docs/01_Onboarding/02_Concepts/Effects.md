@@ -174,7 +174,7 @@ public class DataFetchView : ViewBase
 {
     public override object? Build()
     {
-        var data = UseState<List<Item>?>(null);
+        var data = UseState<List<Item>?>();
         var loading = UseState(true);
         
         UseEffect(async () =>
