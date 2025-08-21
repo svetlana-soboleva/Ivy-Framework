@@ -117,8 +117,7 @@ public class ErrorToastExamplesView : ViewBase
     {
         var client = this.UseService<IClientProvider>();
         
-        return Layout.Vertical().Gap(4)
-            | new Button("Show Error Toast", variant: ButtonVariant.Destructive)
+        return new Button("Show Error Toast", variant: ButtonVariant.Destructive)
                 .HandleClick(_ => client.Toast("Something went wrong!", "Error"));
     }
 }
@@ -133,8 +132,7 @@ public class TextErrorExamplesView : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Vertical().Gap(4)
-            | Text.Danger("Invalid email format");
+        return Text.Danger("Invalid email format");
     }
 }
 ```
@@ -216,175 +214,9 @@ public class FormValidationErrorExamplesView : ViewBase
 }
 ```
 
-### Input State Error Handling
-
-Show error states on individual input components:
-
-```csharp demo-tabs
-public class InputErrorStateExamplesView : ViewBase
-{
-    public override object? Build()
-    {
-        var textInput = UseState("");
-        var numberInput = UseState(0);
-        var selectInput = UseState("");
-        
-        var showTextError = UseState(false);
-        var showNumberError = UseState(false);
-        var showSelectError = UseState(false);
-        
-        return Layout.Vertical().Gap(4)
-            | Layout.Vertical().Gap(3)
-                | Text.Label("Text Input")
-                | textInput.ToTextInput()
-                    .Placeholder("Enter some text")
-                    .Invalid(showTextError.Value ? "This field is required" : null)
-                | new Button("Toggle Error", variant: ButtonVariant.Outline)
-                    .HandleClick(_ => showTextError.Set(!showTextError.Value))
-            | Layout.Vertical().Gap(3)
-                | Text.Label("Number Input")
-                | numberInput.ToNumberInput()
-                    .Placeholder("Enter a number")
-                    .Invalid(showNumberError.Value ? "Must be greater than 0" : null)
-                | new Button("Toggle Error", variant: ButtonVariant.Outline)
-                    .HandleClick(_ => showNumberError.Set(!showNumberError.Value))
-            | Layout.Vertical().Gap(3)
-                | Text.Label("Select Input")
-                | selectInput.ToSelectInput(new[] { "Option 1", "Option 2", "Option 3" }.ToOptions())
-                    .Placeholder("Choose an option")
-                    .Invalid(showSelectError.Value ? "Please select an option" : null)
-                | new Button("Toggle Error", variant: ButtonVariant.Outline)
-                    .HandleClick(_ => showSelectError.Set(!showSelectError.Value));
-    }
-}
-```
-
-### Error Message Blocks
-
-Use `Text.Block` for longer error messages:
-
-```csharp demo-tabs
-public class ErrorMessageBlockExamplesView : ViewBase
-{
-    public override object? Build()
-    {
-        var errorMessage = UseState<string?>();
-        
-        void SimulateError()
-        {
-            errorMessage.Set("This is a detailed error message that provides comprehensive information about what went wrong. It includes multiple sentences and explains the context of the error, potential causes, and suggested solutions for the user to resolve the issue.");
-        }
-        
-        void ClearError()
-        {
-            errorMessage.Set((string?)null);
-        }
-        
-        return Layout.Vertical().Gap(4)
-            | (Layout.Horizontal().Gap(2)
-                | new Button("Show Error", variant: ButtonVariant.Destructive)
-                    .HandleClick(SimulateError)
-                | new Button("Clear Error", variant: ButtonVariant.Outline)
-                    .HandleClick(ClearError))
-            | (errorMessage.Value != null 
-                ? Text.Block(errorMessage.Value)
-                : Text.Muted("Click 'Show Error' to display a detailed error message"));
-    }
-}
-```
-
 ## Advanced Error Handling Patterns
 
 Ivy Framework provides several advanced error handling patterns for different scenarios:
-
-### Error Confirmation Dialogs
-
-Use `WithConfirm` to show error messages in confirmation dialogs:
-
-```csharp demo-tabs
-public class ErrorDialogExamplesView : ViewBase
-{
-    public override object? Build()
-    {
-        var hasError = UseState(false);
-        var errorMessage = UseState("An unexpected error occurred while processing your request.");
-        
-        void SimulateError()
-        {
-            hasError.Set(true);
-        }
-        
-        void ClearError()
-        {
-            hasError.Set(false);
-        }
-        
-        return Layout.Vertical().Gap(4)
-            | (Layout.Horizontal().Gap(2)
-                | new Button("Show Error Dialog", variant: ButtonVariant.Destructive)
-                    .HandleClick(SimulateError)
-                | new Button("Clear Error", variant: ButtonVariant.Outline)
-                    .HandleClick(ClearError))
-            | (hasError.Value 
-                ? new Button("Delete Data", variant: ButtonVariant.Destructive)
-                    .WithConfirm(errorMessage.Value, "Error Occurred")
-                : Text.Muted("Click 'Show Error Dialog' to demonstrate error confirmation"));
-    }
-}
-```
-
-### Error Prompt Dialogs
-
-Use `WithPrompt` to collect user input for error resolution:
-
-```csharp demo-tabs
-public class ErrorPromptExamplesView : ViewBase
-{
-    public override object? Build()
-    {
-        var userInput = UseState("");
-        var isDialogOpen = UseState(false);
-        
-        void HandleUserInput(string input)
-        {
-            userInput.Set(input);
-            isDialogOpen.Set(false); // Close dialog after input
-        }
-        
-        void OpenDialog()
-        {
-            isDialogOpen.Set(true);
-        }
-        
-        void CloseDialog()
-        {
-            isDialogOpen.Set(false);
-        }
-        
-        return Layout.Vertical().Gap(4)
-            | Text.Muted("Use this pattern when you need user input to resolve errors")
-            | (Layout.Horizontal().Gap(2)
-                | new Button("Report Error", variant: ButtonVariant.Secondary)
-                    .HandleClick(OpenDialog)
-                | new Button("Clear Input", variant: ButtonVariant.Outline)
-                    .HandleClick(() => userInput.Set(""))
-                    .Disabled(userInput.Value.Length == 0))
-            | (isDialogOpen.Value 
-                ? Layout.Vertical().Gap(3)
-                    | Callout.Info("Error Report Dialog is open. Please provide details below.")
-                    | new Button("Close Dialog", variant: ButtonVariant.Outline)
-                        .HandleClick(CloseDialog)
-                    | new Button("Submit Report", variant: ButtonVariant.Primary)
-                        .WithPrompt(HandleUserInput, "", "Error Report", "Please describe what you were doing when the error occurred:")
-                : null)
-            | (userInput.Value != null && userInput.Value.Length > 0
-                ? Layout.Vertical().Gap(2)
-                    | Text.Success("Error Report Submitted")
-                    | Text.Muted($"User Input: {userInput.Value}")
-                : Text.Muted("Click 'Report Error' to submit an error report"));
-    }
-}
-```
 
 ### Client Error Notifications
 
@@ -487,7 +319,6 @@ public class EffectErrorView : ViewBase
     public override object? Build()
     {
         var effectError = UseState<Exception?>();
-        var retryCount = UseState(0);
         var isLoading = UseState(false);
         var data = UseState<string?>();
         var shouldThrowError = UseState(false);
@@ -503,10 +334,10 @@ public class EffectErrorView : ViewBase
                 
                 // This will throw an exception that gets wrapped in EffectException
                 if (shouldThrowError.Value) {
-                    throw new HttpRequestException($"API call failed after {retryCount.Value + 1} attempts");
+                    throw new HttpRequestException($"API call failed");
                 }
                 
-                data.Set($"Data loaded successfully on attempt {retryCount.Value + 1}");
+                data.Set($"Data loaded successfully");
             }
             catch (Exception ex) {
                 // Store the effect error for display
@@ -516,17 +347,10 @@ public class EffectErrorView : ViewBase
                 isLoading.Set(false);
             }
         }
-        
-        void RetryEffect()
-        {
-            retryCount.Set(retryCount.Value + 1);
-            _ = RunEffect();
-        }
-        
+
         void ToggleErrorMode()
         {
             shouldThrowError.Set(!shouldThrowError.Value);
-            retryCount.Set(0);
             data.Set((string?)null);
             effectError.Set((Exception?)null);
         }
@@ -544,7 +368,7 @@ public class EffectErrorView : ViewBase
                     .HandleClick(_ => ToggleErrorMode()))
             | Text.Muted($"Error Mode: {(shouldThrowError.Value ? "ON" : "OFF")}")
             | (isLoading.Value 
-                ? Text.Muted($"Loading... (Attempt {retryCount.Value + 1})")
+                ? Text.Muted($"Loading...")
                 : effectError.Value != null 
                     ? Layout.Vertical().Gap(3)
                         | new Error()
@@ -552,7 +376,6 @@ public class EffectErrorView : ViewBase
                             .Message($"The effect threw an exception: {effectError.Value.Message}")
                             .StackTrace(effectError.Value.StackTrace)
                         | Text.Muted($"Exception Type: {effectError.Value.GetType().Name}")
-                        | Text.Muted($"Retry count: {retryCount.Value}")
                     : data.Value != null 
                         ? Text.Success(data.Value)
                         : Text.Muted("Click 'Run Effect' to start"));
