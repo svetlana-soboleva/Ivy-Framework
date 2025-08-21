@@ -9,8 +9,6 @@ prepare: |
 Build robust forms with built-in state management, validation, and submission handling for collecting and processing user input.
 </Ingress>
 
-**Recommended Approach**: Forms in Ivy should always be built using the `.ToForm()` extension method on state objects. This approach provides automatic scaffolding, state management, validation, and submission handling through the FormBuilder pattern.
-
 <Callout Type="important">
 Do not manually create form layouts. Always use `.ToForm()` on your state objects for type safety, automatic state management, and built-in validation.
 </Callout>
@@ -130,7 +128,7 @@ public class RequiredFieldsExample : ViewBase
 {
     public record OrderModel(
         string CustomerName,
-        string? CustomerEmail,  // Nullable - not required
+        string? CustomerEmail, 
         string ShippingAddress,
         int Quantity,
         bool IsPriority
@@ -141,8 +139,8 @@ public class RequiredFieldsExample : ViewBase
         var order = UseState(() => new OrderModel("", null, "", 1, false));
         
         return order.ToForm()
-            .Required(m => m.CustomerEmail)  // Make email required
-            .Required(m => m.IsPriority)     // Make priority required
+            .Required(m => m.CustomerEmail) 
+            .Required(m => m.IsPriority)    
             .Label(m => m.CustomerName, "Customer Name")
             .Label(m => m.CustomerEmail, "Email Address")
             .Label(m => m.ShippingAddress, "Shipping Address")
@@ -302,44 +300,6 @@ public class ValidationExample : ViewBase
 }
 ```
 
-### Conditional Validation
-
-Show validation errors only when certain conditions are met.
-
-```csharp demo-tabs
-public class ConditionalValidationExample : ViewBase
-{
-    public record SubscriptionModel(
-        string Email,
-        bool IsBusiness,
-        string CompanyName,
-        string Industry,
-        int EmployeeCount
-    );
-
-    public override object? Build()
-    {
-        var subscription = UseState(() => new SubscriptionModel("", false, "", "", 0));
-        
-        return subscription.ToForm()
-            .Validate<string>(m => m.CompanyName, companyName => 
-                (subscription.Value.IsBusiness ? !string.IsNullOrEmpty(companyName) : true, 
-                 "Company name is required for business subscriptions"))
-            .Validate<string>(m => m.Industry, industry => 
-                (subscription.Value.IsBusiness ? !string.IsNullOrEmpty(industry) : true, 
-                 "Industry is required for business subscriptions"))
-            .Validate<int>(m => m.EmployeeCount, count => 
-                (subscription.Value.IsBusiness ? count > 0 : true, 
-                 "Employee count must be greater than 0 for business subscriptions"))
-            .Visible(m => m.CompanyName, m => m.IsBusiness)
-            .Visible(m => m.Industry, m => m.IsBusiness)
-            .Visible(m => m.EmployeeCount, m => m.IsBusiness)
-            .Required(m => m.Email)
-            .Required(m => m.CompanyName, m => m.Industry, m => m.EmployeeCount);
-    }
-}
-```
-
 ## Form Submission
 
 ### Basic Form Submission
@@ -488,52 +448,18 @@ public class DynamicConfigurationExample : ViewBase
             .Required(m => m.Email, m => m.Password);
         
         return Layout.Vertical()
-            | Layout.Horizontal()
+            | (Layout.Horizontal()
                 | new Button("New User").HandleClick(_ => isEditMode.Set(false))
-                | new Button("Edit User").HandleClick(_ => isEditMode.Set(true))
+                | new Button("Edit User").HandleClick(_ => isEditMode.Set(true)))
             | form
-            | Layout.Horizontal()
+            | (Layout.Horizontal()
                 | new Button(isEditMode.Value ? "Update User" : "Create User")
-                | new Button("Cancel").Variant(ButtonVariant.Outline);
+                | new Button("Cancel").Variant(ButtonVariant.Outline));
     }
 }
 ```
 
 ## Forms in UI Components
-
-### Inline Forms
-
-Embed forms directly in your layouts.
-
-```csharp demo-tabs
-public class InlineFormExample : ViewBase
-{
-    public record SettingsModel(
-        string Theme,
-        bool Notifications,
-        string Language,
-        int RefreshInterval
-    );
-
-    public override object? Build()
-    {
-        var settings = UseState(() => new SettingsModel("Light", true, "English", 30));
-        
-        return Layout.Vertical()
-            | Text.H2("Application Settings")
-            | new Card(
-                settings.ToForm()
-                    .Label(m => m.Theme, "Theme")
-                    .Label(m => m.Notifications, "Enable Notifications")
-                    .Label(m => m.Language, "Language")
-                    .Label(m => m.RefreshInterval, "Refresh Interval (seconds)")
-            ).Title("General Settings")
-            | Layout.Horizontal()
-                | new Button("Save Settings")
-                | new Button("Reset to Defaults").Variant(ButtonVariant.Outline);
-    }
-}
-```
 
 ### Sheet Forms
 
@@ -613,18 +539,6 @@ return model.ToForm()
 <Callout Type="warning">
 Avoid manually creating form layouts. Always use `.ToForm()` on your state objects for better state management, validation, and type safety.
 </Callout>
-
-## Best Practices
-
-1. **Always use `.ToForm()`** - Never manually create form layouts
-2. **Define clear models** - Use C# records or classes with appropriate types
-3. **Leverage automatic scaffolding** - Let Ivy determine input types based on property types
-4. **Use validation** - Add custom validation for business rules
-5. **Group related fields** - Use `.Group()` for logical organization
-6. **Handle form states** - Use `.UseForm()` for proper submission handling
-7. **Provide helpful labels** - Use `.Label()` and `.Description()` for better UX
-
-This comprehensive forms system makes it easy to build robust, user-friendly data collection interfaces in your Ivy applications.
 
 <WidgetDocs Type="Ivy.Form" ExtensionTypes="Ivy.Views.Forms.FormsExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Forms/Form.cs"/>
 
@@ -730,18 +644,20 @@ public class CrudFormExample : ViewBase
             : null;
         
         return Layout.Vertical()
-            | Layout.Horizontal()
+            | (Layout.Horizontal()
                 | new Button("Add Product", addProduct)
-                | new Button("Edit Product", editProduct).Disabled(selectedProduct.Value == null)
-                | new Button("Delete Product", deleteProduct).Disabled(selectedProduct.Value == null)
-                .Variant(ButtonVariant.Destructive)
-            | Layout.Horizontal()
+                | new Button("Edit Product", editProduct)
+                    .Disabled(selectedProduct.Value == null)
+                | new Button("Delete Product", deleteProduct)
+                    .Disabled(selectedProduct.Value == null)
+                    .Variant(ButtonVariant.Destructive))
+            | (Layout.Vertical()
                 | Text.Block("Select a product to edit/delete:")
                 | new SelectInput<ProductModel?>(
                     selectedProduct.Value,
                     e => selectedProduct.Set(e.Value),
                     products.Value.ToOptions()
-                ).Placeholder("Choose a product...")
+                ).Placeholder("Choose a product..."))
             | products.Value.ToTable()
                 .Width(Size.Full())
                 .Builder(p => p.Name, f => f.Default())
@@ -750,9 +666,7 @@ public class CrudFormExample : ViewBase
                 .Builder(p => p.Category, f => f.Default())
             | (selectedProduct.Value != null ? 
                 Text.Block($"Selected: {selectedProduct.Value.Name} (${selectedProduct.Value.Price})")
-                    .Color(Colors.Blue)
-                : Text.Block("No product selected")
-                    .Color(Colors.Gray))
+                : Text.Block("No product selected"))
             | createDialog!
             | editDialog!;
     }
