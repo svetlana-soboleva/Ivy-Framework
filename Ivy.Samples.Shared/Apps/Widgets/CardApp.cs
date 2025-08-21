@@ -16,16 +16,21 @@ public class CardApp : SampleBase
 
         var card2 = new Card(
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc"
-        );
-
-        var menu = new List(
-            new ListItem("Products", onClick: _ => { }, badge: 100.ToString()),
-            new ListItem("Balance", onClick: _ => { }, icon: Icons.ChevronRight)
-        );
+        ).Title("Card with Border")
+         .Description("This card has a custom border.")
+         .BorderThickness(3)
+         .BorderStyle(BorderStyle.Dashed)
+         .BorderColor(Colors.Primary)
+         .BorderRadius(BorderRadius.Rounded);
 
         var card3 = new Card(
-            menu
-        );
+            "This card demonstrates the border color fix with a thick red border."
+        ).Title("Border Color Test")
+         .Description("Should now display with a red border")
+         .BorderThickness(4)
+         .BorderStyle(BorderStyle.Solid)
+         .BorderColor(Colors.Red)
+         .BorderRadius(BorderRadius.Rounded);
 
         return Layout.Vertical().Width(Size.Units(100))
                | card1
