@@ -113,42 +113,6 @@ public class MultipleElementsView : ViewBase
 }
 ```
 
-### Clean Component Composition
-
-Fragment helps create clean, readable component compositions in complex layouts:
-
-```csharp demo-tabs
-public class ComponentCompositionView : ViewBase
-{
-    public override object? Build()
-    {
-        var client = UseService<IClientProvider>();
-        var isExpanded = UseState(false);
-        
-        return Layout.Vertical().Gap(4)
-            | new Fragment(
-                Text.H2("Expandable Section"),
-                // Always visible header
-                Layout.Horizontal().Gap(2)
-                    | new Spacer()
-                    | new Button(
-                        isExpanded.Value ? "Collapse" : "Expand",
-                        _ => isExpanded.Set(!isExpanded.Value)
-                    ).Icon(isExpanded.Value ? Icons.ChevronUp : Icons.ChevronDown),
-                
-                // Conditional content
-                isExpanded.Value ? new Fragment(
-                    new Separator(),
-                    Text.P("This content is only visible when expanded."),
-                    Layout.Horizontal().Gap(2)
-                        | new Button("Action 1", _ => client.Toast("Action 1 executed!"))
-                        | new Button("Action 2", _ => client.Toast("Action 2 completed"))
-                ) : null
-              );
-    }
-}
-```
-
 <WidgetDocs Type="Ivy.Fragment" ExtensionTypes="Ivy.FragmentExtensions"  SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Fragment.cs"/>
 
 ## Examples
