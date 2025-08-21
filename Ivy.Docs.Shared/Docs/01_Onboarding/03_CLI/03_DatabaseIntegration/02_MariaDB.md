@@ -70,29 +70,6 @@ See the [MariaDB Documentation](https://mariadb.com/kb/en/library/documentation/
 
 See [MariaDB Troubleshooting](https://mariadb.com/kb/en/troubleshooting-connection-issues/) for help.
 
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class CustomerApp : AppBase<Customer>
-{
-    public override Task<IView> BuildAsync(Customer customer)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Customer: {customer.Name}"),
-                Text($"Email: {customer.Email}"),
-                Text($"Registration: {customer.CreatedAt:yyyy-MM-dd}"),
-                customer.IsActive
-                    ? Badge("Active", Colors.Green)
-                    : Badge("Inactive", Colors.Red)
-            )
-        );
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)

@@ -76,25 +76,6 @@ Learn more in the [Snowflake Documentation](https://docs.snowflake.com/en/user-g
 - Ensure the user has appropriate permissions
 - Verify the schema exists in the specified database
 
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class AnalyticsApp : AppBase<AnalyticsData>
-{
-    public override Task<IView> BuildAsync(AnalyticsData data)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Period: {data.Period}"),
-                Text($"Revenue: ${data.Revenue:F2}"),
-                Text($"Growth: {data.GrowthPercentage}%")
-            )
-        );
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)

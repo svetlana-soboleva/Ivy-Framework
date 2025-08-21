@@ -78,31 +78,6 @@ For complete features, see the [Oracle Database documentation](https://docs.orac
 
 For detailed troubleshooting, refer to [Oracle Database Error Messages](https://docs.oracle.com/en/database/oracle/oracle-database/19/errmg/index.html).
 
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class EmployeeApp : AppBase<Employee>
-{
-    public override Task<IView> BuildAsync(Employee employee)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Employee ID: {employee.EmployeeId}"),
-                Text($"Name: {employee.FirstName} {employee.LastName}"),
-                Text($"Department: {employee.Department}"),
-                Text($"Hire Date: {employee.HireDate:yyyy-MM-dd}"),
-                employee.IsActive
-                    ? Badge("Active", Colors.Green)
-                    : Badge("Inactive", Colors.Red)
-            )
-        );
-    }
-}
-```
-
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)

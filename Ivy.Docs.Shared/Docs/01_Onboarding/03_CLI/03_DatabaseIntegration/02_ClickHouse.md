@@ -78,25 +78,6 @@ See the [ClickHouse Features Overview](https://clickhouse.com/docs/en/about-us/d
 
 See the [ClickHouse Troubleshooting Guide](https://clickhouse.com/docs/en/operations/troubleshooting) for more help.
 
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class AnalyticsApp : AppBase<MetricData>
-{
-    public override Task<IView> BuildAsync(MetricData data)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Date: {data.EventDate}"),
-                Text($"Event Type: {data.EventType}"),
-                Text($"Count: {data.EventCount}")
-            )
-        );
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)

@@ -73,24 +73,6 @@ For more information, visit the [Cloud Spanner Documentation](https://cloud.goog
 - Check network connectivity to Google Cloud
 - Ensure your Spanner instance is running and healthy
 
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class CustomerApp : AppBase<Customer>
-{
-    public override Task<IView> BuildAsync(Customer customer)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Customer: {customer.Name}"),
-                Text($"Email: {customer.Email}")
-            )
-        );
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)

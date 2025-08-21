@@ -34,6 +34,8 @@ Ivy supports the following database providers. Click on any provider for detaile
 
 ### Adding a Database Connection
 
+The simplest way to add a database connection to your Ivy project is with the following command:
+
 ```terminal
 >ivy db add
 ```

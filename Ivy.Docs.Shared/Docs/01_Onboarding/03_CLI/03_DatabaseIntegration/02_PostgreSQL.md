@@ -42,19 +42,13 @@ Ivy automatically configures the **Npgsql.EntityFrameworkCore.PostgreSQL** packa
 
 ### Custom Schema
 
-```terminal
->ivy db add --provider Postgres --name MyPostgres --schema MyCustomSchema
-```
-
-### Schema Support
-
-PostgreSQL supports multiple schemas. When connecting with Ivy, you'll be prompted to select a schema from your database, or you can specify one directly using the `--schema` parameter:
+PostgreSQL supports multiple schemas. When configuring your PostgreSQL database with Ivy, you'll be prompted to select a schema from your database, or you can specify one directly using the `--schema` parameter:
 
 ```terminal
 >ivy db add --provider Postgres --name MyPostgres --schema MyCustomSchema
 ```
 
-Ivy will automatically detect available schemas in your PostgreSQL database and let you choose one during setup.
+
 
 ## PostgreSQL-Specific Features
 
@@ -63,11 +57,10 @@ Key features Ivy can leverage:
 - **Array types** for collections
 - **Custom data types** and enums
 
-See the [PostgreSQL documentation](https://www.postgresql.org/docs/current/features.html) for details.
+See the [PostgreSQL features documentation](https://www.postgresql.org/docs/current/features.html) for details on these capabilities.
 
 ## Security Best Practices
 
-- **Use SSL connections** in production environments
 - **Create dedicated database users** with minimal required permissions
 - **Enable row-level security** when appropriate
 - **Use connection pooling** to optimize performance
@@ -83,25 +76,7 @@ See the [PostgreSQL documentation](https://www.postgresql.org/docs/current/featu
 **Authentication Problems**
 - Check `pg_hba.conf` configuration
 
-For detailed help, see the [PostgreSQL Troubleshooting Guide](https://www.postgresql.org/docs/current/troubleshooting.html).
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class ProductApp : AppBase<Product>
-{
-    public override Task<IView> BuildAsync(Product product)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Product: {product.Name}"),
-                Text($"Price: ${product.Price:F2}")
-            )
-        );
-    }
-}
-```
+For detailed help, see the [PostgreSQL Documentation](https://www.postgresql.org/docs/current/) and search for common issues in the [PostgreSQL Wiki](https://wiki.postgresql.org/wiki/Main_Page).
 
 ## Related Documentation
 

@@ -20,7 +20,7 @@ Unlike other providers, SQLite doesn't use connection strings stored in user sec
 Path to database file: data.db
 ```
 
-Ivy will attempt to suggest existing SQLite files in your project, but you can specify any path. 
+Ivy will attempt to suggest existing SQLite files in your project, but you can specify any path.
 
 The connection string will be automatically generated as:
 
@@ -74,30 +74,6 @@ See [SQLite Security Considerations](https://www.sqlite.org/security.html) for m
 - Close connections properly and use WAL mode
 
 See [SQLite Troubleshooting](https://www.sqlite.org/faq.html) for more help.
-
-
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class NoteApp : AppBase<Note>
-{
-    public override Task<IView> BuildAsync(Note note)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Note: {note.Title}"),
-                Text(note.Content),
-                Text($"Created: {note.CreatedAt:yyyy-MM-dd HH:mm}"),
-                Button("Edit", () => EditNote(note.Id)),
-                Button("Delete", () => DeleteNote(note.Id))
-            )
-        );
-    }
-}
-```
-
 
 ## Related Documentation
 

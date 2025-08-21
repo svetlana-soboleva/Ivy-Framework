@@ -1,3 +1,6 @@
+---
+title: SQL Server
+---
 
 # SQL Server Database Provider
 
@@ -67,24 +70,6 @@ See [SQL Server Schema documentation](https://learn.microsoft.com/en-us/sql/rela
 - Ensure firewall allows port 1433
 
 For detailed troubleshooting, see [SQL Server Connection Troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/sql/connect/resolve-connectivity-errors).
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class EmployeeApp : AppBase<Employee>
-{
-    public override Task<IView> BuildAsync(Employee employee)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Employee: {employee.Name}"),
-                Text($"Department: {employee.Department}")
-            )
-        );
-    }
-}
-```
 
 ## Related Documentation
 

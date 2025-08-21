@@ -23,13 +23,13 @@ BaseId=appXXXXXXXXXXXXXX;ApiKey=patXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ## Authentication
 
-Airtable uses personal access tokens (PATs) for authentication. Generate a token from your [Airtable account page](https://airtable.com/account) in the API section.
+Airtable uses personal access tokens (PATs) for authentication. Generate a token from your [Airtable account page](https://airtable.com/account) in the Developer hub section.
 
-For detailed instructions, see the [Airtable Authentication documentation](https://airtable.com/developers/web/api/authenticate).
+For detailed instructions, see the [Airtable personal access tokens documentation](https://airtable.com/developers/web/guides/personal-access-tokens).
 
 ## Configuration
 
-Ivy automatically configures the **Ivy.Airtable.EFCore** package and imports the `Airtable.EFCore` and `AirtableApiClient` namespaces for Airtable connections.
+Ivy automatically configures the **Ivy.Airtable.EFCore** package and imports the `Airtable.EFCore` and `AirtableApiClient` namespaces for Airtable connections. This allows you to interact with your Airtable bases using Entity Framework Core.
 
 ## Working with Airtable Tables
 
@@ -42,7 +42,7 @@ Key features Ivy can leverage:
 - **Record linking** for relationships
 - **Views** for filtered data presentation
 
-See [Airtable Field Types documentation](https://airtable.com/developers/web/api/field-model) for details.
+See [Airtable API documentation](https://airtable.com/developers/web/api/introduction) for more details.
 
 ## Security Best Practices
 
@@ -62,28 +62,7 @@ See [Airtable Field Types documentation](https://airtable.com/developers/web/api
 - Confirm Base ID and account access
 
 **Rate Limiting**
-- Implement retry logic and caching
-
-For API limits details, see [Airtable API Limits](https://airtable.com/developers/web/api/rate-limits).
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class ProductApp : AppBase<Product>
-{
-    public override Task<IView> BuildAsync(Product product)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Product: {product.Name}"),
-                Text($"Category: {product.Category}"),
-                Text($"Price: ${product.Price:F2}")
-            )
-        );
-    }
-}
-```
+- For API limits details, see [Airtable API Rate Limits](https://airtable.com/developers/web/api/rate-limits).
 
 ## Related Documentation
 
@@ -91,4 +70,4 @@ public class ProductApp : AppBase<Product>
 - [SQLite Provider](SQLite.md)
 - [PostgreSQL Provider](PostgreSQL.md)
 - [Official Airtable API Documentation](https://airtable.com/developers/web/api/introduction)
-- [Airtable .NET Client](https://github.com/ngocnicholas/airtable.net)
+- [Airtable .NET SDK](https://github.com/airtable/airtable.net)

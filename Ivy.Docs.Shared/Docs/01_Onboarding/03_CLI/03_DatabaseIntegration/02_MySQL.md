@@ -72,26 +72,6 @@ For more security recommendations, see [MySQL Security Guidelines](https://dev.m
 
 See [MySQL Troubleshooting](https://dev.mysql.com/doc/refman/8.0/en/problems.html) for more help.
 
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class OrderApp : AppBase<Order>
-{
-    public override Task<IView> BuildAsync(Order order)
-    {
-        return Task.FromResult<IView>(
-            Card(
-                Text($"Order #{order.Id}"),
-                Text($"Customer: {order.CustomerName}"),
-                Text($"Total: ${order.Total:F2}"),
-                Text($"Status: {order.Status}")
-            )
-        );
-    }
-}
-```
-
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
