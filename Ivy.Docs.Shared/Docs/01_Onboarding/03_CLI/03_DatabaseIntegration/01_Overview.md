@@ -6,56 +6,21 @@ Connect your Ivy application to various databases with automatic Entity Framewor
 
 The `ivy db` commands allow you to add and manage database connections in your Ivy project. Ivy supports a wide range of database providers and automatically generates the necessary Entity Framework configurations.
 
-## Supported Database Providers
+## Adding a Database Connection
 
-Ivy supports the following database providers. Click on any provider for detailed setup instructions:
-
-### Relational Databases
-
-- **[SQL Server](SqlServer.md)** - Microsoft's enterprise database
-- **[PostgreSQL](PostgreSQL.md)** - Advanced open-source database
-- **[MySQL](MySQL.md)** - Popular open-source database
-- **[MariaDB](MariaDB.md)** - MySQL fork with enhanced features
-- **[SQLite](SQLite.md)** - Lightweight file-based database
-- **[Oracle](Oracle.md)** - Enterprise database system
-
-### Cloud Databases
-
-- **[Supabase](Supabase.md)** - Open-source Firebase alternative with PostgreSQL
-- **[Google Spanner](GoogleSpanner.md)** - Globally distributed database
-- **[Snowflake](Snowflake.md)** - Cloud data platform
-
-### Specialized Databases
-
-- **[ClickHouse](ClickHouse.md)** - Column-oriented database for analytics
-- **[Airtable](Airtable.md)** - Spreadsheet-database hybrid
-
-## Basic Usage
-
-### Adding a Database Connection
-
-The simplest way to add a database connection to your Ivy project is with the following command:
+The simplest way to add a connection between your Ivy project and an existing database is with the following command:
 
 ```terminal
 >ivy db add
 ```
 
-This command will:
+When you run `ivy db add` without specifying options, Ivy will guide you through an interactive setup:
 
-- Prompt you to select a database provider
-- Ask for a connection name
-- Generate the necessary Entity Framework configuration
-- Set up connection strings and secrets management
+1. **Select Database Provider**: Choose from the available providers
+2. **Connection Name**: Enter a name for your connection (PascalCase recommended)
+3. **Connection String**: Provide the connection string or other information to let Ivy build it for you, depending on the provider.
 
-### Generating Database Context
-
-```terminal
->ivy db generate
-```
-
-Generate Entity Framework DbContext for your database connections.
-
-## Command Options
+### Command Options
 
 `--provider <PROVIDER>` - Specify the database provider directly:
 
@@ -89,19 +54,85 @@ Available providers: `SqlServer`, `Postgres`, `MySql`, `MariaDb`, `Sqlite`, `Sup
 >ivy db add --verbose
 ```
 
-### Interactive Mode
+## Generating A Database Schema
 
-When you run `ivy db add` without specifying options, Ivy will guide you through an interactive setup:
+This command opens a GUI to guide you through the process of designing a database schema using generative AI:
 
-1. **Select Database Provider**: Choose from the available providers
-2. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-3. **Connection String**: Provide the connection string or let Ivy help you build it
+```terminal
+>ivy db generate
+```
 
-### Connection Management
+First, you will be prompted for a choice of database provider, a format for table and field names, and a description of your database schema. Currently, database schema generation supports the providers SQLite, SQL Server, PostgreSQL, and MySQL, and the casing schemes `PascalCase`, `camelCase` and `snake_case`. The defaults are SQLite and `snake_case`.
+
+![Ivy Database Generator UI, start page](assets/db_generator_1.png "Ivy Database Generator UI")
+
+If you're having trouble coming up with a schema description, Ivy includes a variety of examples to serve as a starting point:
+
+![Ivy Database Generator UI, samples dropdown](assets/db_generator_2.png "Ivy Database Generator UI")
+
+On the next page, you can preview Ivy's generated schema on the left, with a graph of relationships on the right:
+
+![Ivy Database Generator UI, preview page](assets/db_generator_3.png "Ivy Database Generator UI")
+
+Finally, you can choose which apps to generate, make a final selection of database provider, tweak the connection string, and choose whether or not to generate seed data:
+
+![Ivy Database Generator UI, app selection page](assets/db_generator_4.png "Ivy Database Generator UI")
+
+Ivy will then generate your database schema and associated apps:
+
+![Ivy Database Generator UI, generation page](assets/db_generator_5.png "Ivy Database Generator UI")
+
+## Supported Database Providers
+
+Ivy supports the following database providers. Click on any provider for detailed setup instructions:
+
+### Relational Databases
+
+- **[SQL Server](SqlServer.md)** - Microsoft's enterprise database
+- **[PostgreSQL](PostgreSQL.md)** - Advanced open-source database
+- **[MySQL](MySQL.md)** - Popular open-source database
+- **[MariaDB](MariaDB.md)** - MySQL fork with enhanced features
+- **[SQLite](SQLite.md)** - Lightweight file-based database
+- **[Oracle](Oracle.md)** - Enterprise database system
+
+### Cloud Databases
+
+- **[Supabase](Supabase.md)** - Open-source Firebase alternative with PostgreSQL
+- **[Google Spanner](GoogleSpanner.md)** - Globally distributed database
+- **[Snowflake](Snowflake.md)** - Cloud data platform
+
+### Specialized Databases
+
+- **[ClickHouse](ClickHouse.md)** - Column-oriented database for analytics
+- **[Airtable](Airtable.md)** - Spreadsheet-database hybrid
+
+## Connection Configuration Details
+
+Ivy automatically configures:
+
+- **Connection strings** stored securely using .NET User Secrets
+- **Entity Framework Core** with the appropriate provider, and generated context and entity classes
+- **Ivy connection** to facilitate communication between Ivy apps and the database provider
+
+### Security and Secrets Management
+
+Ivy automatically configures .NET User Secrets for secure connection string storage:
+
+```terminal
+>dotnet user-secrets list
+```
+
+#### Environment Variables
+
+You can also use environment variables for connection strings (with the exception of SQLite connection strings):
+
+```text
+export ConnectionStrings__MY_DATABASE_CONNECTION_STRING="Host=localhost;Database=mydb;Username=user;Password=pass"
+```
 
 ### Connection Structure
 
-Each database connection creates a folder structure:
+Each database connection has its own a folder structure:
 
 ```text
 Connections/
@@ -112,43 +143,7 @@ Connections/
     └── [EntityName].cs...                     # One or more generated entity classes
 ```
 
-### Connection Configuration
-
-Ivy automatically configures:
-
-- **Entity Framework Core** with the appropriate provider
-- **Connection strings** stored securely using .NET User Secrets
-- **DbContext** with proper configuration
-
-### Provider-Specific Setup
-
-For detailed setup instructions, connection string formats, and advanced configuration for each database provider, see the dedicated provider pages:
-
-- **[SQL Server Setup Guide](SqlServer.md)** - Enterprise database with Windows/SQL authentication
-- **[PostgreSQL Setup Guide](PostgreSQL.md)** - Advanced features, JSON support, and performance optimization
-- **[MySQL Setup Guide](MySQL.md)** - Popular open-source database configuration
-- **[MariaDB Setup Guide](MariaDB.md)** - Enhanced MySQL fork with additional features
-- **[SQLite Setup Guide](SQLite.md)** - Zero-configuration file-based database
-- **[Oracle Setup Guide](Oracle.md)** - Enterprise-grade database with advanced security
-- **[Supabase Setup Guide](Supabase.md)** - PostgreSQL with real-time capabilities and authentication
-
-### Security and Secrets Management
-
-Ivy automatically configures .NET User Secrets for secure connection string storage:
-
-```terminal
->dotnet user-secrets list
-```
-
-### Environment Variables
-
-You can also use environment variables for connection strings (with the exception of SQLite):
-
-```text
-export ConnectionStrings__MY_DATABASE_CONNECTION_STRING="Host=localhost;Database=mydb;Username=user;Password=pass"
-```
-
-### Entity Framework Integration
+#### Entity Framework Integration
 
 **Connection** - Ivy generates a class for each connection to facilitate communication with the database provider:
 
@@ -267,7 +262,7 @@ You can add multiple database connections to a single project:
 
 ### Troubleshooting
 
-**Connection String Issues** - Ensure the connection string format is correct for your provider, verify database server is running and accessible, and check firewall settings and network connectivity.
+**Connection String Issues** - Ensure the connection string format is correct for your provider, verify database server is running and accessible (if applicable), and check firewall settings and network connectivity.
 
 **Entity Framework Issues** - Ensure required NuGet packages are installed, verify .NET EF tools are installed: `dotnet tool install -g dotnet-ef`, and check for conflicting Entity Framework versions.
 
