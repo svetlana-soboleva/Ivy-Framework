@@ -56,7 +56,7 @@ export const CardWidget: React.FC<CardWidgetProps> = ({
     ...(borderStyle && getBorderStyle(borderStyle)),
     ...(borderThickness && getBorderThickness(borderThickness)),
     ...(borderRadius && getBorderRadius(borderRadius)),
-    ...(borderColor && getColor(borderColor, 'borderColor', 'foreground')),
+    ...(borderColor && getColor(borderColor, 'borderColor', 'background')),
   };
 
   const footerIsEmpty =

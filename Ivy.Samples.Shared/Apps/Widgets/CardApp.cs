@@ -23,18 +23,14 @@ public class CardApp : SampleBase
          .BorderColor(Colors.Primary)
          .BorderRadius(BorderRadius.Rounded);
 
-        var menu = new List(
-            new ListItem("Products", onClick: _ => { }, badge: 100.ToString()),
-            new ListItem("Balance", onClick: _ => { }, icon: Icons.ChevronRight)
-        );
-
         var card3 = new Card(
-            menu
-        ).Title("Menu Card")
-         .BorderThickness(2)
+            "This card demonstrates the border color fix with a thick red border."
+        ).Title("Border Color Test")
+         .Description("Should now display with a red border")
+         .BorderThickness(4)
          .BorderStyle(BorderStyle.Solid)
-         .BorderColor(Colors.Success)
-         .BorderRadius(BorderRadius.Full);
+         .BorderColor(Colors.Red)
+         .BorderRadius(BorderRadius.Rounded);
 
         return Layout.Vertical().Width(Size.Units(100))
                | card1
