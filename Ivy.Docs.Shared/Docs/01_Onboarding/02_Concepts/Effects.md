@@ -138,28 +138,41 @@ UseEffect(() =>
 
 ### Built-in Triggers
 
-Ivy provides several built-in trigger types:
+```mermaid
+graph LR
+    A[UseEffect] --> B[AfterInit - Default]
+    A --> C[AfterRender]
+    A --> D[AfterChange]
+    
+    B --> B1["Runs once during initialization"]
+    C --> C1["Runs after virtual DOM updates"]
+    D --> D1["Runs when state changes"]
+```
 
 ```csharp
-// Run after component initialization (default)
+// AfterInit (default) - runs once during initialization
+UseEffect(() => { /* ... */ });
 UseEffect(() => { /* ... */ }, EffectTrigger.AfterInit());
 
-// Run after each render
+// AfterRender - runs after virtual DOM updates
 UseEffect(() => { /* ... */ }, EffectTrigger.AfterRender());
 
-// Run when specific state changes
+// AfterChange - runs when state changes
 UseEffect(() => { /* ... */ }, EffectTrigger.AfterChange(myState));
 ```
 
-## Effect Priorities
+### Effect Execution Order
 
-Effects are executed with different priorities to ensure proper ordering:
-
-- **`EffectPriority.StateChange`** - Immediate effects after state changes
-- **`EffectPriority.AfterRender`** - Effects after virtual DOM updates  
-- **`EffectPriority.AfterInit`** - Effects during initialization
-
-The priority is automatically determined based on the trigger type, but understanding this helps with debugging and performance optimization.
+```mermaid
+graph TD
+    A[Effect Processing] --> B["1. StateChange Priority"]
+    B --> C["2. AfterRender Priority"]
+    C --> D["3. AfterInit Priority"]
+    
+    B --> B1[AfterChange triggers]
+    C --> C1[AfterRender triggers]
+    D --> D1[AfterInit triggers - Default]
+```
 
 ## Common Patterns
 
