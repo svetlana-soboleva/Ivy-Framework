@@ -10,18 +10,8 @@ The `Expandable` widget allows you to hide and show content interactively, provi
 
 Here's a simple example of an expandable widget.
 
-```csharp demo-below 
-new Expandable("Click to expand", "This is the hidden content that appears when you expand the widget.")
-```
-
-## Content Types
-
-### Text Content
-
-Expandable widgets can contain various types of content, starting with simple text.
-
 ```csharp demo-tabs
-new Expandable("Simple Text", "This is a simple text content that gets hidden and shown.")
+new Expandable("Click to expand", "This is the hidden content that appears when you expand the widget.")
 ```
 
 ### Rich Content
@@ -52,6 +42,20 @@ new Expandable("Main Section",
         | new Expandable("Subsection 2", "Details about subsection 2")
         | new Expandable("Subsection 3", "Details about subsection 3")
 )
+```
+
+### Disabled
+
+<Callout Type="info">
+The Disabled property allows you to prevent users from expanding content when it's not available or relevant, improving the overall user experience.
+</Callout>
+
+Set to `true` to disable the expandable functionality
+
+```csharp demo-tabs
+Layout.Vertical().Gap(2)
+    | new Expandable("Normal", "This expandable works normally")
+    | new Expandable("Disabled", "This expandable is disabled").Disabled(true)
 ```
 
 ## Layout Integration
@@ -92,106 +96,31 @@ Layout.Grid().Columns(2).Gap(2)
     | new Card(new Expandable("Community", "Join our community and get support"))
 ```
 
-## Advanced Patterns
+<WidgetDocs Type="Ivy.Expandable" ExtensionTypes="Ivy.ExpandableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Expandable.cs"/>
 
-### Conditional Content
-
-Show different content based on conditions or state.
-
-```csharp demo-tabs
-Layout.Vertical().Gap(2)
-    | new Expandable("User Profile", 
-        Layout.Vertical().Gap(2)
-            | Text.H4("John Doe")
-            | Text.Muted("john.doe@example.com")
-            | new Badge("Premium").Secondary()
-            | new Expandable("Preferences", "User preferences and settings")
-            | new Expandable("History", "User activity and history")
-    )
-    | new Expandable("System Status", 
-        Layout.Horizontal().Gap(2)
-            | new Badge("Online").Secondary()
-            | Text.Muted("All systems operational")
-    )
-```
-
-### Interactive Content
-
-Include interactive elements within expandable content.
-
-```csharp demo-tabs
-new Expandable("Interactive Demo", 
-    Layout.Vertical().Gap(2)
-        | Text.H4("Try it out!")
-        | Layout.Horizontal().Gap(2)
-            | new Button("Click me!").Primary()
-            | new Button("Reset").Secondary()
-        | new Progress(75)
-        | Text.Small("Progress: 75%")
-)
-```
+## Examples
 
 ### Form Sections
 
 Organize forms into logical, collapsible sections.
 
 ```csharp demo-tabs
-Layout.Vertical().Gap(2)
-    | new Expandable("Personal Information", 
-        Layout.Vertical().Gap(2)
-            | Text.H4("Basic Details")
-            | Layout.Grid().Columns(2).Gap(2)
-                | Text.Small("First Name")
-                | Text.Small("Last Name")
-                | Text.Small("Email")
-                | Text.Small("Phone")
-    )
-    | new Expandable("Address", 
-        Layout.Vertical().Gap(2)
-            | Text.H4("Location Details")
-            | Layout.Grid().Columns(2).Gap(2)
-                | Text.Small("Street")
-                | Text.Small("City")
-                | Text.Small("State")
-                | Text.Small("ZIP Code")
-    )
-    | new Expandable("Preferences", 
-        Layout.Vertical().Gap(2)
-            | Text.H4("User Preferences")
-            | Layout.Grid().Columns(2).Gap(2)
-                | Text.Small("Language")
-                | Text.Small("Theme")
-                | Text.Small("Notifications")
-                | Text.Small("Privacy")
-    )
+public class SimpleFormExample : ViewBase
+{
+    public record PersonalInfo(string FirstName, string LastName, string Email, string Phone);
+    public record AddressInfo(string Street, string City, string State, string ZipCode);
+    public record UserPreferences(bool EmailNotifications, bool SmsNotifications, string Language, string Theme);
+
+    public override object? Build()
+    {
+        var personalInfo = UseState(() => new PersonalInfo("", "", "", ""));
+        var addressInfo = UseState(() => new AddressInfo("", "", "", ""));
+        var preferences = UseState(() => new UserPreferences(false, false, "en", "light"));
+
+        return Layout.Vertical().Gap(2)
+            | new Expandable("Personal Information", personalInfo.ToForm())
+            | new Expandable("Address", addressInfo.ToForm())
+            | new Expandable("Preferences", preferences.ToForm());
+    }
+}
 ```
-
-## Properties
-
-The `Expandable` widget supports the following properties:
-
-- **Disabled**: Set to `true` to disable the expandable functionality
-
-```csharp demo-tabs
-Layout.Vertical().Gap(2)
-    | new Expandable("Normal", "This expandable works normally")
-    | new Expandable("Disabled", "This expandable is disabled").Disabled(true)
-```
-
-## Best Practices
-
-1. **Clear Headers**: Use descriptive, concise headers that clearly indicate the content
-2. **Logical Grouping**: Group related information into expandable sections
-3. **Consistent Structure**: Maintain consistent patterns across your application
-4. **Performance**: Avoid nesting too many expandables deeply
-5. **Accessibility**: Ensure headers are descriptive for screen readers
-
-## Common Use Cases
-
-- **FAQs**: Organize frequently asked questions
-- **Documentation**: Structure documentation into logical sections
-- **Forms**: Group form fields into collapsible sections
-- **Settings**: Organize application settings and preferences
-- **Data Display**: Show detailed information on demand
-
-<WidgetDocs Type="Ivy.Expandable" ExtensionTypes="Ivy.ExpandableExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Expandable.cs"/>
