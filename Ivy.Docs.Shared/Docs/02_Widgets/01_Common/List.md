@@ -19,8 +19,7 @@ public class BasicListDemo : ViewBase
         {
             new ListItem("Apple"),
             new ListItem("Banana"),
-            new ListItem("Cherry"),
-            new ListItem("Date")
+            new ListItem("Cherry")
         };
         
         return new List(items);
@@ -74,7 +73,7 @@ public class IconListDemo : ViewBase
 }
 ```
 
-### Badges and Tags
+### Badges
 
 Use badges to show additional information like counts, status, or labels:
 
@@ -125,58 +124,6 @@ public class InteractiveListDemo : ViewBase
 }
 ```
 
-### Navigation with Blades
-
-Create navigation patterns using the blade system:
-
-```csharp demo-tabs
-public class NavigationListDemo : ViewBase
-{
-    public override object? Build()
-    {
-        return this.UseBlades(() => new NavigationListRootView(), "Navigation");
-    }
-}
-
-public class NavigationListRootView : ViewBase
-{
-    public override object? Build()
-    {
-        var blades = this.UseContext<IBladeController>();
-        
-        var onItemClick = new Action<Event<ListItem>>(e =>
-        {
-            var item = e.Sender;
-            var detailView = new ListDetailView(item.Title!);
-            blades.Push(this, detailView, item.Title);
-        });
-        
-        var menuItems = new[]
-        {
-            new ListItem("Products", onClick: onItemClick, icon: Icons.Package, subtitle: "Manage inventory"),
-            new ListItem("Customers", onClick: onItemClick, icon: Icons.Users, subtitle: "Customer database"),
-            new ListItem("Orders", onClick: onItemClick, icon: Icons.ShoppingCart, subtitle: "Order management"),
-            new ListItem("Analytics", onClick: onItemClick, icon: Icons.ChartBar, subtitle: "Reports & insights")
-        };
-        
-        return new List(menuItems);
-    }
-}
-
-public class ListDetailView(string title) : ViewBase
-{
-    public override object? Build()
-    {
-        return new Card($"Details for {title}")
-            | Text.Block($"This is the detail view for {title}")
-            | Text.Block("Here you can see detailed information about the selected item.")
-            | new Button("Go Back", onClick: _ => { });
-    }
-}
-```
-
-## Data-Driven Lists
-
 ### Dynamic Content
 
 Create lists from dynamic data sources:
@@ -212,6 +159,10 @@ public class DynamicListDemo : ViewBase
 }
 ```
 
+<Callout type="info">
+Lists in Ivy are highly customizable. You can combine them with other widgets like Cards, Badges, and Buttons to create rich, interactive interfaces. The `onClick` event on ListItems makes it easy to build navigation and user interactions.
+</Callout>
+
 ### Search and Filter
 
 Implement search functionality with filtered lists:
@@ -221,7 +172,7 @@ public class SearchableListDemo : ViewBase
 {
     public override object? Build()
     {
-        var allItems = new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape" };
+        var allItems = new[] { "Apple", "Banana", "Cherry", "Date" };
         var searchTerm = UseState("");
         var filteredItems = UseState(allItems);
         
@@ -241,7 +192,9 @@ public class SearchableListDemo : ViewBase
 }
 ```
 
-## Advanced Patterns
+<WidgetDocs Type="Ivy.List" ExtensionTypes="Ivy.WidgetBaseExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Lists/List.cs"/>
+
+## Examples
 
 ### Custom Item Rendering
 
@@ -269,107 +222,6 @@ public class CustomItemDemo : ViewBase
                     | new Badge(product.Stock.ToString()).Variant(BadgeVariant.Secondary)
             }
         ));
-        
-        return new List(listItems);
-    }
-}
-```
-
-### Integration with Other Widgets
-
-Lists work seamlessly with other Ivy widgets:
-
-```csharp demo-tabs
-public class IntegratedListDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var selectedItems = UseState(new HashSet<string>());
-        
-        var onItemClick = new Action<Event<ListItem>>(e =>
-        {
-            var item = e.Sender;
-            var title = item.Title!;
-            
-            if (selectedItems.Value.Contains(title))
-            {
-                selectedItems.Set(selectedItems.Value.Where(x => x != title).ToHashSet());
-            }
-            else
-            {
-                selectedItems.Set(selectedItems.Value.Append(title).ToHashSet());
-            }
-        });
-        
-        var items = new[] { "Option 1", "Option 2", "Option 3", "Option 4" };
-        
-        var listItems = items.Select(item => new ListItem(
-            title: item,
-            onClick: onItemClick,
-            icon: selectedItems.Value.Contains(item) ? Icons.CircleCheck : Icons.Circle,
-            badge: selectedItems.Value.Contains(item) ? "Selected" : null
-        ));
-        
-        return Layout.Vertical().Gap(2)
-            | new Card(
-                new List(listItems)
-            ).Title("Multi-Select List")
-            | Text.Block($"Selected: {string.Join(", ", selectedItems.Value)}");
-    }
-}
-```
-
-### Empty State Handling
-
-Provide meaningful content when lists are empty:
-
-```csharp demo-tabs
-public class EmptyStateDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var items = UseState(new string[0]);
-        
-        var addSampleItems = new Action<Event<Button>>(e =>
-        {
-            items.Set(new[] { "Sample Item 1", "Sample Item 2", "Sample Item 3" });
-        });
-        
-        var clearItems = new Action<Event<Button>>(e =>
-        {
-            items.Set(new string[0]);
-        });
-        
-        var listContent = items.Value.Length > 0 
-            ? (object)new List(items.Value.Select(item => new ListItem(item)))
-            : new Card("No items found").Width(Size.Full());
-        
-        return Layout.Vertical().Gap(2)
-            | (Layout.Horizontal().Gap(1)
-                | new Button("Add Items", addSampleItems).Variant(ButtonVariant.Secondary)
-                | new Button("Clear All", clearItems).Variant(ButtonVariant.Destructive))
-            | listContent;
-    }
-}
-```
-
-## Performance Considerations
-
-### Virtual Scrolling
-
-For large lists, consider using the built-in virtual scrolling capabilities:
-
-```csharp demo-tabs
-public class LargeListDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var items = this.UseMemo(() => 
-            Enumerable.Range(1, 10).Select(i => $"Item {i:D4}").ToArray(), 
-            []
-        );
-        
-        var listItems = items.Select(item => new ListItem(item));
         
         return new List(listItems);
     }
@@ -411,5 +263,3 @@ public class MemoizedListItem(int value) : ViewBase, IMemoized
     }
 }
 ```
-
-<WidgetDocs Type="Ivy.List" ExtensionTypes="Ivy.WidgetBaseExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Lists/List.cs"/>
