@@ -36,7 +36,7 @@ var uploadUrl = this.UseUpload(
 The most common way to handle uploads is using the FileInput component:
 
 ```csharp demo-below
-public class UploadView : ViewBase
+public class FileUploadView : ViewBase
 {
     public override object? Build()
     {
