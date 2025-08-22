@@ -23,23 +23,6 @@ Ivy automatically configures the **Oracle.EntityFrameworkCore** package for Orac
 
 ## Advanced Configuration
 
-### TNS Names Configuration
-
-If using TNS names, ensure your `tnsnames.ora` file is properly configured:
-
-```text
-MYDB =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = oracle-server)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = myservice)
-    )
-  )
-```
-
-For detailed instructions on TNS configuration, see the [Oracle Net Configuration documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-tns-ora-file.html).
-
 ### Connection Pooling
 
 ```text
@@ -66,9 +49,6 @@ For complete features, see the [Oracle Database documentation](https://docs.orac
 ## Troubleshooting
 
 ### Common Issues
-
-**TNS: Could not resolve the connect identifier**
-- Verify TNS names configuration and environment variables
 
 **Authentication Failed**
 - Check username/password and account status
