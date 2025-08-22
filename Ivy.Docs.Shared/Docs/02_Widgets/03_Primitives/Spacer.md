@@ -129,9 +129,9 @@ public class FormSpacerView : ViewBase
                     | Text.Label("Message:")
                     | message.ToTextAreaInput().Placeholder("Enter your message")
                     | new Spacer().Height(10)
-                    | Layout.Horizontal().Gap(3)
+                    | (Layout.Horizontal().Gap(3)
                         | new Button("Cancel").Variant(ButtonVariant.Outline)
-                        | new Button("Submit").Variant(ButtonVariant.Primary)
+                        | new Button("Submit").Variant(ButtonVariant.Primary))
             );
     }
 }

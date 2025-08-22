@@ -19,11 +19,15 @@ public class ProductCardView : ViewBase
     
     public override object? Build()
     {
-        var isLoading = UseState(true);
+        var isLoading = UseState(false);
         var product = UseState<ProductData?>();
         
-        // Simulate loading data
-        UseEffect(() => {
+        void LoadProduct()
+        {
+            isLoading.Set(true);
+            product.Set((ProductData?)null);
+            
+            // Simulate API call delay using Timer
             var timer = new System.Threading.Timer(_ => {
                 product.Set(new ProductData(
                     "Premium Wireless Headphones",
@@ -35,30 +39,36 @@ public class ProductCardView : ViewBase
                 ));
                 isLoading.Set(false);
             }, null, 2000, Timeout.Infinite);
-            return timer;
-        }, []);
+        }
         
-        return Layout.Vertical().Padding(4)
-            | (isLoading.Value
-                ? Layout.Vertical().Gap(3)
-                    | new Skeleton().Height(Size.Units(40)).Width(Size.Full())
-                    | new Skeleton().Height(Size.Units(24)).Width(Size.Units(40))
-                    | new Skeleton().Height(Size.Units(16)).Width(Size.Full())
-                    | new Skeleton().Height(Size.Units(16)).Width(Size.Full())
-                    | new Skeleton().Height(Size.Units(16)).Width(Size.Units(40))
-                    | (Layout.Horizontal().Gap(2)
+        return Layout.Vertical().Gap(4).Padding(4)
+            | new Button(
+                isLoading.Value ? "Loading..." : "Load Product Data", 
+                onClick: _ => LoadProduct()
+            ).Disabled(isLoading.Value)
+            | (product.Value != null || isLoading.Value
+                ? (isLoading.Value
+                    ? Layout.Vertical().Gap(3)
+                        | new Skeleton().Height(Size.Units(40)).Width(Size.Full())
                         | new Skeleton().Height(Size.Units(24)).Width(Size.Units(40))
-                        | new Skeleton().Height(Size.Units(36)).Width(Size.Units(40)))
-                : Layout.Vertical().Gap(3)
-                    | new Image("https://example.com/headphones.jpg")
-                        .Height(Size.Units(40))
-                        .Width(Size.Full())
-                    | Text.H3(product.Value?.Name)
-                    | Text.P(product.Value?.Description)
-                    | Text.Strong($"Rating: {product.Value?.Rating}/5")
-                    | (Layout.Horizontal().Gap(2)
-                        | Text.H4($"${product.Value?.Price}")
-                        | new Button("Add to Cart")));
+                        | new Skeleton().Height(Size.Units(16)).Width(Size.Full())
+                        | new Skeleton().Height(Size.Units(16)).Width(Size.Full())
+                        | new Skeleton().Height(Size.Units(16)).Width(Size.Units(40))
+                        | (Layout.Horizontal().Gap(2)
+                            | new Skeleton().Height(Size.Units(24)).Width(Size.Units(40))
+                            | new Skeleton().Height(Size.Units(36)).Width(Size.Units(40)))
+                    : Layout.Vertical().Gap(3)
+                        | new Image("https://example.com/headphones.jpg")
+                            .Height(Size.Units(40))
+                            .Width(Size.Full())
+                        | Text.H3(product.Value?.Name)
+                        | Text.P(product.Value?.Description)
+                        | Text.Strong($"Rating: {product.Value?.Rating}/5")
+                        | (Layout.Horizontal().Gap(2)
+                            | Text.H4($"${product.Value?.Price}")
+                            | new Spacer().Width(Size.Grow())
+                            | new Button("Add to Cart")))
+                : Text.P("Click the button above to load product data and see the skeleton loading state."));
     }
 }
 ```
