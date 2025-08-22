@@ -74,8 +74,8 @@ For detailed troubleshooting, see [SQL Server Connection Troubleshooting](https:
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
-- [PostgreSQL Provider](PostgreSQL.md)
-- [MySQL Provider](MySQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
+- [MySQL Provider](MySql.md)
 - [SQLite Provider](SQLite.md)
 - [Official SQL Server Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
 - [Entity Framework Core for SQL Server](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)

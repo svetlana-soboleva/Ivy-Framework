@@ -79,7 +79,7 @@ Learn more in the [Snowflake Documentation](https://docs.snowflake.com/en/user-g
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
 - [Official Snowflake Documentation](https://docs.snowflake.com)
 - [Snowflake .NET Connector](https://docs.snowflake.com/en/developer-guide/dotnet-driver)

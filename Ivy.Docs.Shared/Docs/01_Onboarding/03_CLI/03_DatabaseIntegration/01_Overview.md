@@ -89,9 +89,9 @@ Ivy supports the following database providers. Click on any provider for detaile
 ### Relational Databases
 
 - **[SQL Server](SqlServer.md)** - Microsoft's enterprise database
-- **[PostgreSQL](PostgreSQL.md)** - Advanced open-source database
-- **[MySQL](MySQL.md)** - Popular open-source database
-- **[MariaDB](MariaDB.md)** - MySQL fork with enhanced features
+- **[PostgreSQL](PostgreSql.md)** - Advanced open-source database
+- **[MySQL](MySql.md)** - Popular open-source database
+- **[MariaDB](MariaDb.md)** - MySQL fork with enhanced features
 - **[SQLite](SQLite.md)** - Lightweight file-based database
 - **[Oracle](Oracle.md)** - Enterprise database system
 

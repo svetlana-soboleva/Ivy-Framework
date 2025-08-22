@@ -78,8 +78,8 @@ See [SQLite Troubleshooting](https://www.sqlite.org/faq.html) for more help.
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
-- [MySQL Provider](MySQL.md)
+- [MySQL Provider](MySql.md)
 - [Official SQLite Documentation](https://www.sqlite.org/docs.html)
 - [EF Core SQLite Provider](https://learn.microsoft.com/en-us/ef/core/providers/sqlite/)

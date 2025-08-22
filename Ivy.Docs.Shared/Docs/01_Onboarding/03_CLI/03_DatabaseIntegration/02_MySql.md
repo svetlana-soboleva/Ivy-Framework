@@ -75,8 +75,8 @@ See [MySQL Troubleshooting](https://dev.mysql.com/doc/refman/8.0/en/problems.htm
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
-- [MariaDB Provider](MariaDB.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [MariaDB Provider](MariaDb.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
 - [Official MySQL Documentation](https://dev.mysql.com/doc/)
 - [Pomelo.EntityFrameworkCore.MySql Documentation](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)

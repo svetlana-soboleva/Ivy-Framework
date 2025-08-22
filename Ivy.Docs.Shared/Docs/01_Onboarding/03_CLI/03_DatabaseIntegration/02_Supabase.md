@@ -71,7 +71,7 @@ See [Supabase Connection Troubleshooting](https://supabase.com/docs/guides/datab
 
 - [Database Overview](01_Overview.md)
 - [Supabase Authentication](../04_Authentication/Supabase.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [Official Supabase Documentation](https://supabase.com/docs)
 - [Supabase .NET SDK](https://github.com/supabase-community/supabase-csharp)
 - [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)

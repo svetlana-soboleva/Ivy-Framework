@@ -81,7 +81,7 @@ See the [ClickHouse Troubleshooting Guide](https://clickhouse.com/docs/en/operat
 ## Related Documentation
 
 - [Database Overview](01_Overview.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [Snowflake Provider](Snowflake.md)
 - [Official ClickHouse Documentation](https://clickhouse.com/docs/)
 - [EntityFrameworkCore.ClickHouse Package](https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse)

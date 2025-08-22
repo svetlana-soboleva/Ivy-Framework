@@ -68,6 +68,6 @@ See [Airtable API documentation](https://airtable.com/developers/web/api/introdu
 
 - [Database Overview](01_Overview.md)
 - [SQLite Provider](SQLite.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [Official Airtable API Documentation](https://airtable.com/developers/web/api/introduction)
 - [Airtable .NET SDK](https://github.com/airtable/airtable.net)

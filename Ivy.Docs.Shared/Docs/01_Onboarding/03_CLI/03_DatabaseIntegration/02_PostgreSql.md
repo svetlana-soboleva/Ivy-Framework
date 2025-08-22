@@ -82,7 +82,7 @@ For detailed help, see the [PostgreSQL Documentation](https://www.postgresql.org
 
 - [Database Overview](01_Overview.md)
 - [SQL Server Provider](SqlServer.md)
-- [MySQL Provider](MySQL.md)
+- [MySQL Provider](MySql.md)
 - [Supabase Provider](Supabase.md)
 - [Official PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)

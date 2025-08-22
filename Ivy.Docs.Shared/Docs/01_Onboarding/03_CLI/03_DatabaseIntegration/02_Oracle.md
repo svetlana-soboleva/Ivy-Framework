@@ -62,7 +62,7 @@ For detailed troubleshooting, refer to [Oracle Database Error Messages](https://
 
 - [Database Overview](01_Overview.md)
 - [SQL Server Provider](SqlServer.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [Enterprise Features](../../02_Concepts/Services.md)
 - [Official Oracle Database Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/index.html)
 - [Oracle.EntityFrameworkCore Package](https://docs.oracle.com/en/database/oracle/oracle-database/19/odpnt/EFCore.html)

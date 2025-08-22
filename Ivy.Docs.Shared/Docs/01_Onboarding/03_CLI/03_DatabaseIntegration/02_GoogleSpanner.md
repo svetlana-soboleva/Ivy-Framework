@@ -77,6 +77,6 @@ For more information, visit the [Cloud Spanner Documentation](https://cloud.goog
 
 - [Database Overview](01_Overview.md)
 - [SQL Server Provider](SqlServer.md)
-- [PostgreSQL Provider](PostgreSQL.md)
+- [PostgreSQL Provider](PostgreSql.md)
 - [Official Google Cloud Spanner Documentation](https://cloud.google.com/spanner/docs)
 - [Google.Cloud.EntityFrameworkCore.Spanner Package](https://cloud.google.com/dotnet/docs/reference/Google.Cloud.EntityFrameworkCore.Spanner/latest)
