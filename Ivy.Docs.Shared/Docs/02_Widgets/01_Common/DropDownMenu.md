@@ -14,22 +14,19 @@ Create interactive dropdown menus with customizable options, actions, and stylin
 Here's a simple example of a `DropDownMenu` that shows a toast message when an item is selected:
 
 ```csharp demo-tabs
-Layout.Horizontal()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Basic Menu"),
-        MenuItem.Default("Profile"), 
-        MenuItem.Default("Settings"), 
-        MenuItem.Default("Logout"))
+new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+    new Button("Basic Menu"),
+    MenuItem.Default("Profile"), 
+    MenuItem.Default("Settings"), 
+    MenuItem.Default("Logout"))
 ```
-
-## Menu Item Types
 
 ### Default Menu Items
 
-Basic menu items that trigger actions when selected:
+Default menu items are the most common type, providing simple clickable options. The second example shows how to add custom tags for more advanced event handling.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("Default Items"),
         MenuItem.Default("Copy"),
@@ -43,12 +40,14 @@ Layout.Horizontal().Gap(2)
         MenuItem.Default("Import").Tag("import-action"))
 ```
 
+Default menu items are the most common type, providing simple clickable options. The second example shows how to add custom tags for more advanced event handling.
+
 ### Checkbox Menu Items
 
-Menu items with checkbox functionality:
+Checkbox menu items allow users to toggle options on/off. The second example demonstrates mixing different menu item types for more complex interfaces.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("Checkboxes"),
         MenuItem.Checkbox("Dark Theme").Checked(),
@@ -66,7 +65,7 @@ Layout.Horizontal().Gap(2)
 
 ### Separators
 
-Add visual separation between menu sections:
+Separators help organize menu items into logical groups, making the interface more readable and user-friendly.
 
 ```csharp demo-tabs
 new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
@@ -83,7 +82,7 @@ new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value),
 
 ### Nested Menu Items
 
-Create hierarchical menu structures using the Children method:
+Nested menu items create submenus for better organization of complex menu structures.
 
 ```csharp demo-tabs
 new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
@@ -109,7 +108,7 @@ new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value),
 Control which side of the trigger the menu appears on:
 
 ```csharp demo-tabs
-Layout.Grid().Columns(2).Gap(4)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("Top"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
         .Top()
@@ -124,12 +123,14 @@ Layout.Grid().Columns(2).Gap(4)
         .Left()
 ```
 
+Side positioning is crucial when space is limited or when you want to avoid the menu being cut off by screen boundaries.
+
 ### Alignment Options
 
-Control the alignment of the menu relative to the trigger:
+Alignment options help position the menu precisely relative to the trigger button, ensuring optimal visual balance.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("Start"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
         .Align(DropDownMenu.AlignOptions.Start)
@@ -143,10 +144,10 @@ Layout.Horizontal().Gap(2)
 
 ### Offset Control
 
-Fine-tune the positioning with offset values:
+Offset control provides pixel-perfect positioning when you need to fine-tune the menu placement.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("Small Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
         .SideOffset(0)
@@ -161,19 +162,19 @@ Layout.Horizontal().Gap(2)
 
 ### Headers
 
-Add informational headers to your dropdown menus:
+Headers provide context and user information, making menus more informative and professional-looking.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("With Header"),
+        new Button("Muted Header"),
         MenuItem.Separator(),
         MenuItem.Default("Profile"),
         MenuItem.Default("Settings"),
         MenuItem.Default("Logout"))
         .Header(Text.Muted("Signed in as user@example.com"))
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Complex Header"),
+        new Button("Label Header"),
         MenuItem.Separator(),
         MenuItem.Default("View Profile"),
         MenuItem.Default("Account Settings"))
@@ -182,7 +183,7 @@ Layout.Horizontal().Gap(2)
 
 ### Nested Submenus
 
-Create hierarchical menu structures:
+Nested submenus are perfect for organizing complex application menus with multiple levels of options.
 
 ```csharp demo-tabs
 new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
@@ -212,10 +213,10 @@ new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value),
 
 ### Button Integration
 
-Use the convenient `WithDropDown` extension method on buttons:
+The `WithDropDown` extension method provides a clean, fluent API for quickly adding dropdown functionality to existing buttons.
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new Button("Quick Menu")
         .WithDropDown(
             MenuItem.Default("Option 1"),
@@ -233,7 +234,7 @@ Layout.Horizontal().Gap(2)
 
 ### Custom Event Handling
 
-Implement custom selection logic:
+Custom event handling allows you to implement complex business logic based on menu selections, making your dropdowns more interactive and useful.
 
 ```csharp demo-tabs
 new DropDownMenu(@evt => {
@@ -255,12 +256,16 @@ new DropDownMenu(@evt => {
     | MenuItem.Default("Share").Tag("share")
 ```
 
-## Complete Example
+<WidgetDocs Type="Ivy.DropDownMenu" ExtensionTypes="Ivy.DropDownMenuExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/DropDownMenu.cs"/>
+
+## Examples
+
+### Complex using
 
 Here's a comprehensive example combining multiple features:
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2)
+Layout.Horizontal().Gap(2).Center()
     | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
         new Button("User Menu"),
         MenuItem.Separator(),
@@ -299,5 +304,3 @@ Layout.Horizontal().Gap(2)
         MenuItem.Default("Support").Tag("support"))
         .Header(Text.Muted("Application Settings"))
 ```
-
-<WidgetDocs Type="Ivy.DropDownMenu" ExtensionTypes="Ivy.DropDownMenuExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/DropDownMenu.cs"/>
