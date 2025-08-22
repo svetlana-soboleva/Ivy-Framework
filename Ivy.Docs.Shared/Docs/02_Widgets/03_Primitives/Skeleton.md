@@ -21,24 +21,37 @@ public class ProductCardView : ViewBase
     {
         var isLoading = UseState(false);
         var product = UseState<ProductData?>();
+        var loadTrigger = UseState(0);
+        
+        // Handle loading with proper timer cleanup
+        UseEffect(() => {
+            if (loadTrigger.Value > 0)
+            {
+                isLoading.Set(true);
+                product.Set((ProductData?)null);
+                
+                // Create timer with proper disposal
+                var timer = new System.Threading.Timer(_ => {
+                    product.Set(new ProductData(
+                        "Premium Wireless Headphones",
+                        "Experience crystal-clear sound with our premium noise-cancelling wireless headphones. Features 30-hour battery life and memory foam ear cushions for all-day comfort.",
+                        149.99m,
+                        "https://example.com/headphones.jpg",
+                        4.7,
+                        12
+                    ));
+                    isLoading.Set(false);
+                }, null, 2000, Timeout.Infinite);
+                
+                // Return cleanup function to dispose timer
+                return timer;
+            }
+            return null;
+        }, [loadTrigger]);
         
         void LoadProduct()
         {
-            isLoading.Set(true);
-            product.Set((ProductData?)null);
-            
-            // Simulate API call delay using Timer
-            var timer = new System.Threading.Timer(_ => {
-                product.Set(new ProductData(
-                    "Premium Wireless Headphones",
-                    "Experience crystal-clear sound with our premium noise-cancelling wireless headphones. Features 30-hour battery life and memory foam ear cushions for all-day comfort.",
-                    149.99m,
-                    "https://example.com/headphones.jpg",
-                    4.7,
-                    12
-                ));
-                isLoading.Set(false);
-            }, null, 2000, Timeout.Infinite);
+            loadTrigger.Set(t => t + 1);
         }
         
         return Layout.Vertical().Gap(4).Padding(4)
