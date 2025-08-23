@@ -10,7 +10,7 @@ The `List` widget is a container designed to render collections of items in a ve
 
 The simplest way to create a list is by passing items directly to the constructor:
 
-```csharp demo-tabs
+```csharp demo-below
 public class BasicListDemo : ViewBase
 {
     public override object? Build()
@@ -228,38 +228,45 @@ public class CustomItemDemo : ViewBase
 }
 ```
 
-### Memoization
+### Dynamic List with UseEffect
 
-Use memoization to prevent unnecessary re-renders of list items:
+Use effects to handle dynamic content and timestamps:
 
 ```csharp demo-tabs
-public class MemoizedListDemo : ViewBase
+public class DynamicListDemo : ViewBase
 {
     public override object? Build()
     {
-        var items = UseState(new[] { 1, 2 });
+        var items = UseState(new[] 
+        { 
+            new { Id = 1, CreatedAt = DateTime.Now },
+            new { Id = 2, CreatedAt = DateTime.Now }
+        });
+        
+        var currentTime = UseState(DateTime.Now);
+        
+        // Update current time every second
+        UseEffect(async () =>
+        {
+            while (true)
+            {
+                await Task.Delay(1000);
+                currentTime.Set(DateTime.Now);
+            }
+        }, []);
         
         var addItem = new Action<Event<Button>>(e =>
         {
-            var newItems = items.Value.Append(items.Value.Length + 1).ToArray();
+            var newItem = new { Id = items.Value.Length + 1, CreatedAt = DateTime.Now };
+            var newItems = items.Value.Append(newItem).ToArray();
             items.Set(newItems);
         });
         
-        var listItems = items.Value.Select(item => new MemoizedListItem(item));
+        var listItems = items.Value.Select(item => new ListItem($"Item {item.Id}", subtitle: $"Created at {item.CreatedAt:HH:mm:ss} | Current: {currentTime.Value:HH:mm:ss}"));
         
         return Layout.Vertical().Gap(2)
             | new Button("Add Item", addItem)
             | new List(listItems);
-    }
-}
-
-public class MemoizedListItem(int value) : ViewBase, IMemoized
-{
-    public object[] GetMemoValues() => [value];
-    
-    public override object? Build()
-    {
-        return new ListItem($"Item {value}", subtitle: $"Rendered at {DateTime.Now:HH:mm:ss}");
     }
 }
 ```
