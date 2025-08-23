@@ -7,31 +7,84 @@ using Ivy.Widgets.Inputs;
 // ReSharper disable once CheckNamespace
 namespace Ivy;
 
+/// <summary>
+/// Defines the visual variants available for boolean input controls.
+/// Each variant provides a different user interface pattern for boolean value selection.
+/// </summary>
 public enum BoolInputs
 {
+    /// <summary>Traditional checkbox with checkbox indicator for true/false selection.</summary>
     Checkbox,
+    /// <summary>Toggle switch with sliding indicator for on/off states.</summary>
     Switch,
+    /// <summary>Toggle button that can display custom icons and labels.</summary>
     Toggle
 }
 
+/// <summary>
+/// Interface for boolean input controls that extends IAnyInput with boolean-specific properties.
+/// Provides common functionality for all boolean input variants including labels, descriptions,
+/// visual variants, and icon support.
+/// </summary>
 public interface IAnyBoolInput : IAnyInput
 {
+    /// <summary>Gets or sets the label text displayed alongside the boolean input.</summary>
+    /// <value>The label text, or null if no label should be displayed.</value>
     public string? Label { get; set; }
+
+    /// <summary>Gets or sets the description or help text for the boolean input.</summary>
+    /// <value>The description text, or null if no description should be displayed.</value>
     public string? Description { get; set; }
+
+    /// <summary>Gets or sets the visual variant of the boolean input.</summary>
+    /// <value>The input variant (Checkbox, Switch, or Toggle).</value>
     public BoolInputs Variant { get; set; }
+
+    /// <summary>Gets or sets the icon displayed with the boolean input (primarily for Toggle variant).</summary>
+    /// <value>The icon to display, or Icons.None if no icon should be shown.</value>
     public Icons Icon { get; set; }
 }
 
+/// <summary>
+/// Abstract base class for boolean input controls that provides common functionality
+/// and properties shared across all boolean input variants. Supports automatic conversion
+/// between boolean values and various numeric types for flexible state binding.
+/// </summary>
 public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
 {
+    /// <summary>Gets or sets whether the input is disabled.</summary>
+    /// <value>true if the input is disabled; false if it's interactive.</value>
     [Prop] public bool Disabled { get; set; }
+
+    /// <summary>Gets or sets the validation error message.</summary>
+    /// <value>The error message, or null if the input is valid.</value>
     [Prop] public string? Invalid { get; set; }
+
+    /// <summary>Gets or sets the label text displayed alongside the input.</summary>
+    /// <value>The label text, or null if no label should be displayed.</value>
     [Prop] public string? Label { get; set; }
+
+    /// <summary>Gets or sets the description or help text for the input.</summary>
+    /// <value>The description text, or null if no description should be displayed.</value>
     [Prop] public string? Description { get; set; }
+
+    /// <summary>Gets or sets the visual variant of the boolean input.</summary>
+    /// <value>The input variant (Checkbox, Switch, or Toggle).</value>
     [Prop] public BoolInputs Variant { get; set; }
+
+    /// <summary>Gets or sets the icon displayed with the input.</summary>
+    /// <value>The icon to display, particularly useful for Toggle variants.</value>
     [Prop] public Icons Icon { get; set; }
+
+    /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
+    /// <value>The blur event handler, or null if no handler is set.</value>
     [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
 
+    /// <summary>
+    /// Returns the types that this boolean input can bind to and automatically convert.
+    /// Supports boolean types and various numeric types that can be converted to/from boolean values.
+    /// </summary>
+    /// <returns>An array of supported types for automatic state binding and conversion.</returns>
     public Type[] SupportedStateTypes() =>
     [
         // Boolean types
@@ -49,8 +102,21 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
     ];
 }
 
+/// <summary>
+/// Generic boolean input control that can work with various boolean-compatible types.
+/// Provides type-safe boolean input functionality with automatic conversion support
+/// for different value types including nullable booleans and numeric types.
+/// </summary>
+/// <typeparam name="TBool">The type of the boolean value (bool, bool?, or numeric types).</typeparam>
 public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
 {
+    /// <summary>
+    /// Initializes a new instance bound to a state object for automatic value synchronization.
+    /// </summary>
+    /// <param name="state">The state object to bind to for automatic value updates.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(IAnyState state, string? label = null, bool disabled = false,
         BoolInputs variant = BoolInputs.Checkbox)
         : this(label, disabled, variant)
@@ -60,6 +126,14 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
         OnChange = e => typedState.Set(e.Value);
     }
 
+    /// <summary>
+    /// Initializes a new instance with an explicit value and change handler.
+    /// </summary>
+    /// <param name="value">The initial boolean value.</param>
+    /// <param name="onChange">Event handler called when the value changes.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null,
         bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
     {
@@ -67,6 +141,13 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
         Value = value;
     }
 
+    /// <summary>
+    /// Initializes a new instance with basic configuration.
+    /// This is the base constructor that sets up the core boolean input functionality.
+    /// </summary>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
     {
         Label = label;
@@ -74,33 +155,81 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
         Variant = variant;
     }
 
+    /// <summary>Gets the current boolean value.</summary>
+    /// <value>The boolean value of the specified type.</value>
     [Prop] public TBool Value { get; } = default!;
+
+    /// <summary>Gets or sets whether the input accepts null values.</summary>
+    /// <value>true if null values are allowed; automatically determined based on TBool type.</value>
     [Prop] public bool Nullable { get; set; } = typeof(TBool) == typeof(bool?);
+
+    /// <summary>Gets the event handler called when the boolean value changes.</summary>
+    /// <value>The change event handler, or null if no handler is set.</value>
     [Event] public Action<Event<IInput<TBool>, TBool>>? OnChange { get; }
 }
 
+/// <summary>
+/// Concrete boolean input control for standard boolean values.
+/// Provides a convenient, non-generic interface for working with bool values
+/// while inheriting all functionality from the generic BoolInput&lt;bool&gt; base class.
+/// </summary>
 public record BoolInput : BoolInput<bool>
 {
+    /// <summary>
+    /// Initializes a new instance bound to a state object for automatic value synchronization.
+    /// </summary>
+    /// <param name="state">The state object to bind to for automatic value updates.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(IAnyState state, string? label = null, bool disabled = false,
         BoolInputs variant = BoolInputs.Checkbox)
         : base(state, label, disabled, variant)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance with an explicit value and change handler.
+    /// </summary>
+    /// <param name="value">The initial boolean value.</param>
+    /// <param name="onChange">Event handler called when the value changes.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(bool value, Action<Event<IInput<bool>, bool>> onChange, string? label = null,
         bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
         : base(value, onChange, label, disabled, variant)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance with basic configuration.
+    /// </summary>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
     public BoolInput(string? label = null, bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
         : base(label, disabled, variant)
     {
     }
 }
 
+/// <summary>
+/// Provides extension methods for creating and configuring boolean inputs with fluent syntax.
+/// Includes automatic type conversion between boolean values and various numeric types,
+/// as well as convenient methods for creating different boolean input variants.
+/// </summary>
 public static class BoolInputExtensions
 {
+    /// <summary>
+    /// Creates a boolean input from a state object with automatic type conversion.
+    /// Supports boolean types and numeric types that can be converted to/from boolean values.
+    /// </summary>
+    /// <param name="state">The state object to bind to.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
+    /// <returns>A boolean input bound to the state object with automatic type conversion.</returns>
     public static BoolInputBase ToBoolInput(this IAnyState state, string? label = null, bool disabled = false,
         BoolInputs variant = BoolInputs.Checkbox)
     {
@@ -205,9 +334,24 @@ public static class BoolInputExtensions
         }
     }
 
+    /// <summary>
+    /// Creates a switch-style boolean input from a state object.
+    /// </summary>
+    /// <param name="state">The state object to bind to.</param>
+    /// <param name="label">Optional label text displayed alongside the switch.</param>
+    /// <param name="disabled">Whether the switch should be disabled initially.</param>
+    /// <returns>A switch-style boolean input bound to the state object.</returns>
     public static BoolInputBase ToSwitchInput(this IAnyState state, string? label = null, bool disabled = false)
         => state.ToBoolInput(label, disabled, BoolInputs.Switch);
 
+    /// <summary>
+    /// Creates a toggle-style boolean input from a state object with optional icon.
+    /// </summary>
+    /// <param name="state">The state object to bind to.</param>
+    /// <param name="icon">Optional icon to display on the toggle button.</param>
+    /// <param name="label">Optional label text displayed alongside the toggle.</param>
+    /// <param name="disabled">Whether the toggle should be disabled initially.</param>
+    /// <returns>A toggle-style boolean input bound to the state object.</returns>
     public static BoolInputBase ToToggleInput(this IAnyState state, Icons? icon = null, string? label = null,
         bool disabled = false)
     {
@@ -230,19 +374,43 @@ public static class BoolInputExtensions
         return input;
     }
 
+    /// <summary>Sets the label text for the boolean input.</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="label">The label text to display.</param>
+    /// <returns>The boolean input with the specified label.</returns>
     public static BoolInputBase Label(this BoolInputBase widget, string label) => widget with { Label = label };
 
+    /// <summary>Sets the disabled state of the boolean input.</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="disabled">Whether the input should be disabled.</param>
+    /// <returns>The boolean input with the specified disabled state.</returns>
     public static BoolInputBase Disabled(this BoolInputBase widget, bool disabled = true) =>
         widget with { Disabled = disabled };
 
+    /// <summary>Sets the visual variant of the boolean input.</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="variant">The visual variant (Checkbox, Switch, or Toggle).</param>
+    /// <returns>The boolean input with the specified variant.</returns>
     public static BoolInputBase Variant(this BoolInputBase widget, BoolInputs variant) =>
         widget with { Variant = variant };
 
+    /// <summary>Sets the icon for the boolean input (primarily for Toggle variant).</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="icon">The icon to display.</param>
+    /// <returns>The boolean input with the specified icon.</returns>
     public static BoolInputBase Icon(this BoolInputBase widget, Icons icon) => widget with { Icon = icon };
 
+    /// <summary>Sets the description text for the boolean input.</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="description">The description or help text to display.</param>
+    /// <returns>The boolean input with the specified description.</returns>
     public static BoolInputBase Description(this BoolInputBase widget, string description) =>
         widget with { Description = description };
 
+    /// <summary>Sets the validation error message for the boolean input.</summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="invalid">The validation error message, or null to clear the error.</param>
+    /// <returns>The boolean input with the specified validation state.</returns>
     public static BoolInputBase Invalid(this BoolInputBase widget, string? invalid) =>
         widget with { Invalid = invalid };
 }
