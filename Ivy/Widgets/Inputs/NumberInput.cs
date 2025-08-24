@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -129,7 +131,7 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this number input can bind to and work with.
@@ -166,16 +168,35 @@ public record NumberInput<TNumber> : NumberInputBase, IInput<TNumber>, IAnyNumbe
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the number input.</param>
     /// <param name="formatStyle">The formatting style for displaying numeric values.</param>
+    [OverloadResolutionPriority(1)]
     public NumberInput(IAnyState state, string? placeholder = null, bool disabled = false, NumberInputs variant = NumberInputs.Number, NumberFormatStyle formatStyle = NumberFormatStyle.Decimal)
         : this(placeholder, disabled, variant, formatStyle)
     {
         var typedState = state.As<TNumber>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial numeric value.</param>
+    /// <param name="onChange">Async function to handle numeric value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the number input.</param>
+    /// <param name="formatStyle">The formatting style for displaying numeric values.</param>
+    [OverloadResolutionPriority(1)]
+    public NumberInput(TNumber value, Func<Event<IInput<TNumber>, TNumber>, ValueTask> onChange, string? placeholder = null, bool disabled = false, NumberInputs variant = NumberInputs.Number, NumberFormatStyle formatStyle = NumberFormatStyle.Decimal)
+        : this(placeholder, disabled, variant, formatStyle)
+    {
+        OnChange = onChange;
+        Value = value;
     }
 
     /// <summary>
     /// Initializes a new instance with an explicit value and state setter function.
+    /// Compatibility overload for Action-based state setters.
     /// </summary>
     /// <param name="value">The initial numeric value.</param>
     /// <param name="state">Function to update the state when the numeric value changes.</param>
@@ -186,7 +207,7 @@ public record NumberInput<TNumber> : NumberInputBase, IInput<TNumber>, IAnyNumbe
     public NumberInput(TNumber value, Action<TNumber> state, string? placeholder = null, bool disabled = false, NumberInputs variant = NumberInputs.Number, NumberFormatStyle formatStyle = NumberFormatStyle.Decimal)
         : this(placeholder, disabled, variant, formatStyle)
     {
-        OnChange = e => state(e.Value);
+        OnChange = e => { state(e.Value); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -214,8 +235,8 @@ public record NumberInput<TNumber> : NumberInputBase, IInput<TNumber>, IAnyNumbe
     [Prop] public bool Nullable { get; set; } = typeof(TNumber).IsNullableType();
 
     /// <summary>Gets the event handler called when the numeric value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TNumber>, TNumber>>? OnChange { get; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TNumber>, TNumber>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -403,4 +424,43 @@ public static class NumberInputExtensions
         return widget with { Invalid = invalid };
     }
 
+
+    /// <summary>
+    /// Sets the blur event handler for the number input.
+    /// This method allows you to configure the number input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new number input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static NumberInputBase HandleBlur(this NumberInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the number input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new number input instance with the updated blur handler.</returns>
+    public static NumberInputBase HandleBlur(this NumberInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the number input.
+    /// This method allows you to configure the number input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new number input instance with the updated blur handler.</returns>
+    public static NumberInputBase HandleBlur(this NumberInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
+    }
 }

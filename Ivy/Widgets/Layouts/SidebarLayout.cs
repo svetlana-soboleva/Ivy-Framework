@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Shared;
 
@@ -121,7 +123,8 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     /// This handler receives the selected menu item and can perform navigation or other actions.</param>
     /// <param name="items">Variable number of MenuItem elements that define the menu structure,
     /// including navigation options, hierarchical menus, and interactive elements.</param>
-    public SidebarMenu(Action<Event<SidebarMenu, object>> onSelect, params MenuItem[] items)
+    [OverloadResolutionPriority(1)]
+    public SidebarMenu(Func<Event<SidebarMenu, object>, ValueTask> onSelect, params MenuItem[] items)
     {
         OnSelect = onSelect;
         Items = items;
@@ -147,7 +150,7 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     /// This handler receives the selected menu item and can perform navigation, state updates,
     /// or other actions based on the user's selection.
     /// </summary>
-    [Event] public Action<Event<SidebarMenu, object>> OnSelect { get; set; }
+    [Event] public Func<Event<SidebarMenu, object>, ValueTask> OnSelect { get; set; }
 
     /// <summary>
     /// Gets or sets the optional event handler for Ctrl+Right-click events on menu items.
@@ -155,7 +158,7 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     /// context menus, secondary actions, or alternative navigation behaviors.
     /// Default is null (no Ctrl+Right-click handling).
     /// </summary>
-    [Event] public Action<Event<SidebarMenu, object>>? OnCtrlRightClickSelect { get; set; }
+    [Event] public Func<Event<SidebarMenu, object>, ValueTask>? OnCtrlRightClickSelect { get; set; }
 
     /// <summary>
     /// Operator overload that prevents adding children to the SidebarMenu using the pipe operator.
@@ -172,6 +175,17 @@ public record SidebarMenu : WidgetBase<SidebarLayout>
     public static SidebarMenu operator |(SidebarMenu widget, object child)
     {
         throw new NotSupportedException("SidebarMenu does not support children.");
+    }
+
+    /// <summary>
+    /// Compatibility constructor for Action-based event handlers.
+    /// Automatically wraps Action delegates in ValueTask-returning functions for backward compatibility.
+    /// </summary>
+    /// <param name="onSelect">Optional Action-based event handler for menu item selection events.</param>
+    /// <param name="items">Variable number of MenuItem elements that define the menu structure.</param>
+    public SidebarMenu(Action<Event<SidebarMenu, object>> onSelect, params MenuItem[] items)
+        : this(e => { onSelect(e); return ValueTask.CompletedTask; }, items)
+    {
     }
 }
 

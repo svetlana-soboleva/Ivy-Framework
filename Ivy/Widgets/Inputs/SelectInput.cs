@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -69,7 +71,7 @@ public abstract record SelectInputBase : WidgetBase<SelectInputBase>, IAnySelect
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this select input can bind to and work with.
@@ -97,20 +99,40 @@ public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectI
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the select input.</param>
     /// <param name="selectMany">Whether multiple options can be selected simultaneously.</param>
+    [OverloadResolutionPriority(1)]
     public SelectInput(IAnyState state, IEnumerable<IAnyOption> options, string? placeholder = null, bool disabled = false, SelectInputs variant = SelectInputs.Select, bool selectMany = false)
         : this(options, placeholder, disabled, variant, selectMany)
     {
         var typedState = state.As<TValue>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new select input with an explicit value and change handler.
+    /// Initializes a new select input with an explicit value and async change handler.
     /// Useful for manual state management or when custom change handling is required.
     /// </summary>
     /// <param name="value">The initial selected value.</param>
-    /// <param name="onChange">The event handler called when the selection changes.</param>
+    /// <param name="onChange">The async event handler called when the selection changes.</param>
+    /// <param name="options">The collection of options available for selection.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when no option is selected.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the select input.</param>
+    /// <param name="selectMany">Whether multiple options can be selected simultaneously.</param>
+    [OverloadResolutionPriority(1)]
+    public SelectInput(TValue value, Func<Event<IInput<TValue>, TValue>, ValueTask>? onChange, IEnumerable<IAnyOption> options, string? placeholder = null, bool disabled = false, SelectInputs variant = SelectInputs.Select, bool selectMany = false)
+        : this(options, placeholder, disabled, variant, selectMany)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new select input with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
+    /// </summary>
+    /// <param name="value">The initial selected value.</param>
+    /// <param name="onChange">The synchronous event handler called when the selection changes.</param>
     /// <param name="options">The collection of options available for selection.</param>
     /// <param name="placeholder">Optional placeholder text displayed when no option is selected.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
@@ -119,7 +141,7 @@ public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectI
     public SelectInput(TValue value, Action<Event<IInput<TValue>, TValue>>? onChange, IEnumerable<IAnyOption> options, string? placeholder = null, bool disabled = false, SelectInputs variant = SelectInputs.Select, bool selectMany = false)
         : this(options, placeholder, disabled, variant, selectMany)
     {
-        OnChange = onChange;
+        OnChange = onChange == null ? null : e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -154,8 +176,8 @@ public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectI
     [Prop] public IAnyOption[] Options { get; set; }
 
     /// <summary>Gets the event handler called when the selection changes.</summary>
-    /// <value>The change event handler that receives the select input and the new selected value(s), or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
+    /// <value>The async change event handler that receives the select input and the new selected value(s), or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TValue>, TValue>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -263,5 +285,45 @@ public static class SelectInputExtensions
     public static SelectInputBase List(this SelectInputBase widget)
     {
         return widget with { Variant = SelectInputs.List };
+    }
+
+
+    /// <summary>
+    /// Sets the blur event handler for the select input.
+    /// This method allows you to configure the select input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new select input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static SelectInputBase HandleBlur(this SelectInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the select input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new select input instance with the updated blur handler.</returns>
+    public static SelectInputBase HandleBlur(this SelectInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the select input.
+    /// This method allows you to configure the select input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new select input instance with the updated blur handler.</returns>
+    public static SelectInputBase HandleBlur(this SelectInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 }

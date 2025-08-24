@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -30,22 +32,37 @@ public record ReadOnlyInput<TValue> : WidgetBase<ReadOnlyInput<TValue>>, IInput<
     /// though user interaction is disabled.
     /// </summary>
     /// <param name="state">The state object to bind to for automatic value updates and change handling.</param>
+    [OverloadResolutionPriority(1)]
     public ReadOnlyInput(IAnyState state)
     {
         var typedState = state.As<TValue>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new read-only input with an explicit value and optional change handler.
+    /// Initializes a new read-only input with an explicit value and optional async change handler.
+    /// Useful for displaying static values or when manual change handling is required.
+    /// </summary>
+    /// <param name="value">The value to display in the read-only input.</param>
+    /// <param name="onChange">Optional async event handler called when the value would change (though user interaction is disabled).</param>
+    [OverloadResolutionPriority(1)]
+    public ReadOnlyInput(TValue value, Func<Event<IInput<TValue>, TValue>, ValueTask>? onChange = null)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new read-only input with an explicit value and optional synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// Useful for displaying static values or when manual change handling is required.
     /// </summary>
     /// <param name="value">The value to display in the read-only input.</param>
     /// <param name="onChange">Optional event handler called when the value would change (though user interaction is disabled).</param>
     public ReadOnlyInput(TValue value, Action<Event<IInput<TValue>, TValue>>? onChange = null)
     {
-        OnChange = onChange;
+        OnChange = onChange == null ? null : e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -69,13 +86,13 @@ public record ReadOnlyInput<TValue> : WidgetBase<ReadOnlyInput<TValue>>, IInput<
     [Prop] public bool ShowCopyButton { get; set; } = true;
 
     /// <summary>Gets the event handler called when the value would change.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
+    /// <value>The async change event handler, or null if no handler is set.</value>
     /// <remarks>While users cannot directly modify read-only inputs, this supports programmatic value updates.</remarks>
-    [Event] public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
+    [Event] public Func<Event<IInput<TValue>, TValue>, ValueTask>? OnChange { get; }
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this read-only input can bind to and work with.
@@ -110,5 +127,48 @@ public static class ReadOnlyInputExtensions
         Type genericType = typeof(ReadOnlyInput<>).MakeGenericType(type);
         IAnyReadOnlyInput input = (IAnyReadOnlyInput)Activator.CreateInstance(genericType, state)!;
         return input;
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the read-only input.
+    /// This method allows you to configure the read-only input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The read-only input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new read-only input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static IAnyReadOnlyInput HandleBlur<T>(this IAnyReadOnlyInput widget, Func<Event<IAnyInput>, ValueTask> onBlur) where T : notnull
+    {
+        if (widget is ReadOnlyInput<T> typedWidget)
+        {
+            return typedWidget with { OnBlur = onBlur };
+        }
+        throw new InvalidOperationException($"Widget is not of expected type ReadOnlyInput<{typeof(T).Name}>");
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the read-only input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The read-only input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new read-only input instance with the updated blur handler.</returns>
+    public static IAnyReadOnlyInput HandleBlur<T>(this IAnyReadOnlyInput widget, Action<Event<IAnyInput>> onBlur) where T : notnull
+    {
+        return widget.HandleBlur<T>(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the read-only input.
+    /// This method allows you to configure the read-only input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The read-only input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new read-only input instance with the updated blur handler.</returns>
+    public static IAnyReadOnlyInput HandleBlur<T>(this IAnyReadOnlyInput widget, Action onBlur) where T : notnull
+    {
+        return widget.HandleBlur<T>(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 }

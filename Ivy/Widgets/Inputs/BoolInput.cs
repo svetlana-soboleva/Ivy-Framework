@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -78,7 +80,7 @@ public abstract record BoolInputBase : WidgetBase<BoolInputBase>, IAnyBoolInput
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this boolean input can bind to and automatically convert.
@@ -117,17 +119,35 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
     /// <param name="label">Optional label text displayed alongside the input.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the boolean input.</param>
+    [OverloadResolutionPriority(1)]
     public BoolInput(IAnyState state, string? label = null, bool disabled = false,
         BoolInputs variant = BoolInputs.Checkbox)
         : this(label, disabled, variant)
     {
         var typedState = state.As<TBool>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial boolean value.</param>
+    /// <param name="onChange">Async event handler called when the value changes.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
+    [OverloadResolutionPriority(1)]
+    public BoolInput(TBool value, Func<Event<IInput<TBool>, TBool>, ValueTask> onChange, string? label = null,
+        bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial boolean value.</param>
     /// <param name="onChange">Event handler called when the value changes.</param>
@@ -137,7 +157,7 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
     public BoolInput(TBool value, Action<Event<IInput<TBool>, TBool>> onChange, string? label = null,
         bool disabled = false, BoolInputs variant = BoolInputs.Checkbox) : this(label, disabled, variant)
     {
-        OnChange = onChange;
+        OnChange = e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -164,8 +184,8 @@ public record BoolInput<TBool> : BoolInputBase, IInput<TBool>
     [Prop] public bool Nullable { get; set; } = typeof(TBool) == typeof(bool?);
 
     /// <summary>Gets the event handler called when the boolean value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TBool>, TBool>>? OnChange { get; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TBool>, TBool>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -182,6 +202,7 @@ public record BoolInput : BoolInput<bool>
     /// <param name="label">Optional label text displayed alongside the input.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the boolean input.</param>
+    [OverloadResolutionPriority(1)]
     public BoolInput(IAnyState state, string? label = null, bool disabled = false,
         BoolInputs variant = BoolInputs.Checkbox)
         : base(state, label, disabled, variant)
@@ -189,7 +210,23 @@ public record BoolInput : BoolInput<bool>
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial boolean value.</param>
+    /// <param name="onChange">Async event handler called when the value changes.</param>
+    /// <param name="label">Optional label text displayed alongside the input.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the boolean input.</param>
+    [OverloadResolutionPriority(1)]
+    public BoolInput(bool value, Func<Event<IInput<bool>, bool>, ValueTask> onChange, string? label = null,
+        bool disabled = false, BoolInputs variant = BoolInputs.Checkbox)
+        : base(value, onChange, label, disabled, variant)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial boolean value.</param>
     /// <param name="onChange">Event handler called when the value changes.</param>
@@ -413,4 +450,44 @@ public static class BoolInputExtensions
     /// <returns>The boolean input with the specified validation state.</returns>
     public static BoolInputBase Invalid(this BoolInputBase widget, string? invalid) =>
         widget with { Invalid = invalid };
+
+
+    /// <summary>
+    /// Sets the blur event handler for the boolean input.
+    /// This method allows you to configure the boolean input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new boolean input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static BoolInputBase HandleBlur(this BoolInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the boolean input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new boolean input instance with the updated blur handler.</returns>
+    public static BoolInputBase HandleBlur(this BoolInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the boolean input.
+    /// This method allows you to configure the boolean input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The boolean input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new boolean input instance with the updated blur handler.</returns>
+    public static BoolInputBase HandleBlur(this BoolInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
+    }
 }

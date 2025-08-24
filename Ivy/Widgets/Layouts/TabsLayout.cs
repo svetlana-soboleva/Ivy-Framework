@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Shared;
 
@@ -44,7 +46,8 @@ public record TabsLayout : WidgetBase<TabsLayout>
     /// is pre-selected and the user must make an initial selection.</param>
     /// <param name="tabs">Variable number of Tab objects defining the tab structure, content,
     /// and visual properties for the tabbed interface.</param>
-    public TabsLayout(Action<Event<TabsLayout, int>>? onSelect, Action<Event<TabsLayout, int>>? onClose, Action<Event<TabsLayout, int>>? onRefresh, Action<Event<TabsLayout, int[]>>? onReorder, int? selectedIndex, params Tab[] tabs) : base(tabs.Cast<object>().ToArray())
+    [OverloadResolutionPriority(1)]
+    public TabsLayout(Func<Event<TabsLayout, int>, ValueTask>? onSelect, Func<Event<TabsLayout, int>, ValueTask>? onClose, Func<Event<TabsLayout, int>, ValueTask>? onRefresh, Func<Event<TabsLayout, int[]>, ValueTask>? onReorder, int? selectedIndex, params Tab[] tabs) : base(tabs.Cast<object>().ToArray())
     {
         OnSelect = onSelect;
         OnClose = onClose;
@@ -101,7 +104,7 @@ public record TabsLayout : WidgetBase<TabsLayout>
     /// of the selected tab for navigation, state updates, or other custom actions.
     /// Default is the value provided in the constructor.
     /// </summary>
-    [Event] public Action<Event<TabsLayout, int>>? OnSelect { get; set; }
+    [Event] public Func<Event<TabsLayout, int>, ValueTask>? OnSelect { get; set; }
 
     /// <summary>
     /// Gets or sets the event handler for tab close events.
@@ -109,7 +112,7 @@ public record TabsLayout : WidgetBase<TabsLayout>
     /// of the closed tab for cleanup, state management, or other custom actions.
     /// Default is the value provided in the constructor.
     /// </summary>
-    [Event] public Action<Event<TabsLayout, int>>? OnClose { get; set; }
+    [Event] public Func<Event<TabsLayout, int>, ValueTask>? OnClose { get; set; }
 
     /// <summary>
     /// Gets or sets the event handler for tab refresh events.
@@ -117,7 +120,7 @@ public record TabsLayout : WidgetBase<TabsLayout>
     /// providing the index of the tab to refresh for data reloading or other actions.
     /// Default is the value provided in the constructor.
     /// </summary>
-    [Event] public Action<Event<TabsLayout, int>>? OnRefresh { get; set; }
+    [Event] public Func<Event<TabsLayout, int>, ValueTask>? OnRefresh { get; set; }
 
     /// <summary>
     /// Gets or sets the event handler for tab reordering events.
@@ -125,7 +128,31 @@ public record TabsLayout : WidgetBase<TabsLayout>
     /// providing an array of the new tab order indices for state updates or persistence.
     /// Default is the value provided in the constructor.
     /// </summary>
-    [Event] public Action<Event<TabsLayout, int[]>>? OnReorder { get; set; }
+    [Event] public Func<Event<TabsLayout, int[]>, ValueTask>? OnReorder { get; set; }
+
+    /// <summary>
+    /// Compatibility constructor for Action-based event handlers.
+    /// Automatically wraps Action delegates in ValueTask-returning functions for backward compatibility.
+    /// </summary>
+    /// <param name="onSelect">Optional Action-based event handler for tab selection events.</param>
+    /// <param name="onClose">Optional Action-based event handler for tab close events.</param>
+    /// <param name="onRefresh">Optional Action-based event handler for tab refresh events.</param>
+    /// <param name="onReorder">Optional Action-based event handler for tab reordering events.</param>
+    /// <param name="selectedIndex">The index of the initially selected tab.</param>
+    /// <param name="tabs">Variable number of Tab objects defining the tab structure.</param>
+    public TabsLayout(Action<Event<TabsLayout, int>>? onSelect, Action<Event<TabsLayout, int>>? onClose, Action<Event<TabsLayout, int>>? onRefresh, Action<Event<TabsLayout, int[]>>? onReorder, int? selectedIndex, params Tab[] tabs)
+        : this(
+            onSelect != null ? e => { onSelect(e); return ValueTask.CompletedTask; }
+    : null,
+            onClose != null ? e => { onClose(e); return ValueTask.CompletedTask; }
+    : null,
+            onRefresh != null ? e => { onRefresh(e); return ValueTask.CompletedTask; }
+    : null,
+            onReorder != null ? e => { onReorder(e); return ValueTask.CompletedTask; }
+    : null,
+            selectedIndex, tabs)
+    {
+    }
 }
 
 /// <summary>
