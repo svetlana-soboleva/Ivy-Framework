@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -100,7 +102,7 @@ public abstract record FileInputBase : WidgetBase<FileInputBase>, IAnyFileInput
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this file input can bind to.
@@ -164,6 +166,7 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     /// <param name="placeholder">Optional placeholder text displayed when no files are selected.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the file input.</param>
+    [OverloadResolutionPriority(1)]
     public FileInput(IAnyState state, string? placeholder = null, bool disabled = false, FileInputs variant = FileInputs.Drop)
         : this(placeholder, disabled, variant)
     {
@@ -186,11 +189,29 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
                     Invalid = null;
                 }
             }
+            return ValueTask.CompletedTask;
         };
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial file value.</param>
+    /// <param name="onChange">Optional async event handler called when the file value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when no files are selected.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the file input.</param>
+    [OverloadResolutionPriority(1)]
+    public FileInput(TValue value, Func<Event<IInput<TValue>, TValue>, ValueTask>? onChange, string? placeholder = null, bool disabled = false, FileInputs variant = FileInputs.Drop)
+        : this(placeholder, disabled, variant)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial file value.</param>
     /// <param name="onChange">Optional event handler called when the file value changes.</param>
@@ -200,7 +221,7 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     public FileInput(TValue value, Action<Event<IInput<TValue>, TValue>>? onChange, string? placeholder = null, bool disabled = false, FileInputs variant = FileInputs.Drop)
         : this(placeholder, disabled, variant)
     {
-        OnChange = onChange;
+        OnChange = onChange == null ? null : e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -225,8 +246,8 @@ public record FileInput<TValue> : FileInputBase, IInput<TValue>, IAnyFileInput
     [Prop] public TValue Value { get; } = default!;
 
     /// <summary>Gets the event handler called when the file value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TValue>, TValue>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -383,4 +404,42 @@ public static class FileInputExtensions
     }
 
 
+    /// <summary>
+    /// Sets the blur event handler for the file input.
+    /// This method allows you to configure the file input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The file input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new file input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static FileInputBase HandleBlur(this FileInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the file input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The file input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new file input instance with the updated blur handler.</returns>
+    public static FileInputBase HandleBlur(this FileInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the file input.
+    /// This method allows you to configure the file input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The file input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new file input instance with the updated blur handler.</returns>
+    public static FileInputBase HandleBlur(this FileInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
+    }
 }

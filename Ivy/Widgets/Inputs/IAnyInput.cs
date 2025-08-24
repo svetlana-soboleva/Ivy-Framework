@@ -1,4 +1,5 @@
-
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 
 namespace Ivy.Widgets.Inputs;
@@ -35,7 +36,7 @@ public interface IAnyInput
     /// used for validation, formatting, or other post-input processing.
     /// </summary>
     /// <value>An action that receives a <see cref="Event{T}"/> with this input as the source.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns an array of types that this input control can bind to and work with.
@@ -87,9 +88,37 @@ public static class AnyInputExtensions
     /// <param name="input">The input control to configure.</param>
     /// <param name="onBlur">The event handler to call when the input loses focus, or null to remove the handler.</param>
     /// <returns>The input control with the specified blur event handler.</returns>
-    public static IAnyInput HandleBlur(this IAnyInput input, Action<Event<IAnyInput>>? onBlur)
+    [OverloadResolutionPriority(1)]
+    public static IAnyInput HandleBlur(this IAnyInput input, Func<Event<IAnyInput>, ValueTask>? onBlur)
     {
         input.OnBlur = onBlur;
+        return input;
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the input control.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="input">The input control to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>The input control with the specified blur event handler.</returns>
+    public static IAnyInput HandleBlur(this IAnyInput input, Action<Event<IAnyInput>> onBlur)
+    {
+        input.OnBlur = onBlur.ToValueTask();
+        return input;
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the input control.
+    /// This method allows you to configure the input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="input">The input control to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>The input control with the specified blur event handler.</returns>
+    public static IAnyInput HandleBlur(this IAnyInput input, Action onBlur)
+    {
+        input.OnBlur = _ => { onBlur(); return ValueTask.CompletedTask; };
         return input;
     }
 }

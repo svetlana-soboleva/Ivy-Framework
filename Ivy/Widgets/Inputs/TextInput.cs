@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -75,7 +77,7 @@ public abstract record TextInputBase : WidgetBase<TextInputBase>, IAnyTextInput
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this text input can bind to and work with.
@@ -106,7 +108,7 @@ public record TextInput<TString> : TextInputBase, IInput<TString>
     {
         var typedState = state.As<TString>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
@@ -118,10 +120,19 @@ public record TextInput<TString> : TextInputBase, IInput<TString>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual and functional variant of the text input.</param>
-    public TextInput(TString value, Action<Event<IInput<TString>, TString>>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
+    [OverloadResolutionPriority(1)]
+    public TextInput(TString value, Func<Event<IInput<TString>, TString>, ValueTask>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
         : this(placeholder, disabled, variant)
     {
         OnChange = onChange;
+        Value = value;
+    }
+
+    // Overload for Action<Event<IInput<TString>, TString>>
+    public TextInput(TString value, Action<Event<IInput<TString>, TString>>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
+        : this(placeholder, disabled, variant)
+    {
+        OnChange = onChange?.ToValueTask();
         Value = value;
     }
 
@@ -145,7 +156,7 @@ public record TextInput<TString> : TextInputBase, IInput<TString>
 
     /// <summary>Gets the event handler called when the text value changes.</summary>
     /// <value>The change event handler that receives the text input and the new value, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TString>, TString>>? OnChange { get; }
+    [Event] public Func<Event<IInput<TString>, TString>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -177,8 +188,15 @@ public record TextInput : TextInput<string>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual and functional variant of the text input.</param>
-    public TextInput(string value, Action<Event<IInput<string>, string>>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
+    [OverloadResolutionPriority(1)]
+    public TextInput(string value, Func<Event<IInput<string>, string>, ValueTask>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
         : base(value, onChange, placeholder, disabled, variant)
+    {
+    }
+
+    // Overload for Action<Event<IInput<string>, string>>
+    public TextInput(string value, Action<Event<IInput<string>, string>>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
+        : base(value, onChange?.ToValueTask(), placeholder, disabled, variant)
     {
     }
 
@@ -309,4 +327,44 @@ public static class TextInputExtensions
     /// <param name="shortcutKey">The keyboard shortcut key combination for focusing this input.</param>
     /// <returns>The text input with the specified shortcut key.</returns>
     public static TextInputBase ShortcutKey(this TextInputBase widget, string shortcutKey) => widget with { ShortcutKey = shortcutKey };
+
+
+    /// <summary>
+    /// Sets the blur event handler for the text input.
+    /// This method allows you to configure the text input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The text input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new text input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static TextInputBase HandleBlur(this TextInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the text input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The text input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new text input instance with the updated blur handler.</returns>
+    public static TextInputBase HandleBlur(this TextInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the text input.
+    /// This method allows you to configure the text input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The text input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new text input instance with the updated blur handler.</returns>
+    public static TextInputBase HandleBlur(this TextInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
+    }
 }

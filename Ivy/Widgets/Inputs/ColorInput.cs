@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -66,7 +68,7 @@ public abstract record ColorInputBase : WidgetBase<ColorInputBase>, IAnyColorInp
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this color input can bind to and work with.
@@ -94,16 +96,34 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the color input.</param>
+    [OverloadResolutionPriority(1)]
     public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : this(placeholder, disabled, variant)
     {
         var typedState = state.As<TColor>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial color value.</param>
+    /// <param name="onChange">Async event handler called when the color value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the color input.</param>
+    [OverloadResolutionPriority(1)]
+    public ColorInput(TColor value, Func<Event<IInput<TColor>, TColor>, ValueTask> onChange, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
+        : this(placeholder, disabled, variant)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial color value.</param>
     /// <param name="onChange">Event handler called when the color value changes.</param>
@@ -113,7 +133,7 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
     public ColorInput(TColor value, Action<Event<IInput<TColor>, TColor>> onChange, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : this(placeholder, disabled, variant)
     {
-        OnChange = onChange;
+        OnChange = e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -135,8 +155,8 @@ public record ColorInput<TColor> : ColorInputBase, IInput<TColor>
     [Prop] public TColor Value { get; } = default!;
 
     /// <summary>Gets the event handler called when the color value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TColor>, TColor>>? OnChange { get; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TColor>, TColor>, ValueTask>? OnChange { get; }
 }
 
 /// <summary>
@@ -153,13 +173,29 @@ public record ColorInput : ColorInput<string>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the color input.</param>
+    [OverloadResolutionPriority(1)]
     public ColorInput(IAnyState state, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
         : base(state, placeholder, disabled, variant)
     {
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial color value as a string (hex code, RGB, or color name).</param>
+    /// <param name="onChange">Async event handler called when the color value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the color input.</param>
+    [OverloadResolutionPriority(1)]
+    public ColorInput(string value, Func<Event<IInput<string>, string>, ValueTask> onChange, string? placeholder = null, bool disabled = false, ColorInputs variant = ColorInputs.TextAndPicker)
+        : base(value, onChange, placeholder, disabled, variant)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial color value as a string (hex code, RGB, or color name).</param>
     /// <param name="onChange">Event handler called when the color value changes.</param>
@@ -242,5 +278,45 @@ public static class ColorInputExtensions
     public static ColorInputBase Variant(this ColorInputBase widget, ColorInputs variant)
     {
         return widget with { Variant = variant };
+    }
+
+
+    /// <summary>
+    /// Sets the blur event handler for the color input.
+    /// This method allows you to configure the color input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The color input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new color input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static ColorInputBase HandleBlur(this ColorInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the color input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The color input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new color input instance with the updated blur handler.</returns>
+    public static ColorInputBase HandleBlur(this ColorInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the color input.
+    /// This method allows you to configure the color input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The color input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new color input instance with the updated blur handler.</returns>
+    public static ColorInputBase HandleBlur(this ColorInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 }

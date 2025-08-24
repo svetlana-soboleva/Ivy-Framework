@@ -1,4 +1,6 @@
-﻿using Ivy.Core;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
 using Ivy.Widgets.Inputs;
@@ -50,7 +52,7 @@ public abstract record DateRangeInputBase : WidgetBase<DateRangeInputBase>, IAny
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this date range input can bind to and work with.
@@ -79,16 +81,34 @@ public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange
     /// <param name="state">The state object to bind to for automatic value updates.</param>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
+    [OverloadResolutionPriority(1)]
     public DateRangeInput(IAnyState state, string? placeholder = null, bool disabled = false) : this(placeholder, disabled)
     {
         var typedState = state.As<TDateRange>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
         Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// Automatically detects whether the date range is nullable based on the generic type.
+    /// </summary>
+    /// <param name="value">The initial date range value as a tuple.</param>
+    /// <param name="onChange">Async event handler called when the date range value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    [OverloadResolutionPriority(1)]
+    public DateRangeInput(TDateRange value, Func<Event<IInput<TDateRange>, TDateRange>, ValueTask> onChange, string? placeholder = null, bool disabled = false) : this(placeholder, disabled)
+    {
+        OnChange = onChange;
+        Value = value;
+        Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// Automatically detects whether the date range is nullable based on the generic type.
     /// </summary>
     /// <param name="value">The initial date range value as a tuple.</param>
@@ -97,7 +117,7 @@ public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     public DateRangeInput(TDateRange value, Action<Event<IInput<TDateRange>, TDateRange>> onChange, string? placeholder = null, bool disabled = false) : this(placeholder, disabled)
     {
-        OnChange = onChange;
+        OnChange = e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
         Nullable = typeof(TDateRange) == typeof((DateOnly?, DateOnly?));
     }
@@ -118,8 +138,8 @@ public record DateRangeInput<TDateRange> : DateRangeInputBase, IInput<TDateRange
     [Prop] public TDateRange Value { get; set; } = default!;
 
     /// <summary>Gets or sets the event handler called when the date range value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TDateRange>, TDateRange>>? OnChange { get; set; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TDateRange>, TDateRange>, ValueTask>? OnChange { get; set; }
 }
 
 /// <summary>
@@ -196,5 +216,45 @@ public static class DateRangeInputExtensions
     public static DateRangeInputBase Nullable(this DateRangeInputBase widget, bool nullable = true)
     {
         return widget with { Nullable = nullable };
+    }
+
+
+    /// <summary>
+    /// Sets the blur event handler for the date range input.
+    /// This method allows you to configure the date range input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The date range input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new date range input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static DateRangeInputBase HandleBlur(this DateRangeInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the date range input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The date range input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new date range input instance with the updated blur handler.</returns>
+    public static DateRangeInputBase HandleBlur(this DateRangeInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the date range input.
+    /// This method allows you to configure the date range input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The date range input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new date range input instance with the updated blur handler.</returns>
+    public static DateRangeInputBase HandleBlur(this DateRangeInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 }

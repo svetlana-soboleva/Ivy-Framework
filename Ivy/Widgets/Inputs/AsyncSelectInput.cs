@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -66,16 +68,35 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
     /// <param name="lookup">Delegate for looking up option display information by value.</param>
     /// <param name="placeholder">Optional placeholder text when no option is selected.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
+    [OverloadResolutionPriority(1)]
     public AsyncSelectInputView(IAnyState state, AsyncSelectQueryDelegate<TValue> query, AsyncSelectLookupDelegate<TValue> lookup, string? placeholder = null, bool disabled = false)
         : this(query, lookup, placeholder, disabled)
     {
         var typedState = state.As<TValue>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial selected value.</param>
+    /// <param name="onChange">Async event handler called when the selection changes.</param>
+    /// <param name="query">Delegate for querying options based on search input.</param>
+    /// <param name="lookup">Delegate for looking up option display information by value.</param>
+    /// <param name="placeholder">Optional placeholder text when no option is selected.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    [OverloadResolutionPriority(1)]
+    public AsyncSelectInputView(TValue value, Func<Event<IInput<TValue>, TValue>, ValueTask>? onChange, AsyncSelectQueryDelegate<TValue> query, AsyncSelectLookupDelegate<TValue> lookup, string? placeholder = null, bool disabled = false)
+        : this(query, lookup, placeholder, disabled)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial selected value.</param>
     /// <param name="onChange">Event handler called when the selection changes.</param>
@@ -86,7 +107,7 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
     public AsyncSelectInputView(TValue value, Action<Event<IInput<TValue>, TValue>>? onChange, AsyncSelectQueryDelegate<TValue> query, AsyncSelectLookupDelegate<TValue> lookup, string? placeholder = null, bool disabled = false)
         : this(query, lookup, placeholder, disabled)
     {
-        OnChange = onChange;
+        OnChange = onChange == null ? null : e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -134,14 +155,14 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
     /// <summary>
     /// Gets the event handler called when the selected value changes.
     /// </summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    public Action<Event<IInput<TValue>, TValue>>? OnChange { get; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    public Func<Event<IInput<TValue>, TValue>, ValueTask>? OnChange { get; }
 
     /// <summary>
     /// Gets or sets the event handler called when the input loses focus.
     /// </summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Gets or sets whether the input is disabled.
@@ -181,7 +202,8 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
             if (refreshToken.IsRefreshed)
             {
                 Value = (TValue)refreshToken.ReturnValue!;
-                OnChange?.Invoke(new Event<IInput<TValue>, TValue>("OnChange", this, Value));
+                if (OnChange != null)
+                    await OnChange(new Event<IInput<TValue>, TValue>("OnChange", this, Value));
             }
 
             if (!(Value?.Equals(typeof(TValue).IsValueType ? Activator.CreateInstance<TValue>() : default!) ?? true))
@@ -299,6 +321,65 @@ public static class AsyncSelectInputViewExtensions
         {
             throw ex.InnerException ?? ex;
         }
+    }
+
+
+    /// <summary>
+    /// Sets the blur event handler for the async select input.
+    /// This method allows you to configure the async select input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The async select input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new async select input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        // AsyncSelectInputView is a ViewBase, not a record, so we need to set the OnBlur property directly
+        if (widget is AsyncSelectInputView<object> typedWidget)
+        {
+            typedWidget.OnBlur = onBlur;
+            return typedWidget;
+        }
+
+        // Try to handle other generic types dynamically
+        var widgetType = widget.GetType();
+        if (widgetType.IsGenericType && widgetType.GetGenericTypeDefinition() == typeof(AsyncSelectInputView<>))
+        {
+            var onBlurProperty = widgetType.GetProperty("OnBlur");
+            if (onBlurProperty != null)
+            {
+                onBlurProperty.SetValue(widget, onBlur);
+                return widget;
+            }
+        }
+
+        throw new InvalidOperationException("Unable to set blur handler on async select input");
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the async select input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The async select input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new async select input instance with the updated blur handler.</returns>
+    public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the async select input.
+    /// This method allows you to configure the async select input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The async select input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new async select input instance with the updated blur handler.</returns>
+    public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 }
 

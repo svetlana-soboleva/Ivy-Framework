@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Ivy.Core;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
@@ -69,7 +71,7 @@ public abstract record DateTimeInputBase : WidgetBase<DateTimeInputBase>, IAnyDa
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     /// <value>The blur event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IAnyInput>>? OnBlur { get; set; }
+    [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
 
     /// <summary>
     /// Returns the types that this date/time input can bind to and work with.
@@ -101,15 +103,32 @@ public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the date/time input.</param>
+    [OverloadResolutionPriority(1)]
     public DateTimeInput(IAnyState state, string? placeholder = null, bool disabled = false, DateTimeInputs variant = DateTimeInputs.Date) : this(placeholder, disabled, variant)
     {
         var typedState = state.As<TDate>();
         Value = typedState.Value;
-        OnChange = e => typedState.Set(e.Value);
+        OnChange = e => { typedState.Set(e.Value); return ValueTask.CompletedTask; };
     }
 
     /// <summary>
-    /// Initializes a new instance with an explicit value and change handler.
+    /// Initializes a new instance with an explicit value and async change handler.
+    /// </summary>
+    /// <param name="value">The initial date/time value.</param>
+    /// <param name="onChange">Async event handler called when the date/time value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual variant of the date/time input.</param>
+    [OverloadResolutionPriority(1)]
+    public DateTimeInput(TDate value, Func<Event<IInput<TDate>, TDate>, ValueTask> onChange, string? placeholder = null, bool disabled = false, DateTimeInputs variant = DateTimeInputs.Date) : this(placeholder, disabled, variant)
+    {
+        OnChange = onChange;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance with an explicit value and synchronous change handler.
+    /// Compatibility overload for Action-based change handlers.
     /// </summary>
     /// <param name="value">The initial date/time value.</param>
     /// <param name="onChange">Event handler called when the date/time value changes.</param>
@@ -118,7 +137,7 @@ public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
     /// <param name="variant">The visual variant of the date/time input.</param>
     public DateTimeInput(TDate value, Action<Event<IInput<TDate>, TDate>> onChange, string? placeholder = null, bool disabled = false, DateTimeInputs variant = DateTimeInputs.Date) : this(placeholder, disabled, variant)
     {
-        OnChange = onChange;
+        OnChange = e => { onChange(e); return ValueTask.CompletedTask; };
         Value = value;
     }
 
@@ -144,8 +163,8 @@ public record DateTimeInput<TDate> : DateTimeInputBase, IInput<TDate>
     [Prop] public bool Nullable { get; set; } = typeof(TDate) == typeof(DateTime?) || typeof(TDate) == typeof(DateTimeOffset?) || typeof(TDate) == typeof(DateOnly?) || typeof(TDate) == typeof(TimeOnly?);
 
     /// <summary>Gets or sets the event handler called when the date/time value changes.</summary>
-    /// <value>The change event handler, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<TDate>, TDate>>? OnChange { get; set; }
+    /// <value>The async change event handler, or null if no handler is set.</value>
+    [Event] public Func<Event<IInput<TDate>, TDate>, ValueTask>? OnChange { get; set; }
 }
 
 /// <summary>
@@ -353,4 +372,44 @@ public static class DateTimeInputExtensions
     /// <param name="invalid">The validation error message to display.</param>
     /// <returns>The date/time input with the specified validation error.</returns>
     public static DateTimeInputBase Invalid(this DateTimeInputBase widget, string? invalid) => widget with { Invalid = invalid };
+
+
+    /// <summary>
+    /// Sets the blur event handler for the date/time input.
+    /// This method allows you to configure the date/time input's blur behavior,
+    /// enabling it to perform custom actions when the input loses focus.
+    /// </summary>
+    /// <param name="widget">The date/time input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new date/time input instance with the updated blur handler.</returns>
+    [OverloadResolutionPriority(1)]
+    public static DateTimeInputBase HandleBlur(this DateTimeInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
+    {
+        return widget with { OnBlur = onBlur };
+    }
+
+    /// <summary>
+    /// Sets the blur event handler for the date/time input.
+    /// Compatibility overload for Action-based event handlers.
+    /// </summary>
+    /// <param name="widget">The date/time input to configure.</param>
+    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
+    /// <returns>A new date/time input instance with the updated blur handler.</returns>
+    public static DateTimeInputBase HandleBlur(this DateTimeInputBase widget, Action<Event<IAnyInput>> onBlur)
+    {
+        return widget.HandleBlur(onBlur.ToValueTask());
+    }
+
+    /// <summary>
+    /// Sets a simple blur event handler for the date/time input.
+    /// This method allows you to configure the date/time input's blur behavior with
+    /// a simple action that doesn't require the input event context.
+    /// </summary>
+    /// <param name="widget">The date/time input to configure.</param>
+    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
+    /// <returns>A new date/time input instance with the updated blur handler.</returns>
+    public static DateTimeInputBase HandleBlur(this DateTimeInputBase widget, Action onBlur)
+    {
+        return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
+    }
 }

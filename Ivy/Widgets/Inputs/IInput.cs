@@ -17,7 +17,7 @@ public interface IInput<T> : IAnyInput
 
     /// <summary>Gets the event handler called when the input value changes.</summary>
     /// <value>The change event handler that receives the input control and the new value, or null if no handler is set.</value>
-    [Event] public Action<Event<IInput<T>, T>>? OnChange { get; }
+    [Event] public Func<Event<IInput<T>, T>, ValueTask>? OnChange { get; }
 
     /// <summary>
     /// Operator overload that prevents adding child elements to input controls.
