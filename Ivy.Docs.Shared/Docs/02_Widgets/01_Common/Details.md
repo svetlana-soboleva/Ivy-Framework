@@ -10,7 +10,7 @@ Display structured label-value pairs from models with automatic formatting using
 
 The simplest way to create details is by calling `ToDetails()` on any object:
 
-```csharp demo-tabs
+```csharp demo-below
 new { Name = "John Doe", Email = "john@example.com", Age = 30 }
     .ToDetails()
 ```
