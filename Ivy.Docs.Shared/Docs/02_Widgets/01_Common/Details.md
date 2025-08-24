@@ -90,9 +90,10 @@ new { Name = "John Doe", Description = "Long description" }
 Details automatically handle nested objects by converting them to their own detail views. This creates a hierarchical display that's perfect for complex data structures with parent-child relationships:
 
 ```csharp demo-tabs
-new { Name = "John", Address = new { Street = "123 Main St", City = "Anytown" }
-    .ToDetails() }
-    .ToDetails()
+new { 
+    Name = "John", 
+    Address = new { Street = "123 Main St", City = "Anytown" }.ToDetails() 
+}.ToDetails()
 ```
 
 ## Working with State
