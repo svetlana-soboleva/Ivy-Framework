@@ -10,8 +10,9 @@ The `Expandable` widget allows you to hide and show content interactively, provi
 
 Here's a simple example of an expandable widget.
 
-```csharp demo-tabs
-new Expandable("Click to expand", "This is the hidden content that appears when you expand the widget.")
+```csharp demo-below
+new Expandable("Click to expand", 
+    "This is the hidden content that appears when you expand the widget.")
 ```
 
 ### Rich Content
