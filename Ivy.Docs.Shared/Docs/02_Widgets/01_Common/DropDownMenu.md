@@ -13,7 +13,7 @@ Create interactive dropdown menus with customizable options, actions, and stylin
 
 Here's a simple example of a `DropDownMenu` that shows a toast message when an item is selected:
 
-```csharp demo-tabs
+```csharp demo-below
 new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
     new Button("Basic Menu"),
     MenuItem.Default("Profile"), 
@@ -179,36 +179,6 @@ Layout.Horizontal().Gap(2).Center()
         MenuItem.Default("View Profile"),
         MenuItem.Default("Account Settings"))
         .Header(Text.Label("John Doe - Administrator"))
-```
-
-### Nested Submenus
-
-Nested submenus are perfect for organizing complex application menus with multiple levels of options.
-
-```csharp demo-tabs
-new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-    new Button("Nested Menus"))
-    | MenuItem.Default("File")
-        .Children(
-            MenuItem.Default("New"),
-            MenuItem.Default("Open"),
-            MenuItem.Default("Save"),
-            MenuItem.Separator(),
-            MenuItem.Default("Export")
-                .Children(
-                    MenuItem.Default("PDF"),
-                    MenuItem.Default("Word"),
-                    MenuItem.Default("Excel")
-                )
-        )
-    | MenuItem.Default("Edit")
-        .Children(
-            MenuItem.Default("Undo"),
-            MenuItem.Default("Redo"),
-            MenuItem.Separator(),
-            MenuItem.Default("Find"),
-            MenuItem.Default("Replace")
-        )
 ```
 
 ### Button Integration
