@@ -275,6 +275,7 @@ public static class ButtonExtensions
     /// <param name="onClick">Optional event handler for button click events.</param>
     /// <param name="variant">The visual style variant for the button. Default is <see cref="ButtonVariant.Primary"/>.</param>
     /// <returns>A new Button instance configured with the specified icon and settings.</returns>
+    [OverloadResolutionPriority(1)]
     public static Button ToButton(this Icons icon, Func<Event<Button>, ValueTask>? onClick = null, ButtonVariant variant = ButtonVariant.Primary)
     {
         return new Button(null, onClick, icon: icon, variant: variant);
@@ -460,6 +461,11 @@ public static class ButtonExtensions
     public static Button HandleClick(this Button button, Action onClick)
     {
         return button with { OnClick = _ => { onClick(); return ValueTask.CompletedTask; } };
+    }
+
+    public static Button HandleClick(this Button button, Func<ValueTask> onClick)
+    {
+        return button with { OnClick = _ => onClick() };
     }
 
     /// <summary>
