@@ -58,37 +58,6 @@ public class ChildReceiver : ViewBase
 }
 ```
 
-## Signal Types
-
-### Simple Signals
-
-```csharp
-public class MessageSignal : AbstractSignal<string, string> { }
-public class CounterSignal : AbstractSignal<int, int> { }
-public class EventSignal : AbstractSignal<Unit, Unit> { } // For events without data
-```
-
-### Complex Data Signals
-
-```csharp
-public record UserData(string Name, string Email);
-public class UserSignal : AbstractSignal<UserData, bool> { } // Returns success status
-
-public class SearchSignal : AbstractSignal<string, string[]> { } // Search term -> Results
-```
-
-### Broadcast Signals
-
-Signals can be configured to broadcast across different scopes:
-
-```csharp
-[Signal(BroadcastType.App)]
-public class GlobalNotificationSignal : AbstractSignal<string, Unit> { }
-
-[Signal(BroadcastType.Server)]
-public class ServerEventSignal : AbstractSignal<ServerEvent, Unit> { }
-```
-
 ## Signal Communication Patterns
 
 ### One-to-Many Communication
