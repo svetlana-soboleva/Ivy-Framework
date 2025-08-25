@@ -71,7 +71,7 @@ Ivy works with the Spanner emulator for development. Set up the emulator with:
 When using the emulator, you don't need to set up Google application credentials. However, you do need to manually build a connection string and pass it to Ivy CLI. Replace `{projectId}`, `{instanceId}` and `{databaseId}` below:
 
 ```terminal
-ivy db add --provider Spanner --connection-string "Data Source=projects/{projectId}/instances/{instanceId}/databases/{databaseId}; EmulatorDetection=EmulatorOnly;"
+>ivy db add --provider Spanner --connection-string "Data Source=projects/{projectId}/instances/{instanceId}/databases/{databaseId}; EmulatorDetection=EmulatorOnly;"
 ```
 
 For more details on emulator setup, see the [Spanner Emulator documentation](https://cloud.google.com/spanner/docs/emulator).
