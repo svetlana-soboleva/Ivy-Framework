@@ -6,11 +6,9 @@ Discover the fundamental building blocks of Ivy applications - Widgets provide d
 
 Widgets are the fundamental building blocks of the Ivy framework. They represent the smallest unit of UI and are used to construct Views. Inspired by React's component model, Widgets provide a declarative way to build user interfaces.
 
-## Widget Categories
+## Basic usage
 
 Ivy provides a comprehensive set of widgets organized into several categories:
-
-### Common Widgets
 
 The most frequently used widgets for building user interfaces:
 
@@ -23,320 +21,97 @@ Layout.Vertical().Gap(2)
     | new Card("Card Content")
 ```
 
-Here are more examples of common widgets:
+## Widget Categories
 
-```csharp demo-below
-new Details([
-    new Detail("Name", "John Doe", false),
-    new Detail("Email", "john@example.com", false),
-    new Detail("Bio", "Software developer with 5 years of experience", true)
-    ])
+Ivy provides a comprehensive collection of common widgets designed to deliver the best experience for building interactive user interfaces. These widgets are organized into logical groups based on their usage patterns: common widgets, inputs, primitives, layouts, charts, and advanced components.
+
+```mermaid
+mindmap
+  root((Ivy Widget System))
+    Common Widgets
+    Inputs
+    Primitives
+    Layouts
+    Charts
+    Advanced Components
 ```
 
-```csharp demo-below
-new DropDownMenu(
-    onSelect: _ => {}, 
-        trigger: new Button("Menu"), 
-        [MenuItem.Default("Item 1"), MenuItem.Default("Item 2"), MenuItem.Default("Item 3")]
-    )
-```
+### Common Widgets
 
-```csharp demo-below
-new List([
-    new ListItem("First item"),
-    new ListItem("Second item"),
-    new ListItem("Third item")
-    ])
-```
+The common widgets category offers you the opportunity to work with essential UI elements including [badges](../../02_Widgets/01_Common/Badge.md), [blades](../../02_Widgets/01_Common/Blades.md), [buttons](../../02_Widgets/01_Common/Button.md), [cards](../../02_Widgets/01_Common/Card.md), [details implementations](../../02_Widgets/01_Common/Details.md), [dropdown menus](../../02_Widgets/01_Common/DropDownMenu.md), [expandable sections](../../02_Widgets/01_Common/Expandable.md), [lists](../../02_Widgets/01_Common/List.md), [progress bars](../../02_Widgets/01_Common/Progress.md), [tables](../../02_Widgets/01_Common/Table.md), and [tooltips](../../02_Widgets/01_Common/Tooltip.md). Each widget is designed with Ivy's signature approach to simplicity and functionality.
 
-```csharp demo-below
-new Expandable("Click to expand", "This content is hidden by default")
-```
-
-```csharp demo-below
-new Tooltip("Hover me!", "This is a helpful tooltip")
+```mermaid
+flowchart TB
+    A[Common Widgets] --> B[Badges, Blades, Buttons, Cards]
+    A --> C[Dropdown Menus, Expandables, Lists]
+    A --> D[Progress Bars, Tables, Tooltips]
+    A --> E[Details Implementations]
 ```
 
 ### Input Widgets
 
-Widgets for capturing and validating user input:
+We also provide our users with various input methods to capture user data. Users can work with simple input types such as [boolean inputs](../../02_Widgets/02_Inputs/Bool.md), [feedback forms](../../02_Widgets/02_Inputs/Feedback.md), [text inputs](../../02_Widgets/02_Inputs/Text.md), [number inputs](../../02_Widgets/02_Inputs/Number.md), [date ranges](../../02_Widgets/02_Inputs/DateRange.md), and [date-time pickers](../../02_Widgets/02_Inputs/DateTime.md). Additionally, we offer specialized features including Ivy's [color palette](../../02_Widgets/02_Inputs/Color.md) system and our implementation of [code highlighting](../../02_Widgets/02_Inputs/Code.md). We introduce our [file input](../../02_Widgets/02_Inputs/File.md) implementations, [read-only](../../02_Widgets/02_Inputs/ReadOnly.md) statements, and provide the ability to work with complex structures like [async select](../../02_Widgets/02_Inputs/AsyncSelect.md) operations in a simple, intuitive way.
 
-```csharp demo-tabs
-Layout.Vertical()
-    | new TextInput(UseState("")).Placeholder("Enter text...")
-    | new NumberInput<int>(UseState(0)).Placeholder("Enter number")
-    | new SelectInput<string>(UseState(""), 
-        [new Option<string>("Option 1", "1"), 
-        new Option<string>("Option 2", "2"), 
-        new Option<string>("Option 3", "3")])
-    | new BoolInput(UseState(false)).Label("Enable feature")
+```mermaid
+graph BT
+    A[Input Methods] --> B[Boolean, Feedback, Text, Number, Date, DateRange]
+    A --> C[Color Palette, Code Highlighting, File Inputs, Read-Only]
+    A --> D[Async Select, Complex Structures]
+```
+
+### Primitives
+
+Ivy also provides a special experience when working with primitive widgets. We make complex tasks simpler through our implementation of [boxes](../../02_Widgets/03_Primitives/Box.md), [callouts](../../02_Widgets/03_Primitives/Callout.md), [error](../../02_Widgets/03_Primitives/Error.md) displays, and [text blocks](../../02_Widgets/03_Primitives/TextBlock.md). You can easily add [avatars](../../02_Widgets/03_Primitives/Avatar.md), [icons](../../02_Widgets/03_Primitives/Icon.md), [images](../../02_Widgets/03_Primitives/Image.md), [spacers](../../02_Widgets/03_Primitives/Spacer.md), and [separators](../../02_Widgets/03_Primitives/Separator.md) to enhance your interfaces. We also provide our own implementations of [JSON](../../02_Widgets/03_Primitives/Json.md), [XML](../../02_Widgets/03_Primitives/Xml.md), [HTML](../../02_Widgets/03_Primitives/Html.md), and [code rendering](../../02_Widgets/03_Primitives/Code.md) capabilities.
+
+```mermaid
+flowchart LR
+    A[Primitive Widgets] --> B[Boxes, Callouts, Errors, Text Blocks]
+    A --> C[Avatars, Icons, Images, Spacers, Separators]
+    A --> D[JSON, XML, HTML, Code Rendering]
+```
+
+### Layouts
+
+Ivy makes working with layouts not just easier, but satisfying. We provide a much more intuitive way to work with layouts and their elements, allowing you to create complex arrangements with minimal effort.
+
+```mermaid
+graph LR
+    A[Layout Widgets] --> B[Basic Layouts]
+    A --> C[Panel Layouts]
+    A --> D[Section Layouts]
+    A --> E[Special Layouts]
     
+    B --> B1[Grid]
+    B --> B2[Horizontal]
+    B --> B3[Vertical]
+    
+    C --> C1[Floating Panel]
+    C --> C2[Resizeable Panel Group]
+    C --> C3[Sidebar]
+    C --> C4[Tabs]
+    
+    D --> D1[Header]
+    D --> D2[Footer]
+    
+    E --> E1[Wrap]
 ```
 
-### Primitive Widgets
+### Charts
 
-Basic building blocks for text, layout, and content:
+Additionally, Ivy has its own implementation of charts, which makes data visualization much simpler to work with.
 
-```csharp demo-tabs
-Layout.Vertical()
-    | Text.Large("Hello World")
-    | new Avatar("JD").Size(Size.Units(40))
-    | new Icon(Icons.Star).Size(Size.Units(24))
-    | new Box("Container").BorderRadius(BorderRadius.Rounded)
+```mermaid
+flowchart TB
+    A[Chart Widgets] --> B[Area Chart]
+    A --> C[Bar Chart]
+    A --> D[Line Chart]
+    A --> E[Pie Chart]
 ```
 
-### Layout Widgets
+### Effects
 
-Widgets for organizing and arranging other widgets:
+Ivy provides a rich collection of built-in effects and animations to enhance your user interfaces. Working with effects in Ivy is incredibly simple and intuitive. For detailed information about specific effects, refer to the [animation](../../02_Widgets/05_Effects/Animation.md) and [confetti](../../02_Widgets/05_Effects/Confetti.md) documentation pages.
 
-```csharp demo-tabs
-//rework
-Layout.Grid().Columns(2)
-    | (Layout.Horizontal()
-        | new Button("Left")
-        | new Button("Right"))
-    | Layout.Vertical()
-        | new Button("Top")
-        | new Button("Bottom")
-```
+### Advanced
 
-### Chart Widgets
-
-Data visualization components:
-
-```csharp demo-tabs
-public class ChartDemo : ViewBase 
-{    
-    public override object? Build()
-    {
-        var data = new[]
-        {
-            new { Month = "Jan", Apples = 100, Oranges = 40, Blueberry = 35 },
-            new { Month = "Feb", Apples = 150, Oranges = 60, Blueberry = 55 },
-            new { Month = "Mar", Apples = 170, Oranges = 70, Blueberry = 65 }
-        };
-
-        return Layout.Vertical()
-            | new BarChart(data,
-                new Bar("Apples")
-                    .Fill(Colors.Red)
-                    .LegendType(LegendTypes.Square))
-                .Bar(new Bar("Oranges")
-                    .Fill(Colors.Orange)
-                    .LegendType(LegendTypes.Square))
-                .Bar(new Bar("Blueberry")
-                    .Fill(Colors.Blue)
-                    .Name("Blueberries")
-                    .LegendType(LegendTypes.Square))
-                .Tooltip()
-                .Legend();
-    }
-}
-```
-
-## Widget Properties and Methods
-
-All widgets in Ivy follow a consistent pattern for configuration:
-
-### Fluent API
-
-Widgets use a fluent API for easy configuration:
-
-```csharp demo-tabs
-Layout.Grid().Columns(2)
-    | new Button("Styled Button")
-        .Primary()
-        .Large()
-        .Icon(Icons.Star)
-        .BorderRadius(BorderRadius.Full)
-    | new Card("Styled Card")
-        .Title("Card Title")
-        .Description("Card description")
-        .BorderColor(Colors.Blue)
-        .BorderRadius(BorderRadius.Rounded)
-```
-
-### State Binding
-
-Widgets can be bound to state for reactive updates:
-
-```csharp demo-tabs
-public class StateBindingDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var count = UseState(0);
-        var text = UseState("");
-        
-        return Layout.Vertical()
-            | new TextInput(text).Placeholder("Enter text...")
-            | new Button($"Count: {count.Value}", onClick: _ => count.Value++)
-            | new Progress(count.Value).Goal("Progress to 100");
-    }
-}
-```
-
-## Widget Composition
-
-Widgets can be combined and nested to create complex interfaces:
-
-### Nested Layouts
-
-Combine multiple layout widgets for sophisticated arrangements:
-
-```csharp demo-tabs
-Layout.Grid().Columns(2)
-    | Layout.Vertical()
-        | new Card("Header Card")
-        | Layout.Horizontal()
-            | new Button("Left")
-            | new Button("Right")
-        | new Card("Footer Card")
-    | Layout.Grid().Columns(3)
-        | new Badge("1", BadgeVariant.Primary)
-        | new Badge("2", BadgeVariant.Secondary)
-        | new Badge("3", BadgeVariant.Outline)
-        | new Badge("4", BadgeVariant.Destructive)
-        | new Badge("5", BadgeVariant.Primary)
-        | new Badge("6", BadgeVariant.Secondary)
-```
-
-### Conditional Rendering
-
-Use conditional logic to show/hide widgets:
-
-```csharp demo-tabs
-public class ConditionalDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var showDetails = UseState(false);
-        
-        return Layout.Vertical()
-            | new Button("Toggle Details", onClick: _ => showDetails.Value = !showDetails.Value)
-            | (showDetails.Value ? 
-                new Card("Hidden Details", "This content is conditionally shown")
-                    .BorderColor(Colors.Green) : null);
-    }
-}
-```
-
-## Widget Variants and Styling
-
-Most widgets support multiple visual variants and styling options:
-
-### Color Variants
-
-```csharp demo-tabs
-Layout.Grid().Columns(4)
-    | new Button("Primary").Primary()
-    | new Button("Secondary").Secondary()
-    | new Button("Destructive").Destructive()
-    | new Button("Outline").Outline()
-```
-
-### Size Variants
-
-```csharp demo-tabs
-Layout.Grid().Columns(3)
-    | new Button("Small").Small()
-    | new Button("Medium")
-    | new Button("Large").Large()
-```
-
-### Border and Spacing
-
-```csharp demo-tabs
-Layout.Grid().Columns(2)
-    | new Box("Rounded Box")
-        .BorderRadius(BorderRadius.Rounded)
-        .Color(Colors.Blue)
-        .Padding(new Thickness(16))
-    | new Box("Full Border Box")
-        .BorderRadius(BorderRadius.Full)
-        .Color(Colors.Green)
-        .BorderThickness(new Thickness(3))
-```
-
-## Advanced Widget Features
-
-### Event Handling
-
-Widgets support various event handlers:
-
-```csharp demo-tabs
-public class EventHandlingDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var client = this.UseService<IClientProvider>();
-        
-        return Layout.Grid().Columns(2)
-            | new Button("Click Me", onClick: _ => client.Toast("Button clicked!"))
-            | new TextInput(UseState(""))
-                .Placeholder("Text input with change handling")
-            | new Button("Hover Me")
-                .Tooltip("Hover over me!")
-            | new Button("Focus Me")
-                .Tooltip("Click to focus!");
-    }
-}
-```
-
-### Validation and Feedback
-
-Input widgets provide built-in validation through the `Invalid` property:
-
-```csharp demo-tabs
-public class ValidationDemo : ViewBase
-{
-    public override object? Build()
-    {
-        var email = UseState("");
-        var password = UseState("");
-        
-        return Layout.Vertical()
-            | new TextInput(email)
-                .Placeholder("Enter email")
-                .Variant(TextInputs.Email)
-                .Invalid(email.Value != "" && !email.Value.Contains("@") ? "Invalid email format" : null)
-            | new TextInput(password)
-                .Placeholder("Enter password")
-                .Variant(TextInputs.Password)
-                .Invalid(password.Value != "" && password.Value.Length < 8 ? "Password must be at least 8 characters" : null);
-    }
-}
-```
-
-## Best Practices
-
-### Widget Organization
-
-- Group related widgets together using layout containers
-- Use consistent spacing and alignment
-- Leverage the grid system for responsive layouts
-
-### Performance Considerations
-
-- Use state efficiently to avoid unnecessary re-renders
-- Implement proper disposal patterns for long-lived widgets
-- Consider lazy loading for complex widget trees
-
-### Accessibility
-
-- Provide meaningful labels and descriptions
-- Use semantic HTML equivalents where possible
-- Ensure keyboard navigation support
-
-## Next Steps
-
-Now that you understand the basics of widgets, explore the specific widget documentation:
-
-- **Common Widgets** - Buttons, Cards, Badges, and more
-- **Input Widgets** - Text, Numbers, Selects, and validation
-- **Primitive Widgets** - Text, Icons, Boxes, and basic elements
-- **Layout Widgets** - Grids, Flexbox, and positioning
-- **Chart Widgets** - Data visualization components
-- **Advanced Widgets** - Complex patterns and custom widgets
-
-Each widget category includes detailed examples, API documentation, and best practices for effective usage.
+In the Advanced section, we introduce our specialized implementations for working with [sheets](../../02_Widgets/07_Advanced/Sheet.md) and [chat](../../02_Widgets/07_Advanced/Chat.md) functionality. These advanced widgets provide sophisticated features for complex user interface requirements.
