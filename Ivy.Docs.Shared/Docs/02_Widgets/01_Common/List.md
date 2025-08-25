@@ -228,44 +228,75 @@ public class CustomItemDemo : ViewBase
 }
 ```
 
-### Dynamic List with UseEffect
+### Simple Dynamic List
 
-Use effects to handle dynamic content and timestamps:
+A basic example showing how to add and remove list items:
 
 ```csharp demo-tabs
-public class DynamicListDemo : ViewBase
+public class SimpleListDemo : ViewBase
 {
     public override object? Build()
     {
-        var items = UseState(new[] 
-        { 
-            new { Id = 1, CreatedAt = DateTime.Now },
-            new { Id = 2, CreatedAt = DateTime.Now }
-        });
-        
-        var currentTime = UseState(DateTime.Now);
-        
-        // Update current time every second
-        UseEffect(async () =>
-        {
-            while (true)
-            {
-                await Task.Delay(1000);
-                currentTime.Set(DateTime.Now);
-            }
-        }, []);
+        var items = UseState(new[] { "First Item" });
         
         var addItem = new Action<Event<Button>>(e =>
         {
-            var newItem = new { Id = items.Value.Length + 1, CreatedAt = DateTime.Now };
+            var newItems = items.Value.Append($"Item {items.Value.Length + 1}").ToArray();
+            items.Set(newItems);
+        });
+        
+        var removeItem = new Action<Event<Button>>(e =>
+        {
+            if (items.Value.Length > 1)
+            {
+                var newItems = items.Value.Take(items.Value.Length - 1).ToArray();
+                items.Set(newItems);
+            }
+        });
+        
+        var listItems = items.Value.Select(item => new ListItem(item));
+        
+        return Layout.Vertical().Gap(2)
+            | (Layout.Horizontal().Gap(2)
+                | new Button("Add Item", addItem)
+                | new Button("Remove Item", removeItem))
+            | new List(listItems);
+    }
+}
+```
+
+### List with Time Rendering
+
+Show when each item was created:
+
+```csharp demo-tabs
+public class TimeListDemo : ViewBase
+{
+    public override object? Build()
+    {
+        var items = UseState(new[] { new { Text = "Item 1", CreatedAt = DateTime.Now } });
+        
+        var addItem = new Action<Event<Button>>(e =>
+        {
+            var newItem = new { Text = $"Item {items.Value.Length + 1}", CreatedAt = DateTime.Now };
             var newItems = items.Value.Append(newItem).ToArray();
             items.Set(newItems);
         });
         
-        var listItems = items.Value.Select(item => new ListItem($"Item {item.Id}", subtitle: $"Created at {item.CreatedAt:HH:mm:ss} | Current: {currentTime.Value:HH:mm:ss}"));
+        var clearItems = new Action<Event<Button>>(e =>
+        {
+            items.Set(new[] { new { Text = "Item 1", CreatedAt = DateTime.Now } });
+        });
+        
+        var listItems = items.Value.Select(item => new ListItem(
+            title: item.Text,
+            subtitle: $"Created at {item.CreatedAt:HH:mm:ss}"
+        ));
         
         return Layout.Vertical().Gap(2)
-            | new Button("Add Item", addItem)
+            | (Layout.Horizontal().Gap(2)
+                | new Button("Add Item", addItem)
+                | new Button("Clear All", clearItems).Variant(ButtonVariant.Destructive))
             | new List(listItems);
     }
 }
