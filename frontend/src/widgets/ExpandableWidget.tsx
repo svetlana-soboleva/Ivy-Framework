@@ -18,29 +18,26 @@ interface ExpandableWidgetProps {
 
 export const ExpandableWidget: React.FC<ExpandableWidgetProps> = ({
   id,
-  disabled = false,
+  disabled,
   slots,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  // Use useEffect to handle disabled state changes
-  React.useEffect(() => {
-    if (disabled && isOpen) {
-      setIsOpen(false);
-    }
-  }, [disabled, isOpen]);
+  if (disabled && isOpen) {
+    setIsOpen(false);
+  }
 
   return (
     <Collapsible
       key={id}
       open={isOpen}
-      onOpenChange={disabled ? undefined : setIsOpen}
+      onOpenChange={setIsOpen}
       className="w-full rounded-md border border-border p-2 shadow-sm data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
       data-disabled={disabled}
     >
       <div className="flex justify-between space-x-4">
         <CollapsibleTrigger asChild disabled={disabled}>
-          <Button variant="ghost" disabled={disabled} className="w-full p-0">
+          <Button variant="ghost" className="w-full p-0 ">
             <div className="ml-2">{slots?.Header}</div>
             {!isOpen && <ChevronRight className="h-4 w-4 ml-auto mr-2" />}
             {isOpen && <ChevronDown className="h-4 w-4 ml-auto mr-2" />}
