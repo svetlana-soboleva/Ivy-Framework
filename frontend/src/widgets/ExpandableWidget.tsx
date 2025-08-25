@@ -11,35 +11,39 @@ interface ExpandableWidgetProps {
   id: string;
   disabled?: boolean;
   slots?: {
-    Header: React.ReactNode[];
-    Content: React.ReactNode[];
+    Header: React.ReactNode;
+    Content: React.ReactNode;
   };
 }
 
 export const ExpandableWidget: React.FC<ExpandableWidgetProps> = ({
   id,
-  disabled,
+  disabled = false,
   slots,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  if (disabled && isOpen) {
-    setIsOpen(false);
-  }
+  // Use useEffect to handle disabled state changes
+  React.useEffect(() => {
+    if (disabled && isOpen) {
+      setIsOpen(false);
+    }
+  }, [disabled, isOpen]);
 
   return (
     <Collapsible
       key={id}
       open={isOpen}
-      onOpenChange={setIsOpen}
-      className={`w-full rounded-md border border-gray-200 p-2 shadow-sm ${disabled ? 'cursor-not-allowed' : ''}`}
+      onOpenChange={disabled ? undefined : setIsOpen}
+      className="w-full rounded-md border border-border p-2 shadow-sm data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
+      data-disabled={disabled}
     >
       <div className="flex justify-between space-x-4">
-        <CollapsibleTrigger asChild>
+        <CollapsibleTrigger asChild disabled={disabled}>
           <Button
             variant="ghost"
-            className={`w-full p-0 ${disabled ? 'cursor-not-allowed text-gray-600' : ''}`}
             disabled={disabled}
+            className="w-full p-0 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <div className="ml-2">{slots?.Header}</div>
             {!isOpen && <ChevronRight className="h-4 w-4 ml-auto mr-2" />}
