@@ -14,12 +14,47 @@ Ivy provides a comprehensive set of widgets organized into several categories:
 
 The most frequently used widgets for building user interfaces:
 
-```csharp demo-tabs
-Layout.Grid().Columns(2)
+```csharp demo-below
+Layout.Vertical().Gap(2)
+    | new Badge("Primary")
+    | new Badge("New")
     | new Button("Primary Button")
-    | new Badge("New", BadgeVariant.Primary)
-    | new Card("Card Content", new Button("Action"))
-    | new Progress(75).Goal("Upload Progress")
+    | new Progress(75)
+    | new Card("Card Content")
+```
+
+Here are more examples of common widgets:
+
+```csharp demo-below
+new Details([
+    new Detail("Name", "John Doe", false),
+    new Detail("Email", "john@example.com", false),
+    new Detail("Bio", "Software developer with 5 years of experience", true)
+    ])
+```
+
+```csharp demo-below
+new DropDownMenu(
+    onSelect: _ => {}, 
+        trigger: new Button("Menu"), 
+        [MenuItem.Default("Item 1"), MenuItem.Default("Item 2"), MenuItem.Default("Item 3")]
+    )
+```
+
+```csharp demo-below
+new List([
+    new ListItem("First item"),
+    new ListItem("Second item"),
+    new ListItem("Third item")
+    ])
+```
+
+```csharp demo-below
+new Expandable("Click to expand", "This content is hidden by default")
+```
+
+```csharp demo-below
+new Tooltip("Hover me!", "This is a helpful tooltip")
 ```
 
 ### Input Widgets
@@ -27,11 +62,15 @@ Layout.Grid().Columns(2)
 Widgets for capturing and validating user input:
 
 ```csharp demo-tabs
-Layout.Grid().Columns(2)
+Layout.Vertical()
     | new TextInput(UseState("")).Placeholder("Enter text...")
     | new NumberInput<int>(UseState(0)).Placeholder("Enter number")
+    | new SelectInput<string>(UseState(""), 
+        [new Option<string>("Option 1", "1"), 
+        new Option<string>("Option 2", "2"), 
+        new Option<string>("Option 3", "3")])
     | new BoolInput(UseState(false)).Label("Enable feature")
-    | new SelectInput<string>(UseState(""), [new Option<string>("Option 1", "1"), new Option<string>("Option 2", "2"), new Option<string>("Option 3", "3")])
+    
 ```
 
 ### Primitive Widgets
@@ -39,7 +78,7 @@ Layout.Grid().Columns(2)
 Basic building blocks for text, layout, and content:
 
 ```csharp demo-tabs
-Layout.Grid().Columns(2)
+Layout.Vertical()
     | Text.Large("Hello World")
     | new Avatar("JD").Size(Size.Units(40))
     | new Icon(Icons.Star).Size(Size.Units(24))
@@ -51,10 +90,11 @@ Layout.Grid().Columns(2)
 Widgets for organizing and arranging other widgets:
 
 ```csharp demo-tabs
+//rework
 Layout.Grid().Columns(2)
-    | Layout.Horizontal()
+    | (Layout.Horizontal()
         | new Button("Left")
-        | new Button("Right")
+        | new Button("Right"))
     | Layout.Vertical()
         | new Button("Top")
         | new Button("Bottom")
