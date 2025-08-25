@@ -108,54 +108,51 @@ new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value),
 Control which side of the trigger the menu appears on:
 
 ```csharp demo-tabs
-Layout.Horizontal().Gap(2).Center()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Top"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Top()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Right"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Right()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Bottom"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Bottom()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Left"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Left()
-```
+Layout.Vertical().Gap(2)
+    | Text.H4("Side Positioning")
+    | Text.P("Control which side of the trigger button the menu appears on:")
+    | (Layout.Horizontal().Gap(2).Center()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Top"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Top()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Right"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Right()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Bottom"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Bottom()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Left"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Left())
 
-Side positioning is crucial when space is limited or when you want to avoid the menu being cut off by screen boundaries.
+    | Text.H4("Alignment Options")
+    | Text.P("Control how the menu aligns relative to the trigger button:")
+    | (Layout.Horizontal().Gap(2).Center()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Start"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Align(DropDownMenu.AlignOptions.Start)
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Center"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Align(DropDownMenu.AlignOptions.Center)
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("End"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .Align(DropDownMenu.AlignOptions.End))
 
-### Alignment Options
-
-Alignment options help position the menu precisely relative to the trigger button, ensuring optimal visual balance.
-
-```csharp demo-tabs
-Layout.Horizontal().Gap(2).Center()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Start"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Align(DropDownMenu.AlignOptions.Start)
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Center"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Align(DropDownMenu.AlignOptions.Center)
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("End"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .Align(DropDownMenu.AlignOptions.End)
-```
-
-### Offset Control
-
-Offset control provides pixel-perfect positioning when you need to fine-tune the menu placement.
-
-```csharp demo-tabs
-Layout.Horizontal().Gap(2).Center()
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Small Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .SideOffset(0)
-        .AlignOffset(0)
-    | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
-        new Button("Large Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
-        .SideOffset(15)
-        .AlignOffset(15)
+    | Text.H4("Offset Control")
+    | Text.P("Fine-tune menu placement with pixel-perfect positioning:")
+    | (Layout.Horizontal().Gap(2).Center()
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("No Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .SideOffset(0)
+            .AlignOffset(0)
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Small Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .SideOffset(8)
+            .AlignOffset(8)
+        | new DropDownMenu(@evt => client.Toast("Selected: " + @evt.Value), 
+            new Button("Large Offset"), MenuItem.Default("Item 1"), MenuItem.Default("Item 2"))
+            .SideOffset(15)
+            .AlignOffset(15))
 ```
 
 ## Advanced Features
