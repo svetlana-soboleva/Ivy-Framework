@@ -22,7 +22,7 @@ When you run `ivy db add` without specifying options, Ivy will guide you through
 
 ### Command Options
 
-`--provider <PROVIDER>` - Specify the database provider directly:
+`--provider <PROVIDER>` or `-p <PROVIDER>` - Specify the database provider directly:
 
 ```terminal
 >ivy db add --provider Postgres
@@ -30,7 +30,7 @@ When you run `ivy db add` without specifying options, Ivy will guide you through
 
 Available providers: `SqlServer`, `Postgres`, `MySql`, `MariaDb`, `Sqlite`, `Supabase`, `Airtable`, `Oracle`, `Spanner`, `ClickHouse`, `Snowflake`
 
-`--name <CONNECTION_NAME>` - Specify the connection name in PascalCase:
+`--name <CONNECTION_NAME>` or `-n <CONNECTION_NAME>` - Specify the connection name in PascalCase:
 
 ```terminal
 >ivy db add --name MyDatabase
@@ -48,7 +48,7 @@ Available providers: `SqlServer`, `Postgres`, `MySql`, `MariaDb`, `Sqlite`, `Sup
 >ivy db add --provider Postgres --schema public
 ```
 
-`--verbose` - Enable verbose output for detailed logging:
+`--verbose` or `-v` - Enable verbose output for detailed logging:
 
 ```terminal
 >ivy db add --verbose
