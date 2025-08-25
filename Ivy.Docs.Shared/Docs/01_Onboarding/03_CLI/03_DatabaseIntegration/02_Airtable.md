@@ -21,7 +21,7 @@ You will be asked to name your connection, then prompted for two pieces of infor
 1. **Access Token**: Your Airtable personal access token (PAT)
 2. **Base ID**: The ID of your Airtable base (starts with 'app')
 
-These values will be combined into a connection string and stored in user secrets:
+These values will be combined into a connection string and stored in .NET user secrets:
 
 ```text
 BaseId=appXXXXXXXXXXXXXX;ApiKey=patXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
