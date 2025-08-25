@@ -36,6 +36,8 @@ Specifically, your connection string should contain the following information, i
 
 Your connection string will be stored in .NET user secrets.
 
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
+
 ## Configuration
 
 Ivy automatically configures the **EntityFrameworkCore.ClickHouse** package and imports the `ClickHouse.EntityFrameworkCore.Extensions` namespace for ClickHouse connections.
