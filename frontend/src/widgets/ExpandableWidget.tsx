@@ -11,8 +11,8 @@ interface ExpandableWidgetProps {
   id: string;
   disabled?: boolean;
   slots?: {
-    Header: React.ReactNode[];
-    Content: React.ReactNode[];
+    Header: React.ReactNode;
+    Content: React.ReactNode;
   };
 }
 
@@ -32,11 +32,12 @@ export const ExpandableWidget: React.FC<ExpandableWidgetProps> = ({
       key={id}
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="w-full rounded-md border border-gray-200 p-2 shadow-sm"
+      className="w-full rounded-md border border-border p-2 shadow-sm data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
+      data-disabled={disabled}
     >
       <div className="flex justify-between space-x-4">
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full p-0">
+        <CollapsibleTrigger asChild disabled={disabled}>
+          <Button variant="ghost" className="w-full p-0 ">
             <div className="ml-2">{slots?.Header}</div>
             {!isOpen && <ChevronRight className="h-4 w-4 ml-auto mr-2" />}
             {isOpen && <ChevronDown className="h-4 w-4 ml-auto mr-2" />}
