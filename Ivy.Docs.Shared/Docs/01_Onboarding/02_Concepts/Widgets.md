@@ -23,7 +23,7 @@ Layout.Vertical().Gap(2)
 
 ## Widget Categories
 
-Ivy provides a comprehensive collection of common widgets designed to deliver the best experience for building interactive user interfaces. These widgets are organized into logical groups based on their usage patterns: common widgets, inputs, primitives, layouts, charts, and advanced components.
+Ivy provides a comprehensive collection of common widgets designed to deliver the best experience for building interactive user interfaces. These widgets are organized into logical groups based on their usage patterns: common widgets, inputs, primitives, layouts, effects, charts, and advanced components.
 
 ```mermaid
 mindmap
@@ -32,6 +32,7 @@ mindmap
     Inputs
     Primitives
     Layouts
+    Effects
     Charts
     Advanced Components
 ```
