@@ -21,24 +21,23 @@ Layout.Vertical().Gap(2)
     | new Card("Card Content")
 ```
 
-## Widget Categories
+### Widget Library
 
-Ivy provides a comprehensive collection of common widgets designed to deliver the best experience for building interactive user interfaces. These widgets are organized into logical groups based on their usage patterns: common widgets, inputs, primitives, layouts, charts, and advanced components.
+Ivy ships with a comprehensive set of strongly-typed widgets:
 
-```mermaid
-mindmap
-  root((Ivy Widget System))
-    Common Widgets
-    Inputs
-    Primitives
-    Layouts
-    Charts
-    Advanced Components
-```
+| Category | Examples |
+|----------|----------|
+| Common | [Button](../../02_Widgets/01_Common/Button.md), [Badge](../../02_Widgets/01_Common/Badge.md), [Progress](../../02_Widgets/01_Common/Progress.md), [Table](../../02_Widgets/01_Common/Table.md), [Card](../../02_Widgets/01_Common/Card.md), [Tooltip](../../02_Widgets/01_Common/Tooltip.md), [Expandable](../../02_Widgets/01_Common/Expandable.md), [Blades](../../02_Widgets/01_Common/Blades.md), [Details](../../02_Widgets/01_Common/Details.md), [DropDownMenu](../../02_Widgets/01_Common/DropDownMenu.md), [List](../../02_Widgets/01_Common/List.md)... |
+| Inputs | [TextInput](../../02_Widgets/02_Inputs/Text.md), [NumberInput](../../02_Widgets/02_Inputs/Number.md), [BoolInput](../../02_Widgets/02_Inputs/Bool.md), [DateTimeInput](../../02_Widgets/02_Inputs/DateTime.md), [FileInput](../../02_Widgets/02_Inputs/File.md), [Feedback](../../02_Widgets/02_Inputs/Feedback.md), [DateRange](../../02_Widgets/02_Inputs/DateRange.md), [Color](../../02_Widgets/02_Inputs/Color.md), [Code](../../02_Widgets/02_Inputs/Code.md), [ReadOnly](../../02_Widgets/02_Inputs/ReadOnly.md), [AsyncSelect](../../02_Widgets/02_Inputs/AsyncSelect.md)... |
+| Primitives | [Text](../../02_Widgets/03_Primitives/TextBlock.md), [Icon](../../02_Widgets/03_Primitives/Icon.md), [Image](../../02_Widgets/03_Primitives/Image.md), [Markdown](../../02_Widgets/03_Primitives/Markdown.md), [Json](../../02_Widgets/03_Primitives/Json.md), [Code](../../02_Widgets/03_Primitives/Code.md), [Avatar](../../02_Widgets/03_Primitives/Avatar.md), [Box](../../02_Widgets/03_Primitives/Box.md), [Callout](../../02_Widgets/03_Primitives/Callout.md), [Error](../../02_Widgets/03_Primitives/Error.md), [Spacer](../../02_Widgets/03_Primitives/Spacer.md), [Separator](../../02_Widgets/03_Primitives/Separator.md), [Xml](../../02_Widgets/03_Primitives/Xml.md), [Html](../../02_Widgets/03_Primitives/Html.md)... |
+| Layouts | [GridLayout](../../02_Widgets/04_Layouts/GridLayout.md), [TabsLayout](../../02_Widgets/04_Layouts/TabsLayout.md), [SidebarLayout](../../02_Widgets/04_Layouts/SidebarLayout.md), [FloatingPanel](../../02_Widgets/04_Layouts/FloatingPanel.md), [ResizeablePanelGroup](../../02_Widgets/04_Layouts/ResizeablePanelGroup.md), [Header](../../02_Widgets/04_Layouts/HeaderLayout.md), [Footer](../../02_Widgets/04_Layouts/FooterLayout.md), [Wrap](../../02_Widgets/04_Layouts/WrapLayout.md)... |
+| Effects | [Animation](../../02_Widgets/05_Effects/Animation.md), [Confetti](../../02_Widgets/05_Effects/Confetti.md)... |
+| Charts | [LineChart](../../02_Widgets/06_Charts/LineChart.md), [BarChart](../../02_Widgets/06_Charts/BarChart.md), [PieChart](../../02_Widgets/06_Charts/PieChart.md), [AreaChart](../../02_Widgets/06_Charts/AreaChart.md)... |
+| Advanced | [Sheet](../../02_Widgets/07_Advanced/Sheet.md), [Chat](../../02_Widgets/07_Advanced/Chat.md)... |
 
 ### Common Widgets
 
-The common widgets category offers you the opportunity to work with essential UI elements including [badges](../../02_Widgets/01_Common/Badge.md), [blades](../../02_Widgets/01_Common/Blades.md), [buttons](../../02_Widgets/01_Common/Button.md), [cards](../../02_Widgets/01_Common/Card.md), [details implementations](../../02_Widgets/01_Common/Details.md), [dropdown menus](../../02_Widgets/01_Common/DropDownMenu.md), [expandable sections](../../02_Widgets/01_Common/Expandable.md), [lists](../../02_Widgets/01_Common/List.md), [progress bars](../../02_Widgets/01_Common/Progress.md), [tables](../../02_Widgets/01_Common/Table.md), and [tooltips](../../02_Widgets/01_Common/Tooltip.md). Each widget is designed with Ivy's signature approach to simplicity and functionality.
+The common widgets category offers you the opportunity to work with essential UI elements including badges, blades, buttons, cards, details implementations, dropdown menus, expandable sections, lists, progress bars, tables, and tooltips. Each widget is designed with Ivy's signature approach to simplicity and functionality.
 
 ```mermaid
 flowchart TB
@@ -50,7 +49,7 @@ flowchart TB
 
 ### Input Widgets
 
-We also provide our users with various input methods to capture user data. Users can work with simple input types such as [boolean inputs](../../02_Widgets/02_Inputs/Bool.md), [feedback forms](../../02_Widgets/02_Inputs/Feedback.md), [text inputs](../../02_Widgets/02_Inputs/Text.md), [number inputs](../../02_Widgets/02_Inputs/Number.md), [date ranges](../../02_Widgets/02_Inputs/DateRange.md), and [date-time pickers](../../02_Widgets/02_Inputs/DateTime.md). Additionally, we offer specialized features including Ivy's [color palette](../../02_Widgets/02_Inputs/Color.md) system and our implementation of [code highlighting](../../02_Widgets/02_Inputs/Code.md). We introduce our [file input](../../02_Widgets/02_Inputs/File.md) implementations, [read-only](../../02_Widgets/02_Inputs/ReadOnly.md) statements, and provide the ability to work with complex structures like [async select](../../02_Widgets/02_Inputs/AsyncSelect.md) operations in a simple, intuitive way.
+We also provide our users with various input methods to capture user data. Users can work with simple input types such as boolean inputs, feedback forms, text inputs, number inputs, date ranges, and date-time pickers. Additionally, we offer specialized features including Ivy's color palette system and our implementation of code highlighting. We introduce our file input implementations, read-only statements, and provide the ability to work with complex structures like async select operations in a simple, intuitive way.
 
 ```mermaid
 graph BT
@@ -61,7 +60,7 @@ graph BT
 
 ### Primitives
 
-Ivy also provides a special experience when working with primitive widgets. We make complex tasks simpler through our implementation of [boxes](../../02_Widgets/03_Primitives/Box.md), [callouts](../../02_Widgets/03_Primitives/Callout.md), [error](../../02_Widgets/03_Primitives/Error.md) displays, and [text blocks](../../02_Widgets/03_Primitives/TextBlock.md). You can easily add [avatars](../../02_Widgets/03_Primitives/Avatar.md), [icons](../../02_Widgets/03_Primitives/Icon.md), [images](../../02_Widgets/03_Primitives/Image.md), [spacers](../../02_Widgets/03_Primitives/Spacer.md), and [separators](../../02_Widgets/03_Primitives/Separator.md) to enhance your interfaces. We also provide our own implementations of [JSON](../../02_Widgets/03_Primitives/Json.md), [XML](../../02_Widgets/03_Primitives/Xml.md), [HTML](../../02_Widgets/03_Primitives/Html.md), and [code rendering](../../02_Widgets/03_Primitives/Code.md) capabilities.
+Ivy also provides a special experience when working with primitive widgets. We make complex tasks simpler through our implementation of boxes, callouts, error displays, and text blocks. You can easily add avatars, icons, images, spacers, and separators to enhance your interfaces. We also provide our own implementations of JSON, XML, HTML, and code rendering capabilities.
 
 ```mermaid
 flowchart LR
@@ -110,8 +109,8 @@ flowchart TB
 
 ### Effects
 
-Ivy provides a rich collection of built-in effects and animations to enhance your user interfaces. Working with effects in Ivy is incredibly simple and intuitive. For detailed information about specific effects, refer to the [animation](../../02_Widgets/05_Effects/Animation.md) and [confetti](../../02_Widgets/05_Effects/Confetti.md) documentation pages.
+Ivy provides a rich collection of built-in effects and animations to enhance your user interfaces. Working with effects in Ivy is incredibly simple and intuitive. For detailed information about specific effects, refer to the animation and confetti documentation pages.
 
 ### Advanced
 
-In the Advanced section, we introduce our specialized implementations for working with [sheets](../../02_Widgets/07_Advanced/Sheet.md) and [chat](../../02_Widgets/07_Advanced/Chat.md) functionality. These advanced widgets provide sophisticated features for complex user interface requirements.
+In the Advanced section, we introduce our specialized implementations for working with sheets and chat functionality. These advanced widgets provide sophisticated features for complex user interface requirements.
