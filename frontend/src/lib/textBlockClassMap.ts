@@ -7,7 +7,7 @@ export const textBlockClassMap: Record<string, string> = {
   H4: 'text-xl font-semibold tracking-tight scroll-m-20 mt-4 mb-4',
 
   // Body Typography
-  P: 'leading-7 scroll-m-20',
+  P: 'text-sm leading-relaxed scroll-m-20',
 
   // Lead Typography - Prominent Text
   Lead: 'text-sm text-muted-foreground',
