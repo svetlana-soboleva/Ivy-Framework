@@ -36,7 +36,7 @@ Server=localhost; Database=my_db; User Id=user; Password=password;
 
 Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
 
-- **Server**: The hostname of your MariaDB server instance.
+- **Server**: The hostname of your SQL Server instance.
 - **Database**: The name of the database you wish to connect to.
 - One of the following sets of options:
   - **Trusted_Connection**: Set to `True` to use Windows authentication.
