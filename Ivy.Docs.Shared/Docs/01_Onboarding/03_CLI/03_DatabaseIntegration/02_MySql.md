@@ -32,7 +32,7 @@ Specifically, your connection string should contain the following information, i
 - **Database**: The name of the database you wish to connect to.
 - **User** and **Password**: The credentials used to authenticate to the server.
 
-For more connection options, see the [MySqlConnector documentation](https://mysqlconnector.net/connection-options/).
+For all connection options, see the [MySqlConnector documentation](https://mysqlconnector.net/connection-options/).
 
 > **Note**: `MySqlConnector` is a library used by Ivy to connect with MySQL and MariaDB.
 
@@ -65,7 +65,7 @@ For more security recommendations, see [MySQL Security Guidelines](https://dev.m
 ### Common Issues
 
 **Connection Issues**
-- Verify server is running on the expected port
+- Verify server is running and listening on the expected port
 - Check firewall settings
 
 **Authentication Problems**
