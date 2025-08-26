@@ -8,8 +8,6 @@ State management is a fundamental concept in Ivy that allows you to handle and u
 
 ## Basic Usage
 
-### Creating State with UseState
-
 The `UseState` hook is the primary way to create reactive state in Ivy views:
 
 ```csharp demo-below
@@ -19,6 +17,7 @@ public class CounterApp : ViewBase
     {
         var count = UseState(0);
         var name = UseState("World");
+        var client = UseService<IClientProvider>();
         
         return new Card(
             Layout.Vertical(
@@ -32,7 +31,7 @@ public class CounterApp : ViewBase
                 new Separator(),
                 Layout.Horizontal(
                     name.ToTextInput().Placeholder("Your Name"),
-                    new Button("Greet", _ => { /* Name will update automatically */ })
+                    new Button("Greet", _ => client.Toast($"Hello, {name.Value}!", "Greeting"))
                 )
             )
         ).Title("Counter Demo");
@@ -42,17 +41,15 @@ public class CounterApp : ViewBase
 
 ### State with Factory Functions
 
-For complex initialization or when you need to defer object creation:
+For complex initialization or when you need to defer object creation, use factory functions with UseState. This pattern is useful for expensive computations, dependency injection, and lazy loading:
 
 ```csharp demo-tabs
 public class FactoryStateDemo : ViewBase
 {
     public override object? Build()
     {
-        // Lazy initialization - only computed once
         var expensiveData = UseState(() => ComputeExpensiveData());
         
-        // Complex object with dependencies
         var service = UseState(() => new DataService(GetConfig()));
         
         return Layout.Vertical(
@@ -74,7 +71,9 @@ public class DataService
 }
 ```
 
-## State Types and Patterns
+### State Types and Patterns
+
+Ivy supports various state types including primitives, collections, complex objects, and nullable types. Each type has specific update patterns and considerations for optimal performance and maintainability:
 
 ```csharp demo-tabs
 public class StatePatternsDemo : ViewBase
@@ -84,33 +83,27 @@ public class StatePatternsDemo : ViewBase
         // Primitive types
         var count = UseState(0);
         var name = UseState("Guest");
-        var isActive = UseState(false);
         
-        // Collections - use factory functions to avoid ambiguity
+        // Collections
         var items = UseState(() => new List<string> { "Item 1", "Item 2" });
-        var settings = UseState(() => new Dictionary<string, object>());
         
-        // Complex objects - use factory functions to avoid ambiguity
+        // Complex objects
         var user = UseState(() => new User { Name = "John", Age = 25 });
-        var config = UseState(() => new AppConfig { Theme = "Dark", Language = "EN" });
         
         // Nullable types
         var selectedItem = UseState(() => (string?)null);
-        var lastError = UseState(() => (Exception?)null);
         
         return Layout.Vertical(
             Text.H2("State Types & Patterns"),
             
             // Primitive state
             Layout.Horizontal(
-                new Button("Count: " + count.Value, _ => count.Set(count.Value + 1)),
-                new Button(name.Value, _ => name.Set("User " + Random.Shared.Next(100))),
-                new Button(isActive.Value ? "ON" : "OFF", _ => isActive.Set(!isActive.Value))
+                new Button($"Count: {count.Value}", _ => count.Set(count.Value + 1)),
+                new Button(name.Value, _ => name.Set("User " + Random.Shared.Next(100)))
             ),
             
             // Collection state
-            Layout.Vertical(
-                Text.Literal($"Items: {string.Join(", ", items.Value)}"),
+            Layout.Horizontal(
                 new Button("Add Item", _ => {
                     var newList = new List<string>(items.Value) { $"Item {items.Value.Count + 1}" };
                     items.Set(newList);
@@ -126,33 +119,21 @@ public class StatePatternsDemo : ViewBase
                 new Button($"User: {user.Value.Name}", _ => {
                     var newUser = new User { Name = "Jane", Age = 30 };
                     user.Set(newUser);
-                }),
-                new Button($"Theme: {config.Value.Theme}", _ => {
-                    var newConfig = new AppConfig { Theme = "Light", Language = "EN" };
-                    config.Set(newConfig);
                 })
             ),
             
             // Nullable state
             Layout.Horizontal(
-                new Button("Select Item", _ => {
-                    var firstItem = items.Value.FirstOrDefault();
-                    selectedItem.Set(firstItem);
-                }),
-                new Button("Clear Selection", _ => {
+                new Button("Set Item", _ => selectedItem.Set("Selected Item")),
+                new Button("Clear Item", _ => {
                     string? nullValue = null;
                     selectedItem.Set(nullValue);
-                }),
-                new Button("Trigger Error", _ => {
-                    Exception? error = new Exception("Demo error");
-                    lastError.Set(error);
                 })
             ),
             
-            // Display current states
             new Separator(),
-            Text.Literal($"Selected: {selectedItem.Value ?? "None"}"),
-            Text.Literal($"Error: {lastError.Value?.Message ?? "None"}")
+            Text.Literal($"Items: {string.Join(", ", items.Value)}"),
+            Text.Literal($"Selected: {selectedItem.Value ?? "None"}")
         );
     }
 }
@@ -162,15 +143,11 @@ public class User
     public string Name { get; set; } = "";
     public int Age { get; set; }
 }
-
-public class AppConfig
-{
-    public string Theme { get; set; } = "";
-    public string Language { get; set; } = "";
-}
 ```
 
-## State Updates
+### State Updates
+
+State updates in Ivy are handled through the Set method, which can accept direct values or computed values. Updates trigger automatic re-renders of the affected components, ensuring the UI stays synchronized with the current state:
 
 ```csharp demo-tabs
 public class StateUpdatesDemo : ViewBase
@@ -206,13 +183,16 @@ public class StateUpdatesDemo : ViewBase
                 new Button("Clear", _ => items.Set(new List<string>()))
             ),
             
-            Text.Literal($"Text: {text.Value} | Items: {string.Join(", ", items.Value)}")
+            Text.Literal($"Text: {text.Value}"),
+            Text.Literal($"Items: {string.Join(", ", items.Value)}")
         );
     }
 }
 ```
 
-## State in Forms
+### State in Forms
+
+Forms in Ivy use state variables bound to input widgets, allowing for real-time validation, live previews, and easy form submission handling. The ToTextInput, ToNumberInput, and ToBoolInput extensions provide seamless state binding:
 
 ```csharp demo-tabs
 public class FormStateDemo : ViewBase
@@ -223,7 +203,8 @@ public class FormStateDemo : ViewBase
         var email = UseState("");
         var age = UseState(18);
         var isSubscribed = UseState(false);
-        
+        var client = UseService<IClientProvider>();
+
         return Layout.Vertical(
             Text.H2("Form State Demo"),
             
@@ -235,9 +216,7 @@ public class FormStateDemo : ViewBase
             new Separator(),
             
             Layout.Horizontal(
-                new Button("Submit", _ => {
-                    // Form submission logic here
-                }),
+                new Button("Submit", _ => client.Toast($"Hello, {name.Value}!", "Greeting")),
                 new Button("Clear", _ => {
                     name.Set("");
                     email.Set("");
@@ -253,6 +232,8 @@ public class FormStateDemo : ViewBase
 ```
 
 ### State with Effects
+
+The UseEffect hook allows you to perform side effects when state changes, such as updating derived state, making API calls, or triggering other actions. Effects run automatically when their dependencies change:
 
 ```csharp demo-tabs
 public class EffectsStateDemo : ViewBase
