@@ -8,9 +8,15 @@ Connect your Ivy application to Supabase with automatic Entity Framework configu
 
 Supabase is an open-source Firebase alternative that provides a PostgreSQL database with real-time capabilities, authentication, and storage. Ivy integrates with Supabase using its PostgreSQL backend through the Npgsql provider. Learn more at the [Supabase website](https://supabase.com/).
 
-### Connecting to Supabase
+## Adding a Database Connection
 
-To get your connection string:
+To set up a Supabase database with Ivy, run the following command and select `Supabase` when asked to choose a DB provider:
+
+```terminal
+>ivy db add
+```
+
+You will be asked to name your connection, then prompted for a connection string. To get your connection string:
 
 1. Go to your Supabase project dashboard
 2. Click the "Connect" button at the top of the page to access all available connection strings
@@ -65,13 +71,12 @@ See [Supabase Row Level Security documentation](https://supabase.com/docs/guides
 - Use correct host URL and credentials
 
 **Other Issues**
-See [Supabase Connection Troubleshooting](https://supabase.com/docs/guides/database/connecting-to-postgres#troubleshooting) for more troubleshooting steps.
+See [Supabase Connection Troubleshooting](https://supabase.com/docs/guides/database/connecting-to-postgres#troubleshooting-and-postgres-connection-string-faqs) for more troubleshooting steps.
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [Supabase Authentication](../04_Authentication/Supabase.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [Official Supabase Documentation](https://supabase.com/docs)
-- [Supabase .NET SDK](https://github.com/supabase-community/supabase-csharp)
 - [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)
