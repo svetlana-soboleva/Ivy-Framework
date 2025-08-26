@@ -43,7 +43,9 @@ Host=db.[YOUR-PROJECT-REF].supabase.co;Database=postgres;Username=postgres;Passw
 
 For either format, remember to replace `[YOUR-PASSWORD]` with your database password, which is the password you used when creating the project (not your Supabase account password).
 
-Ivy CLI will automatically detect and convert URI-style connection strings to the key-value format.
+Ivy CLI will automatically detect and convert URI-style connection strings to the key-value format. After conversion, your connection string will be stored in .NET user secrets.
+
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
 
 ## Configuration
 

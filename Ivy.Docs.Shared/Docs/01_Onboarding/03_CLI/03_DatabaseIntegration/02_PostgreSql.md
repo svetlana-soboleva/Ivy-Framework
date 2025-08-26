@@ -36,6 +36,10 @@ Specifically, your connection string should contain the following information, i
 
 For all connection options, see [Npgsql Connection String Parameters](https://www.npgsql.org/doc/connection-string-parameters.html).
 
+Your connection string will be stored in .NET user secrets.
+
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
+
 ## Configuration
 
 Ivy automatically configures the **Npgsql.EntityFrameworkCore.PostgreSQL** package for PostgreSQL connections.

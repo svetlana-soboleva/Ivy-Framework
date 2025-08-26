@@ -36,6 +36,10 @@ For all connection options, see the [MySqlConnector documentation](https://mysql
 
 > **Note**: `MySqlConnector` is a library used by Ivy to connect with MySQL and MariaDB.
 
+Your connection string will be stored in .NET user secrets.
+
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
+
 ## Configuration
 
 Ivy automatically configures the **Pomelo.EntityFrameworkCore.MySql** package for MySQL connections.
