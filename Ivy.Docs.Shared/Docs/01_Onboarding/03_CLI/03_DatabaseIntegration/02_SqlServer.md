@@ -12,25 +12,41 @@ Connect your Ivy application to Microsoft SQL Server with automatic Entity Frame
 
 SQL Server is Microsoft's enterprise-grade relational database management system. Ivy provides seamless integration with SQL Server through Entity Framework Core.
 
-## Connection String Format
+## Adding a Database Connection
 
-```text
-Server=localhost;Database=mydb;Trusted_Connection=true;
+To set up SQL Server with Ivy, run the following command and select `SqlServer` when asked to choose a DB provider:
+
+```terminal
+>ivy db add
 ```
 
-### Authentication Options
+You will be asked to name your connection, then prompted for a connection string. The connection string you provide should follow one of the following formats, depending on your authentication mode:
+
+> For details on authentication modes, see Microsoft's [Choose an authentication mode](https://learn.microsoft.com/en-us/sql/relational-databases/security/choose-an-authentication-mode).
 
 **Windows Authentication (Recommended)**
 ```text
-Server=localhost;Database=mydb;Trusted_Connection=true;
+Server=localhost; Database=my_db; Trusted_Connection=True;
 ```
 
 **SQL Server Authentication**
 ```text
-Server=localhost;Database=mydb;User Id=username;Password=password;
+Server=localhost; Database=my_db; User Id=user; Password=password;
 ```
 
-For Azure SQL and authentication details, see [SQL Server Authentication documentation](https://learn.microsoft.com/en-us/sql/relational-databases/security/choose-an-authentication-mode).
+Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+
+- **Server**: The hostname of your MariaDB server instance.
+- **Database**: The name of the database you wish to connect to.
+- One of the following sets of options:
+  - **Trusted_Connection**: Set to `True` to use Windows authentication.
+  - **User ID** and **Password**: The credentials used to authenticate with SQL Server authentication.
+
+For all connection options, see the [SqlConnection.ConnectionString documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.data.sqlclient.sqlconnection.connectionstring).
+
+Your connection string will be stored in .NET user secrets.
+
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
 
 ## Configuration
 
@@ -52,7 +68,7 @@ SQL Server supports multiple schemas. When connecting with Ivy, you'll be prompt
 >ivy db add --provider SqlServer --name MySqlServer --schema MyCustomSchema
 ```
 
-See [SQL Server Schema documentation](https://learn.microsoft.com/en-us/sql/relational-databases/security/schemas-general) for more details.
+See Microsoft's [Create a database schema](https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/create-a-database-schema) for more details.
 
 ## Security Best Practices
 
@@ -69,13 +85,13 @@ See [SQL Server Schema documentation](https://learn.microsoft.com/en-us/sql/rela
 - Check credentials and permissions
 - Ensure firewall allows port 1433
 
-For detailed troubleshooting, see [SQL Server Connection Troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/sql/connect/resolve-connectivity-errors).
+For detailed troubleshooting, see [SQL Server Troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/sql/welcome-sql-server).
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [MySQL Provider](MySql.md)
 - [SQLite Provider](SQLite.md)
-- [Official SQL Server Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
-- [Entity Framework Core for SQL Server](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)
+- [SQL Server Technical Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
+- [SQL Server EF Core Database Provider](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)
