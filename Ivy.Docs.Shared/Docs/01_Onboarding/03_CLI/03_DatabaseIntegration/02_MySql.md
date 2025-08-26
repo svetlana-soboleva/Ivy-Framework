@@ -12,25 +12,29 @@ Connect your Ivy application to MySQL with automatic Entity Framework configurat
 
 MySQL is one of the world's most popular open-source relational databases, known for its speed, reliability, and ease of use. Ivy provides seamless integration with MySQL through Entity Framework Core.
 
-## Connection String Format
+## Adding a Database Connection
 
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass
+To set up MySQL with Ivy, run the following command and select `MySql` when asked to choose a DB provider:
+
+```terminal
+>ivy db add
 ```
 
-### Authentication Options
+You will be asked to name your connection, then prompted for a connection string. The connection string you provide should follow this format:
 
-**Standard Authentication**
 ```text
-Server=localhost;Database=mydb;Uid=myuser;Pwd=mypassword;Port=3306
+Server=localhost; Database=my_db; User=user; Password=password;
 ```
 
-**SSL Connection**
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass;SslMode=Required
-```
+Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
 
-For all connection options, see [MySQL Connection String Options](https://dev.mysql.com/doc/connector-net/en/connector-net-connection-options.html).
+- **Server**: The hostname of your MariaDB server instance.
+- **Database**: The name of the database you wish to connect to.
+- **User** and **Password**: The credentials used to authenticate to the server.
+
+For more connection options, see the [MySqlConnector documentation](https://mysqlconnector.net/connection-options/).
+
+> **Note**: `MySqlConnector` is a library used by Ivy to connect with MySQL and MariaDB.
 
 ## Configuration
 
@@ -45,7 +49,7 @@ Key features Ivy can leverage:
 - **Full-text indexes** for search functionality
 - **Multiple storage engines** (InnoDB, MyISAM)
 
-See [MySQL Feature Reference](https://dev.mysql.com/doc/refman/8.0/en/features.html) for details.
+See [MySQL Feature Reference](https://dev.mysql.com/doc/refman/8.4/en/features.html) for details.
 
 ## Security Best Practices
 
@@ -54,29 +58,26 @@ See [MySQL Feature Reference](https://dev.mysql.com/doc/refman/8.0/en/features.h
 - **Enable binary logging** for point-in-time recovery
 - **Use connection pooling** to optimize performance
 
-For more security recommendations, see [MySQL Security Guidelines](https://dev.mysql.com/doc/refman/8.0/en/security-guidelines.html).
+For more security recommendations, see [MySQL Security Guidelines](https://dev.mysql.com/doc/refman/8.4/en/security-guidelines.html).
 
 ## Troubleshooting
 
 ### Common Issues
 
 **Connection Issues**
-- Verify server is running on port 3306
+- Verify server is running on the expected port
 - Check firewall settings
 
 **Authentication Problems**
 - Verify credentials and user privileges
 
-**Character Set Issues**
-- Use `CharSet=utf8mb4` in connection string
-
-See [MySQL Troubleshooting](https://dev.mysql.com/doc/refman/8.0/en/problems.html) for more help.
+See [MySQL Problems and Common Errors](https://dev.mysql.com/doc/refman/8.4/en/problems.html) for more help.
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [MariaDB Provider](MariaDb.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
 - [Official MySQL Documentation](https://dev.mysql.com/doc/)
-- [Pomelo.EntityFrameworkCore.MySql Documentation](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)
+- [Pomelo.EntityFrameworkCore.MySql](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)
