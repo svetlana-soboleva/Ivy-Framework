@@ -78,7 +78,7 @@ Learn more in the [Snowflake Documentation](https://docs.snowflake.com/en/user-g
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
 - [Official Snowflake Documentation](https://docs.snowflake.com)

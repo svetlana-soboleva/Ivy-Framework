@@ -60,7 +60,7 @@ For detailed troubleshooting, refer to [Oracle Database Error Messages](https://
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [SQL Server Provider](SqlServer.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [Enterprise Features](../../02_Concepts/Services.md)

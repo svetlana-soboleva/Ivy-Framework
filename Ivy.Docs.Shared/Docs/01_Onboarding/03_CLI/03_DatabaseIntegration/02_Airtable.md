@@ -80,7 +80,7 @@ See [Airtable's API Reference](https://airtable.com/developers/web/api/introduct
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [SQLite Provider](SQLite.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [Official Airtable API Documentation](https://airtable.com/developers/web/api/introduction)
