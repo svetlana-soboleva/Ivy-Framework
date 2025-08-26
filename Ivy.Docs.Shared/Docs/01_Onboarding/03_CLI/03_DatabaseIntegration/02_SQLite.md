@@ -12,38 +12,35 @@ Connect your Ivy application to SQLite with automatic Entity Framework configura
 
 SQLite is a lightweight, file-based relational database that's perfect for development, testing, and applications that need a simple, self-contained database solution. No server setup required! Learn more about SQLite at the [official SQLite website](https://www.sqlite.org/).
 
-## Database File Selection
+## Adding a Database Connection
 
-Unlike other providers, SQLite doesn't use connection strings stored in user secrets. When setting up SQLite with Ivy, you'll be prompted for the path to your database file:
+To set up SQLite with Ivy, run the following command and select `Sqlite` when asked to choose a DB provider:
 
 ```terminal
-Path to database file: data.db
+>ivy db add
 ```
 
-Ivy will attempt to suggest existing SQLite files in your project, but you can specify any path.
+You will be asked to name your connection, then prompted for the path to your database file:
 
-The connection string will be automatically generated as:
+```terminal
+Path to database file: (existing_file.db):
+```
+
+Ivy will attempt to suggest existing SQLite files in your project, but you can specify any path. Ivy automatically adds the database file to your project with `<CopyToOutputDirectory>Always</CopyToOutputDirectory>` so it's included when building your project.
+
+A connection string will be automatically generated as:
 
 ```text
 Data Source=data.db
 ```
 
-Ivy automatically adds the database file to your project with `<CopyToOutputDirectory>Always</CopyToOutputDirectory>` so it's included when building your project.
+Unlike other providers, SQLite doesn't store this connection string in .NET user secrets. Instead, it is included directly in the generated DbContextFactory source file.
 
-### Common Configurations
-
-**In-Memory Database (for testing)**
-```text
-Data Source=:memory:
-```
-
-See [SQLite Connection Strings](https://www.connectionstrings.com/sqlite/) for additional options.
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
 
 ## Configuration
 
 Ivy automatically configures the **Microsoft.EntityFrameworkCore.Sqlite** package for SQLite connections.
-
-SQLite database files are referenced directly in your project file rather than stored as connection strings in User Secrets.
 
 ## SQLite-Specific Features
 
@@ -73,11 +70,11 @@ See [SQLite Security Considerations](https://www.sqlite.org/security.html) for m
 **Database Locked Errors**
 - Close connections properly and use WAL mode
 
-See [SQLite Troubleshooting](https://www.sqlite.org/faq.html) for more help.
+See the [SQLite FAQ](https://www.sqlite.org/faq.html) for more help.
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySql.md)
