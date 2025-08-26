@@ -28,7 +28,7 @@ Server=localhost; Database=my_db; User=user; Password=password;
 
 Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
 
-- **Server**: The hostname of your MariaDB server instance.
+- **Server**: The hostname of your MySQL server instance.
 - **Database**: The name of the database you wish to connect to.
 - **User** and **Password**: The credentials used to authenticate to the server.
 
