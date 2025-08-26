@@ -16,6 +16,7 @@ const calloutVariants = {
   Info: {
     container:
       'border-cyan/20 bg-cyan/5 text-cyan-foreground dark:border-cyan/30 dark:bg-cyan/10',
+    icon: '',
   },
   Success: {
     container:
