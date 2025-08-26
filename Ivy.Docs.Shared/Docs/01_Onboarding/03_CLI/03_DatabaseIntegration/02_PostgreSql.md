@@ -12,27 +12,29 @@ Connect your Ivy application to PostgreSQL with automatic Entity Framework confi
 
 PostgreSQL is an advanced open-source relational database known for its reliability, feature robustness, and performance. Ivy provides seamless integration with PostgreSQL through Entity Framework Core.
 
-## Connection String Format
+## Adding a Database Connection
+
+To set up PostgreSQL with Ivy, run the following command and select `Postgres` when asked to choose a DB provider:
+
+```terminal
+>ivy db add
+```
+
+You will be asked to name your connection, then prompted for a connection string. The connection string you provide should follow this format:
 
 ```text
 Host=localhost;Database=mydb;Username=user;Password=pass
 ```
 
+Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+
+- **Host**: The hostname of your Postgres server instance.
+- **Database**: The name of the database you wish to connect to.
+- **Username** and **Password**: The credentials used to authenticate to the server.
+
 > **Note**: Ivy also supports URI-style connection strings (e.g., `postgresql://user:password@host:port/dbname`) and will automatically convert them to the key-value format.
 
-### Authentication Options
-
-**Standard Authentication**
-```text
-Host=localhost;Database=mydb;Username=myuser;Password=mypassword;Port=5432
-```
-
-**SSL Connection**
-```text
-Host=localhost;Database=mydb;Username=user;Password=pass;SSL Mode=Require
-```
-
-For all connection string options, see [Npgsql Connection String Parameters](https://www.npgsql.org/doc/connection-string-parameters.html).
+For all connection options, see [Npgsql Connection String Parameters](https://www.npgsql.org/doc/connection-string-parameters.html).
 
 ## Configuration
 
@@ -48,8 +50,6 @@ PostgreSQL supports multiple schemas. When configuring your PostgreSQL database 
 >ivy db add --provider Postgres --name MyPostgres --schema MyCustomSchema
 ```
 
-
-
 ## PostgreSQL-Specific Features
 
 Key features Ivy can leverage:
@@ -57,7 +57,7 @@ Key features Ivy can leverage:
 - **Array types** for collections
 - **Custom data types** and enums
 
-See the [PostgreSQL features documentation](https://www.postgresql.org/docs/current/features.html) for details on these capabilities.
+See [About PostgreSQL](https://www.postgresql.org/about/) for more information on PostgreSQL features.
 
 ## Security Best Practices
 
@@ -70,7 +70,7 @@ See the [PostgreSQL features documentation](https://www.postgresql.org/docs/curr
 ### Common Issues
 
 **Connection Issues**
-- Verify server is running on port 5432
+- Verify server is running and listening on expected port
 - Check credentials and firewall settings
 
 **Authentication Problems**
@@ -80,9 +80,9 @@ For detailed help, see the [PostgreSQL Documentation](https://www.postgresql.org
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [SQL Server Provider](SqlServer.md)
 - [MySQL Provider](MySql.md)
 - [Supabase Provider](Supabase.md)
-- [Official PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Official PostgreSQL Documentation](https://www.postgresql.org/docs/current/)
 - [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)
