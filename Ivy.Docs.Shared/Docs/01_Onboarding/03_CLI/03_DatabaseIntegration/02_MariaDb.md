@@ -10,27 +10,29 @@ Connect your Ivy application to MariaDB with automatic Entity Framework configur
 
 ## Overview
 
-MariaDB is a popular open-source relational database that started as a fork of MySQL. It offers enhanced features, improved performance, and better storage engines while maintaining MySQL compatibility. For more information, visit the [MariaDB Knowledge Base](https://mariadb.com/kb/en/about-mariadb-server/).
+MariaDB is a popular open-source relational database that started as a fork of MySQL. It offers enhanced features, improved performance, and better storage engines while maintaining MySQL compatibility. For more information, visit the [MariaDB documentation](https://mariadb.com/docs/general-resources/about/about-mariadb).
 
-## Connection String Format
+## Adding a Database Connection
 
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass
+To set up MariaDB with Ivy, run the following command and select `MariaDb` when asked to choose a DB provider:
+
+```terminal
+>ivy db add
 ```
 
-### Authentication Options
+You will be asked to name your connection, then prompted for a connection string. The connection string you provide should follow this format:
 
-**Standard Authentication**
 ```text
-Server=localhost;Database=mydb;Uid=myuser;Pwd=mypassword;Port=3306
+Server=localhost; Database=my_db; User=user; Password=password;
 ```
 
-**SSL Connection**
-```text
-Server=localhost;Database=mydb;Uid=user;Pwd=pass;SslMode=Required
-```
+Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
 
-See [MariaDB Connection Parameters](https://mariadb.com/kb/en/about-mariadb-connector-net/) for all options.
+- **Server**: The hostname of your MariaDB server instance.
+- **Database**: The name of the database you wish to connect to.
+- **User** and **Password**: The credentials used to authenticate to the server.
+
+For more connection options, see the [MySqlConnector documentation](https://mysqlconnector.net/connection-options/). _Note: `MySqlConnector` is a library used by Ivy to connect with MariaDB and MySQL._
 
 ## Configuration
 
@@ -59,20 +61,17 @@ See the [MariaDB Documentation](https://mariadb.com/kb/en/library/documentation/
 ### Common Issues
 
 **Connection Issues**
-- Verify server is running on port 3306
+- Verify server is running on the correct port
 - Check firewall settings
 
 **Authentication Problems**
 - Verify credentials and user privileges
 
-**Character Set Issues**
-- Use `CharSet=utf8mb4` in connection string
-
 See [MariaDB Troubleshooting](https://mariadb.com/kb/en/troubleshooting-connection-issues/) for help.
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
+- [Database Overview](Overview.md)
 - [MySQL Provider](MySql.md)
 - [PostgreSQL Provider](PostgreSql.md)
 - [SQL Server Provider](SqlServer.md)
