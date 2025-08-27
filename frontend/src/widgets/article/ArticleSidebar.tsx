@@ -16,8 +16,8 @@ export const ArticleSidebar: React.FC<ArticleSidebarProps> = ({
   documentSource,
   title,
 }) => {
-  // Only show sidebar if TOC, contributors, or tools should be displayed
-  if (!showToc && !documentSource) return null;
+  // Only show sidebar if TOC should be displayed
+  if (!showToc) return null;
 
   return (
     <div className="hidden lg:block w-64">
@@ -29,7 +29,7 @@ export const ArticleSidebar: React.FC<ArticleSidebarProps> = ({
         />
         <div className="flex-1 flex flex-col gap-4 min-h-0">
           <TableOfContents articleRef={articleRef} show={showToc} />
-          <GitHubContributors documentSource={documentSource} show={showToc} />
+          <GitHubContributors documentSource={documentSource} />
         </div>
       </div>
     </div>
