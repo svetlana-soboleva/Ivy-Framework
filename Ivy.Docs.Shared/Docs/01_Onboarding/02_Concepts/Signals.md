@@ -62,43 +62,61 @@ public class ChildReceiver : ViewBase
 
 ### One-to-Many Communication
 
-```csharp demo-tabs
-public class NotificationSignal : AbstractSignal<string, Unit> { }
+This example demonstrates the one-to-many pattern where one sender broadcasts a message that multiple receivers all receive simultaneously.
 
-public class NotificationSender : ViewBase
+```csharp demo-tabs
+public class BroadcastSignal : AbstractSignal<string, Unit> { }
+
+public class OneToManyDemo : ViewBase
 {
     public override object? Build()
     {
-        var signal = Context.CreateSignal<NotificationSignal, string, Unit>();
+        var signal = Context.CreateSignal<BroadcastSignal, string, Unit>();
         var message = UseState("");
+        var receiver1Message = UseState("");
+        var receiver2Message = UseState("");
+        var receiver3Message = UseState("");
         
-        async void SendNotification(Event<Button> _)
+        async void BroadcastMessage(Event<Button> _)
         {
-            await signal.Send(message.Value);
-            message.Set("");
+            if (!string.IsNullOrWhiteSpace(message.Value))
+            {
+                await signal.Send(message.Value);
+                message.Set("");
+            }
         }
         
-        return Layout.Vertical(
-            message.ToTextInput("Message"),
-            new Button("Send Notification", SendNotification)
-        );
-    }
-}
-
-public class NotificationReceiver : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.UseSignal<NotificationSignal, string, Unit>();
-        var lastMessage = UseState("");
-        
-        UseEffect(() => signal.Receive(message =>
+        // Set up receivers
+        UseEffect(() => 
         {
-            lastMessage.Set($"Received: {message} at {DateTime.Now:HH:mm:ss}");
-            return new Unit();
-        }));
+            var receiver = Context.UseSignal<BroadcastSignal, string, Unit>();
+            var subscription = receiver.Receive(message =>
+            {
+                receiver1Message.Set(message);
+                receiver2Message.Set(message);
+                receiver3Message.Set(message);
+                return new Unit();
+            });
+            return subscription;
+        });
         
-        return new Card(lastMessage.Value);
+        return Layout.Vertical(
+            Layout.Horizontal(
+                message.ToTextInput("Broadcast Message"),
+                new Button("Send to ALL", BroadcastMessage)
+            ),
+            Layout.Horizontal(
+                Layout.Vertical(
+                    new Card(Text.Block(receiver1Message.Value))
+                ),
+                Layout.Vertical(
+                    new Card(Text.Block(receiver2Message.Value))
+                ),
+                Layout.Vertical(
+                    new Card(Text.Block(receiver3Message.Value))
+                )
+            )
+        );
     }
 }
 ```
@@ -115,7 +133,6 @@ public class DataRequester : ViewBase
         var signal = Context.CreateSignal<DataRequestSignal, string, string[]>();
         var query = UseState("");
         var results = UseState<string[]>(() => Array.Empty<string>());
-        
         async void SearchData(Event<Button> _)
         {
             var responses = await signal.Send(query.Value);
