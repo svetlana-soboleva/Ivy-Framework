@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 interface Contributor {
   login: string;
+  name?: string;
   avatar_url: string;
   html_url: string;
   contributions: number;
@@ -16,6 +17,13 @@ interface GitHubCommit {
     avatar_url: string;
     html_url: string;
   } | null;
+  commit: {
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+  };
 }
 
 interface GitHubContributorsProps {
@@ -121,6 +129,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
               const isIvyMember = login in IVY_TEAM_MEMBERS;
               contributorMap.set(login, {
                 login: commit.author.login,
+                name: commit.commit.author.name,
                 avatar_url: commit.author.avatar_url,
                 html_url: commit.author.html_url,
                 contributions: 1,
@@ -217,7 +226,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                      {contributor.login}
+                      {contributor.name || contributor.login}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {contributor.role}
