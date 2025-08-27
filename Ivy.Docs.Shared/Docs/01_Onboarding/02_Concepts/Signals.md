@@ -126,34 +126,30 @@ public class OneToManyDemo : ViewBase
 This example demonstrates the request-response pattern where a requester sends a query and receives specific responses from providers. Unlike one-to-many broadcasting, this pattern expects specific data back from each provider.
 
 ```csharp demo-tabs
+public class DataRequestSignal : AbstractSignal<string, string[]> { }
+
 public class RequestResponseDemo : ViewBase
 {
     public override object? Build()
     {
-        var query = UseState("");
+        var signal = Context.CreateSignal<DataRequestSignal, string, string[]>();
+        var query = UseState<string>("");
         var results = UseState<string[]>(() => Array.Empty<string>());
+        var isSearching = UseState<bool>(false);
         
-        void SearchData(Event<Button> _)
+        async void SearchData(Event<Button> _)
         {
             if (!string.IsNullOrWhiteSpace(query.Value))
             {
-                // Simulate request-response: one query gets responses from multiple sources
-                var allResults = new List<string>();
+                isSearching.Set(true);
                 
-                // Response from User Database
-                var userResults = new[] { "John Doe", "Jane Smith", "Bob Johnson" }
-                    .Where(item => item.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
-                    .Select(item => "[Users] " + item);
-                allResults.AddRange(userResults);
+                // Send request via signal and get responses from all providers
+                var responses = await signal.Send(query.Value);
+                var allResults = responses.SelectMany(r => r).ToArray();
                 
-                // Response from Product Catalog
-                var productResults = new[] { "Laptop", "Smartphone", "Tablet" }
-                    .Where(item => item.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
-                    .Select(item => "[Products] " + item);
-                allResults.AddRange(productResults);
-                
-                results.Set(allResults.ToArray());
+                results.Set(allResults);
                 query.Set("");
+                isSearching.Set(false);
             }
         }
         
@@ -163,15 +159,13 @@ public class RequestResponseDemo : ViewBase
                 query.ToTextInput("Search"),
                 new Button("Search", SearchData)
             ),
-            Text.Block($"Found {results.Value.Length} results"),
+            Text.Block(isSearching.Value ? "Searching..." : $"Found {results.Value.Length} results"),
             Layout.Vertical(
                 results.Value.Select(r => Text.Block(r))
             ),
             Layout.Horizontal(
-                Layout.Vertical(
-                    Text.Block("Users: John Doe, Jane Smith, Bob Johnson"),
-                    Text.Block("Products: Laptop, Smartphone, Tablet")
-                )
+                new DataProvider("User Database", new[] { "John Doe", "Jane Smith", "Bob Johnson" }),
+                new DataProvider("Product Catalog", new[] { "Laptop", "Smartphone", "Tablet" })
             )
         );
     }
@@ -190,8 +184,23 @@ public class DataProvider : ViewBase
     
     public override object? Build()
     {
-        var processedQueries = UseState(0);
-        var lastQuery = UseState("");
+        var signal = Context.UseSignal<DataRequestSignal, string, string[]>();
+        var processedQueries = UseState<int>(0);
+        var lastQuery = UseState<string>("");
+        
+        UseEffect(() => signal.Receive(query =>
+        {
+            processedQueries.Set(processedQueries.Value + 1);
+            lastQuery.Set(query);
+            
+            // Process the query and return results
+            var matchingResults = _dataSource
+                .Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .Select(item => $"[{_providerName}] {item}")
+                .ToArray();
+                
+            return matchingResults;
+        }));
         
         return new Card(
             Layout.Vertical(
@@ -203,8 +212,6 @@ public class DataProvider : ViewBase
         );
     }
 }
-
-public class DataRequestSignal : AbstractSignal<string, string[]> { }
 ```
 
 ## Broadcast Types
