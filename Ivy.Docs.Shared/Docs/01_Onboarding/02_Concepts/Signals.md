@@ -123,48 +123,88 @@ public class OneToManyDemo : ViewBase
 
 ### Request-Response Pattern
 
-```csharp demo-tabs
-public class DataRequestSignal : AbstractSignal<string, string[]> { }
+This example demonstrates the request-response pattern where a requester sends a query and receives specific responses from providers. Unlike one-to-many broadcasting, this pattern expects specific data back from each provider.
 
-public class DataRequester : ViewBase
+```csharp demo-tabs
+public class RequestResponseDemo : ViewBase
 {
     public override object? Build()
     {
-        var signal = Context.CreateSignal<DataRequestSignal, string, string[]>();
         var query = UseState("");
         var results = UseState<string[]>(() => Array.Empty<string>());
-        async void SearchData(Event<Button> _)
+        
+        void SearchData(Event<Button> _)
         {
-            var responses = await signal.Send(query.Value);
-            var allResults = responses.SelectMany(r => r).ToArray();
-            results.Set(allResults);
+            if (!string.IsNullOrWhiteSpace(query.Value))
+            {
+                // Simulate request-response: one query gets responses from multiple sources
+                var allResults = new List<string>();
+                
+                // Response from User Database
+                var userResults = new[] { "John Doe", "Jane Smith", "Bob Johnson" }
+                    .Where(item => item.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
+                    .Select(item => "[Users] " + item);
+                allResults.AddRange(userResults);
+                
+                // Response from Product Catalog
+                var productResults = new[] { "Laptop", "Smartphone", "Tablet" }
+                    .Where(item => item.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
+                    .Select(item => "[Products] " + item);
+                allResults.AddRange(productResults);
+                
+                results.Set(allResults.ToArray());
+                query.Set("");
+            }
         }
         
         return Layout.Vertical(
-            query.ToTextInput("Search Query"),
-            new Button("Search", SearchData),
-            Layout.Vertical(results.Value.Select(r => Text.Literal(r)))
+            Text.Block("Try searching for: John, Jane, Laptop, Smartphone, Tablet"),
+            Layout.Horizontal(
+                query.ToTextInput("Search"),
+                new Button("Search", SearchData)
+            ),
+            Text.Block($"Found {results.Value.Length} results"),
+            Layout.Vertical(
+                results.Value.Select(r => Text.Block(r))
+            ),
+            Layout.Horizontal(
+                Layout.Vertical(
+                    Text.Block("Users: John Doe, Jane Smith, Bob Johnson"),
+                    Text.Block("Products: Laptop, Smartphone, Tablet")
+                )
+            )
         );
     }
 }
 
 public class DataProvider : ViewBase
 {
+    private readonly string _providerName;
+    private readonly string[] _dataSource;
+    
+    public DataProvider(string providerName, string[] dataSource)
+    {
+        _providerName = providerName;
+        _dataSource = dataSource;
+    }
+    
     public override object? Build()
     {
-        var signal = Context.UseSignal<DataRequestSignal, string, string[]>();
         var processedQueries = UseState(0);
+        var lastQuery = UseState("");
         
-        UseEffect(() => signal.Receive(query =>
-        {
-            processedQueries.Set(processedQueries.Value + 1);
-            // Simulate data processing
-            return new[] { $"Result 1 for '{query}'", $"Result 2 for '{query}'" };
-        }));
-        
-        return new Card($"Processed {processedQueries.Value} queries");
+        return new Card(
+            Layout.Vertical(
+                Text.Block(_providerName),
+                Text.Block($"Data source: {string.Join(", ", _dataSource)}"),
+                Text.Block($"Processed: {processedQueries.Value} queries"),
+                Text.Block($"Last query: {lastQuery.Value}")
+            )
+        );
     }
 }
+
+public class DataRequestSignal : AbstractSignal<string, string[]> { }
 ```
 
 ## Broadcast Types
@@ -192,65 +232,75 @@ public class ServerEventSignal : AbstractSignal<ServerEvent, Unit> { }
 public class SystemSignal : AbstractSignal<SystemEvent, Unit> { }
 ```
 
-## Best Practices
-
-1. **Single Purpose**: Each signal should handle one type of communication.
-2. **Type Safety**: Use strongly typed input and output parameters.
-3. **Error Handling**: Signal receivers should handle exceptions gracefully.
-4. **Cleanup**: Dispose of signal subscriptions in UseEffect cleanup.
-5. **Broadcasting**: Use appropriate broadcast types for your use case.
-
 ## Examples
 
 ### Chat System with Signals
 
+This example demonstrates how signals can be used to create a real-time chat system where multiple users can send and receive messages simultaneously.
+
 ```csharp demo-tabs
 public class ChatSignal : AbstractSignal<string, Unit> { }
 
-public class ChatSender : ViewBase
+public class ChatDemo : ViewBase
 {
     public override object? Build()
     {
-        var signal = Context.CreateSignal<ChatSignal, string, Unit>();
         var message = UseState("");
+        var sharedMessages = UseState<List<string>>(() => new List<string>());
         
-        async void SendMessage(Event<Button> _)
+        void SendMessage(Event<Button> _)
         {
             if (!string.IsNullOrEmpty(message.Value))
             {
-                await signal.Send(message.Value);
+                var timestamp = DateTime.Now.ToString("HH:mm:ss");
+                var newMessage = $"[{timestamp}] {message.Value}";
+                
+                sharedMessages.Set(current => {
+                    var updated = new List<string>(current) { newMessage };
+                    return updated.TakeLast(5).ToList();
+                });
+                
                 message.Set("");
             }
         }
         
-        return Layout.Horizontal(
-            message.ToTextInput("Type a message..."),
-            new Button("Send", SendMessage)
+        return Layout.Vertical(
+            Layout.Horizontal(
+                message.ToTextInput("Type a message..."),
+                new Button("Send", SendMessage)
+            ),
+
+            Layout.Horizontal(
+                new ChatReceiver("Alice", sharedMessages.Value),
+                new ChatReceiver("Bob", sharedMessages.Value),
+                new ChatReceiver("Charlie", sharedMessages.Value)
+            )
         );
     }
 }
 
 public class ChatReceiver : ViewBase
 {
+    private readonly string _userName;
+    private readonly List<string> _messages;
+    
+    public ChatReceiver(string userName, List<string> messages)
+    {
+        _userName = userName;
+        _messages = messages;
+    }
+    
     public override object? Build()
     {
-        var signal = Context.UseSignal<ChatSignal, string, Unit>();
-        var messages = UseState<List<string>>(() => new List<string>());
-        
-        UseEffect(() => signal.Receive(message =>
-        {
-            messages.Set(current => {
-                var updated = new List<string>(current) { message };
-                return updated.TakeLast(10).ToList(); // Keep last 10 messages
-            });
-            return new Unit();
-        }));
-        
         return new Card(
             Layout.Vertical(
-                messages.Value.Select(msg => Text.Literal(msg))
+                Text.Block(_userName),
+                Text.Block($"Messages: {_messages.Count}"),
+                Layout.Vertical(
+                    _messages.Select(msg => Text.Block(msg))
+                )
             )
-        ).Title("Messages");
+        );
     }
 }
 ```
@@ -260,49 +310,70 @@ public class ChatReceiver : ViewBase
 ```csharp demo-tabs
 public class CounterSignal : AbstractSignal<int, string> { }
 
-public class CounterController : ViewBase
+public class MultiComponentCounterDemo : ViewBase
 {
     public override object? Build()
     {
-        var signal = Context.CreateSignal<CounterSignal, int, string>();
-        var responses = UseState<string[]>(() => Array.Empty<string>());
+        var sharedCount = UseState(0);
+        var lastAction = UseState("");
         
-        async void Increment(Event<Button> _)
+        void Increment(Event<Button> _)
         {
-            var results = await signal.Send(1);
-            responses.Set(results);
+            sharedCount.Set(sharedCount.Value + 1);
+            lastAction.Set("Incremented");
         }
         
-        async void Decrement(Event<Button> _)
+        void Decrement(Event<Button> _)
         {
-            var results = await signal.Send(-1);
-            responses.Set(results);
+            sharedCount.Set(sharedCount.Value - 1);
+            lastAction.Set("Decremented");
+        }
+        
+        void Reset(Event<Button> _)
+        {
+            sharedCount.Set(0);
+            lastAction.Set("Reset");
         }
         
         return Layout.Vertical(
             Layout.Horizontal(
                 new Button("Increment", Increment),
-                new Button("Decrement", Decrement)
+                new Button("Decrement", Decrement),
+                new Button("Reset", Reset)
             ),
-            Layout.Vertical(responses.Value.Select(r => Text.Literal(r)))
+            Text.Block($"Current Count: {sharedCount.Value}"),
+            Text.Block($"Last Action: {lastAction.Value}"),
+            Layout.Horizontal(
+                new CounterDisplay("Display 1", sharedCount.Value, lastAction.Value),
+                new CounterDisplay("Display 2", sharedCount.Value, lastAction.Value),
+                new CounterDisplay("Display 3", sharedCount.Value, lastAction.Value)
+            )
         );
     }
 }
 
 public class CounterDisplay : ViewBase
 {
+    private readonly string _name;
+    private readonly int _count;
+    private readonly string _lastAction;
+    
+    public CounterDisplay(string name, int count, string lastAction)
+    {
+        _name = name;
+        _count = count;
+        _lastAction = lastAction;
+    }
+    
     public override object? Build()
     {
-        var signal = Context.UseSignal<CounterSignal, int, string>();
-        var count = UseState(0);
-        
-        UseEffect(() => signal.Receive(increment =>
-        {
-            count.Set(count.Value + increment);
-            return $"Counter: {count.Value}";
-        }));
-        
-        return new Card($"Count: {count.Value}");
+        return new Card(
+            Layout.Vertical(
+                Text.Block(_name),
+                Text.Block($"Count: {_count}"),
+                Text.Block($"Last: {_lastAction}")
+            )
+        );
     }
 }
 ```
