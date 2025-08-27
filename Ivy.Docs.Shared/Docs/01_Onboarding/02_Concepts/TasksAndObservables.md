@@ -187,20 +187,14 @@ public class TransformationExample : ViewBase
 
 ### Error Handling
 
-The `TaskView<T>` automatically handles task exceptions and displays them appropriately. For observables, consider using try-catch blocks in your subscription handlers:
+Both `TaskView<T>` and `UseEffect` automatically handle exceptions through Ivy's built-in exception handling system. Any exceptions thrown during effect execution or task processing are automatically caught and routed to the configured exception handlers (such as displaying errors in the UI).
 
 ```csharp
 this.UseEffect(() =>
 {
-    return observable.Subscribe(
-        value => {
-            try {
-                state.Set(value);
-            }
-            catch (Exception ex) {
-                errorState.Set(ex.Message);
-            }
-        }
-    );
+    return observable.Subscribe(value => {
+        // No need for manual try-catch - Ivy handles exceptions automatically
+        state.Set(value);
+    });
 });
 ```
