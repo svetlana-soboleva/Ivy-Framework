@@ -79,35 +79,28 @@ public class OneToManyDemo : ViewBase
             }
         }
         
-        // Set up receivers
-        UseEffect(() => 
+        // Set up signal receiver
+        var receiver = Context.UseSignal<BroadcastSignal, string, Unit>();
+        
+        // Process incoming messages
+        UseEffect(() => receiver.Receive(message =>
         {
-            var receiver = Context.UseSignal<BroadcastSignal, string, Unit>();
-            var subscription = receiver.Receive(message =>
-            {
-                receiver1Message.Set(message);
-                receiver2Message.Set(message);
-                receiver3Message.Set(message);
-                return new Unit();
-            });
-            return subscription;
-        });
+            // Each receiver processes the same message differently
+            receiver1Message.Set($"Logged: {message}");
+            receiver2Message.Set($"Analyzed: {message.Length} characters");
+            receiver3Message.Set($"Stats: {message.Split(' ').Length} words");
+            return new Unit();
+        }));
         
         return Layout.Vertical(
             Layout.Horizontal(
                 message.ToTextInput("Broadcast Message"),
-                new Button("Send to ALL", BroadcastMessage)
+                new Button("Send", BroadcastMessage)
             ),
             Layout.Horizontal(
-                Layout.Vertical(
-                    new Card(Text.Block(receiver1Message.Value))
-                ),
-                Layout.Vertical(
-                    new Card(Text.Block(receiver2Message.Value))
-                ),
-                Layout.Vertical(
-                    new Card(Text.Block(receiver3Message.Value))
-                )
+                new Card(Text.Block(receiver1Message.Value)),
+                new Card(Text.Block(receiver2Message.Value)),
+                new Card(Text.Block(receiver3Message.Value))
             )
         );
     }
