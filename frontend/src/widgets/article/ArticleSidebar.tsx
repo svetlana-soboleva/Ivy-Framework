@@ -16,8 +16,8 @@ export const ArticleSidebar: React.FC<ArticleSidebarProps> = ({
   documentSource,
   title,
 }) => {
-  // Only show sidebar if TOC, contributors, or tools should be displayed
-  if (!showToc && !documentSource) return null;
+  // Only show sidebar if TOC should be displayed
+  if (!showToc) return null;
 
   return (
     <div className="hidden lg:block w-64">
