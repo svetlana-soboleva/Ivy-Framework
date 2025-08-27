@@ -192,7 +192,7 @@ public class StateUpdatesDemo : ViewBase
 
 ### State in Forms
 
-Forms in Ivy use state variables bound to input widgets, allowing for real-time validation, live previews, and easy form submission handling. The ToTextInput, ToNumberInput, and ToBoolInput extensions provide seamless state binding:
+[Forms](../../01_Onboarding/02_Concepts/Forms.md) in Ivy use state variables bound to input widgets, allowing for real-time validation, live previews, and easy form submission handling. The ToTextInput, ToNumberInput, and ToBoolInput extensions provide seamless state binding:
 
 ```csharp demo-tabs
 public class FormStateDemo : ViewBase
@@ -233,7 +233,7 @@ public class FormStateDemo : ViewBase
 
 ### State with Effects
 
-The UseEffect hook allows you to perform side effects when state changes, such as updating derived state, making API calls, or triggering other actions. Effects run automatically when their dependencies change:
+The [UseEffect](../../01_Onboarding/02_Concepts/Effects.md) hook allows you to perform side effects when state changes, such as updating derived state, making API calls, or triggering other actions. Effects run automatically when their dependencies change:
 
 ```csharp demo-tabs
 public class EffectsStateDemo : ViewBase
