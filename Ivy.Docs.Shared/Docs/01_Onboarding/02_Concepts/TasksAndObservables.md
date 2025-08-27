@@ -158,43 +158,40 @@ public class ObservableSearchExample : ViewBase
 
 ### Observable Transformations
 
-This example showcases advanced observable stream processing with multiple transformation operators. It demonstrates how to chain operations like filtering, projection, and limiting to create complex data processing pipelines that update every 2 seconds.
+This example demonstrates interactive data transformation with immediate feedback. It demonstrates filtering, projection, and limiting operations to create processed results.
 
 ```csharp demo-tabs
 public class TransformationExample : ViewBase
 {
     public override object? Build()
     {
-        var sourceData = this.UseState<int[]>(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-        
-        var transformedObservable = this.UseStatic(() => 
-            Observable.Interval(TimeSpan.FromSeconds(1))
-                .Select(_ => sourceData.Value)
-                .SelectMany(numbers => numbers)
+        var generatedData = this.UseState<int[]>(Array.Empty<int>());
+        var lastTransformed = this.UseState<int[]>(Array.Empty<int>());
+
+        void GenerateNewData(Event<Button> _)
+        {
+            var random = new Random();
+            var newData = Enumerable.Range(1, 10)
+                .Select(_ => random.Next(1, 21))
+                .ToArray();
+            
+            generatedData.Set(newData);
+            
+            var immediateResult = newData
                 .Where(num => num % 2 == 0)
                 .Select(num => num * 2)
                 .Take(5)
-                .ToArray()
-        );
+                .ToArray();
+            lastTransformed.Set(immediateResult);
+        }
 
         return Layout.Vertical(
-            Text.Block("Source: " + string.Join(", ", sourceData.Value)),
-            new ObservableView<int[]>(transformedObservable)
+            Layout.Horizontal(
+                new Button("Generate New Data", GenerateNewData)
+            ),
+            Text.Block("Generated data: " + string.Join(", ", generatedData.Value)),
+            Text.Block("Last Generated Result: " + string.Join(", ", lastTransformed.Value))
         );
     }
 }
-```
-
-### Error Handling
-
-Both `TaskView<T>` and `UseEffect` automatically handle exceptions through Ivy's built-in exception handling system. Any exceptions thrown during effect execution or task processing are automatically caught and routed to the configured exception handlers (such as displaying errors in the UI).
-
-```csharp
-this.UseEffect(() =>
-{
-    return observable.Subscribe(value => {
-        // No need for manual try-catch - Ivy handles exceptions automatically
-        state.Set(value);
-    });
-});
 ```
