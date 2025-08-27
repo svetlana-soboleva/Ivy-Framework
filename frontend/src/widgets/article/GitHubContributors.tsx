@@ -28,6 +28,7 @@ interface GitHubCommit {
 
 interface GitHubContributorsProps {
   documentSource?: string;
+  show?: boolean;
 }
 
 // Ivy team members with their roles
@@ -65,13 +66,14 @@ const getCommitsUrl = (githubUrl: string): string => {
 
 export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   documentSource,
+  show = true,
 }) => {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!documentSource) return;
+    if (!documentSource || !show) return;
 
     // Extract repo and file path from GitHub URL
     const getApiUrl = (githubUrl: string): string | null => {
@@ -155,9 +157,9 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [documentSource]);
+  }, [documentSource, show]);
 
-  if (!documentSource) return null;
+  if (!documentSource || !show) return null;
 
   const displayedContributors = contributors.slice(0, 3);
   const remainingCount = contributors.length - 3;
