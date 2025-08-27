@@ -155,7 +155,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   const hasMoreContributors = remainingCount > 0;
 
   return (
-    <div className="mt-4">
+    <div>
       <div className="text-body mb-4 flex items-center gap-2">
         <Users className="w-4 h-4" />
         Contributors
@@ -163,7 +163,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
       {loading && (
         <div className="flex-shrink-0 min-h-40">
-          <div className="p-4">
+          <div className="pr-2">
             <div className="flex flex-col gap-3">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex items-center gap-3">
@@ -181,7 +181,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
       {error && (
         <div className="flex-shrink-0 min-h-40">
-          <div className="p-4">
+          <div className="pr-2">
             <div className="text-sm text-muted-foreground">{error}</div>
           </div>
         </div>
@@ -189,7 +189,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
       {!loading && !error && contributors.length === 0 && (
         <div className="flex-shrink-0 min-h-40">
-          <div className="p-4">
+          <div className="pr-2">
             <div className="text-sm text-muted-foreground">
               No contributors found
             </div>
@@ -200,8 +200,8 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       {!loading && !error && contributors.length > 0 && (
         <div className="flex-shrink-0 min-h-40 overflow-hidden">
           {/* Contributors list with scrollable area */}
-          <div className="h-full overflow-y-auto">
-            <div className="p-4 space-y-3">
+          <div className="h-full overflow-y-auto pr-2">
+            <div className="space-y-3">
               {displayedContributors.map(contributor => (
                 <a
                   key={contributor.login}
@@ -231,7 +231,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
           {/* "and X more" link */}
           {hasMoreContributors && (
-            <div className="px-4 pb-4">
+            <div className="pr-2 pt-4">
               <a
                 href={getCommitsUrl(documentSource)}
                 target="_blank"
