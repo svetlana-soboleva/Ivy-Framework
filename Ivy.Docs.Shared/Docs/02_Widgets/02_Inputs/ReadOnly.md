@@ -17,8 +17,7 @@ public class ReadOnlyDemo : ViewBase
     {    
         double value = 123.45;
         var readOnlyInput = new ReadOnlyInput<double>(value);
-        return Layout.Vertical()
-                | readOnlyInput;
+        return readOnlyInput;
     }    
 }    
 ```
