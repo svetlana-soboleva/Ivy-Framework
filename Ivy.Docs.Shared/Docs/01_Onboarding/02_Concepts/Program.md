@@ -210,6 +210,8 @@ server.SetMetaDescription("A powerful web application built with Ivy");
 
 ### Simple Application
 
+A minimal setup for development with hot reload enabled and basic chrome configuration.
+
 ```csharp
 using System.Globalization;
 
@@ -222,6 +224,8 @@ await server.RunAsync();
 ```
 
 ### Documentation Server
+
+A specialized configuration for documentation sites with custom chrome, version display, and page-based navigation.
 
 ```csharp
 using System.Globalization;
@@ -249,6 +253,8 @@ await server.RunAsync();
 
 ### Authentication-Enabled Application
 
+A basic setup with Supabase authentication configured for email/password and Google OAuth login.
+
 ```csharp
 using System.Globalization;
 
@@ -263,6 +269,8 @@ await server.RunAsync();
 ```
 
 ### Production-Ready Configuration
+
+A comprehensive setup with conditional compilation, HTTPS redirection, metadata configuration, and dependency injection services for production deployment.
 
 ```csharp
 using System.Globalization;
@@ -300,11 +308,15 @@ await server.RunAsync();
 
 ### Custom Content Builder
 
+Configure a custom content builder to handle specialized content rendering and processing.
+
 ```csharp
 server.UseContentBuilder(new CustomContentBuilder());
 ```
 
 ### WebApplication Builder Modifications
+
+Extend the underlying WebApplication builder with custom middleware, services, and logging configuration.
 
 ```csharp
 server.UseBuilder(builder =>
@@ -319,6 +331,8 @@ server.UseBuilder(builder =>
 ```
 
 ### Connection Management
+
+Automatically discover and register SignalR connection classes for real-time communication features.
 
 ```csharp
 server.AddConnectionsFromAssembly();
