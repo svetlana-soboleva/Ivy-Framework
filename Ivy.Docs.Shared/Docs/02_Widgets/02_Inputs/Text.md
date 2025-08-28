@@ -263,8 +263,7 @@ public class DisabledInputDemo : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Horizontal()
-                | new TextInput(UseState(""))
+        return new TextInput(UseState(""))
                      .Placeholder("Disabled Input")
                      .Disabled();
     }
