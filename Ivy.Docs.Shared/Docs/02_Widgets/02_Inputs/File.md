@@ -57,14 +57,13 @@ public class FileDropDemo : ViewBase
 
 To render a disabled `FileInput` control, the `Disabled` function should be used.
 
-```csharp
+```csharp demo-below
 public class FileInputDisabledDemo : ViewBase
 {
     public override object? Build()
     {
         var fileState = this.UseState((FileInput?)null);
-         return Layout.Vertical()
-                |  fileState.ToFileInput()
+         return fileState.ToFileInput()
                     .Placeholder("Select a file")
                     .Accept(".jpg,.png")
                     .Disabled();
