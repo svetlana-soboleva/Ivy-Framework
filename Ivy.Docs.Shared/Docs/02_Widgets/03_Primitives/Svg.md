@@ -10,7 +10,7 @@ The `Svg` widget renders scalable vector graphics directly in your app. SVGs are
 
 The simplest way to create an SVG is to pass SVG markup as a string:
 
-```csharp demo-tabs
+```csharp demo-below
 public class SimpleSvgView : ViewBase
 {
     public override object? Build()
