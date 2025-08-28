@@ -21,7 +21,7 @@ public class CounterApp : ViewBase
         
         return new Card(
             Layout.Vertical(
-                Text.H2($"Hello, {name.Value}!"),
+                Text.Literal($"Hello, {name.Value}!"),
                 Text.Literal($"Count: {count.Value}"),
                 Layout.Horizontal(
                     new Button("Increment", _ => count.Set(count.Value + 1)),
