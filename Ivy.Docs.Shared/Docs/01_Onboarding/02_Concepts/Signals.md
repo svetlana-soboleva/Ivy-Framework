@@ -146,9 +146,7 @@ public class RequestResponseDemo : ViewBase
                 new Button("Search", SearchData)
             ),
             Text.Block(isSearching.Value ? "Searching..." : $"Found {results.Value.Length} results"),
-            Layout.Vertical(
-                results.Value.Select(r => Text.Block(r))
-            ),
+            results.Value.Select(r => Text.Block(r)),
             Layout.Horizontal(
                 new DataProvider("User Database", new[] { "John Doe", "Jane Smith", "Bob Johnson" }),
                 new DataProvider("Product Catalog", new[] { "Laptop", "Smartphone", "Tablet" })
