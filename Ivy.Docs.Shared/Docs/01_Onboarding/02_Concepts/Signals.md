@@ -2,23 +2,16 @@
 
 <Ingress>
 Signals enable inter-component communication in Ivy applications, allowing components to send and receive messages across the component tree.
+They follow a publisher-subscriber pattern where components can send messages through signals and other components can listen for and respond to those messages.
 </Ingress>
-
-## Overview
-
-Signals are communication primitives that allow different parts of your application to communicate with each other. They follow a publisher-subscriber pattern where components can send messages through signals and other components can listen for and respond to those messages.
 
 ## Basic Usage
 
 First, define a signal by creating a class that inherits from `AbstractSignal<TInput, TOutput>`:
 
-```csharp
-public class CounterSignal : AbstractSignal<int, string> { }
-```
-
-Then use the signal in your application:
-
 ```csharp demo-below
+public class CounterSignal : AbstractSignal<int, string> { }
+
 public class SignalExample : ViewBase
 {
     public override object? Build()
@@ -62,90 +55,147 @@ public class ChildReceiver : ViewBase
 
 ### One-to-Many Communication
 
-```csharp demo-tabs
-public class NotificationSignal : AbstractSignal<string, Unit> { }
+This example demonstrates the one-to-many pattern where one sender broadcasts a message that multiple receivers all receive simultaneously.
 
-public class NotificationSender : ViewBase
+```csharp demo-tabs
+public class BroadcastSignal : AbstractSignal<string, Unit> { }
+
+public class OneToManyDemo : ViewBase
 {
     public override object? Build()
     {
-        var signal = Context.CreateSignal<NotificationSignal, string, Unit>();
+        var signal = Context.CreateSignal<BroadcastSignal, string, Unit>();
         var message = UseState("");
+        var receiver1Message = UseState("");
+        var receiver2Message = UseState("");
+        var receiver3Message = UseState("");
         
-        async void SendNotification(Event<Button> _)
+        async void BroadcastMessage(Event<Button> _)
         {
-            await signal.Send(message.Value);
-            message.Set("");
+            if (!string.IsNullOrWhiteSpace(message.Value))
+            {
+                await signal.Send(message.Value);
+                message.Set("");
+            }
         }
         
-        return Layout.Vertical(
-            message.ToTextInput("Message"),
-            new Button("Send Notification", SendNotification)
-        );
-    }
-}
-
-public class NotificationReceiver : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.UseSignal<NotificationSignal, string, Unit>();
-        var lastMessage = UseState("");
+        // Set up signal receiver
+        var receiver = Context.UseSignal<BroadcastSignal, string, Unit>();
         
-        UseEffect(() => signal.Receive(message =>
+        // Process incoming messages
+        UseEffect(() => receiver.Receive(message =>
         {
-            lastMessage.Set($"Received: {message} at {DateTime.Now:HH:mm:ss}");
+            // Each receiver processes the same message differently
+            receiver1Message.Set($"Logged: {message}");
+            receiver2Message.Set($"Analyzed: {message.Length} characters");
+            receiver3Message.Set($"Stats: {message.Split(' ').Length} words");
             return new Unit();
         }));
         
-        return new Card(lastMessage.Value);
+        return Layout.Vertical(
+            Layout.Horizontal(
+                message.ToTextInput("Broadcast Message"),
+                new Button("Send", BroadcastMessage)
+            ),
+            Layout.Horizontal(
+                new Card(Text.Block(receiver1Message.Value)),
+                new Card(Text.Block(receiver2Message.Value)),
+                new Card(Text.Block(receiver3Message.Value))
+            )
+        );
     }
 }
 ```
 
 ### Request-Response Pattern
 
+This example demonstrates the request-response pattern where a requester sends a query and receives specific responses from providers. Unlike one-to-many broadcasting, this pattern expects specific data back from each provider.
+
 ```csharp demo-tabs
 public class DataRequestSignal : AbstractSignal<string, string[]> { }
 
-public class DataRequester : ViewBase
+public class RequestResponseDemo : ViewBase
 {
     public override object? Build()
     {
         var signal = Context.CreateSignal<DataRequestSignal, string, string[]>();
-        var query = UseState("");
+        var query = UseState<string>("");
         var results = UseState<string[]>(() => Array.Empty<string>());
+        var isSearching = UseState<bool>(false);
         
         async void SearchData(Event<Button> _)
         {
-            var responses = await signal.Send(query.Value);
-            var allResults = responses.SelectMany(r => r).ToArray();
-            results.Set(allResults);
+            if (!string.IsNullOrWhiteSpace(query.Value))
+            {
+                isSearching.Set(true);
+                
+                // Send request via signal and get responses from all providers
+                var responses = await signal.Send(query.Value);
+                var allResults = responses.SelectMany(r => r).ToArray();
+                
+                results.Set(allResults);
+                query.Set("");
+                isSearching.Set(false);
+            }
         }
         
         return Layout.Vertical(
-            query.ToTextInput("Search Query"),
-            new Button("Search", SearchData),
-            Layout.Vertical(results.Value.Select(r => Text.Literal(r)))
+            Text.Block("Try searching for: John, Jane, Laptop, Smartphone, Tablet"),
+            Layout.Horizontal(
+                query.ToTextInput("Search"),
+                new Button("Search", SearchData)
+            ),
+            Text.Block(isSearching.Value ? "Searching..." : $"Found {results.Value.Length} results"),
+            Layout.Vertical(
+                results.Value.Select(r => Text.Block(r))
+            ),
+            Layout.Horizontal(
+                new DataProvider("User Database", new[] { "John Doe", "Jane Smith", "Bob Johnson" }),
+                new DataProvider("Product Catalog", new[] { "Laptop", "Smartphone", "Tablet" })
+            )
         );
     }
 }
 
 public class DataProvider : ViewBase
 {
+    private readonly string _providerName;
+    private readonly string[] _dataSource;
+    
+    public DataProvider(string providerName, string[] dataSource)
+    {
+        _providerName = providerName;
+        _dataSource = dataSource;
+    }
+    
     public override object? Build()
     {
         var signal = Context.UseSignal<DataRequestSignal, string, string[]>();
-        var processedQueries = UseState(0);
+        var processedQueries = UseState<int>(0);
+        var lastQuery = UseState<string>("");
         
         UseEffect(() => signal.Receive(query =>
         {
             processedQueries.Set(processedQueries.Value + 1);
-            // Simulate data processing
-            return new[] { $"Result 1 for '{query}'", $"Result 2 for '{query}'" };
+            lastQuery.Set(query);
+            
+            // Process the query and return results
+            var matchingResults = _dataSource
+                .Where(item => item.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .Select(item => $"[{_providerName}] {item}")
+                .ToArray();
+                
+            return matchingResults;
         }));
         
-        return new Card($"Processed {processedQueries.Value} queries");
+        return new Card(
+            Layout.Vertical(
+                Text.Block(_providerName),
+                Text.Block($"Data source: {string.Join(", ", _dataSource)}"),
+                Text.Block($"Processed: {processedQueries.Value} queries"),
+                Text.Block($"Last query: {lastQuery.Value}")
+            )
+        );
     }
 }
 ```
@@ -159,135 +209,24 @@ Signals can be configured to broadcast across different scopes:
 ```csharp
 [Signal(BroadcastType.App)]
 public class AppNotificationSignal : AbstractSignal<string, Unit> { }
-```
 
-### Server-Level Broadcasting
-
-```csharp
 [Signal(BroadcastType.Server)]
 public class ServerEventSignal : AbstractSignal<ServerEvent, Unit> { }
-```
 
-### Machine-Level Broadcasting
-
-```csharp
 [Signal(BroadcastType.Machine)]
 public class SystemSignal : AbstractSignal<SystemEvent, Unit> { }
 ```
 
-## Best Practices
-
-1. **Single Purpose**: Each signal should handle one type of communication.
-2. **Type Safety**: Use strongly typed input and output parameters.
-3. **Error Handling**: Signal receivers should handle exceptions gracefully.
-4. **Cleanup**: Dispose of signal subscriptions in UseEffect cleanup.
-5. **Broadcasting**: Use appropriate broadcast types for your use case.
-
-## Examples
-
-### Chat System with Signals
-
-```csharp demo-tabs
-public class ChatSignal : AbstractSignal<string, Unit> { }
-
-public class ChatSender : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.CreateSignal<ChatSignal, string, Unit>();
-        var message = UseState("");
-        
-        async void SendMessage(Event<Button> _)
-        {
-            if (!string.IsNullOrEmpty(message.Value))
-            {
-                await signal.Send(message.Value);
-                message.Set("");
-            }
-        }
-        
-        return Layout.Horizontal(
-            message.ToTextInput("Type a message..."),
-            new Button("Send", SendMessage)
-        );
-    }
-}
-
-public class ChatReceiver : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.UseSignal<ChatSignal, string, Unit>();
-        var messages = UseState<List<string>>(() => new List<string>());
-        
-        UseEffect(() => signal.Receive(message =>
-        {
-            messages.Set(current => {
-                var updated = new List<string>(current) { message };
-                return updated.TakeLast(10).ToList(); // Keep last 10 messages
-            });
-            return new Unit();
-        }));
-        
-        return new Card(
-            Layout.Vertical(
-                messages.Value.Select(msg => Text.Literal(msg))
-            )
-        ).Title("Messages");
-    }
-}
-```
-
-### Multi-Component Counter
-
-```csharp demo-tabs
-public class CounterSignal : AbstractSignal<int, string> { }
-
-public class CounterController : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.CreateSignal<CounterSignal, int, string>();
-        var responses = UseState<string[]>(() => Array.Empty<string>());
-        
-        async void Increment(Event<Button> _)
-        {
-            var results = await signal.Send(1);
-            responses.Set(results);
-        }
-        
-        async void Decrement(Event<Button> _)
-        {
-            var results = await signal.Send(-1);
-            responses.Set(results);
-        }
-        
-        return Layout.Vertical(
-            Layout.Horizontal(
-                new Button("Increment", Increment),
-                new Button("Decrement", Decrement)
-            ),
-            Layout.Vertical(responses.Value.Select(r => Text.Literal(r)))
-        );
-    }
-}
-
-public class CounterDisplay : ViewBase
-{
-    public override object? Build()
-    {
-        var signal = Context.UseSignal<CounterSignal, int, string>();
-        var count = UseState(0);
-        
-        UseEffect(() => signal.Receive(increment =>
-        {
-            count.Set(count.Value + increment);
-            return $"Counter: {count.Value}";
-        }));
-        
-        return new Card($"Count: {count.Value}");
-    }
-}
+```mermaid
+graph TB
+    Sender[Signal Sender]
+    App[App-Level]
+    Server[Server-Level]
+    Machine[Machine-Level]
+    
+    Sender --> App
+    Sender --> Server
+    Sender --> Machine
 ```
 
 ## See Also
