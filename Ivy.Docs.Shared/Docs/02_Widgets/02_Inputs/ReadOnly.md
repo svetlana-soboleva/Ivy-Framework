@@ -10,7 +10,7 @@ The `ReadOnlyInput` widget displays data in an input-like format that cannot be 
 
 Here's a simple example of a `ReadOnlyInput` displaying a value:
 
-```csharp demo-below 
+```csharp demo-below
 public class ReadOnlyDemo : ViewBase
 {    
     public override object? Build()
