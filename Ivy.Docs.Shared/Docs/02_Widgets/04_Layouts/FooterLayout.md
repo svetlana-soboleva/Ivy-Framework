@@ -19,7 +19,7 @@ public class BasicFooterExample : ViewBase
         
         return Layout.Vertical()
             | new Card("Main Section")
-                    | Text.H2("Welcome to Ivy Framework")
+                    | Text.P("Welcome to Ivy Framework")
             | new FooterLayout(
                 footer: new Button("Save", _ => client.Toast("Content saved!"))
                     .Variant(ButtonVariant.Primary),
@@ -79,7 +79,7 @@ public class SheetWithFooterExample : ViewBase
         return Layout.Vertical()
             | new Card("Sheet Header")
                     | Layout.Vertical()
-                        | Text.H1("Article Editor")
+                        | Text.P("Article Editor")
                         | Text.Small("Create and edit your articles with ease").Color(Colors.Gray)
             | new FooterLayout(
                 footer: Layout.Horizontal().Align(Align.Right)
@@ -124,7 +124,7 @@ public class ComplexFooterExample : ViewBase
         return Layout.Vertical()
             | new Card("Project Header")
                     | Layout.Vertical()
-                        | Text.H1("Document Editor")
+                        | Text.P("Document Editor")
                         | Text.Small("Comprehensive project management tool").Color(Colors.Gray)
             | new FooterLayout(
                 footer: Layout.Horizontal().Align(Align.Right)
