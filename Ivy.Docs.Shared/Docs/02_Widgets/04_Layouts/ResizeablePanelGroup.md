@@ -17,15 +17,9 @@ public class BasicResizeablePanelView : ViewBase
     {
         return new ResizeablePanelGroup(
             new ResizeablePanel(30, 
-                new Card(
-                    Layout.Vertical()
-                        | Text.Block("Left Panel")
-                )),
+                new Card("Left Panel")),
             new ResizeablePanel(70, 
-                new Card(
-                    Layout.Vertical()
-                        | Text.Block("Right Panel")
-                ))
+                new Card("Right Panel"))
         );
     }
 }
