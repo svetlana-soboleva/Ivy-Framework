@@ -184,9 +184,7 @@ public class TransformationExample : ViewBase
         }
 
         return Layout.Vertical(
-            Layout.Horizontal(
-                new Button("Generate New Data", GenerateNewData)
-            ),
+            new Button("Generate New Data", GenerateNewData),
             Text.Block("Generated data: " + string.Join(", ", generatedData.Value)),
             Text.Block("Last Generated Result: " + string.Join(", ", lastTransformed.Value))
         );

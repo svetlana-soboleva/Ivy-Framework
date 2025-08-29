@@ -21,8 +21,7 @@ public class ColorDemo : ViewBase
     public override object? Build()
     {    
         var colorState = this.UseState("#ff0000");
-        return Layout.Horizontal()
-                | colorState.ToColorInput();
+        return colorState.ToColorInput();
     }   
 }
 ```
@@ -131,9 +130,7 @@ public class DisabledColorInput : ViewBase
 {
     public override object? Build()
     {    
-        return Layout.Vertical()
-                | new ColorInput<string>("#ff0000")
-                        .Disabled();
+        return new ColorInput<string>("#ff0000").Disabled();
     }
 }    
 ```
@@ -148,13 +145,12 @@ public class InvalidStyleDemo : ViewBase
 { 
     public override object? Build()
     {    
-        return Layout.Vertical()
-                | new ColorInput<string>("#ff0000")
-                        .Invalid("This is not used now");
+        return new ColorInput<string>("#ff0000").Invalid("This is not used now");
     }
 }
 
 ```
+
 
 <WidgetDocs Type="Ivy.ColorInput" ExtensionTypes="Ivy.ColorInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/ColorInput.cs"/>
 

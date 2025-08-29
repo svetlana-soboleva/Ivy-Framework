@@ -263,8 +263,7 @@ public class DisabledInputDemo : ViewBase
 {
     public override object? Build()
     {
-        return Layout.Horizontal()
-                | new TextInput(UseState(""))
+        return new TextInput(UseState(""))
                      .Placeholder("Disabled Input")
                      .Disabled();
     }
@@ -331,32 +330,32 @@ public class DataCaptureUsingExtensionDemo: ViewBase
         var address = UseState("");
         var website = UseState("");
         return Layout.Vertical()
-                | Layout.Horizontal()
-                   | Text.Block("Username")
+                | (Layout.Horizontal()
+                   | Text.Block("Username").Width(Size.Fraction(0.15f))
                    | userName.ToTextInput()
-                             .Placeholder("User name") 
-                | Layout.Horizontal()
-                   | Text.Block("Password")
+                             .Placeholder("User name"))
+                | (Layout.Horizontal()
+                   | Text.Block("Password").Width(Size.Fraction(0.15f))
                    | password.ToPasswordInput(placeholder: "Password")
-                             .Disabled(userName.Value.Length == 0)
-                | Layout.Horizontal()
-                   | Text.Block("Email")
+                             .Disabled(userName.Value.Length == 0))
+                | (Layout.Horizontal()
+                   | Text.Block("Email").Width(Size.Fraction(0.15f))
                    | email.ToEmailInput()
-                           .Placeholder("Email")
-                | Layout.Horizontal() 
-                   | Text.Block("Mobile")
+                           .Placeholder("Email"))
+                | (Layout.Horizontal() 
+                   | Text.Block("Mobile").Width(Size.Fraction(0.15f))
                    | tel.ToTelInput()
-                        .Placeholder("Mobile")
-                | Layout.Horizontal()
-                   | Text.Block("Address")  
+                        .Placeholder("Mobile"))
+                | (Layout.Horizontal()
+                   | Text.Block("Address").Width(Size.Fraction(0.15f))
                    | address.ToTextAreaInput()
                             .Placeholder("Address Line1\nAddress Line2\nAddress Line 3")
                             .Height(40)
-                            .Width(100)
-                | Layout.Horizontal()
-                   | Text.Block("Website")
+                            .Width(100))
+                | (Layout.Horizontal()
+                   | Text.Block("Website").Width(Size.Fraction(0.15f))
                    | website.ToUrlInput()
-                            .Placeholder("https://ivy.app/");                             
+                            .Placeholder("https://ivy.app/"));                             
     }
 }
 ```
@@ -394,7 +393,7 @@ public class BasicFilter : ViewBase
 
 <WidgetDocs Type="Ivy.TextInput" ExtensionTypes="Ivy.TextInputExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Inputs/TextInput.cs"/>
 
-### Examples
+## Examples
 
 The following demo shows how to use style like `Invalid` in form validations.
 
@@ -466,10 +465,9 @@ public class LoginForm : ViewBase
                     .Placeholder("Enter your password")
                      // Disabled when username is empty
                     .Disabled(string.IsNullOrWhiteSpace(usernameState.Value))
-                | Layout.Horizontal()
-                    | new Button("Login")
-                        .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
-                             string.IsNullOrWhiteSpace(passwordState.Value));                             
+                | new Button("Login")
+                    .Disabled(string.IsNullOrWhiteSpace(usernameState.Value) || 
+                        string.IsNullOrWhiteSpace(passwordState.Value));                             
     }     
 }
 ```

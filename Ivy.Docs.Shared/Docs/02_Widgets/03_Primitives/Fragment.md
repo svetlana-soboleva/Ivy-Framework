@@ -16,7 +16,7 @@ public class BasicFragmentView : ViewBase
     public override object? Build()
     {
         return new Fragment(
-            Text.H1("Welcome"),
+            Text.P("Welcome"),
             Text.P("This text is grouped with the heading above.")
         );
     }
@@ -36,7 +36,7 @@ public class ConditionalRenderingView : ViewBase
         var viewMode = UseState("user"); 
         
         return Layout.Vertical().Gap(4)
-            | Text.H2("User Dashboard")
+            | Text.P("User Dashboard")
             | (Layout.Horizontal().Gap(2)
                 | new Button("User View", _ => {
                     viewMode.Set("user");
@@ -50,14 +50,14 @@ public class ConditionalRenderingView : ViewBase
                     .Variant(viewMode.Value == "admin" ? ButtonVariant.Primary : ButtonVariant.Secondary))
             | (viewMode.Value == "admin"
                 ? new Fragment(
-                    Text.H3("Admin Controls"),
+                    Text.P("Admin Controls"),
                     Layout.Horizontal().Gap(2)
                         | new Button("Reset System", _ => client.Toast("System reset initiated!"), variant: ButtonVariant.Destructive)
                         | new Button("View Logs", _ => client.Toast("Opening system logs..."))
                         | new Button("Manage Users", _ => client.Toast("User management panel opened"))
                   )
                 : new Fragment(
-                    Text.H3("User Profile"),
+                    Text.P("User Profile"),
                     Layout.Horizontal().Gap(2)
                         | new Button("Edit Profile", _ => client.Toast("Profile editor opened"))
                         | new Button("Change Password", _ => client.Toast("Password change dialog opened"))
@@ -85,7 +85,7 @@ public class MultipleElementsView : ViewBase
         var tabs = new[] { "Overview", "Details", "Settings" };
         
         return new Fragment(
-            Text.H1("Application"),
+            Text.P("Application"),
             new Spacer().Height(4),
             // Tab navigation
             Layout.Horizontal().Gap(2)
@@ -131,7 +131,7 @@ public class DynamicContentView : ViewBase
         var showDetails = UseState(false);
         
         return Layout.Vertical().Gap(4)
-            | Text.H2("Dynamic Content")
+            | Text.P("Dynamic Content")
             | new Fragment(
                 // Static controls
                 Layout.Horizontal().Gap(2)

@@ -183,12 +183,12 @@ public class NavigationSheetContent : ViewBase
         var pages = new[] { "Home", "Profile", "Settings", "Help" };
         
         return Layout.Vertical()
-            | Layout.Horizontal().Gap(2)
+            | (Layout.Horizontal().Gap(2)
                 | pages.Select((page, index) => 
                     new Button(page)
                         .Variant(currentPage.Value == index ? ButtonVariant.Primary : ButtonVariant.Outline)
                         .HandleClick(_ => currentPage.Value = index)
-                ).ToArray()
+                ).ToArray())
             | new Card(
                 $"This is the {pages[currentPage.Value]} page content"
             ).Title("Page Content");
@@ -198,7 +198,7 @@ public class NavigationSheetContent : ViewBase
 
 <WidgetDocs Type="Ivy.Sheet" ExtensionTypes="Ivy.SheetExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Sheet.cs"/>
 
-## Advanced example
+## Examples
 
 ### Conditional Rendering
 
@@ -246,7 +246,7 @@ public class ConditionalSheetExample : ViewBase
             | new Button("Open Conditional Sheet").HandleClick(_ => isOpen.Value = true)
             | (isOpen.Value ? new Sheet((Event<Sheet> _) => isOpen.Value = false,
                 Layout.Vertical().Gap(2)
-                    | Layout.Horizontal().Gap(2)
+                    | (Layout.Horizontal().Gap(2)
                         | new Button("List").Variant(viewMode.Value == "list" ? ButtonVariant.Primary : ButtonVariant.Outline)
                             .HandleClick(_ => {
                                 viewMode.Value = "list";
@@ -261,7 +261,7 @@ public class ConditionalSheetExample : ViewBase
                             .HandleClick(_ => {
                                 viewMode.Value = "details";
                                 client.Toast("Switched to Details view");
-                            })
+                            }))
                     | RenderContent(),
                 title: "Conditional Content Sheet",
                 description: "Switch between different view modes"
