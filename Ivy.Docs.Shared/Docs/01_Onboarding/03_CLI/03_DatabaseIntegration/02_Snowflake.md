@@ -24,7 +24,7 @@ account=myaccount; db=mydatabase; schema=myschema; warehouse=mywarehouse; user=m
 
 Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
 
-- **account**: Snowflake account name. See Snowflake's [Account Identifiers Documentation](https://docs.snowflake.cn/en/user-guide/admin-account-identifier) for instructions on how to find this.
+- **account**: Snowflake account name. See Snowflake's [Account Identifiers Documentation](https://docs.snowflake.com/en/user-guide/admin-account-identifier) for instructions on how to find this.
 - **db**: The name of the database you wish to connect to.
 - **schema**: The name of the schema you wish to use.
 - **warehouse**: The name of the warehouse you wish to use for compute.
