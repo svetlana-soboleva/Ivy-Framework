@@ -12,64 +12,45 @@ Connect your Ivy application to Microsoft SQL Server with automatic Entity Frame
 
 SQL Server is Microsoft's enterprise-grade relational database management system. Ivy provides seamless integration with SQL Server through Entity Framework Core.
 
-## Setup
+## Adding a Database Connection
 
-### Adding SQL Server Connection
+To set up SQL Server with Ivy, run the following command and select `SqlServer` when asked to choose a DB provider:
 
 ```terminal
->ivy db add --provider SqlServer --name MySqlServer
+>ivy db add
 ```
 
-### Interactive Setup
+You will be asked to name your connection, then prompted for a connection string. The connection string you provide should follow one of the following formats, depending on your authentication mode:
 
-When using interactive mode, Ivy will guide you through:
+> For details on authentication modes, see Microsoft's [Choose an authentication mode](https://learn.microsoft.com/en-us/sql/relational-databases/security/choose-an-authentication-mode).
 
-1. **Connection Name**: Enter a name for your connection (PascalCase recommended)
-2. **Connection String**: Provide your SQL Server connection string
-3. **Schema**: Specify the database schema (optional, defaults to `dbo`)
-
-## Connection String Format
-
+**Windows Authentication (Recommended)**
 ```text
-Server=localhost;Database=mydb;Trusted_Connection=true;
-```
-
-### Authentication Options
-
-**Windows Authentication (Recommended for local development)**
-```text
-Server=localhost;Database=mydb;Trusted_Connection=true;
+Server=localhost; Database=my_db; Trusted_Connection=True;
 ```
 
 **SQL Server Authentication**
 ```text
-Server=localhost;Database=mydb;User Id=username;Password=password;
+Server=localhost; Database=my_db; User Id=user; Password=password;
 ```
 
-**Azure SQL Database**
-```text
-Server=tcp:yourserver.database.windows.net,1433;Database=mydb;User ID=username;Password=password;Encrypt=true;TrustServerCertificate=false;Connection Timeout=30;
-```
+Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+
+- **Server**: The hostname of your SQL Server instance.
+- **Database**: The name of the database you wish to connect to.
+- One of the following sets of options:
+  - **Trusted_Connection**: Set to `True` to use Windows authentication.
+  - **User ID** and **Password**: The credentials used to authenticate with SQL Server authentication.
+
+For all connection options, see the [SqlConnection.ConnectionString documentation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.data.sqlclient.sqlconnection.connectionstring).
+
+Your connection string will be stored in .NET user secrets.
+
+See [Database Integration Overview](Overview.md) for more information on adding database connections to Ivy.
 
 ## Configuration
 
-### Entity Framework Setup
-
-Ivy automatically configures:
-- **Microsoft.EntityFrameworkCore.SqlServer** package
-- **Connection strings** stored in .NET User Secrets
-- **DbContext** with SQL Server provider configuration
-
-### Generated Files
-
-```text
-Connections/
-└── MySqlServer/
-    ├── MySqlServerContext.cs             # Entity Framework DbContext
-    ├── MySqlServerContextFactory.cs      # DbContext factory
-    ├── MySqlServerConnection.cs          # Connection configuration
-    └── [EntityName].cs...                # Generated entity classes
-```
+Ivy automatically configures the **Microsoft.EntityFrameworkCore.SqlServer** package for SQL Server connections.
 
 ## Advanced Configuration
 
@@ -79,14 +60,19 @@ Connections/
 >ivy db add --provider SqlServer --name MySqlServer --schema MyCustomSchema
 ```
 
-### Multiple Schemas
+### Schema Support
 
-SQL Server supports multiple schemas. You can specify different schemas when adding connections or configure them in the DbContext.
+SQL Server supports multiple schemas. When connecting with Ivy, you'll be prompted to select a schema from your database, or you can specify one directly using the `--schema` parameter:
+
+```terminal
+>ivy db add --provider SqlServer --name MySqlServer --schema MyCustomSchema
+```
+
+See Microsoft's [Create a database schema](https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/create-a-database-schema) for more details.
 
 ## Security Best Practices
 
 - **Use Windows Authentication** when possible for local development
-- **Store connection strings** in User Secrets or Azure Key Vault
 - **Use Azure AD authentication** for Azure SQL Database
 - **Enable encryption** in connection strings for production
 
@@ -94,39 +80,18 @@ SQL Server supports multiple schemas. You can specify different schemas when add
 
 ### Common Issues
 
-**Connection Timeout**
-- Increase connection timeout in connection string
-- Check network connectivity to SQL Server instance
-- Verify SQL Server is running and accepting connections
+**Connection Problems**
+- Verify server is running and network connectivity
+- Check credentials and permissions
+- Ensure firewall allows port 1433
 
-**Authentication Failures**
-- Verify credentials are correct
-- Check if Windows Authentication is properly configured
-- Ensure user has necessary database permissions
-
-**Firewall Issues**
-- Configure Windows Firewall to allow SQL Server traffic
-- Check Azure SQL Database firewall rules
-- Verify port 1433 is accessible
-
-## Example Usage
-
-```csharp
-// In your Ivy app
-public class EmployeeApp : AppBase<Employee>
-{
-    public override Task<IView> BuildAsync(Employee employee)
-    {
-        return Task.FromResult<IView>(
-            Text($"Employee: {employee.Name}")
-        );
-    }
-}
-```
+For detailed troubleshooting, see [SQL Server Troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/sql/welcome-sql-server).
 
 ## Related Documentation
 
-- [Database Overview](01_Overview.md)
-- [PostgreSQL Provider](PostgreSQL.md)
-- [MySQL Provider](MySQL.md)
+- [Database Overview](Overview.md)
+- [PostgreSQL Provider](PostgreSql.md)
+- [MySQL Provider](MySql.md)
 - [SQLite Provider](SQLite.md)
+- [SQL Server Technical Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
+- [SQL Server EF Core Database Provider](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)
