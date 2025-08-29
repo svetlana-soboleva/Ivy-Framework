@@ -164,13 +164,6 @@ public class PivotTable<T>
         return result.ToArray();
     }
 
-    /// <summary>
-    /// Replaces parameter references in expressions for multi-dimension grouping.
-    /// </summary>
-    /// <param name="expr">The expression to modify.</param>
-    /// <param name="oldParam">The parameter to replace.</param>
-    /// <param name="newParam">The new parameter to use.</param>
-    /// <returns>The expression with replaced parameters.</returns>
     private static Expression ReplaceParameter(Expression expr, ParameterExpression oldParam,
         ParameterExpression newParam)
     {

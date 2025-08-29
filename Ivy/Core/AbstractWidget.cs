@@ -232,14 +232,6 @@ public abstract record AbstractWidget : IWidget
 
         return false;
     }
-
-    /// <summary>
-    /// Determines if the given object is a valid Func delegate and extracts the event type and return type.
-    /// </summary>
-    /// <param name="eventDelegate">The delegate to check.</param>
-    /// <param name="eventType">When this method returns, contains the event type if the delegate is valid.</param>
-    /// <param name="returnType">When this method returns, contains the return type of the delegate.</param>
-    /// <returns>true if the delegate is a valid Func with a single parameter; otherwise, false.</returns>
     private static bool IsFunc(object eventDelegate, out Type? eventType, out Type? returnType)
     {
         eventType = null;
