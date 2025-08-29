@@ -138,14 +138,12 @@ public class ObservableSearchExample : ViewBase
         });
 
         return Layout.Vertical(
+            Text.Block("Observable Search: "),
             Layout.Horizontal(
-                Text.Block("Observable Search: "),
-                new TextInput(inputText, placeholder: "Type to filter (throttled)...")
-            ),
-            Layout.Horizontal(
-                Text.Block($"Found {filteredItems.Value.Length} of {originalItems.Value.Length} items"),
+                new TextInput(inputText, placeholder: "Type to filter (throttled)..."),
                 new Button("Clear", _ => inputText.Set(""))
             ),
+            Text.Block($"Found {filteredItems.Value.Length} of {originalItems.Value.Length} items"),
             Layout.Vertical(
                 filteredItems.Value.Select(item => 
                     Text.Block(item)
