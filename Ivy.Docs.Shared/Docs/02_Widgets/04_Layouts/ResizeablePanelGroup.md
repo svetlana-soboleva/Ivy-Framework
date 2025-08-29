@@ -10,7 +10,7 @@ The `ResizeablePanelGroup` widget creates layouts with multiple panels separated
 
 The simplest resizable panel group consists of two or more panels arranged horizontally:
 
-```csharp demo-tabs
+```csharp demo-below
 public class BasicResizeablePanelView : ViewBase
 {
     public override object? Build()
@@ -19,16 +19,12 @@ public class BasicResizeablePanelView : ViewBase
             new ResizeablePanel(30, 
                 new Card(
                     Layout.Vertical()
-                        | Text.Label("Left Panel")
-                        | Text.Block("This is the left sidebar")
-                        | Text.Block("with navigation items")
+                        | Text.Block("Left Panel")
                 )),
             new ResizeablePanel(70, 
                 new Card(
                     Layout.Vertical()
-                        | Text.Label("Right Panel")
-                        | Text.Block("This is the main content area")
-                        | Text.Block("where your primary content goes")
+                        | Text.Block("Right Panel")
                 ))
         );
     }
