@@ -70,7 +70,7 @@ See the [ClickHouse Features Overview](https://clickhouse.com/docs/en/about-us/d
 - Review table engine selection and indexing strategy
 - Consider materialized views for common queries
 
-See the [ClickHouse Troubleshooting Guide](https://docs-content.clickhouse.tech/docs/knowledgebase/troubleshooting) for more help.
+See the [ClickHouse Troubleshooting Guide](https://clickhouse.com/docs/guides/troubleshooting) for more help.
 
 ## Related Documentation
 
