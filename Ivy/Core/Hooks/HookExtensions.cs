@@ -113,12 +113,6 @@ public static class HookExtensions
         return memo.Value.Value;
     }
 
-    /// <summary>
-    /// Compares two dependency arrays for equality to determine if memoized values should be recalculated.
-    /// </summary>
-    /// <param name="oldDeps">The previous dependency array.</param>
-    /// <param name="newDeps">The new dependency array.</param>
-    /// <returns>True if dependencies are equal, false otherwise.</returns>
     private static bool AreDependenciesEqual(object[]? oldDeps, object[]? newDeps)
     {
         if (oldDeps == null || newDeps == null || oldDeps.Length != newDeps.Length)

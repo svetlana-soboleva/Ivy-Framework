@@ -10,11 +10,6 @@
 /// </remarks>
 public static class TableCalculations
 {
-    /// <summary>
-    /// Converts an object value to double using best-guess conversion, returning 0 for null or unconvertible values.
-    /// </summary>
-    /// <param name="value">The value to convert to double.</param>
-    /// <returns>The converted double value, or 0 if conversion fails or value is null.</returns>
     private static double Convert(object value) => (double?)Core.Utils.BestGuessConvert(value, typeof(double)) ?? 0;
 
     /// <summary>
