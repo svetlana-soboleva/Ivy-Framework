@@ -34,7 +34,7 @@ Specifically, your connection string should contain the following information, i
 
 For all connection options, see the [MySqlConnector documentation](https://mysqlconnector.net/connection-options/).
 
-> **Note**: `MySqlConnector` is a library used by Ivy to connect with MySQL and MariaDB.
+> **Note**: `MySqlConnector` is an ADO.NET driver, used by Ivy to connect with MySQL and MariaDB.
 
 Your connection string will be stored in .NET user secrets.
 
