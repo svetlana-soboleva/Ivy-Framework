@@ -206,8 +206,8 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
 
       {!loading && !error && contributors.length > 0 && (
         <div className="flex-shrink-0 min-h-40 overflow-hidden">
-          {/* Contributors list with scrollable area */}
-          <div className="h-full overflow-y-auto pr-2">
+          {/* Contributors list*/}
+          <div className="h-full pr-2">
             <div className="space-y-3">
               {displayedContributors.map(contributor => (
                 <a
