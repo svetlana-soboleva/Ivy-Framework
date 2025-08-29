@@ -19,14 +19,14 @@ public class BasicResizeablePanelView : ViewBase
             new ResizeablePanel(30, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Left Panel")
+                        | Text.Label("Left Panel")
                         | Text.Block("This is the left sidebar")
                         | Text.Block("with navigation items")
                 )),
             new ResizeablePanel(70, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Right Panel")
+                        | Text.Label("Right Panel")
                         | Text.Block("This is the main content area")
                         | Text.Block("where your primary content goes")
                 ))
@@ -50,7 +50,7 @@ public class HorizontalResizeableView : ViewBase
             new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Sidebar")
+                        | Text.Label("Sidebar")
                         | Text.Block("Navigation")
                         | Text.Block("• Home")
                         | Text.Block("• Settings")
@@ -58,7 +58,7 @@ public class HorizontalResizeableView : ViewBase
             new ResizeablePanel(50, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Main Content")
+                        | Text.Label("Main Content")
                         | Text.Block("This is the primary content area")
                         | Text.Block("where the main application content")
                         | Text.Block("would be displayed.")
@@ -66,7 +66,7 @@ public class HorizontalResizeableView : ViewBase
             new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Info Panel")
+                        | Text.Label("Info Panel")
                         | Text.Block("Additional info")
                         | Text.Block("• Stats")
                         | Text.Block("• Notifications")
@@ -89,13 +89,13 @@ public class VerticalResizeableView : ViewBase
             new ResizeablePanel(30, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Header Section")
+                        | Text.Label("Header Section")
                         | Text.Block("Navigation and branding")
                 )),
             new ResizeablePanel(40, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Main Content")
+                        | Text.Label("Main Content")
                         | Text.Block("This is the main content area where")
                         | Text.Block("your primary content would be displayed.")
                         | Text.Block("It takes up the majority of the space.")
@@ -103,7 +103,7 @@ public class VerticalResizeableView : ViewBase
             new ResizeablePanel(30, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Footer Section")
+                        | Text.Label("Footer Section")
                         | Text.Block("Copyright and links")
                 ))
         ).Vertical().Height(Size.Units(150));
@@ -126,20 +126,20 @@ public class DefaultSizesView : ViewBase
             new ResizeablePanel(20, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("20% Panel")
+                        | Text.Label("20% Panel")
                         | Text.Block("Small panel")
                 )),
             new ResizeablePanel(60, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("60% Panel")
+                        | Text.Label("60% Panel")
                         | Text.Block("Large main panel")
                         | Text.Block("with more content space")
                 )),
             new ResizeablePanel(20, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("20% Panel")
+                        | Text.Label("20% Panel")
                         | Text.Block("Small panel")
                 ))
         );
@@ -160,21 +160,21 @@ public class AutoSizingView : ViewBase
             new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Fixed 25%")
+                        | Text.Label("Fixed 25%")
                         | Text.Block("This panel has")
                         | Text.Block("a fixed size")
                 )),
             new ResizeablePanel(null, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Auto Size")
+                        | Text.Label("Auto Size")
                         | Text.Block("This panel automatically")
                         | Text.Block("sizes to available space")
                 )),
             new ResizeablePanel(null, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Auto Size")
+                        | Text.Label("Auto Size")
                         | Text.Block("This panel also")
                         | Text.Block("sizes automatically")
                 ))
@@ -200,13 +200,13 @@ public class HandleVisibilityView : ViewBase
                 new ResizeablePanel(50, 
                     new Card(
                         Layout.Vertical()
-                            | Text.H3("Panel A")
+                            | Text.Label("Panel A")
                             | Text.Block("Resizable panel")
                     )),
                 new ResizeablePanel(50, 
                     new Card(
                         Layout.Vertical()
-                            | Text.H3("Panel B")
+                            | Text.Label("Panel B")
                             | Text.Block("Resizable panel")
                     ))
             ).ShowHandle(true).Height(Size.Units(50))
@@ -215,13 +215,13 @@ public class HandleVisibilityView : ViewBase
                 new ResizeablePanel(50, 
                     new Card(
                         Layout.Vertical()
-                            | Text.H3("Panel A")
+                            | Text.Label("Panel A")
                             | Text.Block("Fixed panel")
                     )),
                 new ResizeablePanel(50, 
                     new Card(
                         Layout.Vertical()
-                            | Text.H3("Panel B")
+                            | Text.Label("Panel B")
                             | Text.Block("Fixed panel")
                     ))
             ).ShowHandle(false).Height(Size.Units(50));
@@ -242,7 +242,7 @@ public class NestedLayoutView : ViewBase
             new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Sidebar")
+                        | Text.Label("Sidebar")
                         | Text.Block("Navigation menu")
                         | Text.Block("• Dashboard")
                         | Text.Block("• Reports")
@@ -253,7 +253,7 @@ public class NestedLayoutView : ViewBase
                     new ResizeablePanel(60, 
                         new Card(
                             Layout.Vertical()
-                                | Text.H3("Main Content")
+                                | Text.Label("Main Content")
                                 | Text.Block("Primary workspace area")
                                 | Text.Block("This is where the main")
                                 | Text.Block("application content is displayed.")
@@ -263,14 +263,14 @@ public class NestedLayoutView : ViewBase
                             new ResizeablePanel(50, 
                                 new Card(
                                     Layout.Vertical()
-                                        | Text.H3("Top Right")
+                                        | Text.Label("Top Right")
                                         | Text.Block("Quick stats")
                                         | Text.Block("or tools")
                                 )),
                             new ResizeablePanel(50, 
                                 new Card(
                                     Layout.Vertical()
-                                        | Text.H3("Bottom Right")
+                                        | Text.Label("Bottom Right")
                                         | Text.Block("Additional info")
                                         | Text.Block("or controls")
                                 ))
@@ -299,7 +299,7 @@ public class MultiDirectionalResizingView : ViewBase
             new ResizeablePanel(25, 
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("File Browser")
+                        | Text.Label("File Browser")
                         | Text.Block("App.cs")
                         | Text.Block("Layout.cs")
                         | Text.Block("Components.cs")
@@ -315,7 +315,7 @@ public class MultiDirectionalResizingView : ViewBase
                     new ResizeablePanel(70, 
                         new Card(
                             Layout.Vertical()
-                                | Text.H3("Code Editor")
+                                | Text.Label("Code Editor")
                                 | Text.Code("public class ResizeableExample\n{\n    public void DemoResize()\n    {\n        // Drag handles to resize!\n        Console.WriteLine(\"Resizing works!\");\n    }\n}", Languages.Csharp)
                         ).Title("main.cs")
                     ),
@@ -323,7 +323,7 @@ public class MultiDirectionalResizingView : ViewBase
                     new ResizeablePanel(70,
                         new Card(
                             Layout.Vertical()
-                                | Text.H3("Console Output")
+                                | Text.Label("Console Output")
                                 | Text.Block("> dotnet run")
                                 | Text.Block("Building...")
                                 | Text.Block("Build succeeded")
@@ -336,13 +336,13 @@ public class MultiDirectionalResizingView : ViewBase
             new ResizeablePanel(25,
                 new Card(
                     Layout.Vertical()
-                        | Text.H3("Properties")
+                        | Text.Label("Properties")
                         | Text.Block("Selected: ResizeablePanel")
                         | Text.Block("Default Size: 25%")
                         | Text.Block("Direction: Horizontal")
                         | Text.Block("Show Handle: true")
                         | Text.Block("")
-                        | Text.H3("Actions")
+                        | Text.Label("Actions")
                         | Text.Block("• Resize horizontally ↔")
                         | Text.Block("• Resize vertically ↕")
                         | Text.Block("• Nested resizing ⤡")
