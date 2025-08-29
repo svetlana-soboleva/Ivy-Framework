@@ -240,6 +240,8 @@ public class FormBuilder<TModel> : ViewBase
     /// </remarks>
     private Func<IAnyState, IAnyInput>? ScaffoldEditor(string name, Type type)
     {
+        Type nonNullableType = Nullable.GetUnderlyingType(type) ?? type;
+
         if (type == typeof(FileInput))
         {
             return (state) => state.ToFileInput();
@@ -250,17 +252,22 @@ public class FormBuilder<TModel> : ViewBase
             return (state) => state.ToReadOnlyInput();
         }
 
-        if (name.EndsWith("Email") && type == typeof(string))
+        if (name.EndsWith("Email") && nonNullableType == typeof(string))
         {
             return (state) => state.ToEmailInput();
         }
 
-        if (type == typeof(bool) || type == typeof(bool?))
+        if ((name.EndsWith("Color") || name.EndsWith("Colour")) && nonNullableType == typeof(string))
+        {
+            return (state) => state.ToColorInput();
+        }
+
+        if (nonNullableType == typeof(bool))
         {
             return (state) => state.ToBoolInput().ScaffoldDefaults(name, type);
         }
 
-        if (type == typeof(string))
+        if (nonNullableType == typeof(string))
         {
             if (name.EndsWith("Password"))
             {
@@ -270,7 +277,7 @@ public class FormBuilder<TModel> : ViewBase
             return (state) => state.ToTextInput();
         }
 
-        if (type.IsEnum)
+        if (nonNullableType.IsEnum)
         {
             return (state) => state.ToSelectInput();
         }
@@ -730,14 +737,14 @@ public class FormBuilder<TModel> : ViewBase
     {
         (Func<Task<bool>> onSubmit, IView formView, IView validationView, bool submitting) = UseForm(this.Context);
 
-        async void HandleSubmit() //todo: handle errors
+        async ValueTask HandleSubmit()
         {
             await onSubmit();
         }
 
         return Layout.Vertical()
                | formView
-               | Layout.Horizontal(new Button(SubmitTitle).HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+               | Layout.Horizontal(new Button(SubmitTitle).HandleClick(HandleSubmit)
                    .Loading(submitting).Disabled(submitting), validationView);
     }
 

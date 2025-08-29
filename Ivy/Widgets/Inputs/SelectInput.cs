@@ -179,9 +179,10 @@ public static class SelectInputExtensions
 
         if (options == null)
         {
-            if (type.IsEnum)
+            var nonNullableType = Nullable.GetUnderlyingType(type) ?? type;
+            if (nonNullableType.IsEnum)
             {
-                options = type.ToOptions();
+                options = nonNullableType.ToOptions();
             }
             else if (selectMany && type.GetCollectionTypeParameter() is { } itemType)
             {
