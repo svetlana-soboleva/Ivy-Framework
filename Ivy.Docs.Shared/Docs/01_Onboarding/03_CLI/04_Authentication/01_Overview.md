@@ -149,7 +149,7 @@ Ivy supports the following authentication providers. Click on any provider for d
 
 **Authentication Provider Issues** - Verify your provider configuration is correct, check that your project is properly registered with the identity provider, ensure callback URLs are correctly configured, and verify network connectivity to the authentication provider.
 
-**Token Validation Issues** - Check that your JWT tokens are properly signed, verify audience and issuer claims, and ensure your user's system clock is synchronized.
+**Token Validation Issues** - Check that your JWT tokens are properly signed, verify audience and issuer claims, and ensure your system clock is set correctly.
 
 **Configuration Issues** - Ensure authentication settings are properly stored in user secrets (or verify environment variables are correctly set), and check that your `Program.cs` includes the necessary authentication config.
 
