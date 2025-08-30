@@ -304,11 +304,6 @@ public class ViewContext : IViewContext
         return service;
     }
 
-    /// <summary>
-    /// Internal method to manage state hooks, ensuring proper identity tracking and render subscriptions.
-    /// </summary>
-    /// <param name="stateHook">The state hook to register or retrieve.</param>
-    /// <returns>The state instance associated with the hook.</returns>
     private IAnyState UseStateHook(StateHook stateHook)
     {
         if (_hooks.TryGetValue(stateHook.Identity, out var existingHook))

@@ -143,9 +143,9 @@ public class ComplexContentCalloutView : ViewBase
             | new Callout(
                 Layout.Vertical().Gap(2)
                     | Text.P("This callout contains multiple elements including badges and rich content. You can include any widgets as children!")
-                    | Layout.Horizontal().Gap(2)
+                    | (Layout.Horizontal().Gap(2)
                         | new Badge("Feature", BadgeVariant.Secondary)
-                        | new Badge("New", BadgeVariant.Primary)
+                        | new Badge("New", BadgeVariant.Primary))
                     | Text.P("Additional content can be added as children"),
                 "Rich Content Example",
                 CalloutVariant.Info)
@@ -216,16 +216,12 @@ public class DashboardCalloutView : ViewBase
     public override object? Build()
     {
         return Layout.Vertical().Gap(4)
-            | Layout.Horizontal().Gap(4)
-                | Layout.Vertical().Gap(2)
-                    | Callout.Success("Revenue increased by 15% this month", "Financial Update").Icon(Icons.TrendingUp)
-                    | Callout.Info("3 new team members joined this week", "Team Update").Icon(Icons.Users)
-                | Layout.Vertical().Gap(2)
-                    | Callout.Warning("Server maintenance scheduled for 2:00 AM", "System Notice").Icon(Icons.Server)
-                    | Callout.Error("2 failed login attempts detected", "Security Alert").Icon(Icons.Shield)
-            | Layout.Horizontal().Gap(4)
-                | Callout.Info("Your daily backup is running in the background", "Background Process").Icon(Icons.Clock)
-                | Callout.Success("All systems operational", "System Status").Icon(Icons.Check);
+            | Callout.Success("Revenue increased by 15% this month", "Financial Update").Icon(Icons.TrendingUp)
+            | Callout.Info("3 new team members joined this week", "Team Update").Icon(Icons.Users)
+            | Callout.Warning("Server maintenance scheduled for 2:00 AM", "System Notice").Icon(Icons.Server)
+            | Callout.Error("2 failed login attempts detected", "Security Alert").Icon(Icons.Shield)
+            | Callout.Info("Your daily backup is running in the background", "Background Process").Icon(Icons.Clock)
+            | Callout.Success("All systems operational", "System Status").Icon(Icons.Check);
     }
 }
 ```

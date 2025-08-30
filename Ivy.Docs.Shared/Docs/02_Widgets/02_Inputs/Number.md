@@ -22,8 +22,7 @@ public class SimpleNumericValueDemo : ViewBase
     public override object? Build()
     {
         var value = UseState(0);
-        return Layout.Horizontal() 
-                | new NumberInput<double>(value)
+        return new NumberInput<double>(value)
                      .Min(-10)
                      .Max(10);
     }

@@ -150,7 +150,12 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
       })
       .catch(err => {
         console.error('Failed to fetch contributors:', err);
-        setError(err.message || 'Failed to load contributors');
+        // Don't show error for rate limiting - just hide the component
+        if (err.message && err.message.includes('rate limit exceeded')) {
+          setError(null);
+        } else {
+          setError(err.message || 'Failed to load contributors');
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -158,6 +163,9 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   }, [documentSource]);
 
   if (!documentSource) return null;
+
+  // Don't render anything if we have no contributors and no error (likely rate limited)
+  if (!loading && !error && contributors.length === 0) return null;
 
   const displayedContributors = contributors.slice(0, 3);
   const remainingCount = contributors.length - 3;
@@ -196,20 +204,10 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         </div>
       )}
 
-      {!loading && !error && contributors.length === 0 && (
-        <div className="flex-shrink-0 min-h-40">
-          <div className="pr-2">
-            <div className="text-sm text-muted-foreground">
-              No contributors found
-            </div>
-          </div>
-        </div>
-      )}
-
       {!loading && !error && contributors.length > 0 && (
         <div className="flex-shrink-0 min-h-40 overflow-hidden">
-          {/* Contributors list with scrollable area */}
-          <div className="h-full overflow-y-auto pr-2">
+          {/* Contributors list*/}
+          <div className="h-full pr-2">
             <div className="space-y-3">
               {displayedContributors.map(contributor => (
                 <a

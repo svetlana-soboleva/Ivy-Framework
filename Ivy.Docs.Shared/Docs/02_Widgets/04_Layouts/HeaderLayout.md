@@ -208,10 +208,9 @@ public class FormHeaderExample : ViewBase
         var formHeader = new Card(
             Layout.Horizontal().Gap(4)
                 | Text.Label("Edit Profile")
-                | new Spacer()
-                | Layout.Horizontal().Gap(2)
-                    | new Button("Cancel").Variant(ButtonVariant.Ghost)
-                    | new Button("Save").Variant(ButtonVariant.Primary)
+                | new Spacer().Width(Size.Grow())
+                | new Button("Cancel").Variant(ButtonVariant.Ghost)
+                | new Button("Save").Variant(ButtonVariant.Primary)
                         .HandleClick(_ => client.Toast("Profile saved!"))
         );
 
