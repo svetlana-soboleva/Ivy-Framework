@@ -8,13 +8,13 @@ The `ivy db` commands allow you to add and manage database connections in your I
 
 ## Adding a Database Connection
 
-The simplest way to add a connection between your Ivy project and an existing database is with the following command:
+To add a database connection to your Ivy project, run:
 
 ```terminal
 >ivy db add
 ```
 
-When you run `ivy db add` without specifying options, Ivy will guide you through an interactive setup:
+When you run this command without specifying options, Ivy will guide you through an interactive setup:
 
 1. **Select Database Provider**: Choose from the available providers
 2. **Connection Name**: Enter a name for your connection (PascalCase recommended)
