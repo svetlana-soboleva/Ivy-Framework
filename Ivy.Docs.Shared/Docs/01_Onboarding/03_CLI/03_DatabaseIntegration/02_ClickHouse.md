@@ -26,7 +26,7 @@ You will be asked to name your connection, then prompted for a connection string
 Host=localhost; Port=8123; Protocol=http; Database=my_db; Username=default; Password=mypassword;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Host**: The hostname of your running ClickHouse server instance.
 - **Protocol**: The protocol used to connect to the server. This should be either `http` or `https`.

@@ -34,7 +34,7 @@ Server=localhost; Database=my_db; Trusted_Connection=True;
 Server=localhost; Database=my_db; User Id=user; Password=password;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Server**: The hostname of your SQL Server instance.
 - **Database**: The name of the database you wish to connect to.

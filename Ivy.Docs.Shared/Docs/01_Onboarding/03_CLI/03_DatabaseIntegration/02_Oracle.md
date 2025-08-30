@@ -22,7 +22,7 @@ You will be asked to name your connection, then prompted for a connection string
 Data Source=localhost:1521/FREEPDB1; User Id=user; Password=password;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Data Source**: Database to connect to, specified by either an easy connect name (as shown above), a connect descriptor, or an Oracle net services name.
 - **User Id** and **Password**: The credentials used to authenticate to the server.
