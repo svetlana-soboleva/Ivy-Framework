@@ -64,7 +64,7 @@ public class ExpandableApp : SampleBase
             | Text.H2("Original Basic Expandable")
             | basicExpandable
             | Text.H2("Problematic Case - Switch in Header")
-            | Text.Block("This replicates the exact issue from your HTML - switches in the expandable header:")
+            | Text.Block("Nested switches should not be blocked by the expandable:")
             | Text.Block($"Switch states: {headerSwitchState1.Value}, {headerSwitchState2.Value}, {headerSwitchState3.Value}, {headerSwitchState4.Value}")
             | switchInHeaderExpandable1
             | switchInHeaderExpandable2
