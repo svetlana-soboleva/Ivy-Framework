@@ -35,12 +35,15 @@ export const ExpandableWidget: React.FC<ExpandableWidgetProps> = ({
       className="w-full rounded-md border border-border p-2 shadow-sm data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
       data-disabled={disabled}
     >
-      <div className="flex justify-between space-x-4">
+      <div className="flex justify-between items-center space-x-4">
+        <div className="flex-1 ml-2 min-w-0">{slots?.Header}</div>
         <CollapsibleTrigger asChild disabled={disabled}>
-          <Button variant="ghost" className="w-full p-0 ">
-            <div className="ml-2">{slots?.Header}</div>
-            {!isOpen && <ChevronRight className="h-4 w-4 ml-auto mr-2" />}
-            {isOpen && <ChevronDown className="h-4 w-4 ml-auto mr-2" />}
+          <Button
+            variant="ghost"
+            className="p-0 h-9 w-9 shrink-0 hover:bg-accent"
+          >
+            {!isOpen && <ChevronRight className="h-4 w-4" />}
+            {isOpen && <ChevronDown className="h-4 w-4" />}
           </Button>
         </CollapsibleTrigger>
       </div>
