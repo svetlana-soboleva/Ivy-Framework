@@ -14,7 +14,7 @@ SQLite is a lightweight, file-based relational database that's perfect for devel
 
 ## Adding a Database Connection
 
-To set up SQLite with Ivy, run the following command and select `Sqlite` when asked to choose a DB provider:
+To set up SQLite with Ivy, run the following command and choose `Sqlite` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

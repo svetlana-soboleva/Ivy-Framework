@@ -14,7 +14,7 @@ MySQL is one of the world's most popular open-source relational databases, known
 
 ## Adding a Database Connection
 
-To set up MySQL with Ivy, run the following command and select `MySql` when asked to choose a DB provider:
+To set up MySQL with Ivy, run the following command and choose `MySql` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
@@ -26,7 +26,7 @@ You will be asked to name your connection, then prompted for a connection string
 Server=localhost; Database=my_db; User=user; Password=password;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Server**: The hostname of your MySQL server instance.
 - **Database**: The name of the database you wish to connect to.

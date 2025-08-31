@@ -14,7 +14,7 @@ ClickHouse is an open-source column-oriented database management system designed
 
 ## Adding a Database Connection
 
-To set up ClickHouse with Ivy, run the following command and select `ClickHouse` when asked to choose a DB provider:
+To set up ClickHouse with Ivy, run the following command and choose `ClickHouse` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
@@ -26,7 +26,7 @@ You will be asked to name your connection, then prompted for a connection string
 Host=localhost; Port=8123; Protocol=http; Database=my_db; Username=default; Password=mypassword;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Host**: The hostname of your running ClickHouse server instance.
 - **Protocol**: The protocol used to connect to the server. This should be either `http` or `https`.

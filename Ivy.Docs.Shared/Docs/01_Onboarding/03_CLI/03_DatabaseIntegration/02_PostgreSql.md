@@ -14,7 +14,7 @@ PostgreSQL is an advanced open-source relational database known for its reliabil
 
 ## Adding a Database Connection
 
-To set up PostgreSQL with Ivy, run the following command and select `Postgres` when asked to choose a DB provider:
+To set up PostgreSQL with Ivy, run the following command and choose `Postgres` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
@@ -26,7 +26,7 @@ You will be asked to name your connection, then prompted for a connection string
 Host=localhost;Database=mydb;Username=user;Password=pass
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Host**: The hostname of your Postgres server instance.
 - **Database**: The name of the database you wish to connect to.

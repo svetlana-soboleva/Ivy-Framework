@@ -10,7 +10,7 @@ Supabase is an open-source Firebase alternative that provides a PostgreSQL datab
 
 ## Adding a Database Connection
 
-To set up a Supabase database with Ivy, run the following command and select `Supabase` when asked to choose a DB provider:
+To set up a Supabase database with Ivy, run the following command and choose `Supabase` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

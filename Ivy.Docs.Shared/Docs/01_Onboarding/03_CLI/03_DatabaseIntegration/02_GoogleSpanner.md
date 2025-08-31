@@ -22,7 +22,7 @@ For comprehensive instructions, see the [ADC documentation](https://cloud.google
 
 ## Adding a Database Connection
 
-To set up Google Spanner with Ivy, first make sure you have configured ADC in the previous section (unless using the Spanner emulator). Then, run the following command and select `Spanner` when asked to choose a DB provider:
+To set up Google Spanner with Ivy, first make sure you have configured ADC in the previous section (unless using the Spanner emulator). Then, run the following command and choose `Spanner` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

@@ -30,7 +30,7 @@ If you run this command without additional options, Ivy will guide you through a
 
 Available providers: `Auth0`, `Supabase`, `MicrosoftEntra`, `Authelia`, `Basic`
 
-`--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax:
+`--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax. When used with `--provider`, this option allows you pass all required configuration inline, rather than being prompted interactively during setup:
 
 ```terminal
 >ivy auth add --provider Auth0 --connection-string YourConnectionString
@@ -82,12 +82,24 @@ Ivy automatically configures .NET user secrets for secure authentication configu
 
 Instead of .NET user secrets, you can also use environment variables to store authentication secrets. For example, you might configure Auth0 like so:
 
-```terminal
+**Windows (PowerShell):**
+
+```powershell
+$env:AUTH0_DOMAIN="your-domain.auth0.com"
+$env:AUTH0_CLIENT_ID="your-client-id"
+$env:AUTH0_CLIENT_SECRET="your-client-secret"
+$env:AUTH0_AUDIENCE="https://your-domain.auth0.com/api/v2"
+```
+
+**Mac/Linux (Bash):**
+```bash
 export AUTH0_DOMAIN="your-domain.auth0.com"
 export AUTH0_CLIENT_ID="your-client-id"
 export AUTH0_CLIENT_SECRET="your-client-secret"
 export AUTH0_AUDIENCE="https://your-domain.auth0.com/api/v2"
 ```
+
+If configuration is present in both .NET user secrets and environment variables, Ivy will use the values in .NET user secrets.
 
 ## Authentication Flow
 

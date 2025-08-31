@@ -14,7 +14,7 @@ MariaDB is a popular open-source relational database that started as a fork of M
 
 ## Adding a Database Connection
 
-To set up MariaDB with Ivy, run the following command and select `MariaDb` when asked to choose a DB provider:
+To set up MariaDB with Ivy, run the following command and choose `MariaDb` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
@@ -26,7 +26,7 @@ You will be asked to name your connection, then prompted for a connection string
 Server=localhost; Database=my_db; User=user; Password=password;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Server**: The hostname of your MariaDB server instance.
 - **Database**: The name of the database you wish to connect to.

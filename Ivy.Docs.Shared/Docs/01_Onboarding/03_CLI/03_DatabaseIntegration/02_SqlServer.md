@@ -14,7 +14,7 @@ SQL Server is Microsoft's enterprise-grade relational database management system
 
 ## Adding a Database Connection
 
-To set up SQL Server with Ivy, run the following command and select `SqlServer` when asked to choose a DB provider:
+To set up SQL Server with Ivy, run the following command and choose `SqlServer` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
@@ -34,7 +34,7 @@ Server=localhost; Database=my_db; Trusted_Connection=True;
 Server=localhost; Database=my_db; User Id=user; Password=password;
 ```
 
-Specifically, your connection string should contain the following information, in the form of semicolon-delimited key-value pairs:
+Specifically, your connection string should contain the following information, in the form of semicolon-separated key-value pairs:
 
 - **Server**: The hostname of your SQL Server instance.
 - **Database**: The name of the database you wish to connect to.
