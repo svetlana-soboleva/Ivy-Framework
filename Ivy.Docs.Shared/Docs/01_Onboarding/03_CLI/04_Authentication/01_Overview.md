@@ -30,7 +30,7 @@ If you run this command without additional options, Ivy will guide you through a
 
 Available providers: `Auth0`, `Supabase`, `MicrosoftEntra`, `Authelia`, `Basic`
 
-`--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax. This allows you pass all required configuration inline, rather than being prompted interactively during setup:
+`--connection-string <CONNECTION_STRING>` - Provide provider-specific configuration using connection string syntax. When used with `--provider`, this option allows you pass all required configuration inline, rather than being prompted interactively during setup:
 
 ```terminal
 >ivy auth add --provider Auth0 --connection-string YourConnectionString
