@@ -44,8 +44,8 @@ The connection string uses the following parameters:
 
 The following parameters can be manually set via .NET user secrets or environment variables:
 
-- **USERS**: A semicolon-separated list of `username:password` pairs. Set by `ivy db add`.
-- **JWT_SECRET**: A custom secret key for token generation. Set by `ivy db add`.
+- **USERS**: A semicolon-separated list of `username:password` pairs. Set by `ivy auth add`.
+- **JWT_SECRET**: A custom secret key for token generation. Set by `ivy auth add`.
 - **JWT_ISSUER**: Used as the issuer of generated tokens. Default value: `ivy`.
 - **JWT_AUDIENCE**: Used as the audience of generated tokens. Default value: `ivy-app`.
 
