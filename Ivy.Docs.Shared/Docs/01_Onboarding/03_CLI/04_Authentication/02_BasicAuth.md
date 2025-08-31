@@ -10,10 +10,10 @@ Basic Authentication in Ivy provides a straightforward way to secure your applic
 
 ## Adding Authentication
 
-To set up Basic Authentication with Ivy, run the following command:
+To set up Basic Authentication with Ivy, run the following command and choose `Basic` when asked to select an auth provider:
 
 ```terminal
->ivy auth add --provider Basic
+>ivy auth add
 ```
 
 You will be prompted to provide user credentials in the following format:
@@ -22,29 +22,34 @@ You will be prompted to provide user credentials in the following format:
 user1:password1; user2:password2; ...
 ```
 
-Your credentials will be stored securely in .NET user secrets, along with an automatically-generated secret key.
+Your credentials will be stored securely in .NET user secrets, along with an automatically-generated secret key that is used for token generation. Ivy then finishes configuring your application automatically:
 
-## Connection String Format
+1. Adds `server.UseAuth<BasicAuthProvider>()` to your `Program.cs`.
+2. Adds `Ivy.Auth` to your global usings.
 
-For automated setup, you can provide credentials via the connection string parameter:
+### Connection String Format
+
+To skip the interactive prompts, you can provide credentials via a connection string parameter:
 
 ```terminal
->ivy auth add --provider Basic --connection-string "USERS=user1:password1;user2:password2"
+>ivy auth add --provider Basic --connection-string "USERS=\"user1:password1;user2:password2\""
 ```
 
 The connection string uses the following parameters:
 
-- **USERS**: Required. A semicolon-separated list of username:password pairs.
+- **USERS**: Required. A semicolon-separated list of `username:password` pairs.
 - **JWT_SECRET**: Optional. A custom secret key for token generation. If not provided, one will be generated automatically.
 
-## Configuration
+### Advanced Configuration
 
-Ivy automatically configures your application for Basic Authentication:
+The following parameters can be manually set via .NET user secrets or environment variables:
 
-1. Updates your `Program.cs` file with `server.UseAuth<BasicAuthProvider>()`.
-2. Adds `Ivy.Auth` to your global usings.
+- **USERS**: A semicolon-separated list of `username:password` pairs. Set by `ivy db add`.
+- **JWT_SECRET**: A custom secret key for token generation. Set by `ivy db add`.
+- **JWT_ISSUER**: Used as the issuer of generated tokens. Default value: `ivy`.
+- **JWT_AUDIENCE**: Used as the audience of generated tokens. Default value: `ivy-app`.
 
-Your credentials are stored in .NET user secrets and can be accessed as environment variables in your application.
+If configuration is present in both .NET user secrets and environment variables, Ivy will use the values in .NET user secrets. For more information, see [Authentication Overview](Overview.md).
 
 ## Authentication Flow
 
@@ -89,6 +94,6 @@ Key features of the Basic Auth provider:
 
 ## Related Documentation
 
-- [Authentication Overview](01_Overview.md)
+- [Authentication Overview](Overview.md)
 - [Auth0 Provider](Auth0.md)
 - [Microsoft Entra Provider](MicrosoftEntra.md)
