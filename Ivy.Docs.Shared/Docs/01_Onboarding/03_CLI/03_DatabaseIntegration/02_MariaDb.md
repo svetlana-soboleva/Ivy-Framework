@@ -14,7 +14,7 @@ MariaDB is a popular open-source relational database that started as a fork of M
 
 ## Adding a Database Connection
 
-To set up MariaDB with Ivy, run the following command and select `MariaDb` when asked to choose a DB provider:
+To set up MariaDB with Ivy, run the following command and choose `MariaDb` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

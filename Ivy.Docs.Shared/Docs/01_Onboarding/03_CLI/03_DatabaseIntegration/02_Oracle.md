@@ -10,7 +10,7 @@ Oracle Database is a multi-model database management system developed by Oracle 
 
 ## Adding a Database Connection
 
-To set up Oracle Database with Ivy, run the following command and select `Oracle` when asked to choose a DB provider:
+To set up Oracle Database with Ivy, run the following command and choose `Oracle` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

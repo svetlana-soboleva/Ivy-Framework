@@ -14,7 +14,7 @@ PostgreSQL is an advanced open-source relational database known for its reliabil
 
 ## Adding a Database Connection
 
-To set up PostgreSQL with Ivy, run the following command and select `Postgres` when asked to choose a DB provider:
+To set up PostgreSQL with Ivy, run the following command and choose `Postgres` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

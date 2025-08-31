@@ -14,7 +14,7 @@ MySQL is one of the world's most popular open-source relational databases, known
 
 ## Adding a Database Connection
 
-To set up MySQL with Ivy, run the following command and select `MySql` when asked to choose a DB provider:
+To set up MySQL with Ivy, run the following command and choose `MySql` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

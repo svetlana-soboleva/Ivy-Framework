@@ -14,7 +14,7 @@ SQL Server is Microsoft's enterprise-grade relational database management system
 
 ## Adding a Database Connection
 
-To set up SQL Server with Ivy, run the following command and select `SqlServer` when asked to choose a DB provider:
+To set up SQL Server with Ivy, run the following command and choose `SqlServer` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

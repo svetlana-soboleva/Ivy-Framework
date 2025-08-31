@@ -10,7 +10,7 @@ Snowflake is a cloud-based data warehousing platform that provides a single, int
 
 ## Adding a Database Connection
 
-To set up Snowflake with Ivy, run the following command and select `Snowflake` when asked to choose a DB provider:
+To set up Snowflake with Ivy, run the following command and choose `Snowflake` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

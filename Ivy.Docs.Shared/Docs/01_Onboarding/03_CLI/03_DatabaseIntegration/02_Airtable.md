@@ -10,7 +10,7 @@ Airtable is a cloud-based spreadsheet-database hybrid that combines the simplici
 
 ## Adding a Database Connection
 
-To set up Airtable with Ivy, run the following command and select `Airtable` when asked to choose a DB provider:
+To set up Airtable with Ivy, run the following command and choose `Airtable` when asked to select a DB provider:
 
 ```terminal
 >ivy db add

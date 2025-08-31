@@ -14,7 +14,7 @@ ClickHouse is an open-source column-oriented database management system designed
 
 ## Adding a Database Connection
 
-To set up ClickHouse with Ivy, run the following command and select `ClickHouse` when asked to choose a DB provider:
+To set up ClickHouse with Ivy, run the following command and choose `ClickHouse` when asked to select a DB provider:
 
 ```terminal
 >ivy db add
