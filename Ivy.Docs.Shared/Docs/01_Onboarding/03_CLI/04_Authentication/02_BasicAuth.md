@@ -86,11 +86,10 @@ Key features of the Basic Auth provider:
 
 **Missing Configuration**
 - Verify the Basic Auth provider is properly configured in your `Program.cs`
-- Check user secrets are accessible to your application
+- Check that user secrets or environment variables are set and accessible to your application
 
 **Token Issues**
-- Tokens have a limited lifetime; ensure clients request new tokens as needed
-- Verify the application is correctly sending the token in the Authorization header
+- Tokens have a limited lifetime (1 hour after generation); users will need to login again after their token expires.
 
 ## Related Documentation
 
