@@ -28,6 +28,8 @@ interface GitHubCommit {
 
 interface GitHubContributorsProps {
   documentSource?: string;
+  onLoadingChange?: (isLoading: boolean) => void;
+  show?: boolean;
 }
 
 // Ivy team members with their roles
@@ -65,13 +67,17 @@ const getCommitsUrl = (githubUrl: string): string => {
 
 export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
   documentSource,
+  onLoadingChange,
+  show = true,
 }) => {
   const [contributors, setContributors] = useState<Contributor[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!documentSource) return;
+    if (!documentSource) {
+      onLoadingChange?.(false);
+      return;
+    }
 
     // Extract repo and file path from GitHub URL
     const getApiUrl = (githubUrl: string): string | null => {
@@ -96,9 +102,12 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
     };
 
     const apiUrl = getApiUrl(documentSource);
-    if (!apiUrl) return;
+    if (!apiUrl) {
+      onLoadingChange?.(false);
+      return;
+    }
 
-    setLoading(true);
+    onLoadingChange?.(true);
     setError(null);
 
     fetch(apiUrl)
@@ -158,14 +167,14 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         }
       })
       .finally(() => {
-        setLoading(false);
+        onLoadingChange?.(false);
       });
-  }, [documentSource]);
+  }, [documentSource, onLoadingChange]);
 
-  if (!documentSource) return null;
+  if (!documentSource || !show) return null;
 
   // Don't render anything if we have no contributors and no error (likely rate limited)
-  if (!loading && !error && contributors.length === 0) return null;
+  if (!error && contributors.length === 0) return null;
 
   const displayedContributors = contributors.slice(0, 3);
   const remainingCount = contributors.length - 3;
@@ -178,24 +187,6 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         Contributors
       </div>
 
-      {loading && (
-        <div className="flex-shrink-0 min-h-40">
-          <div className="pr-2">
-            <div className="flex flex-col gap-3">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-muted rounded animate-pulse w-1/2 mb-1"></div>
-                    <div className="h-3 bg-muted rounded animate-pulse w-3/4"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
       {error && (
         <div className="flex-shrink-0 min-h-40">
           <div className="pr-2">
@@ -204,7 +195,7 @@ export const GitHubContributors: React.FC<GitHubContributorsProps> = ({
         </div>
       )}
 
-      {!loading && !error && contributors.length > 0 && (
+      {!error && contributors.length > 0 && (
         <div className="flex-shrink-0 min-h-40 overflow-hidden">
           {/* Contributors list*/}
           <div className="h-full pr-2">
