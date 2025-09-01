@@ -159,7 +159,6 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
       activeElement.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
-        inline: 'nearest',
       });
     }
   }, [activeId, isManualScrolling]);
