@@ -131,6 +131,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       'div[class*="api"]', // Divs with "api" in class
       'section[class*="api"]', // Sections with "api" in class
       '[data-testid*="api"]', // Elements with "api" in test ID
+      '[role="terminal"]', // Terminal elements
     ];
 
     // Find all elements that might contain API content
@@ -211,6 +212,22 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
               processedElements.add(element);
               // Mark child code elements as processed
               if (codeElement) processedElements.add(codeElement);
+            }
+            break;
+
+          case 'div':
+            // Handle terminal elements
+            if (
+              element.getAttribute('role') === 'terminal' &&
+              !processedElements.has(element)
+            ) {
+              const terminalContent = extractTerminalContent(element);
+              if (terminalContent) {
+                apiContent += `\`\`\`terminal\n${terminalContent}\n\`\`\`\n\n`;
+                processedElements.add(element);
+                // Mark all child elements as processed to avoid duplication
+                markChildrenAsProcessed(element, processedElements);
+              }
             }
             break;
 
@@ -418,6 +435,57 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     });
 
     return listMarkdown + '\n';
+  };
+
+  // Helper function to extract terminal content using proper ARIA roles
+  const extractTerminalContent = (terminalElement: Element): string => {
+    let terminalContent = '';
+
+    // Look for terminal lines using the role="log" attribute
+    const terminalLines = Array.from(
+      terminalElement.querySelectorAll('[role="log"]')
+    );
+
+    if (terminalLines.length > 0) {
+      // Process each terminal line
+      terminalLines.forEach((line, index) => {
+        if (index > 0) terminalContent += '\n';
+
+        // Check if this is a command line using the aria-label
+        const ariaLabel = line.getAttribute('aria-label');
+        const isCommand = ariaLabel === 'Command';
+
+        // Look for the content element using role
+        const contentElement = line.querySelector('[role="terminal-text"]');
+
+        if (contentElement) {
+          const contentText = contentElement.textContent?.trim() || '';
+
+          if (isCommand) {
+            // This is a command line - add the prompt
+            terminalContent += `> ${contentText}`;
+          } else {
+            // This is output
+            terminalContent += contentText;
+          }
+        } else {
+          // Fallback: get text from the entire line
+          const fallbackText = line.textContent?.trim() || '';
+          if (fallbackText) {
+            if (isCommand) {
+              terminalContent += `> ${fallbackText}`;
+            } else {
+              terminalContent += fallbackText;
+            }
+          }
+        }
+      });
+    } else {
+      // Fallback: get all text content from the terminal
+      terminalContent = terminalElement.textContent?.trim() || '';
+    }
+
+    return terminalContent;
   };
 
   const generateFileName = (): string => {
