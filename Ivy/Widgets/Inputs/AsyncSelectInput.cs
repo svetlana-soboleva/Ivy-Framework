@@ -57,7 +57,6 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
     /// <param name="lookup">Delegate for looking up option by value.</param>
     /// <param name="placeholder">Optional placeholder text.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
-    [OverloadResolutionPriority(1)]
     public AsyncSelectInputView(IAnyState state, AsyncSelectQueryDelegate<TValue> query, AsyncSelectLookupDelegate<TValue> lookup, string? placeholder = null, bool disabled = false)
         : this(query, lookup, placeholder, disabled)
     {
@@ -200,9 +199,10 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
             displayValue.Set((string?)null!);
         }, [EffectTrigger.AfterInit(), refreshToken]);
 
-        void OnSelect(Event<AsyncSelectInput> _)
+        ValueTask HandleSelect(Event<AsyncSelectInput> _)
         {
             open.Set(true);
+            return ValueTask.CompletedTask;
         }
 
         void OnClose(Event<Sheet> _)
@@ -217,7 +217,7 @@ public class AsyncSelectInputView<TValue> : ViewBase, IAnyAsyncSelectInputBase, 
                 Disabled = Disabled,
                 Invalid = Invalid,
                 DisplayValue = displayValue.Value,
-                OnSelect = OnSelect,
+                OnSelect = HandleSelect,
                 Loading = loading.Value
             },
             open.Value ? new Sheet(
@@ -367,5 +367,5 @@ internal record AsyncSelectInput : WidgetBase<AsyncSelectInput>
     [Prop] public bool Loading { get; init; }
 
     /// <summary>Gets the event handler called when the user triggers option selection.</summary>
-    [Event] public Action<Event<AsyncSelectInput>>? OnSelect { get; init; }
+    [Event] public Func<Event<AsyncSelectInput>, ValueTask>? OnSelect { get; init; }
 }
