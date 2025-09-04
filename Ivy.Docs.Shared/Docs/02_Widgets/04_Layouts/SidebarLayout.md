@@ -52,10 +52,8 @@ public class SidebarWithHeaderFooterExample : ViewBase
                 | new Button("Settings").Variant(ButtonVariant.Ghost)
                 | new Button("Help").Variant(ButtonVariant.Ghost),
             sidebarHeader: Layout.Vertical().Gap(1)
-                | Text.Lead("Navigation")
-                | new Separator(),
+                | Text.Lead("Navigation"),
             sidebarFooter: Layout.Vertical().Gap(1)
-                | new Separator()
                 | Text.Small("Version 1.0.0").Color(Colors.Gray)
         );
     }
@@ -129,9 +127,9 @@ public class SidebarMenuExample : ViewBase
                 | new TextInput(placeholder: "Search...", variant: TextInputs.Search),
             sidebarFooter: Layout.Horizontal().Gap(2)
                 | new Avatar("JD").Size(20)
-                | Layout.Vertical()
-                    | Text.Small("John Doe").NoWrap()
-                    | Text.Small("john@example.com").Color(Colors.Gray)
+                | (Layout.Vertical()
+                    | Text.Small("John Doe")
+                    | Text.Small("john@example.com").Color(Colors.Gray))
         );
     }
 }
