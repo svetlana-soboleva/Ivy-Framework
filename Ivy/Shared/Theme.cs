@@ -2,15 +2,12 @@
 
 /// <summary>
 /// Specifies the visual theme mode for the application interface.
+/// This controls whether the application uses light, dark, or system-based theming.
 /// </summary>
-public enum Theme
+public enum ThemeMode
 {
-    /// <summary>Light theme with bright backgrounds and dark text.</summary>
     Light,
-
-    /// <summary>Dark theme with dark backgrounds and light text.</summary>
     Dark,
-
     /// <summary>Automatically follows the user's operating system theme preference.</summary>
     System
 }

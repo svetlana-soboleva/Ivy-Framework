@@ -10,6 +10,7 @@ using Ivy.Chrome;
 using Ivy.Connections;
 using Ivy.Core;
 using Ivy.Hooks;
+using Ivy.Themes;
 using Ivy.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -211,6 +212,33 @@ public class Server
         return this;
     }
 
+    /// <summary>
+    /// Configures the server to use a custom theme configuration.
+    /// This will register a theme service with the specified theme and make it available throughout the application.
+    /// </summary>
+    /// <param name="theme">The theme configuration to use for the application.</param>
+    public Server UseTheme(Theme theme)
+    {
+        var themeService = new ThemeService();
+        themeService.SetTheme(theme);
+        Services.AddSingleton<IThemeService>(themeService);
+        return this;
+    }
+
+    /// <summary>
+    /// Configures the server to use a custom theme configuration with a builder pattern.
+    /// </summary>
+    /// <param name="configureTheme">An action delegate to configure the theme properties.</param>
+    public Server UseTheme(Action<Theme> configureTheme)
+    {
+        var theme = new Theme();
+        configureTheme(theme);
+        var themeService = new ThemeService();
+        themeService.SetTheme(theme);
+        Services.AddSingleton<IThemeService>(themeService);
+        return this;
+    }
+
     public async Task RunAsync(CancellationTokenSource? cts = null)
     {
         var sessionStore = new AppSessionStore();
@@ -321,6 +349,18 @@ public class Server
         builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddHealthChecks();
+
+        // Register theme service if not already registered
+        if (!Services.Any(s => s.ServiceType == typeof(IThemeService)))
+        {
+            Services.AddSingleton<IThemeService, ThemeService>();
+        }
+
+        // Register all services from this server's Services collection
+        foreach (var service in Services)
+        {
+            builder.Services.Add(service);
+        }
 
         builder.Services.AddCors(options =>
         {
@@ -473,6 +513,15 @@ public static class WebApplicationExtensions
                 {
                     var metaTitleTag = $"<title>{serverArgs.MetaTitle}</title>";
                     html = Regex.Replace(html, "<title>.*?</title>", metaTitleTag, RegexOptions.Singleline);
+                }
+
+                // Inject theme configuration
+                var themeService = app.Services.GetService<IThemeService>();
+                if (themeService != null)
+                {
+                    var themeCss = themeService.GenerateThemeCss();
+                    var themeMetaTag = themeService.GenerateThemeMetaTag();
+                    html = html.Replace("</head>", $"  {themeMetaTag}\n  {themeCss}\n</head>");
                 }
 
                 context.Response.ContentType = "text/html";
