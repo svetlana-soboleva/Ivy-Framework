@@ -45,15 +45,13 @@ export const FileInputWidget: React.FC<FileInputWidgetProps> = ({
 
   const convertFileToUploadFile = useCallback(
     async (file: File): Promise<FileInput> => {
-      const arrayBuffer = await file.arrayBuffer();
-      const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
+      // Ivy FileInput should only contain metadata, not file content
       return {
         name: file.name,
         size: file.size,
         type: file.type,
         lastModified: new Date(file.lastModified),
-        content: base64,
+        // Don't include content - it's handled by UploadService
       };
     },
     []

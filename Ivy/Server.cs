@@ -237,6 +237,20 @@ public class Server
             cts.Cancel();
         };
 
+        // Handle unobserved task exceptions to prevent process termination
+        TaskScheduler.UnobservedTaskException += (sender, e) =>
+        {
+            Console.WriteLine($"[ERROR] Unobserved task exception: {e.Exception}");
+            e.SetObserved(); // Prevents process termination
+        };
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            var ex = (Exception)e.ExceptionObject;
+            Console.WriteLine($"[CRITICAL] Unhandled domain exception - IsTerminating: {e.IsTerminating}");
+            Console.WriteLine($"[CRITICAL] Exception: {ex}");
+        };
+
 #if (DEBUG)
         _ = Task.Run(() =>
         {
@@ -298,6 +312,7 @@ public class Server
         builder.Services.AddSingleton<IContentBuilder>(_contentBuilder ?? new DefaultContentBuilder());
         builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+        builder.Services.AddHealthChecks();
 
         // Register theme service if not already registered
         if (!Services.Any(s => s.ServiceType == typeof(IThemeService)))
@@ -337,6 +352,30 @@ public class Server
 
         var app = builder.Build();
 
+        app.UseExceptionHandler(error =>
+        {
+            error.Run(async context =>
+            {
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
+                var errorFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+                if (errorFeature != null)
+                {
+                    var ex = errorFeature.Error;
+
+                    var logger = app.Services.GetRequiredService<ILogger<Server>>();
+                    logger.LogError(ex, "An unhandled exception occurred.");
+
+                    var result = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        error = ex.Message,
+                        detail = ex.StackTrace
+                    });
+                    await context.Response.WriteAsync(result);
+                }
+            });
+        });
+
         if (_useHttpRedirection)
         {
             app.UseHttpsRedirection();
@@ -349,6 +388,7 @@ public class Server
 
         app.MapControllers();
         app.MapHub<AppHub>("/messages");
+        app.MapHealthChecks("/health");
 
         if (_useHotReload)
         {

@@ -1,9 +1,7 @@
 ﻿global using System.Collections.Immutable;
 global using System.Reactive.Linq;
-global using Ivy.Alerts;
 global using Ivy.Auth;
 global using Ivy.Apps;
-global using Ivy.Builders;
 global using Ivy.Client;
 global using Ivy.Core;
 global using Ivy.Core.Hooks;
@@ -13,6 +11,8 @@ global using Ivy.Views;
 global using Ivy.Views.Forms;
 global using Ivy.Shared;
 global using Ivy.Charts;
+global using Ivy.Views.Alerts;
+global using Ivy.Views.Builders;
 global using Ivy.Views.Charts;
 global using Ivy.Widgets.Inputs;
 global using Microsoft.Extensions.DependencyInjection;
