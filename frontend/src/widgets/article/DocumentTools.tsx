@@ -54,16 +54,101 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
     await new Promise(resolve => setTimeout(resolve, 200));
   };
 
+  // Function to wait for actual expansion completion
+  const waitForExpansion = async (
+    element: Element,
+    timeout = 3000
+  ): Promise<boolean> => {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+      // Check multiple expansion indicators
+      const isExpanded =
+        element.getAttribute('data-state') === 'open' ||
+        element.getAttribute('aria-expanded') === 'true' ||
+        // Also check if CollapsibleContent is visible
+        element.querySelector('[data-state="open"]') !== null;
+
+      if (isExpanded) {
+        // Additional verification: ensure content is actually rendered
+        const content = element.querySelector(
+          '[class*="CollapsibleContent"], [data-state="open"]'
+        );
+        if (content && (content as HTMLElement).offsetHeight > 0) {
+          // Wait a tiny bit more for animations to complete
+          await new Promise(resolve => setTimeout(resolve, 50));
+          return true;
+        }
+      }
+
+      // Short polling interval - check every 50ms
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    return false;
+  };
+
+  // Function to expand all details elements
+  const expandDetailsElements = async (): Promise<void> => {
+    if (!articleRef.current) return;
+
+    const detailsElements =
+      articleRef.current.querySelectorAll('[role="details"]');
+    if (detailsElements.length === 0) return;
+
+    for (const element of Array.from(detailsElements)) {
+      try {
+        // Check if element is closed
+        const isClosed =
+          element.getAttribute('data-state') === 'closed' ||
+          element.getAttribute('aria-expanded') === 'false';
+
+        if (isClosed) {
+          // Dispatch expand event
+          const expandEvent = new CustomEvent('expand', {
+            bubbles: true,
+            cancelable: true,
+            detail: { element },
+          });
+          element.dispatchEvent(expandEvent);
+
+          // If not cancelled, try to click trigger
+          if (!expandEvent.defaultPrevented) {
+            const trigger =
+              element.querySelector(
+                '[role="button"], button, .trigger, summary'
+              ) || element;
+            if (trigger instanceof HTMLElement) {
+              trigger.click();
+
+              const expanded = await waitForExpansion(element, 3000);
+              if (!expanded) {
+                console.warn(
+                  'Failed to expand details element after 3s:',
+                  element
+                );
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to expand details element:', error);
+      }
+    }
+  };
+
   const copyTextContent = async () => {
     try {
       // Show loading state
       toast({
         title: 'Loading Content...',
-        description:
-          'Loading all tabs and extracting API sections from page...',
+        description: 'Expanding sections and loading all tabs...',
       });
 
-      // First, click through all unloaded tabs to ensure content is loaded
+      // First, expand all data-state="closed" elements
+      await expandDetailsElements();
+
+      // Then, click through all unloaded tabs to ensure content is loaded
       await loadAllTabs();
 
       // Extract API sections from the rendered page
@@ -132,6 +217,7 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       'section[class*="api"]', // Sections with "api" in class
       '[data-testid*="api"]', // Elements with "api" in test ID
       '[role="terminal"]', // Terminal elements
+      '[role="details"]', // Details elements
     ];
 
     // Find all elements that might contain API content
@@ -156,6 +242,20 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
 
       // Check if this element is part of an API section
       if (isApiSection(element)) {
+        // Handle expandable details - extract header first
+        if (element.getAttribute('role') === 'details') {
+          const summaryElement = element.querySelector('[role="summary"]');
+          if (summaryElement && !processedElements.has(summaryElement)) {
+            const summaryText = summaryElement.textContent?.trim();
+            if (summaryText) {
+              apiContent += `### ${summaryText}\n\n`;
+              processedElements.add(summaryElement);
+            }
+          }
+          // The content will be processed by other selectors
+          return;
+        }
+
         switch (tagName) {
           case 'h1':
           case 'h2':
@@ -533,10 +633,13 @@ export const DocumentTools: React.FC<DocumentToolsProps> = ({
       // Show loading state
       toast({
         title: 'Preparing Download...',
-        description: 'Loading all tabs and extracting API sections...',
+        description: 'Expanding sections and loading all tabs...',
       });
 
-      // First, click through all unloaded tabs to ensure content is loaded
+      // First, expand all data-state="closed" elements
+      await expandDetailsElements();
+
+      // Then, click through all unloaded tabs to ensure content is loaded
       await loadAllTabs();
 
       // Extract the same content that gets copied
