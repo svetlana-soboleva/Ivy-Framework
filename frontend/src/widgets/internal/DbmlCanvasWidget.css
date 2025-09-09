@@ -56,6 +56,10 @@
 
 /* ReactFlow Edge styling */
 .react-flow__edge-path {
+  stroke: var(--foreground) !important;
+}
+
+.dark .react-flow__edge-path {
   stroke: var(--primary) !important;
 }
 
@@ -64,7 +68,6 @@
   font-size: 12px !important;
   font-weight: 500 !important;
 }
-
 .react-flow__edge-textbg {
   fill: var(--background) !important;
   stroke: var(--border) !important;
@@ -82,10 +85,14 @@
 
 /* ReactFlow Handle styling */
 .react-flow__handle {
-  background-color: var(--primary) !important;
+  background-color: var(--foreground) !important;
   border: 2px solid var(--background) !important;
   width: 8px !important;
   height: 8px !important;
+}
+
+.dark .react-flow__handle {
+  background-color: var(--primary) !important;
 }
 
 .react-flow__handle:hover {

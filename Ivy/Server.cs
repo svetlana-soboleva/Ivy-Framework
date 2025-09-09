@@ -10,6 +10,7 @@ using Ivy.Chrome;
 using Ivy.Connections;
 using Ivy.Core;
 using Ivy.Hooks;
+using Ivy.Themes;
 using Ivy.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,11 @@ public record ServerArgs
     public string? MetaTitle { get; set; } = null;
     public string? MetaDescription { get; set; } = null;
     public Assembly? AssetAssembly { get; set; } = null;
+#if DEBUG
+    public bool FindAvailablePort { get; set; } = true;
+#else
+    public bool FindAvailablePort { get; set; } = false;
+#endif
 }
 
 public class Server
@@ -51,8 +57,7 @@ public class Server
     public IServiceCollection Services { get; } = new ServiceCollection();
     public Type? AuthProviderType { get; private set; } = null;
     public ServerArgs Args => _args;
-
-    private readonly ServerArgs _args;
+    private ServerArgs _args;
 
     public Server(ServerArgs? args = null)
     {
@@ -207,6 +212,33 @@ public class Server
         return this;
     }
 
+    /// <summary>
+    /// Configures the server to use a custom theme configuration.
+    /// This will register a theme service with the specified theme and make it available throughout the application.
+    /// </summary>
+    /// <param name="theme">The theme configuration to use for the application.</param>
+    public Server UseTheme(Theme theme)
+    {
+        var themeService = new ThemeService();
+        themeService.SetTheme(theme);
+        Services.AddSingleton<IThemeService>(themeService);
+        return this;
+    }
+
+    /// <summary>
+    /// Configures the server to use a custom theme configuration with a builder pattern.
+    /// </summary>
+    /// <param name="configureTheme">An action delegate to configure the theme properties.</param>
+    public Server UseTheme(Action<Theme> configureTheme)
+    {
+        var theme = new Theme();
+        configureTheme(theme);
+        var themeService = new ThemeService();
+        themeService.SetTheme(theme);
+        Services.AddSingleton<IThemeService>(themeService);
+        return this;
+    }
+
     public async Task RunAsync(CancellationTokenSource? cts = null)
     {
         var sessionStore = new AppSessionStore();
@@ -251,6 +283,29 @@ public class Server
             {
                 Utils.KillProcessUsingPort(_args.Port);
             }
+            else if (_args.FindAvailablePort)
+            {
+                var originalPort = _args.Port;
+                var maxAttempts = 100;
+                var attemptCount = 0;
+
+                while (Utils.IsPortInUse(_args.Port) && attemptCount < maxAttempts)
+                {
+                    _args = _args with { Port = _args.Port + 1 };
+                    attemptCount++;
+                }
+
+                if (attemptCount >= maxAttempts)
+                {
+                    Console.WriteLine($@"[31mCould not find an available port after checking {maxAttempts} ports starting from {originalPort}.[0m");
+                    return;
+                }
+
+                if (_args.Port != originalPort)
+                {
+                    Console.WriteLine($@"[33mPort {originalPort} is in use. Using port {_args.Port} instead.[0m");
+                }
+            }
             else
             {
                 Console.WriteLine($@"[31mPort {_args.Port} is already in use on this machine.[0m");
@@ -294,6 +349,18 @@ public class Server
         builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddHealthChecks();
+
+        // Register theme service if not already registered
+        if (!Services.Any(s => s.ServiceType == typeof(IThemeService)))
+        {
+            Services.AddSingleton<IThemeService, ThemeService>();
+        }
+
+        // Register all services from this server's Services collection
+        foreach (var service in Services)
+        {
+            builder.Services.Add(service);
+        }
 
         builder.Services.AddCors(options =>
         {
@@ -448,6 +515,15 @@ public static class WebApplicationExtensions
                     html = Regex.Replace(html, "<title>.*?</title>", metaTitleTag, RegexOptions.Singleline);
                 }
 
+                // Inject theme configuration
+                var themeService = app.Services.GetService<IThemeService>();
+                if (themeService != null)
+                {
+                    var themeCss = themeService.GenerateThemeCss();
+                    var themeMetaTag = themeService.GenerateThemeMetaTag();
+                    html = html.Replace("</head>", $"  {themeMetaTag}\n  {themeCss}\n</head>");
+                }
+
                 context.Response.ContentType = "text/html";
                 context.Response.StatusCode = 200;
                 var bytes = Encoding.UTF8.GetBytes(html);
@@ -520,7 +596,7 @@ public static class IvyServerUtils
         var parser = new ArgsParser();
         var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
         var parsedArgs = parser.Parse(args);
-        return new ServerArgs()
+        var serverArgs = new ServerArgs()
         {
             Port = parser.GetValue(parsedArgs, "port", ServerArgs.DefaultPort),
             Verbose = parser.GetValue(parsedArgs, "verbose", false),
@@ -530,5 +606,11 @@ public static class IvyServerUtils
             DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
             Silent = parser.GetValue(parsedArgs, "silent", false)
         };
+#if DEBUG
+        serverArgs = serverArgs with { FindAvailablePort = parser.GetValue(parsedArgs, "find-available-port", true) };
+#else
+        serverArgs = serverArgs with { FindAvailablePort = parser.GetValue(parsedArgs, "find-available-port", false) };
+#endif
+        return serverArgs;
     }
 }

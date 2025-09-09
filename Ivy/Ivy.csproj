@@ -6,8 +6,6 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <PackageId>Ivy</PackageId>
     <Company>Ivy</Company>
     <Description>Build Internal Applications with AI and Pure C#</Description>
@@ -25,9 +23,14 @@
   <PropertyGroup Condition="'$(CI)' == 'true'">
     <DebugType>none</DebugType>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(CI)' != 'true'">
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+  </PropertyGroup>
 
   <ItemGroup>
-    <None Update="README.md" Pack="true" PackagePath=""/>
+    <None Include="../README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>
