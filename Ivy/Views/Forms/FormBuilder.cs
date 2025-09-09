@@ -264,7 +264,22 @@ public class FormBuilder<TModel> : ViewBase
 
         if (nonNullableType == typeof(bool))
         {
-            return (state) => state.ToBoolInput().ScaffoldDefaults(name, type);
+            return (state) =>
+            {
+                var input = state.ToBoolInput();
+                // Only apply scaffold defaults if no custom label was set
+                if (_fields.TryGetValue(name, out var field) && HasCustomLabel(field.Label, name))
+                {
+                    // Custom label was set, don't override it
+                    input.Label = field.Label;
+                }
+                else
+                {
+                    // Use scaffold defaults
+                    input.ScaffoldDefaults(name, type);
+                }
+                return input;
+            };
         }
 
         if (nonNullableType == typeof(string))
@@ -321,7 +336,17 @@ public class FormBuilder<TModel> : ViewBase
                 var input = inner(state);
                 if (input is IAnyBoolInput boolInput)
                 {
-                    boolInput.ScaffoldDefaults(hint.Name, hint.Type);
+                    // Only apply scaffold defaults if no custom label was set
+                    if (HasCustomLabel(hint.Label, hint.Name))
+                    {
+                        // Custom label was set, don't override it
+                        boolInput.Label = hint.Label;
+                    }
+                    else
+                    {
+                        // Use scaffold defaults
+                        boolInput.ScaffoldDefaults(hint.Name, hint.Type);
+                    }
                 }
                 else if (input is IAnyNumberInput numberInput)
                 {
@@ -622,6 +647,9 @@ public class FormBuilder<TModel> : ViewBase
         }
         return this;
     }
+
+    private static bool HasCustomLabel(string label, string name)
+        => label != Utils.SplitPascalCase(name);
 
     private FormBuilderField<TModel> GetField<TU>(Expression<Func<TModel, TU>> field)
     {
