@@ -15,7 +15,7 @@ The `Card` widget is a versatile container used to group related content and act
 
 Here's a simple example of a card containing text and a button that shows a toast message when clicked.
 
-```csharp demo-below 
+```csharp demo-below
 new Card(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
     new Button("Sign Me Up", _ => client.Toast("You have signed up!"))
@@ -38,5 +38,24 @@ new Card(
  .BorderRadius(BorderRadius.Rounded)
  .Width(Size.Units(100))
 ```
+
+## Dashboard Metrics
+
+For dashboard applications, Ivy provides the specialized `MetricView` component that extends Card functionality with KPI-specific features like trend indicators and goal tracking.
+
+```csharp demo-below
+new MetricView(
+    "Revenue", 
+    Icons.DollarSign,
+    () => Task.FromResult(new MetricRecord(
+        "$125,430", 
+        0.12, // 12% increase
+        0.85, // 85% of goal
+        "Target: $150,000"
+    ))
+)
+```
+
+The `MetricView` automatically handles loading states, error handling, and displays trend arrows with color-coded indicators for performance tracking.
 
 <WidgetDocs Type="Ivy.Card" ExtensionTypes="Ivy.CardExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Card.cs"/>
