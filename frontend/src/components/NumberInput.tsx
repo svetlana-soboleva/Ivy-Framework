@@ -22,6 +22,7 @@ interface NumberInputProps {
   format?: Intl.NumberFormatOptions;
   allowNegative?: boolean;
   className?: string;
+  size?: 'Default' | 'Small' | 'Large';
 
   'data-testid'?: string;
 }
@@ -53,6 +54,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       },
       allowNegative = true,
       className = '',
+      size = 'Default',
       'data-testid': dataTestId,
       ...props
     },
@@ -302,6 +304,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           step={step}
           disabled={disabled}
           placeholder={placeholder}
+          size={size}
           className={`${className} ${
             !isValid ? 'border-red-500' : ''
           } ${dragState?.isDragging ? 'select-none' : ''} cursor-pointer`}

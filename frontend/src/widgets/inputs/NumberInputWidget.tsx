@@ -48,6 +48,7 @@ interface NumberInputBaseProps {
   'data-testid'?: string;
   // Add type information for validation
   targetType?: string;
+  size?: 'Default' | 'Small' | 'Large';
 }
 
 interface NumberInputWidgetProps
@@ -177,6 +178,7 @@ const NumberVariant = memo(
     nullable = false,
     onValueChange,
     currency,
+    size = 'Default',
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     const formatConfig = useMemo(
@@ -190,6 +192,18 @@ const NumberVariant = memo(
       }),
       [currency, formatStyle, precision]
     );
+
+    // Map backend size names to frontend size names
+    const getInputSize = (size: string): 'Default' | 'Small' | 'Large' => {
+      switch (size) {
+        case 'Small':
+          return 'Small';
+        case 'Large':
+          return 'Large';
+        default:
+          return 'Default';
+      }
+    };
 
     const handleNumberChange = useCallback(
       (newValue: number | null) => {
@@ -213,6 +227,7 @@ const NumberVariant = memo(
           placeholder={placeholder}
           value={value}
           disabled={disabled}
+          size={getInputSize(size)}
           onChange={handleNumberChange}
           className={cn(
             invalid && inputStyles.invalidInput,

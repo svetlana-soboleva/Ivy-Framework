@@ -20,6 +20,9 @@ public class NumberInputApp : SampleBase
 
         var nullIntInvalid = UseState<int?>();
 
+        // Create a currency value for size examples
+        var sizeExampleCurrency = UseState(1234.56m);
+
         const string loremIpsumString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec eros";
 
         return Layout.Vertical()
@@ -86,6 +89,25 @@ public class NumberInputApp : SampleBase
                // Currency Examples:
                | Text.H2("Currency Examples")
                | currencyExamples
+
+               // Sizes:
+               | Text.H2("Sizes")
+               | (Layout.Grid().Columns(4)
+                  | Text.InlineCode("Description")
+                  | Text.InlineCode("Small")
+                  | Text.InlineCode("Medium")
+                  | Text.InlineCode("Large")
+
+                  | Text.Block("Number Input")
+                  | intValue
+                    .ToNumberInput()
+                    .Small()
+                  | intValue
+                    .ToNumberInput()
+                  | intValue
+                    .ToNumberInput()
+                    .Large()
+               )
 
                // Events: 
                | Text.H2("Events")

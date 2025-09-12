@@ -1,8 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Ivy.Core;
+using Ivy.Core.Docs;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
+using Ivy.Shared;
 using Ivy.Widgets.Inputs;
 
 // ReSharper disable once CheckNamespace
@@ -63,6 +65,19 @@ public interface IAnyNumberInput : IAnyInput
 
     /// <summary>Gets or sets the target type name for frontend validation and formatting.</summary>
     public string? TargetType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the number input.
+    /// This property controls the overall dimensions and visual prominence of
+    /// the input field, allowing you to match it to your design requirements and
+    /// the importance of the input being displayed.
+    /// 
+    /// Different sizes provide different levels of visual emphasis and are
+    /// suited for different contexts, from compact forms to prominent
+    /// data entry interfaces.
+    /// Default is <see cref="Sizes.Medium"/>.
+    /// </summary>
+    [Prop] public Sizes Size { get; set; }
 }
 
 /// <summary>
@@ -102,6 +117,19 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
 
     /// <summary>Gets or sets the target type name for frontend validation and formatting.</summary>
     [Prop] public string? TargetType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the number input.
+    /// This property controls the overall dimensions and visual prominence of
+    /// the input field, allowing you to match it to your design requirements and
+    /// the importance of the input being displayed.
+    /// 
+    /// Different sizes provide different levels of visual emphasis and are
+    /// suited for different contexts, from compact forms to prominent
+    /// data entry interfaces.
+    /// Default is <see cref="Sizes.Medium"/>.
+    /// </summary>
+    [Prop] public Sizes Size { get; set; } = Sizes.Medium;
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
@@ -366,6 +394,47 @@ public static class NumberInputExtensions
     public static NumberInputBase Invalid(this NumberInputBase widget, string invalid)
     {
         return widget with { Invalid = invalid };
+    }
+
+    /// <summary>
+    /// Sets the size of the number input.
+    /// This method allows you to control the input's dimensions and visual prominence
+    /// after creation, enabling dynamic sizing based on context or design requirements.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <param name="size">The size to apply to the input.</param>
+    /// <returns>A new NumberInputBase instance with the updated size setting.</returns>
+    public static NumberInputBase Size(this NumberInputBase widget, Sizes size)
+    {
+        return widget with { Size = size };
+    }
+
+    /// <summary>
+    /// Sets the number input size to large for prominent display.
+    /// This convenience method creates a large input that provides maximum
+    /// visual emphasis and is ideal for important data entry or
+    /// prominent form interfaces.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <returns>A new NumberInputBase instance with large size applied.</returns>
+    [RelatedTo(nameof(NumberInputBase.Size))]
+    public static NumberInputBase Large(this NumberInputBase widget)
+    {
+        return widget.Size(Sizes.Large);
+    }
+
+    /// <summary>
+    /// Sets the number input size to small for compact display.
+    /// This convenience method creates a small input that provides minimal
+    /// visual footprint and is ideal for dense forms or space-constrained
+    /// layouts.
+    /// </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <returns>A new NumberInputBase instance with small size applied.</returns>
+    [RelatedTo(nameof(NumberInputBase.Size))]
+    public static NumberInputBase Small(this NumberInputBase widget)
+    {
+        return widget.Size(Sizes.Small);
     }
 
 
