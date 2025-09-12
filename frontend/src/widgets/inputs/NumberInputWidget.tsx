@@ -7,6 +7,7 @@ import { inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { X } from 'lucide-react';
 import React from 'react';
+import { Sizes, mapSizeToUISize } from '@/types/sizes';
 
 const formatStyleMap = {
   Decimal: 'decimal',
@@ -48,7 +49,7 @@ interface NumberInputBaseProps {
   'data-testid'?: string;
   // Add type information for validation
   targetType?: string;
-  size?: 'Default' | 'Small' | 'Large';
+  size?: Sizes;
 }
 
 interface NumberInputWidgetProps
@@ -99,6 +100,7 @@ const SliderVariant = memo(
     disabled = false,
     invalid,
     currency,
+    size = Sizes.Medium,
     onValueChange,
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
@@ -131,6 +133,9 @@ const SliderVariant = memo(
     // For slider, we need a numeric value - use 0 as fallback for null
     const sliderValue = localValue ?? 0;
 
+    // Map widget size to UI component size
+    const sliderSize = mapSizeToUISize(size);
+
     return (
       <div className="relative w-full flex-1 flex flex-col gap-1 pt-6 pb-2 my-auto justify-center">
         <Slider
@@ -140,13 +145,19 @@ const SliderVariant = memo(
           value={[sliderValue]}
           disabled={disabled}
           currency={currency}
+          size={sliderSize}
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
           className={cn(invalid && inputStyles.invalidInput)}
           data-testid={dataTestId}
         />
         <span
-          className="flex w-full items-center justify-between gap-1 text-small-label font-sm text-muted-foreground"
+          className={cn(
+            'flex w-full items-center justify-between gap-1 text-muted-foreground',
+            size === Sizes.Small && 'text-xs',
+            size === Sizes.Medium && 'text-small-label font-sm',
+            size === Sizes.Large && 'text-sm font-medium'
+          )}
           aria-hidden="true"
         >
           <span>{min}</span>
@@ -178,7 +189,7 @@ const NumberVariant = memo(
     nullable = false,
     onValueChange,
     currency,
-    size = 'Default',
+    size = Sizes.Medium,
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     const formatConfig = useMemo(
@@ -193,17 +204,8 @@ const NumberVariant = memo(
       [currency, formatStyle, precision]
     );
 
-    // Map backend size names to frontend size names
-    const getInputSize = (size: string): 'Default' | 'Small' | 'Large' => {
-      switch (size) {
-        case 'Small':
-          return 'Small';
-        case 'Large':
-          return 'Large';
-        default:
-          return 'Default';
-      }
-    };
+    // Map widget size to UI component size
+    const inputSize = mapSizeToUISize(size);
 
     const handleNumberChange = useCallback(
       (newValue: number | null) => {
@@ -227,7 +229,7 @@ const NumberVariant = memo(
           placeholder={placeholder}
           value={value}
           disabled={disabled}
-          size={getInputSize(size)}
+          size={inputSize}
           onChange={handleNumberChange}
           className={cn(
             invalid && inputStyles.invalidInput,

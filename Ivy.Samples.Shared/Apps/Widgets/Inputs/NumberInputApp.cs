@@ -98,7 +98,7 @@ public class NumberInputApp : SampleBase
                   | Text.InlineCode("Medium")
                   | Text.InlineCode("Large")
 
-                  | Text.Block("Number Input")
+                  | Text.InlineCode("ToNumberInput()")
                   | intValue
                     .ToNumberInput()
                     .Small()
@@ -106,6 +106,16 @@ public class NumberInputApp : SampleBase
                     .ToNumberInput()
                   | intValue
                     .ToNumberInput()
+                    .Large()
+
+                  | Text.InlineCode("ToSliderInput")
+                  | intValue
+                    .ToSliderInput()
+                    .Small()
+                  | intValue
+                    .ToSliderInput()
+                  | intValue
+                    .ToSliderInput()
                     .Large()
                )
 
