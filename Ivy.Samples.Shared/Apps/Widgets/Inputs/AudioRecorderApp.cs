@@ -2,7 +2,9 @@ using Ivy.Shared;
 
 namespace Ivy.Samples.Shared.Apps.Widgets;
 
+
 [App(icon: Icons.Mic, path: ["Widgets", "Inputs"])]
+
 public class AudioRecorderApp() : SampleBase
 {
     protected override object? BuildSample()
