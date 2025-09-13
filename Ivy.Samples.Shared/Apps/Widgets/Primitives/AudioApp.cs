@@ -1,8 +1,8 @@
 using Ivy.Shared;
 
-namespace Ivy.Samples.Shared.Apps.Widgets;
+namespace Ivy.Samples.Shared.Apps.Widgets.Primitives;
 
-[App(icon: Icons.Volume2, path: ["Widgets"])]
+[App(icon: Icons.Volume2, path: ["Widgets", "Primitives"])]
 public class AudioApp : SampleBase
 {
     protected override object? BuildSample()
