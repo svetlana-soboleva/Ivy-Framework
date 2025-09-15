@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { Sizes } from '@/types/sizes';
 import React, {
   useState,
   useCallback,
@@ -22,7 +23,7 @@ interface NumberInputProps {
   format?: Intl.NumberFormatOptions;
   allowNegative?: boolean;
   className?: string;
-  size?: 'Default' | 'Small' | 'Large';
+  size?: Sizes;
 
   'data-testid'?: string;
 }
@@ -54,7 +55,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       },
       allowNegative = true,
       className = '',
-      size = 'Default',
+      size = Sizes.Medium,
       'data-testid': dataTestId,
       ...props
     },

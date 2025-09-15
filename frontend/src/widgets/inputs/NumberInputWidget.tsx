@@ -7,7 +7,7 @@ import { inputStyles } from '@/lib/styles';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { X } from 'lucide-react';
 import React from 'react';
-import { Sizes, mapSizeToUISize } from '@/types/sizes';
+import { Sizes } from '@/types/sizes';
 
 const formatStyleMap = {
   Decimal: 'decimal',
@@ -133,9 +133,6 @@ const SliderVariant = memo(
     // For slider, we need a numeric value - use 0 as fallback for null
     const sliderValue = localValue ?? 0;
 
-    // Map widget size to UI component size
-    const sliderSize = mapSizeToUISize(size);
-
     return (
       <div className="relative w-full flex-1 flex flex-col gap-1 pt-6 pb-2 my-auto justify-center">
         <Slider
@@ -145,7 +142,7 @@ const SliderVariant = memo(
           value={[sliderValue]}
           disabled={disabled}
           currency={currency}
-          size={sliderSize}
+          size={size}
           onValueChange={handleSliderChange}
           onValueCommit={handleSliderCommit}
           className={cn(invalid && inputStyles.invalidInput)}
@@ -204,9 +201,6 @@ const NumberVariant = memo(
       [currency, formatStyle, precision]
     );
 
-    // Map widget size to UI component size
-    const inputSize = mapSizeToUISize(size);
-
     const handleNumberChange = useCallback(
       (newValue: number | null) => {
         // If not nullable and value is null, convert to 0
@@ -229,7 +223,7 @@ const NumberVariant = memo(
           placeholder={placeholder}
           value={value}
           disabled={disabled}
-          size={inputSize}
+          size={size}
           onChange={handleNumberChange}
           className={cn(
             invalid && inputStyles.invalidInput,

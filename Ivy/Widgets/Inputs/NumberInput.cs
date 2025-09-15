@@ -109,7 +109,7 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
     [Prop] public string? TargetType { get; set; }
 
     /// <summary>Gets or sets the size of the number input(Medium, Small, Large)</summary>
-    [Prop] public Sizes Size { get; set; } = Sizes.Medium;
+    [Prop] public Sizes Size { get; set; }
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
@@ -384,9 +384,7 @@ public static class NumberInputExtensions
         return widget with { Size = size };
     }
 
-    /// <summary>
-    /// Sets the number input size to large for prominent display.
-    /// </summary>
+    /// <summary>Sets the number input size to large for prominent display.</summary>
     /// <param name="widget">The number input to configure.</param>
     /// <returns>A new NumberInputBase instance with large size applied.</returns>
     [RelatedTo(nameof(NumberInputBase.Size))]
@@ -395,9 +393,7 @@ public static class NumberInputExtensions
         return widget.Size(Sizes.Large);
     }
 
-    /// <summary>
-    /// Sets the number input size to small for compact display.
-    /// </summary>
+    /// <summary>Sets the number input size to small for compact display.</summary>
     /// <param name="widget">The number input to configure.</param>
     /// <returns>A new NumberInputBase instance with small size applied.</returns>
     [RelatedTo(nameof(NumberInputBase.Size))]
