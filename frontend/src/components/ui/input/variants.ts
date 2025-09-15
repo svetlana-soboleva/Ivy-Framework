@@ -6,13 +6,13 @@ export const inputVariants = cva(
   {
     variants: {
       size: {
-        [Sizes.Medium]: 'h-9 px-3 py-1 text-base',
-        [Sizes.Small]: 'h-7 px-2 py-1 text-xs leading-tight',
-        [Sizes.Large]: 'h-11 px-4 py-2 text-xl leading-relaxed',
+        [Sizes[Sizes.Medium]]: 'h-9 px-3 py-1 text-base',
+        [Sizes[Sizes.Small]]: 'h-7 px-2 py-1 text-xs leading-tight',
+        [Sizes[Sizes.Large]]: 'h-11 px-4 py-2 text-xl leading-relaxed',
       },
     },
     defaultVariants: {
-      size: Sizes.Medium,
+      size: Sizes[Sizes.Medium],
     },
   }
 );

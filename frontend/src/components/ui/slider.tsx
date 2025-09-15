@@ -29,18 +29,21 @@ const Slider = React.forwardRef<
   }, [currentValue, currency]);
 
   // Size variants for track and thumb
-  const sizeVariants = {
-    [Sizes.Small]: {
+  const sizeVariants: Record<
+    string,
+    { track: string; thumb: string; tooltip: string }
+  > = {
+    Small: {
       track: 'h-1',
       thumb: 'h-3 w-3',
       tooltip: 'text-xs -top-6',
     },
-    [Sizes.Medium]: {
+    Medium: {
       track: 'h-1.5',
       thumb: 'h-4 w-4',
       tooltip: 'text-sm -top-7',
     },
-    [Sizes.Large]: {
+    Large: {
       track: 'h-2',
       thumb: 'h-5 w-5',
       tooltip: 'text-ml -top-8',
@@ -53,7 +56,7 @@ const Slider = React.forwardRef<
     <SliderPrimitive.Root
       ref={ref}
       className={cn(
-        'relative flex w-full touch-none select-none items-center',
+        'relative flex w-full touch-none select-none items-ceFnter',
         className
       )}
       {...props}
