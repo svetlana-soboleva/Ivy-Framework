@@ -5,9 +5,9 @@ export const inputVariants = cva(
   {
     variants: {
       size: {
-        Default: 'h-9 px-3 py-1 text-sm',
-        Small: 'h-8 px-2 py-1 text-xs',
-        Large: 'h-10 px-4 py-2 text-base',
+        Default: 'h-9 px-3 py-1 text-base',
+        Small: 'h-7 px-2 py-1 text-xs leading-tight',
+        Large: 'h-11 px-4 py-2 text-xl leading-relaxed',
       },
     },
     defaultVariants: {

@@ -153,10 +153,10 @@ const SliderVariant = memo(
         />
         <span
           className={cn(
-            'flex w-full items-center justify-between gap-1 text-muted-foreground',
+            'flex w-full items-center justify-between gap-1',
             size === Sizes.Small && 'text-xs',
-            size === Sizes.Medium && 'text-small-label font-sm',
-            size === Sizes.Large && 'text-sm font-medium'
+            size === Sizes.Medium && 'text-sm font-sm',
+            size === Sizes.Large && 'text-ml font-medium'
           )}
           aria-hidden="true"
         >

@@ -32,17 +32,17 @@ const Slider = React.forwardRef<
     Small: {
       track: 'h-1',
       thumb: 'h-3 w-3',
-      tooltip: 'text-xs -top-5',
+      tooltip: 'text-xs -top-6',
     },
     Default: {
       track: 'h-1.5',
       thumb: 'h-4 w-4',
-      tooltip: 'text-xs -top-6',
+      tooltip: 'text-sm -top-8',
     },
     Large: {
       track: 'h-2',
       thumb: 'h-5 w-5',
-      tooltip: 'text-sm -top-7',
+      tooltip: 'text-ml -top-8',
     },
   };
 
@@ -73,7 +73,7 @@ const Slider = React.forwardRef<
       >
         <div
           className={cn(
-            'absolute left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground p-1 rounded shadow',
+            'absolute left-1/2 transform -translate-x-1/2 bg-popover text-foreground p-1 rounded shadow',
             variant.tooltip
           )}
         >

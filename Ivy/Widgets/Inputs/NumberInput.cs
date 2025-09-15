@@ -379,7 +379,6 @@ public static class NumberInputExtensions
     /// <summary>Sets the size of the number input. </summary>
     /// <param name="widget">The number input to configure.</param>
     /// <param name="size">The size to apply to the input.</param>
-    /// <returns>A new NumberInputBase instance with the updated size setting.</returns>
     public static NumberInputBase Size(this NumberInputBase widget, Sizes size)
     {
         return widget with { Size = size };
@@ -387,9 +386,6 @@ public static class NumberInputExtensions
 
     /// <summary>
     /// Sets the number input size to large for prominent display.
-    /// This convenience method creates a large input that provides maximum
-    /// visual emphasis and is ideal for important data entry or
-    /// prominent form interfaces.
     /// </summary>
     /// <param name="widget">The number input to configure.</param>
     /// <returns>A new NumberInputBase instance with large size applied.</returns>
@@ -401,9 +397,6 @@ public static class NumberInputExtensions
 
     /// <summary>
     /// Sets the number input size to small for compact display.
-    /// This convenience method creates a small input that provides minimal
-    /// visual footprint and is ideal for dense forms or space-constrained
-    /// layouts.
     /// </summary>
     /// <param name="widget">The number input to configure.</param>
     /// <returns>A new NumberInputBase instance with small size applied.</returns>
