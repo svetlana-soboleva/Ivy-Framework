@@ -18,7 +18,13 @@ public enum BadgeVariant
     /// <summary>Outline badge style with bordered appearance, typically used for secondary actions or subtle status indicators.</summary>
     Outline,
     /// <summary>Secondary badge style with reduced visual emphasis, typically used for supporting information or less prominent status indicators.</summary>
-    Secondary
+    Secondary,
+    /// <summary>Success badge style with positive or confirmation colors, typically used for successful operations or positive status indicators.</summary>
+    Success,
+    /// <summary>Warning badge style with cautionary colors, typically used for alerts or important notices that require attention.</summary>
+    Warning,
+    /// <summary>Info badge style with informational colors, typically used for general information or help indicators.</summary>
+    Info
 }
 
 /// <summary>
@@ -259,5 +265,47 @@ public static class BadgeExtensions
     public static Badge Primary(this Badge badge)
     {
         return badge with { Variant = BadgeVariant.Primary };
+    }
+
+    /// <summary>
+    /// Sets the badge variant to success for positive or confirmation styling.
+    /// This convenience method creates a success badge that provides
+    /// positive visual styling suitable for successful operations,
+    /// confirmations, or positive status indicators.
+    /// </summary>
+    /// <param name="badge">The Badge to configure.</param>
+    /// <returns>A new Badge instance with success variant applied.</returns>
+    [RelatedTo(nameof(Badge.Variant))]
+    public static Badge Success(this Badge badge)
+    {
+        return badge with { Variant = BadgeVariant.Success };
+    }
+
+    /// <summary>
+    /// Sets the badge variant to warning for cautionary styling.
+    /// This convenience method creates a warning badge that provides
+    /// cautionary visual styling suitable for alerts, important notices,
+    /// or conditions that require user attention.
+    /// </summary>
+    /// <param name="badge">The Badge to configure.</param>
+    /// <returns>A new Badge instance with warning variant applied.</returns>
+    [RelatedTo(nameof(Badge.Variant))]
+    public static Badge Warning(this Badge badge)
+    {
+        return badge with { Variant = BadgeVariant.Warning };
+    }
+
+    /// <summary>
+    /// Sets the badge variant to info for informational styling.
+    /// This convenience method creates an info badge that provides
+    /// informational visual styling suitable for general information,
+    /// help text, or neutral status indicators.
+    /// </summary>
+    /// <param name="badge">The Badge to configure.</param>
+    /// <returns>A new Badge instance with info variant applied.</returns>
+    [RelatedTo(nameof(Badge.Variant))]
+    public static Badge Info(this Badge badge)
+    {
+        return badge with { Variant = BadgeVariant.Info };
     }
 }
