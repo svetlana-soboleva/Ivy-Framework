@@ -61,7 +61,7 @@ public class AdvancedStackLayoutExample : ViewBase
             Text.H2("Advanced StackLayout Features"),
             Text.Label("With Margin (external spacing)"),
             new StackLayout([box, box], Orientation.Horizontal, margin: new Thickness(4)),
-            Text.Label("Remove Parent Padding, Backgroung color"),
+            Text.Label("Remove Parent Padding, Background color"),
             new StackLayout([box, box], Orientation.Horizontal, removeParentPadding: true, background: Colors.Gray)
         ], gap: 2, padding: new Thickness(8));
     }
