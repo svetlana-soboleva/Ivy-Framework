@@ -44,7 +44,7 @@ public class ProgressApp : SampleBase
                 | new Progress(100).Goal("Completed!")
 
             | Text.H2("Indeterminate Progress")
-            | new Progress(null).Goal("Loading...")
+            | new Progress((int?)null).Goal("Loading...")
         ;
     }
 }
