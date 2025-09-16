@@ -91,6 +91,19 @@ const validateAndCapValue = (
   return cappedValue;
 };
 
+// Size variants for text styling
+const sizeVariants: Record<string, { text: string }> = {
+  Small: {
+    text: 'text-xs',
+  },
+  Medium: {
+    text: 'text-sm font-normal',
+  },
+  Large: {
+    text: 'text-ml font-medium',
+  },
+};
+
 const SliderVariant = memo(
   ({
     value,
@@ -151,9 +164,7 @@ const SliderVariant = memo(
         <span
           className={cn(
             'flex w-full items-center justify-between gap-1',
-            String(size) === 'Small' && 'text-xs',
-            String(size) === 'Medium' && 'text-sm font-sm',
-            String(size) === 'Large' && 'text-ml font-medium'
+            sizeVariants[String(size)].text
           )}
           aria-hidden="true"
         >
