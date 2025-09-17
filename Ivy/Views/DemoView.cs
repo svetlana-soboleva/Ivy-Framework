@@ -9,7 +9,6 @@ namespace Ivy.Views;
 /// Represents a demo view that displays content alongside its corresponding C# code.
 /// This view is designed for documentation and demonstration purposes, showing both
 /// the rendered content and the source code that generated it.
-
 /// </summary>
 public class DemoView : ViewBase
 {

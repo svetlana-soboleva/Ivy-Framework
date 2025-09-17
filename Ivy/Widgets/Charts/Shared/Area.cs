@@ -40,9 +40,9 @@ public record Area
     /// Gets or sets the type of legend representation for this area.
     /// Common options include:
     /// - <see cref="LegendTypes.Line"/>: Line legend (default)
-    /// - <see cref="LegendTypes.Area"/>: Area legend
-    /// - <see cref="LegendTypes.Point"/>: Point legend
-    /// - <see cref="LegendTypes.Step"/>: Step legend
+    /// - <see cref="LegendTypes.Square"/>: Square legend
+    /// - <see cref="LegendTypes.Circle"/>: Circle legend
+    /// - <see cref="LegendTypes.Triangle"/>: Triangle legend
     /// </summary>
     public LegendTypes LegendType { get; set; } = LegendTypes.Line;
 

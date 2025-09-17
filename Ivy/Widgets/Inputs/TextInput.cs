@@ -79,6 +79,7 @@ public record TextInput<TString> : TextInputBase, IInput<TString>
     /// <summary>
     /// Initializes a new text input bound to a state object for automatic value synchronization.
     /// </summary>
+    /// <param name="state">The state object to bind the text input to.</param>
     /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual and functional variant of the text input.</param>
@@ -95,6 +96,10 @@ public record TextInput<TString> : TextInputBase, IInput<TString>
     /// Useful for manual state management or when custom change handling is required.
     /// </summary>
     /// <param name="value">The initial text value.</param>
+    /// <param name="onChange">Optional event handler called when the input value changes.</param>
+    /// <param name="placeholder">Optional placeholder text displayed when the input is empty.</param>
+    /// <param name="disabled">Whether the input should be disabled initially.</param>
+    /// <param name="variant">The visual and functional variant of the text input.</param>
     [OverloadResolutionPriority(1)]
     public TextInput(TString value, Func<Event<IInput<TString>, TString>, ValueTask>? onChange = null, string? placeholder = null, bool disabled = false, TextInputs variant = TextInputs.Text)
         : this(placeholder, disabled, variant)

@@ -55,6 +55,7 @@ public record Pagination : WidgetBase<Pagination>
 public static class PaginationExtensions
 {
     /// <summary>Sets Siblings property of pagination widget.</summary>
+    /// <param name="widget">The pagination widget to configure.</param>
     /// <param name="siblings">Number of siblings to show.</param>
     /// <returns>Pagination instance for method chaining.</returns>
     public static Pagination Siblings(this Pagination widget, int siblings)
@@ -64,6 +65,7 @@ public static class PaginationExtensions
     }
 
     /// <summary>Sets Boundaries property of pagination widget.</summary>
+    /// <param name="widget">The pagination widget to configure.</param>
     /// <param name="boundaries">Number of boundaries to show.</param>
     /// <returns>Pagination instance for method chaining.</returns>
     public static Pagination Boundaries(this Pagination widget, int boundaries)
@@ -73,6 +75,7 @@ public static class PaginationExtensions
     }
 
     /// <summary>Sets disabled state of pagination widget. When disabled, page cannot be changed and buttons greyed out.</summary>
+    /// <param name="widget">The pagination widget to configure.</param>
     /// <param name="disabled">Whether widget should be disabled.</param>
     /// <returns>Pagination instance for method chaining.</returns>
     public static Pagination Disabled(this Pagination widget, bool disabled)
