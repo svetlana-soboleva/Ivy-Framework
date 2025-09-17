@@ -35,8 +35,8 @@ export const textBlockClassMap: Record<string, string> = {
   table: 'w-full border-collapse border border-border mb-2',
   thead: 'bg-muted',
   tr: 'border border-border',
-  th: 'border border-border px-4 py-2 text-left font-bold',
-  td: 'border border-border px-4 py-2',
+  th: 'border border-border px-4 py-2 text-left font-bold text-sm',
+  td: 'border border-border px-4 py-2 text-sm',
   code: 'relative rounded bg-muted px-[0.25rem] py-[0.05rem] font-mono text-sm font-semibold',
   img: 'max-w-full h-auto cursor-zoom-in mb-2',
 };
