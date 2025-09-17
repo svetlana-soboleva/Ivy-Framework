@@ -15,7 +15,7 @@ public class PostgresDatabaseProvider() : IDatabaseProvider
             .Options;
         return (T)Activator.CreateInstance(typeof(T), options)!;
     }
-    
+
     public string? GetDefaultConnectionString(string? projectDirectory)
     {
         return null;
@@ -52,9 +52,9 @@ public class PostgresDatabaseProvider() : IDatabaseProvider
             }
 
             if (!uri.Scheme.Equals("postgresql", StringComparison.InvariantCultureIgnoreCase) &&
-                !uri.Scheme.Equals("postgres", StringComparison.InvariantCultureIgnoreCase))
+                !uri.Scheme.Equals("postgres",   StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new ArgumentException($"Unrecognized URI scheme '{connectionString}'", nameof(connectionString));
+                throw new ArgumentException($"Unrecognized URI scheme '{uri.Scheme}'", nameof(connectionString));
             }
 
             var dbName = uri.AbsolutePath.Trim('/');
@@ -64,7 +64,7 @@ public class PostgresDatabaseProvider() : IDatabaseProvider
                 throw new ArgumentException("Database name not found in connection URI", nameof(connectionString));
             }
 
-            var userInfo = WebUtility.UrlDecode(uri.UserInfo).Split(':');
+            var userInfo = uri.UserInfo.Split(':');
             var username = WebUtility.UrlDecode(userInfo[0]).Trim();
             var password = userInfo.Length > 1
                 ? WebUtility.UrlDecode(userInfo[1]).Trim()
@@ -88,16 +88,9 @@ public class PostgresDatabaseProvider() : IDatabaseProvider
         }
 
         //Ensure required parameters are present for Npgsql/Supabase
-        bool updated = false;
         if (!builder.ContainsKey("SslMode") || builder.SslMode == Npgsql.SslMode.Disable || builder.SslMode == Npgsql.SslMode.Allow)
         {
             builder.SslMode = Npgsql.SslMode.Require;
-            updated = true;
-        }
-
-        if (updated)
-        {
-            System.Console.WriteLine(@"Warning: Connection string updated to ensure Npgsql SSL compatibility (SslMode=Require).");
         }
 
         return builder.ConnectionString;
