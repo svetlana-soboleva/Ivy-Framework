@@ -18,7 +18,7 @@ public record Blade : WidgetBase<Blade>
     /// <param name="bladeView">The view to be displayed within this blade. Must implement <see cref="IView"/>.</param>
     /// <param name="index">The zero-based index position of this blade in the blade stack.</param>
     /// <param name="title">The optional title to display in the blade header. If null, no title is shown.</param>
-    /// <param name="width">The width of the blade. If null, defaults to auto-sizing with a minimum of 80 units.</param>
+    /// <param name="width">The width of the blade. If null, defaults to fit-content with a minimum of 120 units and maximum of 300 units.</param>
     /// <param name="onClose">Optional event handler called when the blade is closed by the user.</param>
     /// <param name="onRefresh">Optional event handler called when the blade content should be refreshed.</param>
     [OverloadResolutionPriority(1)]
@@ -28,7 +28,7 @@ public record Blade : WidgetBase<Blade>
         Title = title;
         OnClose = onClose;
         OnRefresh = onRefresh;
-        Width = width ?? Size.Auto().Min(Size.Units(80));
+        Width = width ?? Size.Fit().Min(Size.Units(120)).Max(Size.Units(300));
     }
 
     /// <summary>

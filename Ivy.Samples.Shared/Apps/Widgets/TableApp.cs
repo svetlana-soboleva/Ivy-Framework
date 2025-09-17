@@ -29,18 +29,52 @@ public class TableApp : SampleBase
             new {Sku = "1238", Foo = true, Name = "Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example Multiline Example", Price = 2.0, Url = "http://example.com/socks"}
         };
 
-        return products
+        // Table with long headers to test overflow and tooltips
+        var longHeaderTable = new Table(
+            new TableRow(
+                new TableCell("Very Long Column Name That Should Cause Overflow And Show Tooltips").IsHeader(),
+                new TableCell("Another Extremely Long Column Header Name For Testing Truncation Purposes").IsHeader(),
+                new TableCell("Super Long Descriptive Column Name That Explains Everything In Great Detail").IsHeader(),
+                new TableCell("Ultra Wide Column Header With Lots Of Words And Characters To Test Overflow").IsHeader()
+            )
+            { IsHeader = true },
+            new TableRow(
+                new TableCell("Short Data"),
+                new TableCell("Medium length data value"),
+                new TableCell("This is a very long data value that should also get truncated and show a tooltip when hovered"),
+                new TableCell("Result A")
+            ),
+            new TableRow(
+                new TableCell("Data 2"),
+                new TableCell("Value B"),
+                new TableCell("Another long piece of data that exceeds the normal cell width and should be truncated"),
+                new TableCell("Result B")
+            ),
+            new TableRow(
+                new TableCell("Data 3"),
+                new TableCell("Value C"),
+                new TableCell("Short"),
+                new TableCell("Result C")
+            )
+        );
+
+        return Layout.Vertical(
+            Text.H3("Products Table"),
+            products
                 .ToTable()
                 .Builder(e => e.Url, e => e.Link())
                 .Width(Size.Full())
                 .MultiLine(e => e.Name)
-            // .Width(e => e.Name, Size.Units(100));
-            // Enable multi-line display for Name column
-            // .Width(e => e.Sku, Size.Fraction(0))
-            // .Width(e => e.Name, Size.Fraction(1 / 3f))
-            // .Width(e => e.Price, Size.Fraction(1 / 3f))
-            // .Width(e => e.Url, Size.Fraction(1 / 3f))
-            ;
+                // Add explicit column widths to test overflow
+                .Width(e => e.Sku, Size.Fraction(0.15f))      // 15% for SKU
+                .Width(e => e.Foo, Size.Fraction(0.1f))       // 10% for Foo  
+                .Width(e => e.Name, Size.Fraction(0.3f))      // 30% for Name
+                .Width(e => e.Price, Size.Fraction(0.15f))    // 15% for Price
+                .Width(e => e.Url, Size.Fraction(0.3f)),      // 30% for URL
+
+            Text.H3("Long Headers Table (Test Overflow & Tooltips)"),
+            longHeaderTable.Width(Size.Full())
+        );
 
         // return
         //     Layout.Vertical()
