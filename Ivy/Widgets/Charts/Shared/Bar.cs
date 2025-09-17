@@ -30,10 +30,10 @@ public record Bar
     /// <summary>
     /// Gets or sets the type of legend representation for this bar. Determines how the bar appears in the chart legend.
     /// Common options include:
-    /// - <see cref="LegendTypes.Line"/>: Line legend (default)
-    /// - <see cref="LegendTypes.Area"/>: Area legend
-    /// - <see cref="LegendTypes.Point"/>: Point legend
-    /// - <see cref="LegendTypes.Step"/>: Step legend
+    /// - <see cref="Legend.IconTypes.Line"/>: Line legend (default)
+    /// - <see cref="Legend.IconTypes.Square"/>: Square legend
+    /// - <see cref="Legend.IconTypes.Circle"/>: Circle legend
+    /// - <see cref="Legend.IconTypes.Triangle"/>: Triangle legend
     /// </summary>
     public LegendTypes LegendType { get; set; } = LegendTypes.Line;
 
