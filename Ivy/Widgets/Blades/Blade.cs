@@ -28,7 +28,7 @@ public record Blade : WidgetBase<Blade>
         Title = title;
         OnClose = onClose;
         OnRefresh = onRefresh;
-        Width = width ?? Size.Fit().Min(Size.Units(80)).Max(Size.Units(240));
+        Width = width ?? Size.Fit().Min(Size.Units(120)).Max(Size.Units(240));
     }
 
     /// <summary>
