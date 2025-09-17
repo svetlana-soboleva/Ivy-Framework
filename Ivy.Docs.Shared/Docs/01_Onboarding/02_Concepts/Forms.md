@@ -172,9 +172,9 @@ public class LayoutControlExample : ViewBase
         var address = UseState(() => new AddressModel("", "", "", "", ""));
         
         return address.ToForm()
-            .Place(m => m.Street)                    // First column
-            .Place(1, m => m.City, m => m.State)    // Second column, same row
-            .Place(1, m => m.ZipCode, m => m.Country) // Second column, same row
+            .Place(m => m.Street)                    // Single field spans full width
+            .Place(true, m => m.City, m => m.State)  // Two fields side-by-side, sharing row width
+            .Place(true, m => m.ZipCode, m => m.Country) // Two fields side-by-side, sharing row width
             .Label(m => m.Street, "Street Address")
             .Label(m => m.City, "City")
             .Label(m => m.State, "State/Province")

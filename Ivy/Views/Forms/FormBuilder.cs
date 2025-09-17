@@ -348,36 +348,36 @@ public class FormBuilder<TModel> : ViewBase
         return this;
     }
 
-    /// <summary>Places specified fields in given column with automatic vertical ordering.</summary>
+    /// <summary>Places specified fields vertically in the given column with automatic ordering.</summary>
     /// <param name="col">Zero-based column index where fields should be placed.</param>
-    /// <param name="fields">Fields to place in specified column.</param>
+    /// <param name="fields">Fields to place vertically in the specified column.</param>
     /// <returns>Form builder instance for method chaining.</returns>
     public FormBuilder<TModel> Place(int col, params Expression<Func<TModel, object>>[] fields)
     {
         return _Place(col, null, fields);
     }
 
-    /// <summary>Places specified fields in first column (column 0) with automatic vertical ordering.</summary>
-    /// <param name="fields">Fields to place in first column.</param>
+    /// <summary>Places specified fields vertically in the first column (column 0) with automatic ordering.</summary>
+    /// <param name="fields">Fields to place vertically in the first column.</param>
     /// <returns>Form builder instance for method chaining.</returns>
     public FormBuilder<TModel> Place(params Expression<Func<TModel, object>>[] fields)
     {
         return _Place(0, null, fields);
     }
 
-    /// <summary>Places specified fields with optional horizontal row grouping.</summary>
-    /// <param name="row">Whether to group fields in same horizontal row.</param>
-    /// <param name="fields">Fields to place, optionally in same row.</param>
+    /// <summary>Places specified fields horizontally side-by-side when row is true, or vertically when false.</summary>
+    /// <param name="row">True to arrange fields side-by-side in the same row; false to stack vertically.</param>
+    /// <param name="fields">Fields to arrange. When row is true, fields will be distributed evenly across the row width.</param>
     /// <returns>Form builder instance for method chaining.</returns>
     public FormBuilder<TModel> Place(bool row, params Expression<Func<TModel, object>>[] fields)
     {
         return _Place(0, row ? Guid.NewGuid() : null, fields);
     }
 
-    /// <summary>Places specified fields in specific column with optional horizontal row grouping.</summary>
+    /// <summary>Places specified fields in a specific column, optionally arranging them horizontally side-by-side.</summary>
     /// <param name="col">Zero-based column index where fields should be placed.</param>
-    /// <param name="row">Whether to group fields in same horizontal row.</param>
-    /// <param name="fields">Fields to place in specified column and optional row.</param>
+    /// <param name="row">True to arrange fields side-by-side in the same row; false to stack vertically in the column.</param>
+    /// <param name="fields">Fields to place in the specified column. When row is true, fields will share the same row.</param>
     /// <returns>Form builder instance for method chaining.</returns>
     public FormBuilder<TModel> Place(int col, bool row, params Expression<Func<TModel, object>>[] fields)
     {
