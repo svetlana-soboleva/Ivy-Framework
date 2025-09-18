@@ -1,8 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Ivy.Core;
+using Ivy.Core.Docs;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
+using Ivy.Shared;
 using Ivy.Widgets.Inputs;
 
 // ReSharper disable once CheckNamespace
@@ -63,6 +65,9 @@ public interface IAnyNumberInput : IAnyInput
 
     /// <summary>Gets or sets the target type name for frontend validation and formatting.</summary>
     public string? TargetType { get; set; }
+
+    /// <summary>Gets or sets the size of the number input(Medium, Small, Large)</summary>
+    [Prop] public Sizes Size { get; set; }
 }
 
 /// <summary>
@@ -102,6 +107,9 @@ public abstract record NumberInputBase : WidgetBase<NumberInputBase>, IAnyNumber
 
     /// <summary>Gets or sets the target type name for frontend validation and formatting.</summary>
     [Prop] public string? TargetType { get; set; }
+
+    /// <summary>Gets or sets the size of the number input(Medium, Small, Large)</summary>
+    [Prop] public Sizes Size { get; set; }
 
     /// <summary>Gets or sets the event handler called when the input loses focus.</summary>
     [Event] public Func<Event<IAnyInput>, ValueTask>? OnBlur { get; set; }
@@ -366,6 +374,32 @@ public static class NumberInputExtensions
     public static NumberInputBase Invalid(this NumberInputBase widget, string invalid)
     {
         return widget with { Invalid = invalid };
+    }
+
+    /// <summary>Sets the size of the number input. </summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <param name="size">The size to apply to the input.</param>
+    public static NumberInputBase Size(this NumberInputBase widget, Sizes size)
+    {
+        return widget with { Size = size };
+    }
+
+    /// <summary>Sets the number input size to large for prominent display.</summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <returns>A new NumberInputBase instance with large size applied.</returns>
+    [RelatedTo(nameof(NumberInputBase.Size))]
+    public static NumberInputBase Large(this NumberInputBase widget)
+    {
+        return widget.Size(Sizes.Large);
+    }
+
+    /// <summary>Sets the number input size to small for compact display.</summary>
+    /// <param name="widget">The number input to configure.</param>
+    /// <returns>A new NumberInputBase instance with small size applied.</returns>
+    [RelatedTo(nameof(NumberInputBase.Size))]
+    public static NumberInputBase Small(this NumberInputBase widget)
+    {
+        return widget.Size(Sizes.Small);
     }
 
 
