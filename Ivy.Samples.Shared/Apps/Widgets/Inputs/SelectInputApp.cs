@@ -308,9 +308,10 @@ public class SelectInputApp : SampleBase
 
     private object CreateSizesSection()
     {
-        var colorStateSelect = UseState(Colors.Red);
-        var colorStateList = UseState(Colors.Red);
+        var colorStateSelect = UseState<Colors[]>([]);
+        var colorStateList = UseState<Colors[]>([]);
         var colorStateToggle = UseState<Colors[]>([]);
+        var colorState = UseState((Colors?)null);
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(4)
@@ -319,14 +320,27 @@ public class SelectInputApp : SampleBase
                | Text.InlineCode("Medium")
                | Text.InlineCode("Large")
 
+               | Text.InlineCode("SelectInputs")
+               | colorState
+                    .ToSelectInput(colorOptions)
+                    .Small()
+               | colorState
+                    .ToSelectInput(colorOptions)
+               | colorState
+                    .ToSelectInput(colorOptions)
+                    .Large()
+
                | Text.InlineCode("SelectInputs.Select")
                | colorStateSelect
                     .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
                     .Small()
                | colorStateSelect
                     .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
                | colorStateSelect
                     .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Select)
                     .Large()
 
                | Text.InlineCode("SelectInputs.List")
