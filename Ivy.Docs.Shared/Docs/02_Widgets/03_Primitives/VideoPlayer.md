@@ -64,7 +64,6 @@ Display a placeholder image before playback:
 ```csharp demo-tabs
 new VideoPlayer("https://www.w3schools.com/html/mov_bbb.mp4")
     .Poster("https://www.w3schools.com/html/pic_trulli.jpg")
-    .Controls(true)
 ```
 
 ### YouTube Video Embed
@@ -72,7 +71,7 @@ new VideoPlayer("https://www.w3schools.com/html/mov_bbb.mp4")
 Embed a YouTube video directly by providing its URL:
 
 ```csharp demo-tabs
-new VideoPlayer("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+new VideoPlayer("https://www.youtube.com/shorts/5ONcACL9c6k?wa=d")
     .Height(Size.Units(100))
     .Controls(false)
 ```

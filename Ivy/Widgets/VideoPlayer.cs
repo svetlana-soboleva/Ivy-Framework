@@ -15,14 +15,12 @@ public record VideoPlayer : WidgetBase<VideoPlayer>
     /// <param name="controls">Whether playback controls should be displayed.</param>
     /// <param name="muted">Whether the video should be muted by default.</param>
     /// <param name="loop">Whether the video should loop continuously.</param>
-    /// <param name="disabled">Whether the widget should be disabled initially.</param>
     public VideoPlayer(
         string? source = null,
         bool autoplay = false,
         bool controls = true,
         bool muted = false,
         bool loop = false,
-        bool disabled = false,
         string? poster = null)
     {
         Source = source;
@@ -30,13 +28,9 @@ public record VideoPlayer : WidgetBase<VideoPlayer>
         Controls = controls;
         Muted = muted;
         Loop = loop;
-        Disabled = disabled;
         Poster = poster;
         Id = Guid.NewGuid().ToString();
     }
-
-    /// <summary>Gets or sets whether the widget is disabled.</summary>
-    [Prop] public bool Disabled { get; set; }
 
     /// <summary>Gets or sets the video source URL or file path.</summary>
     [Prop] public string? Source { get; set; }
@@ -91,12 +85,6 @@ public static class VideoPlayerExtensions
     public static VideoPlayer Loop(this VideoPlayer widget, bool loop = true)
     {
         return widget with { Loop = loop };
-    }
-
-    /// <summary>Sets the disabled state of the video player.</summary>
-    public static VideoPlayer Disabled(this VideoPlayer widget, bool disabled = true)
-    {
-        return widget with { Disabled = disabled };
     }
 
     /// <summary>Sets the poster image URL to display before the video starts or while loading.</summary>
