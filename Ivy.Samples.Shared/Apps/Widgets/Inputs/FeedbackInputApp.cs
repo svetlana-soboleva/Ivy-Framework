@@ -72,14 +72,32 @@ public class FeedbackInputApp : SampleBase
                           | (nullableBoolState.Value == null ? Text.InlineCode("null") : (nullableBoolState.Value == false ? Text.InlineCode("false") : Text.InlineCode("true")))
         ;
 
+        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
+
         return Layout.Vertical()
                | Text.H1("Feedback Inputs")
                | Text.H2("Variants")
                | variants
                | Text.H2("Data Binding")
                | dataBinding
+               | Text.H2("Labels and Descriptions")
+               | labelsAndDescriptions
 
             ;
 
+    }
+
+    private object CreateLabelsAndDescriptionsSection()
+    {
+        var starRatingState = UseState(0);
+        var thumbsRatingState = UseState(false);
+        var emojiRatingState = UseState(0);
+
+        return Layout.Vertical()
+               | (Layout.Vertical()
+                  | starRatingState.ToFeedbackInput().Variant(FeedbackInputs.Stars).Label("Service Rating").Description("Please rate our service quality from 1 to 5 stars")
+                  | thumbsRatingState.ToFeedbackInput().Variant(FeedbackInputs.Thumbs).Label("Was this helpful?").Description("Let us know if this information was useful to you")
+                  | emojiRatingState.ToFeedbackInput().Variant(FeedbackInputs.Emojis).Label("How are you feeling?").Description("Select the emoji that best represents your current mood")
+               );
     }
 }
