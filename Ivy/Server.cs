@@ -492,14 +492,14 @@ public static class WebApplicationExtensions
 
                 //Inject IVY_LICENSE:
                 var configuration = app.Services.GetRequiredService<IConfiguration>();
-                var ivyLicense = configuration["IVY_LICENSE"] ?? "";
+                var ivyLicense = configuration["Ivy:License"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicense))
                 {
                     var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
                     html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
                 }
 #if DEBUG
-                var ivyLicensePublicKey = configuration["IVY_LICENSE_PUBLIC_KEY"] ?? "";
+                var ivyLicensePublicKey = configuration["Ivy:LicensePublicKey"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicensePublicKey))
                 {
                     var ivyLicensePublicKeyTag =
