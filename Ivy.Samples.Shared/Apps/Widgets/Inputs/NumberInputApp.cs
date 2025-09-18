@@ -17,6 +17,7 @@ public class NumberInputApp : SampleBase
 
         var dataBinding = CreateNumericTypeTests();
         var currencyExamples = CreateCurrencyExamples();
+        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
 
         var nullIntInvalid = UseState<int?>();
 
@@ -118,6 +119,10 @@ public class NumberInputApp : SampleBase
                     .ToSliderInput()
                     .Large()
                )
+
+               // Labels and Descriptions:
+               | Text.H2("Labels and Descriptions")
+               | labelsAndDescriptions
 
                // Events: 
                | Text.H2("Events")
@@ -369,5 +374,22 @@ public class NumberInputApp : SampleBase
         return Layout.Vertical()
                | anyState.ToNumberInput()
                | anyState.ToSliderInput();
+    }
+
+    private object CreateLabelsAndDescriptionsSection()
+    {
+        var priceState = UseState(99.99m);
+        var quantityState = UseState(5);
+        var ratingState = UseState(4.5);
+        var percentageState = UseState(75.0);
+
+        return Layout.Vertical()
+               | (Layout.Vertical()
+                  | priceState.ToMoneyInput().Label("Product Price").Description("Enter the price of the product in USD")
+                  | quantityState.ToNumberInput().Label("Quantity").Description("How many items would you like to order?")
+                  | ratingState.ToNumberInput().Min(0).Max(5).Step(0.1).Precision(1).Label("Rating").Description("Rate this product from 0 to 5 stars")
+                  | percentageState.ToNumberInput().FormatStyle(NumberFormatStyle.Percent).Min(0).Max(100).Label("Discount").Description("Enter the discount percentage (0-100%)")
+                  | quantityState.ToSliderInput().Min(1).Max(10).Label("Quantity Slider").Description("Use the slider to select quantity from 1 to 10")
+               );
     }
 }
