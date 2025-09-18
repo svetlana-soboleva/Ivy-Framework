@@ -227,6 +227,9 @@ public class DateTimeInputApp : SampleBase
                 .Placeholder("Lunch break")
                 .TestId("datetime-input-placeholder-lunch-time");
 
+        // Labels and descriptions section
+        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
+
         // Current values section
         var currentValues = Layout.Vertical()
             | Text.H3("Current Values")
@@ -248,6 +251,43 @@ public class DateTimeInputApp : SampleBase
             | dataBindingGrid
             | Text.H2("Placeholder Examples")
             | placeholderExamplesGrid
+            | Text.H2("Labels and Descriptions")
+            | labelsAndDescriptions
             | currentValues;
+    }
+
+    private object CreateLabelsAndDescriptionsSection()
+    {
+        var birthDateState = UseState<DateOnly?>(() => null);
+        var appointmentState = UseState<DateTime?>(() => null);
+        var meetingTimeState = UseState<TimeOnly?>(() => null);
+        var deadlineState = UseState<DateTime?>(() => null);
+
+        return Layout.Vertical()
+               | (Layout.Vertical()
+                  | birthDateState.ToDateTimeInput()
+                    .Variant(DateTimeInputs.Date)
+                    .Label("Birth Date")
+                    .Description("Please enter your date of birth for age verification")
+                    .Placeholder("Select your birth date")
+
+                  | appointmentState.ToDateTimeInput()
+                    .Variant(DateTimeInputs.DateTime)
+                    .Label("Appointment Time")
+                    .Description("Choose your preferred appointment date and time. Available slots are Monday-Friday, 9 AM - 5 PM")
+                    .Placeholder("Select appointment date and time")
+
+                  | meetingTimeState.ToDateTimeInput()
+                    .Variant(DateTimeInputs.Time)
+                    .Label("Meeting Start Time")
+                    .Description("What time should the meeting begin? Please select in 15-minute intervals")
+                    .Placeholder("Select meeting time")
+
+                  | deadlineState.ToDateTimeInput()
+                    .Variant(DateTimeInputs.DateTime)
+                    .Label("Project Deadline")
+                    .Description("Set the final deadline for project submission. This date cannot be changed once set")
+                    .Placeholder("Select deadline date and time")
+               );
     }
 }
