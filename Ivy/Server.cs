@@ -32,6 +32,7 @@ public record ServerArgs
     public string? Args { get; set; } = null;
     public string? DefaultAppId { get; set; } = null;
     public bool Silent { get; set; } = false;
+    public bool Describe { get; set; } = false;
     public string? MetaTitle { get; set; } = null;
     public string? MetaDescription { get; set; } = null;
     public Assembly? AssetAssembly { get; set; } = null;
@@ -256,15 +257,15 @@ public class Server
         // Handle unobserved task exceptions to prevent process termination
         TaskScheduler.UnobservedTaskException += (sender, e) =>
         {
-            Console.WriteLine($"[CRITICAL] Unobserved Task Exception: {e.Exception}");
+            Console.WriteLine($@"[CRITICAL] Unobserved Task Exception: {e.Exception}");
             e.SetObserved(); // Prevents process termination
         };
 
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
             var ex = (Exception)e.ExceptionObject;
-            Console.WriteLine($"[CRITICAL] Unhandled Domain Exception - IsTerminating: {e.IsTerminating}");
-            Console.WriteLine($"[CRITICAL] Exception: {ex}");
+            Console.WriteLine($@"[CRITICAL] Unhandled Domain Exception - IsTerminating: {e.IsTerminating}");
+            Console.WriteLine($@"[CRITICAL] Exception: {ex}");
         };
 
 #if (DEBUG)
@@ -351,13 +352,13 @@ public class Server
         builder.Services.AddControllers()
             .AddApplicationPart(Assembly.Load("Ivy"))
             .AddControllersAsServices();
-        builder.Services.AddSingleton<IContentBuilder>(_contentBuilder ?? new DefaultContentBuilder());
+        builder.Services.AddSingleton(_contentBuilder ?? new DefaultContentBuilder());
         builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddHealthChecks();
 
         // Register theme service if not already registered
-        if (!Services.Any(s => s.ServiceType == typeof(IThemeService)))
+        if (Services.All(s => s.ServiceType != typeof(IThemeService)))
         {
             Services.AddSingleton<IThemeService, ThemeService>();
         }
@@ -459,6 +460,13 @@ public class Server
                 Utils.OpenBrowser(localUrl);
             }
         });
+
+        if (_args.Describe)
+        {
+            var description = ServerDescription.Gather(this, app.Services);
+            Console.WriteLine(description.ToYaml());
+            return;
+        }
 
         try
         {
@@ -610,7 +618,8 @@ public static class IvyServerUtils
             Browse = parser.GetValue(parsedArgs, "browse", false),
             Args = parser.GetValue<string?>(parsedArgs, "args", null),
             DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
-            Silent = parser.GetValue(parsedArgs, "silent", false)
+            Silent = parser.GetValue(parsedArgs, "silent", false),
+            Describe = parser.GetValue(parsedArgs, "describe", false)
         };
 #if DEBUG
         serverArgs = serverArgs with { FindAvailablePort = parser.GetValue(parsedArgs, "find-available-port", true) };

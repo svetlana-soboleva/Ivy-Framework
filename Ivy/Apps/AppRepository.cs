@@ -204,4 +204,9 @@ public class AppRepository : IAppRepository
         }
         return [];
     }
+
+    public IEnumerable<AppDescriptor> All()
+    {
+        return Apps.Values;
+    }
 }
