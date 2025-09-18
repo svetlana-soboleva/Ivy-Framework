@@ -29,6 +29,44 @@ import {
   Option as MultiSelectOption,
 } from '@/components/ui/multiselect';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle';
+import { Sizes } from '@/types/sizes';
+import { cva } from 'class-variance-authority';
+
+const getInputSize = (size: Sizes) => {
+  switch (String(size)) {
+    case 'Small':
+      return 'Small';
+    case 'Medium':
+      return 'Medium';
+    case 'Large':
+      return 'Large';
+    default:
+      return 'Medium';
+  }
+};
+
+// variants for SelectInputWidget container
+const selectContainerVariants = cva(
+  'relative border border-input bg-transparent rounded-md shadow-sm focus-within:ring-1 focus-within:ring-ring',
+  {
+    variants: {
+      size: {
+        [Sizes[Sizes.Small]]: 'px-2 py-1',
+        [Sizes[Sizes.Medium]]: 'px-3 py-2',
+        [Sizes[Sizes.Large]]: 'px-4 py-3',
+      },
+    },
+    defaultVariants: {
+      size: Sizes[Sizes.Medium],
+    },
+  }
+);
+
+const selectTextVariants = {
+  Small: 'text-xs',
+  Medium: 'text-sm',
+  Large: 'text-base',
+};
 
 export type NullableSelectValue =
   | string
@@ -56,7 +94,7 @@ interface SelectInputWidgetProps {
   eventHandler: EventHandler;
   selectMany: boolean;
   separator: string;
-  'data-testid'?: string;
+  size?: Sizes;
 }
 
 // Helper function to convert string values back to their original types
@@ -182,8 +220,15 @@ const ToggleOptionItem: React.FC<{
   option: Option;
   isSelected: boolean;
   invalid?: string;
-}> = ({ option, isSelected, invalid }) => {
+  size?: Sizes;
+}> = ({ option, isSelected, invalid, size = Sizes.Medium }) => {
   const isInvalid = !!invalid && isSelected;
+
+  const sizeClasses = {
+    Small: 'px-1 py-1 text-xs',
+    Medium: 'px-3 py-2 text-sm',
+    Large: 'px-5 py-3 text-base',
+  };
 
   const toggleItem = (
     <ToggleGroupItem
@@ -191,7 +236,8 @@ const ToggleOptionItem: React.FC<{
       value={option.value.toString()}
       aria-label={option.label}
       className={cn(
-        'px-3 py-2 hover:text-foreground',
+        'hover:text-foreground',
+        sizeClasses[getInputSize(size)],
         isInvalid
           ? cn(
               inputStyles.invalidInput,
@@ -232,7 +278,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   selectMany = false,
   separator = ',',
   nullable = false,
-  'data-testid': dataTestId,
+  size = Sizes.Medium,
 }) => {
   const validOptions = useMemo(
     () =>
@@ -278,7 +324,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -291,7 +337,6 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
               onValueChange={handleValueChange}
               disabled={disabled}
               className="flex flex-wrap gap-2"
-              data-testid={dataTestId}
             >
               {validOptions.map(option => {
                 const isSelected = selectedValues.includes(option.value);
@@ -301,6 +346,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                     option={option}
                     isSelected={isSelected}
                     invalid={invalid}
+                    size={size}
                   />
                 );
               })}
@@ -312,7 +358,6 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
               onValueChange={handleValueChange}
               disabled={disabled}
               className="flex flex-wrap gap-2"
-              data-testid={dataTestId}
             >
               {validOptions.map(option => {
                 const isSelected =
@@ -323,6 +368,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                     option={option}
                     isSelected={isSelected}
                     invalid={invalid}
+                    size={size}
                   />
                 );
               })}
@@ -374,7 +420,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   options = [],
   eventHandler,
   nullable = false,
-  'data-testid': dataTestId,
+  size = Sizes.Medium,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -397,7 +443,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -408,36 +454,45 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
             onValueChange={handleValueChange}
             disabled={disabled}
             className="flex flex-col gap-4"
-            data-testid={dataTestId}
           >
-            {validOptions.map(option => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value={option.value.toString()}
-                  id={`${id}-${option.value}`}
-                  className={cn(
-                    'border-input text-input',
-                    stringValue === option.value.toString() && !invalid
-                      ? 'border-primary text-primary'
-                      : undefined,
-                    stringValue === option.value.toString() && invalid
-                      ? inputStyles.invalidInput
-                      : undefined
-                  )}
-                />
-                <Label
-                  htmlFor={`${id}-${option.value}`}
-                  className={cn(
-                    'cursor-pointer',
-                    stringValue === option.value.toString() && invalid
-                      ? inputStyles.invalidInput
-                      : undefined
-                  )}
-                >
-                  {option.label}
-                </Label>
-              </div>
-            ))}
+            {validOptions.map(option => {
+              const CircleSize = {
+                Small: 'h-3 w-3',
+                Medium: 'h-4 w-4',
+                Large: 'h-5 w-5',
+              };
+
+              return (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={option.value.toString()}
+                    id={`${id}-${option.value}`}
+                    className={cn(
+                      'border-input text-input',
+                      CircleSize[getInputSize(size)],
+                      stringValue === option.value.toString() && !invalid
+                        ? 'border-primary text-primary'
+                        : undefined,
+                      stringValue === option.value.toString() && invalid
+                        ? inputStyles.invalidInput
+                        : undefined
+                    )}
+                  />
+                  <Label
+                    htmlFor={`${id}-${option.value}`}
+                    className={cn(
+                      'cursor-pointer',
+                      selectTextVariants[getInputSize(size)],
+                      stringValue === option.value.toString() && invalid
+                        ? inputStyles.invalidInput
+                        : undefined
+                    )}
+                  >
+                    {option.label}
+                  </Label>
+                </div>
+              );
+            })}
           </RadioGroup>
         </div>
         {((nullable && hasValue && !disabled) || invalid) && (
@@ -479,7 +534,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   eventHandler,
   separator = ',',
   nullable = false,
-  'data-testid': dataTestId,
+  size = Sizes.Medium,
 }) => {
   const validOptions = useMemo(
     () =>
@@ -565,11 +620,11 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                 ? 'max-h-48 overflow-y-auto pr-2 -mr-2'
                 : ''
             )}
-            data-testid={dataTestId}
           >
             {validOptions.map(option => {
               const isSelected = selectedValues.includes(option.value);
               const isInvalid = !!invalid && isSelected;
+
               return (
                 <div key={option.value} className="flex items-center space-x-2">
                   {isInvalid ? (
@@ -588,7 +643,8 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                             disabled={disabled}
                             className={cn(
                               inputStyles.invalidInput,
-                              'bg-destructive/10 border-destructive text-destructive'
+                              'bg-destructive/10 border-destructive text-destructive',
+                              selectTextVariants[getInputSize(size)]
                             )}
                           />
                         </TooltipTrigger>
@@ -607,6 +663,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                       disabled={disabled}
                       className={cn(
                         'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
+                        selectTextVariants[getInputSize(size)],
                         isSelected
                           ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
                           : undefined
@@ -617,6 +674,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                     htmlFor={`${id}-${option.value}`}
                     className={cn(
                       'flex-1 cursor-pointer',
+                      selectTextVariants[getInputSize(size)],
                       isInvalid ? inputStyles.invalidInput : undefined
                     )}
                   >
@@ -669,7 +727,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   eventHandler,
   nullable = false,
   selectMany = false,
-  'data-testid': dataTestId,
+  size = Sizes.Medium,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -803,10 +861,10 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
           disabled={disabled}
           value={stringValue}
           onValueChange={handleValueChange}
-          data-testid={dataTestId}
         >
           <SelectTrigger
             className={cn('relative', invalid && inputStyles.invalidInput)}
+            size={size}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
@@ -851,7 +909,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
               )}
             </div>
           ) : null}
-          <SelectContent>
+          <SelectContent size={size}>
             {Object.entries(groupedOptions).map(([group, options]) => (
               <SelectGroup key={group}>
                 {group !== 'default' && <SelectLabel>{group}</SelectLabel>}
@@ -859,6 +917,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                   <SelectItem
                     key={option.value}
                     value={option.value.toString()}
+                    size={size}
                   >
                     {option.label}
                   </SelectItem>

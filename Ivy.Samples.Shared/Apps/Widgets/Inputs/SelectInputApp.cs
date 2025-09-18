@@ -47,6 +47,8 @@ public class SelectInputApp : SampleBase
         var nullableTest = CreateNullableTestSection();
 
         return Layout.Vertical()
+               | Text.H2("Sizes")
+               | CreateSizesSection()
                | Text.H1("Select Inputs")
                | Text.H2("Nullable Test")
                | nullableTest
@@ -302,6 +304,56 @@ public class SelectInputApp : SampleBase
                | anyState.ToSelectInput(options)
                | anyState.ToSelectInput(options).Variant(SelectInputs.List)
                | anyState.ToSelectInput(options).Variant(SelectInputs.Toggle);
+    }
+
+    private object CreateSizesSection()
+    {
+        var colorStateSelect = UseState(Colors.Red);
+        var colorStateList = UseState(Colors.Red);
+        var colorStateToggle = UseState<Colors[]>([]);
+        var colorOptions = typeof(Colors).ToOptions();
+
+        return Layout.Grid().Columns(4)
+               | Text.InlineCode("Description")
+               | Text.InlineCode("Small")
+               | Text.InlineCode("Medium")
+               | Text.InlineCode("Large")
+
+               | Text.InlineCode("SelectInputs.Select")
+               | colorStateSelect
+                    .ToSelectInput(colorOptions)
+                    .Small()
+               | colorStateSelect
+                    .ToSelectInput(colorOptions)
+               | colorStateSelect
+                    .ToSelectInput(colorOptions)
+                    .Large()
+
+               | Text.InlineCode("SelectInputs.List")
+               | colorStateList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Small()
+               | colorStateList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | colorStateList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Large()
+
+               | Text.InlineCode("SelectInputs.Toggle")
+               | colorStateToggle
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Small()
+               | colorStateToggle
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+               | colorStateToggle
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.Toggle)
+                    .Large();
     }
 
     private object CreateNullableTestSection()
