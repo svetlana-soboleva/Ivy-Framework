@@ -110,4 +110,3 @@ If you want to work on the framework itself, you need to set up the following:
 Changes in /frontend will be hot-reloaded by Vite and changes in /Ivy.Samples will be hot-reloaded by Ivy.
 
 For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
