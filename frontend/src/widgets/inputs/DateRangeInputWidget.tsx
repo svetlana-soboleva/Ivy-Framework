@@ -319,7 +319,7 @@ export const DateRangeInputWidget: React.FC<DateRangeInputWidgetProps> = ({
       )}
     </div>
   );
-  // If no label or description, return just the date/time input
+  // If no label or description, return just the date range input
   if (!label && !description) {
     return dateRangeElement;
   }
