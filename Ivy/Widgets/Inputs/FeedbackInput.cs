@@ -29,7 +29,7 @@ public interface IAnyFeedbackInput : IAnyInput
 {
     /// <summary> Gets or sets the label text displayed alongside the feedback input. </summary>
     public string? Label { get; set; }
-    /// <summary>/ Gets or sets the description text displayed alongside the feedback input.</summary>
+    /// <summary>Gets or sets the description text displayed alongside the feedback input.</summary>
     public string? Description { get; set; }
     /// <summary>Gets or sets the placeholder text displayed when the feedback input is empty.</summary>
     public string? Placeholder { get; set; }
