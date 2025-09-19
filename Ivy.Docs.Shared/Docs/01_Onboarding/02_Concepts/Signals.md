@@ -19,7 +19,7 @@ public class SignalExample : ViewBase
         var signal = Context.CreateSignal<CounterSignal, int, string>();
         var output = UseState("");
 
-        async void OnClick(Event<Button> _)
+        async ValueTask OnClick(Event<Button> _)
         {
             var results = await signal.Send(1);
             output.Set(string.Join(", ", results));
@@ -70,7 +70,7 @@ public class OneToManyDemo : ViewBase
         var receiver2Message = UseState("");
         var receiver3Message = UseState("");
         
-        async void BroadcastMessage(Event<Button> _)
+        async ValueTask BroadcastMessage(Event<Button> _)
         {
             if (!string.IsNullOrWhiteSpace(message.Value))
             {
@@ -123,7 +123,7 @@ public class RequestResponseDemo : ViewBase
         var results = UseState<string[]>(() => Array.Empty<string>());
         var isSearching = UseState<bool>(false);
         
-        async void SearchData(Event<Button> _)
+        async ValueTask SearchData(Event<Button> _)
         {
             if (!string.IsNullOrWhiteSpace(query.Value))
             {

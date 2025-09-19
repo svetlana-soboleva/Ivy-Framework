@@ -244,7 +244,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     trigger)
                 .Top();
 
-            var onLogout = new Action(async void () =>
+            var onLogout = new Action(async () =>
             {
                 try
                 {
