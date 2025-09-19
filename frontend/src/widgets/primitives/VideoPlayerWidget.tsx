@@ -90,10 +90,10 @@ export const VideoPlayerWidget: React.FC<VideoPlayerWidgetProps> = ({
     const videoId =
       url.searchParams.get('v') ??
       url.pathname.split('/').filter(Boolean).pop();
-    const timeParam = url.searchParams.get('t');
+    const timeParam = parseInt(url.searchParams.get('t') ?? '', 10).toString();
     const embedUrl = `https://www.youtube.com/embed/${videoId}`;
     const params = new URLSearchParams();
-    params.append('start', timeParam ? timeParam : '0');
+    params.append('start', timeParam ?? '0');
     params.append('autoplay', autoplay ? '1' : '0');
     params.append('loop', loop ? '1' : '0');
     params.append('muted', muted ? '1' : '0');
