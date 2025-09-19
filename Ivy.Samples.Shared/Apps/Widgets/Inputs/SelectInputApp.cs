@@ -45,7 +45,6 @@ public class SelectInputApp : SampleBase
         var multiSelectVariants = CreateMultiSelectVariantsSection();
         var dataBinding = CreateDataBindingTests();
         var nullableTest = CreateNullableTestSection();
-        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
 
         return Layout.Vertical()
                | Text.H1("Select Inputs")
@@ -57,8 +56,6 @@ public class SelectInputApp : SampleBase
                | multiSelectVariants
                | Text.H2("Data Binding")
                | dataBinding
-               | Text.H2("Labels and Descriptions")
-               | labelsAndDescriptions
                ;
     }
 
@@ -336,21 +333,6 @@ public class SelectInputApp : SampleBase
                | nonNullableColorState
                     .ToSelectInput(colorOptions)
                     .Variant(SelectInputs.Toggle);
-    }
-
-    private object CreateLabelsAndDescriptionsSection()
-    {
-        var colorState = UseState(Colors.Red);
-        var colorArrayState = UseState<Colors[]>([]);
-        var colorOptions = typeof(Colors).ToOptions();
-
-        return Layout.Vertical()
-               | (Layout.Vertical()
-                  | colorState.ToSelectInput(colorOptions).Label("Favorite Color").Description("Choose your preferred color from the list")
-                  | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.List).Label("Color List").Description("Select multiple colors using checkboxes")
-                  | colorState.ToSelectInput(colorOptions).Variant(SelectInputs.Toggle).Label("Color Toggle").Description("Toggle colors on and off")
-                  | colorArrayState.ToSelectInput(colorOptions).Label("Multi-Select Colors").Description("Select multiple colors with the dropdown")
-               );
     }
 
     private static object FormatStateValue(string typeName, object? value, bool isNullable)

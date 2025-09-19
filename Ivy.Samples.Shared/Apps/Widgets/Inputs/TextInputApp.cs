@@ -81,14 +81,6 @@ public class TextInputApp : SampleBase
                | Text.H2("Data Binding")
                | dataBinding
 
-               | Text.H2("Labels and Descriptions")
-               | (Layout.Vertical()
-                  | withoutValue.ToTextInput().Label("Username").Placeholder("Enter your username")
-                  | withValue.ToTextInput().Label("Email").Description("We'll never share your email with anyone else.")
-                  | withoutValue.ToPasswordInput().Label("Password").Description("Must be at least 8 characters long")
-                  | withValue.ToTextAreaInput().Label("Comments").Description("Tell us what you think about our service")
-               )
-
                //Events: 
 
                | Text.H2("Events")

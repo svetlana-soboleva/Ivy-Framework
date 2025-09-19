@@ -62,8 +62,6 @@ public class FileInputApp : SampleBase
                           | multipleFiles
             ;
 
-        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
-
         return Layout.Vertical()
                | Text.H1("File Inputs")
                | Text.H2("Variants")
@@ -93,10 +91,6 @@ public class FileInputApp : SampleBase
                // Data Binding:
                | Text.H2("Data Binding")
                | dataBinding
-
-               // Labels and Descriptions:
-               | Text.H2("Labels and Descriptions")
-               | labelsAndDescriptions
 
                // File Type Restrictions:
                | Text.H2("File Type Restrictions")
@@ -210,22 +204,5 @@ public class FileInputApp : SampleBase
                   | validatedFiles.ToFileInput().MaxFiles(3).Accept("image/*").Placeholder("Select up to 3 image files")
                )
             ;
-    }
-
-    private object CreateLabelsAndDescriptionsSection()
-    {
-        var profileImageState = UseState<FileInput?>(() => null);
-        var documentState = UseState<IEnumerable<FileInput>?>(() => null);
-        var avatarState = UseState<FileInput?>(() => null);
-        var resumeState = UseState<FileInput?>(() => null);
-
-        return Layout.Vertical()
-               | (Layout.Vertical()
-                  | profileImageState.ToFileInput()
-                    .Label("Profile Image")
-                    .Description("Upload a profile picture for your account. Supported formats: JPG, PNG, GIF (max 5MB)")
-                    .Accept("image/jpeg,image/png,image/gif")
-                    .Placeholder("Click to select or drag and drop your profile image")
-               );
     }
 }

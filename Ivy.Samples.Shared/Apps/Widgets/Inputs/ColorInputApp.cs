@@ -11,7 +11,6 @@ public class ColorInputApp : SampleBase
         var dataBinding = CreateDataBindingTests();
         var formatTests = CreateFormatTests();
         var nonGenericConstructor = CreateNonGenericConstructorSection();
-        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
 
         return Layout.Vertical()
                | Text.H1("ColorInput")
@@ -23,8 +22,6 @@ public class ColorInputApp : SampleBase
                | formatTests
                | Text.H2("Data Binding")
                | dataBinding
-               | Text.H2("Labels and Descriptions")
-               | labelsAndDescriptions
             ;
     }
 
@@ -232,55 +229,5 @@ public class ColorInputApp : SampleBase
         // Simple conversion for demo purposes
         // In a real implementation, you'd want proper color parsing
         return colorValue.StartsWith("#") ? colorValue : $"#{colorValue.GetHashCode():X6}";
-    }
-
-    private object CreateLabelsAndDescriptionsSection()
-    {
-        var labelOnlyState = UseState("#ff6b6b");
-        var descriptionOnlyState = UseState("#4ecdc4");
-        var labelAndDescriptionState = UseState("#45b7d1");
-        var textVariantState = UseState("#96ceb4");
-        var pickerVariantState = UseState("#feca57");
-        var disabledState = UseState("#ff9ff3");
-        var invalidState = UseState("#54a0ff");
-
-        return Layout.Grid().Columns(2)
-               | Text.InlineCode("Example")
-               | Text.InlineCode("ColorInput with Label/Description")
-
-               | Text.InlineCode("Label Only")
-               | labelOnlyState.ToColorInput().Label("Primary Color")
-
-               | Text.InlineCode("Description Only")
-               | descriptionOnlyState.ToColorInput().Description("Choose a color that represents your brand identity")
-
-               | Text.InlineCode("Label and Description")
-               | labelAndDescriptionState.ToColorInput()
-                   .Label("Accent Color")
-                   .Description("This color will be used for highlights and call-to-action buttons")
-
-               | Text.InlineCode("Text Variant with Label")
-               | textVariantState.ToColorInput()
-                   .Variant(ColorInputs.Text)
-                   .Label("Text Color")
-                   .Description("Enter a hex color code (e.g., #ff0000) or color name")
-
-               | Text.InlineCode("Picker Variant with Label")
-               | pickerVariantState.ToColorInput()
-                   .Variant(ColorInputs.Picker)
-                   .Label("Background Color")
-                   .Description("Click the color picker to select a background color")
-
-               | Text.InlineCode("Disabled with Label")
-               | disabledState.ToColorInput()
-                   .Label("Disabled Color")
-                   .Description("This input is disabled and cannot be modified")
-                   .Disabled()
-
-               | Text.InlineCode("Invalid with Label")
-               | invalidState.ToColorInput()
-                   .Label("Invalid Color")
-                   .Description("This input has validation errors")
-                   .Invalid("Please enter a valid color value");
     }
 }

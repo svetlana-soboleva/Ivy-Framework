@@ -131,7 +131,6 @@ public class CodeInputApp : SampleBase
             ;
 
         var dataBinding = CreateStringTypeTests();
-        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
 
         return Layout.Vertical()
                | Text.H1("CodeInput")
@@ -141,8 +140,6 @@ public class CodeInputApp : SampleBase
                | thirdGrid
                | Text.H2("Data Binding")
                | dataBinding
-               | Text.H2("Labels and Descriptions")
-               | labelsAndDescriptions
                ;
     }
 
@@ -224,121 +221,5 @@ public class CodeInputApp : SampleBase
                | anyState.ToCodeInput()
                | anyState.ToCodeInput().Language(Languages.Csharp)
                | anyState.ToCodeInput().Language(Languages.Csharp).ShowCopyButton();
-    }
-
-    private object CreateLabelsAndDescriptionsSection()
-    {
-        var labelOnlyState = UseState(
-            """
-            function greet(name) {
-                return `Hello, ${name}!`;
-            }
-            """);
-
-        var descriptionOnlyState = UseState(
-            """
-            {
-                "name": "John Doe",
-                "age": 30,
-                "email": "john@example.com"
-            }
-            """);
-
-        var labelAndDescriptionState = UseState(
-            """
-            SELECT u.name, u.email, p.title
-            FROM users u
-            JOIN posts p ON u.id = p.user_id
-            WHERE u.active = true
-            ORDER BY p.created_at DESC;
-            """);
-
-        var csharpWithLabelState = UseState(
-            """
-            public class Program
-            {
-                public static void Main(string[] args)
-                {
-                    Console.WriteLine("Hello, World!");
-                }
-            }
-            """);
-
-        var htmlWithLabelState = UseState(
-            """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>My Page</title>
-            </head>
-            <body>
-                <h1>Hello World</h1>
-            </body>
-            </html>
-            """);
-
-        var disabledWithLabelState = UseState(
-            """
-            // This code is disabled and cannot be edited
-            const config = {
-                apiUrl: "https://api.example.com",
-                timeout: 5000
-            };
-            """);
-
-        var invalidWithLabelState = UseState(
-            """
-            {
-                "name": "John Doe",
-                "age": 30,
-                "email": "john@example.com"
-                // Missing closing brace
-            """);
-
-        return Layout.Grid().Columns(2)
-               | Text.InlineCode("Example")
-               | Text.InlineCode("CodeInput with Label/Description")
-
-               | Text.InlineCode("Label Only")
-               | labelOnlyState.ToCodeInput()
-                   .Language(Languages.Javascript)
-                   .Label("JavaScript Function")
-
-               | Text.InlineCode("Description Only")
-               | descriptionOnlyState.ToCodeInput()
-                   .Language(Languages.Json)
-                   .Description("Enter a valid JSON object with user information")
-
-               | Text.InlineCode("Label and Description")
-               | labelAndDescriptionState.ToCodeInput()
-                   .Language(Languages.Sql)
-                   .Label("Database Query")
-                   .Description("Write a SQL query to fetch user data with their posts")
-
-               | Text.InlineCode("C# with Label")
-               | csharpWithLabelState.ToCodeInput()
-                   .Language(Languages.Csharp)
-                   .Label("C# Program")
-                   .Description("Enter your C# program code here")
-
-               | Text.InlineCode("HTML with Label")
-               | htmlWithLabelState.ToCodeInput()
-                   .Language(Languages.Html)
-                   .Label("HTML Document")
-                   .Description("Write your HTML markup")
-
-               | Text.InlineCode("Disabled with Label")
-               | disabledWithLabelState.ToCodeInput()
-                   .Language(Languages.Javascript)
-                   .Label("Configuration")
-                   .Description("This configuration is read-only")
-                   .Disabled()
-
-               | Text.InlineCode("Invalid with Label")
-               | invalidWithLabelState.ToCodeInput()
-                   .Language(Languages.Json)
-                   .Label("JSON Data")
-                   .Description("Fix the JSON syntax errors")
-                   .Invalid("Invalid JSON syntax");
     }
 }
