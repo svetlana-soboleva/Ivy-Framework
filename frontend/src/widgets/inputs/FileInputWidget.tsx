@@ -17,8 +17,6 @@ interface FileInput {
 
 interface FileInputWidgetProps {
   id: string;
-  label?: string;
-  description?: string;
   value?: FileInput | FileInput[] | null;
   disabled: boolean;
   invalid?: string;
@@ -33,8 +31,6 @@ interface FileInputWidgetProps {
 
 export const FileInputWidget: React.FC<FileInputWidgetProps> = ({
   id,
-  label,
-  description,
   value,
   disabled,
   invalid,
@@ -201,7 +197,7 @@ export const FileInputWidget: React.FC<FileInputWidgetProps> = ({
       : value.name
     : '';
 
-  const fileInputElement = (
+  return (
     <div
       className="relative"
       style={{ ...getWidth(width) }}
@@ -259,26 +255,6 @@ export const FileInputWidget: React.FC<FileInputWidgetProps> = ({
           </Button>
         )}
       </div>
-    </div>
-  );
-
-  // If no label or description, return just the file input
-  if (!label && !description) {
-    return fileInputElement;
-  }
-
-  // Otherwise, wrap with label and description structure
-  return (
-    <div className="flex flex-col gap-2 flex-1 min-w-0">
-      {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {label}
-        </label>
-      )}
-      {fileInputElement}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
     </div>
   );
 };

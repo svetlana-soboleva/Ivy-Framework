@@ -18,8 +18,6 @@ import { sidebarMenuRef } from '../layouts/sidebar';
 
 interface TextInputWidgetProps {
   id: string;
-  label?: string;
-  description?: string;
   placeholder?: string;
   value?: string;
   variant:
@@ -476,8 +474,6 @@ const SearchVariant: React.FC<{
 
 export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
   id,
-  label,
-  description,
   placeholder,
   value,
   variant,
@@ -561,8 +557,6 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
   const commonProps = useMemo(
     () => ({
       id,
-      label,
-      description,
       placeholder,
       value: localValue,
       disabled,
@@ -575,8 +569,6 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     }),
     [
       id,
-      label,
-      description,
       placeholder,
       localValue,
       disabled,
@@ -589,78 +581,54 @@ export const TextInputWidget: React.FC<TextInputWidgetProps> = ({
     ]
   );
 
-  const renderInput = () => {
-    switch (variant) {
-      case 'Password':
-        return (
-          <PasswordVariant
-            props={commonProps}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            inputRef={inputRef}
-          />
-        );
-      case 'Textarea':
-        return (
-          <TextareaVariant
-            props={commonProps}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            inputRef={inputRef}
-            isFocused={isFocused}
-          />
-        );
-      case 'Search':
-        return (
-          <SearchVariant
-            props={commonProps}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            inputRef={inputRef}
-            isFocused={isFocused}
-          />
-        );
-      default:
-        return (
-          <DefaultVariant
-            type={
-              variant.toLowerCase() as Lowercase<
-                TextInputWidgetProps['variant']
-              >
-            }
-            props={commonProps}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            inputRef={inputRef}
-            isFocused={isFocused}
-          />
-        );
-    }
-  };
-
-  // If no label or description, return the input directly
-  if (!label && !description) {
-    return renderInput();
+  switch (variant) {
+    case 'Password':
+      return (
+        <PasswordVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+        />
+      );
+    case 'Textarea':
+      return (
+        <TextareaVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
+    case 'Search':
+      return (
+        <SearchVariant
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
+    default:
+      return (
+        <DefaultVariant
+          type={
+            variant.toLowerCase() as Lowercase<TextInputWidgetProps['variant']>
+          }
+          props={commonProps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          inputRef={inputRef}
+          isFocused={isFocused}
+        />
+      );
   }
-
-  // Otherwise, wrap with label and description structure
-  return (
-    <div className="flex flex-col gap-2 flex-1 min-w-0">
-      {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {label}
-        </label>
-      )}
-      {renderInput()}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
-    </div>
-  );
 };
 
 export default TextInputWidget;

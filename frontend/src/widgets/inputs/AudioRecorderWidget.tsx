@@ -8,7 +8,6 @@ import { logger } from '@/lib/logger';
 interface AudioRecorderWidgetProps {
   label?: string;
   recordingLabel?: string;
-  description?: string;
   mimeType: string;
   disabled: boolean;
   events: string[];
@@ -20,7 +19,6 @@ interface AudioRecorderWidgetProps {
 export const AudioRecorderWidget: React.FC<AudioRecorderWidgetProps> = ({
   label,
   recordingLabel,
-  description,
   mimeType,
   disabled,
   width,
@@ -134,11 +132,11 @@ export const AudioRecorderWidget: React.FC<AudioRecorderWidgetProps> = ({
       onCancel();
       setRecordingStoppedAt(Date.now());
     };
-  }, [recording, chunkInterval, uploadChunk, mimeType]);
+  }, [recording, chunkInterval, uploadChunk]);
 
   const volumePercent = recording ? Math.min(volume / 255, 1) * 100 : 0;
 
-  const audioRecorderElement = (
+  return (
     <div className="relative" style={{ ...getWidth(width) }}>
       <div
         className={cn(
@@ -195,21 +193,6 @@ export const AudioRecorderWidget: React.FC<AudioRecorderWidgetProps> = ({
           </p>
         )}
       </div>
-    </div>
-  );
-
-  // If no description, return just the audio recorder
-  if (!description) {
-    return audioRecorderElement;
-  }
-
-  // Otherwise, wrap with description structure
-  return (
-    <div className="flex flex-col gap-2 flex-1 min-w-0">
-      {audioRecorderElement}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
     </div>
   );
 };
