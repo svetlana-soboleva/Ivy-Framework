@@ -139,13 +139,7 @@ export const DropDownMenuWidget: React.FC<DropDownMenuWidgetProps> = ({
               )}
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent
-                className="z-[60]"
-                sideOffset={4}
-                alignOffset={-4}
-                avoidCollisions={true}
-                collisionBoundary={[]}
-              >
+              <DropdownMenuSubContent>
                 {renderMenuItems(item.children)}
               </DropdownMenuSubContent>
             </DropdownMenuPortal>

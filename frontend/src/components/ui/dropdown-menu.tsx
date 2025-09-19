@@ -49,9 +49,6 @@ const DropdownMenuSubContent = React.forwardRef<
       className
     )}
     sideOffset={4}
-    alignOffset={-4}
-    avoidCollisions={true}
-    collisionBoundary={[]}
     {...props}
   />
 ));
