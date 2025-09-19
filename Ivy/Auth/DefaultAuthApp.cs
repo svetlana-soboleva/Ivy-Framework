@@ -72,7 +72,7 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
         var auth = this.UseService<IAuthService>();
         var client = this.UseService<IClientProvider>();
 
-        async void Login()
+        async ValueTask Login()
         {
             try
             {
@@ -133,7 +133,7 @@ public class OAuthFlowView(AuthOption option, IState<string?> errorMessage) : Vi
             return new RedirectResult("/");
         });
 
-        async void Login()
+        async ValueTask Login()
         {
             try
             {

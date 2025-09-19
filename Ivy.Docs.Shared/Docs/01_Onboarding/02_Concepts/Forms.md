@@ -319,7 +319,7 @@ public class FormSubmissionExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
@@ -331,7 +331,7 @@ public class FormSubmissionExample : ViewBase
         return Layout.Vertical()
             | formView
             | Layout.Horizontal()
-                | new Button("Send Message").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                | new Button("Send Message").HandleClick(_ => HandleSubmit())
                     .Loading(loading).Disabled(loading)
                 | validationView;
     }
@@ -360,7 +360,7 @@ public class FormStatesExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
@@ -372,7 +372,7 @@ public class FormStatesExample : ViewBase
         return Layout.Vertical()
             | formView
             | Layout.Horizontal()
-                | new Button("Create Order").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                | new Button("Create Order").HandleClick(_ => HandleSubmit())
                     .Loading(loading).Disabled(loading)
                 | validationView
             | Text.Block($"Total: ${order.Value.Quantity * order.Value.UnitPrice:F2}");

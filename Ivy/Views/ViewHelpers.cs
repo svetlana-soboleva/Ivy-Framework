@@ -91,7 +91,7 @@ public static class ViewHelpers
     public static Action<T> HandleError<T>(this Func<T, Task> action, IView view)
     {
         var client = view.Context.UseService<IClientProvider>();
-        return async void (e) =>
+        return async e =>
         {
             try
             {
@@ -118,7 +118,7 @@ public static class ViewHelpers
     public static Action HandleError(this Func<Task> action, IView view)
     {
         var client = view.Context.UseService<IClientProvider>();
-        return async void () =>
+        return async () =>
         {
             try
             {
