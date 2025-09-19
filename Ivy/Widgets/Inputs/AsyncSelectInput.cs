@@ -314,12 +314,10 @@ public static class AsyncSelectInputViewExtensions
     }
 
 
-    /// <summary>
-    /// Sets the blur event handler for the async select input.
-    /// </summary>
-    /// <param name="widget">The async select input to configure.</param>
-    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
-    /// <returns>The configured async select input.</returns>
+    /// <summary>Sets the blur event handler.</summary>
+    /// <param name="widget">The widget to configure.</param>
+    /// <param name="onBlur">The blur event handler.</param>
+    /// <returns>The configured widget.</returns>
     [OverloadResolutionPriority(1)]
     public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
     {
@@ -327,46 +325,38 @@ public static class AsyncSelectInputViewExtensions
         return widget;
     }
 
-    /// <summary>
-    /// Sets the blur event handler for the async select input.
-    /// </summary>
-    /// <param name="widget">The async select input to configure.</param>
-    /// <param name="onBlur">The event handler to call when the input loses focus.</param>
-    /// <returns>A new async select input.</returns>
+    /// <summary>Sets the blur event handler.</summary>
+    /// <param name="widget">The widget to configure.</param>
+    /// <param name="onBlur">The blur event handler.</param>
+    /// <returns>The configured widget.</returns>
     public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Action<Event<IAnyInput>> onBlur)
     {
         return widget.HandleBlur(onBlur.ToValueTask());
     }
 
-    /// <summary>
-    /// Sets a simple blur event handler for the async select input.
-    /// </summary>
-    /// <param name="widget">The async select input to configure.</param>
-    /// <param name="onBlur">The simple action to perform when the input loses focus.</param>
-    /// <returns>A new async select input.</returns>
+    /// <summary>Sets a simple blur event handler.</summary>
+    /// <param name="widget">The widget to configure.</param>
+    /// <param name="onBlur">The action to perform on blur.</param>
+    /// <returns>The configured widget.</returns>
     public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Action onBlur)
     {
         return widget.HandleBlur(_ => { onBlur(); return ValueTask.CompletedTask; });
     }
 
-    /// <summary>
-    /// Sets the label text for the async select input.
-    /// </summary>
-    /// <param name="widget">The async select input to configure.</param>
-    /// <param name="label">The label text to display.</param>
-    /// <returns>The configured async select input.</returns>
+    /// <summary>Sets the label text.</summary>
+    /// <param name="widget">The widget to configure.</param>
+    /// <param name="label">The label text.</param>
+    /// <returns>The configured widget.</returns>
     public static IAnyAsyncSelectInputBase Label(this IAnyAsyncSelectInputBase widget, string label)
     {
         widget.Label = label;
         return widget;
     }
 
-    /// <summary>
-    /// Sets the description text for the async select input.
-    /// </summary>
-    /// <param name="widget">The async select input to configure.</param>
-    /// <param name="description">The description text to display.</param>
-    /// <returns>The configured async select input.</returns>
+    /// <summary>Sets the description text.</summary>
+    /// <param name="widget">The widget to configure.</param>
+    /// <param name="description">The description text.</param>
+    /// <returns>The configured widget.</returns>
     public static IAnyAsyncSelectInputBase Description(this IAnyAsyncSelectInputBase widget, string description)
     {
         widget.Description = description;
