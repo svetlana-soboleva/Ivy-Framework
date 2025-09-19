@@ -319,28 +319,12 @@ public static class AsyncSelectInputViewExtensions
     /// </summary>
     /// <param name="widget">The async select input to configure.</param>
     /// <param name="onBlur">The event handler to call when the input loses focus.</param>
-    /// <returns>A new async select input.</returns>
+    /// <returns>The configured async select input.</returns>
     [OverloadResolutionPriority(1)]
     public static IAnyAsyncSelectInputBase HandleBlur(this IAnyAsyncSelectInputBase widget, Func<Event<IAnyInput>, ValueTask> onBlur)
     {
-        if (widget is AsyncSelectInputView<object> typedWidget)
-        {
-            typedWidget.OnBlur = onBlur;
-            return typedWidget;
-        }
-
-        var widgetType = widget.GetType();
-        if (widgetType.IsGenericType && widgetType.GetGenericTypeDefinition() == typeof(AsyncSelectInputView<>))
-        {
-            var onBlurProperty = widgetType.GetProperty("OnBlur");
-            if (onBlurProperty != null)
-            {
-                onBlurProperty.SetValue(widget, onBlur);
-                return widget;
-            }
-        }
-
-        throw new InvalidOperationException("Unable to set blur handler on async select input");
+        widget.OnBlur = onBlur;
+        return widget;
     }
 
     /// <summary>
@@ -370,27 +354,11 @@ public static class AsyncSelectInputViewExtensions
     /// </summary>
     /// <param name="widget">The async select input to configure.</param>
     /// <param name="label">The label text to display.</param>
-    /// <returns>A new async select input.</returns>
+    /// <returns>The configured async select input.</returns>
     public static IAnyAsyncSelectInputBase Label(this IAnyAsyncSelectInputBase widget, string label)
     {
-        if (widget is AsyncSelectInputView<object> typedWidget)
-        {
-            typedWidget.Label = label;
-            return typedWidget;
-        }
-
-        var widgetType = widget.GetType();
-        if (widgetType.IsGenericType && widgetType.GetGenericTypeDefinition() == typeof(AsyncSelectInputView<>))
-        {
-            var labelProperty = widgetType.GetProperty("Label");
-            if (labelProperty != null)
-            {
-                labelProperty.SetValue(widget, label);
-                return widget;
-            }
-        }
-
-        throw new InvalidOperationException("Unable to set label on async select input");
+        widget.Label = label;
+        return widget;
     }
 
     /// <summary>
@@ -398,27 +366,11 @@ public static class AsyncSelectInputViewExtensions
     /// </summary>
     /// <param name="widget">The async select input to configure.</param>
     /// <param name="description">The description text to display.</param>
-    /// <returns>A new async select input.</returns>
+    /// <returns>The configured async select input.</returns>
     public static IAnyAsyncSelectInputBase Description(this IAnyAsyncSelectInputBase widget, string description)
     {
-        if (widget is AsyncSelectInputView<object> typedWidget)
-        {
-            typedWidget.Description = description;
-            return typedWidget;
-        }
-
-        var widgetType = widget.GetType();
-        if (widgetType.IsGenericType && widgetType.GetGenericTypeDefinition() == typeof(AsyncSelectInputView<>))
-        {
-            var descriptionProperty = widgetType.GetProperty("Description");
-            if (descriptionProperty != null)
-            {
-                descriptionProperty.SetValue(widget, description);
-                return widget;
-            }
-        }
-
-        throw new InvalidOperationException("Unable to set description on async select input");
+        widget.Description = description;
+        return widget;
     }
 }
 
