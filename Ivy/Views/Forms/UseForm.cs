@@ -38,7 +38,7 @@ public static class UseFormExtensions
 
                 if (!isOpen.Value) return null; //shouldn't happen
 
-                async void HandleSubmit()
+                async ValueTask HandleSubmit()
                 {
                     if (await onSubmit())
                     {
@@ -81,7 +81,7 @@ public static class UseFormExtensions
 
                 if (!isOpen.Value) return null; //shouldn't happen
 
-                async void HandleSubmit()
+                async ValueTask HandleSubmit()
                 {
                     if (await onSubmit())
                     {

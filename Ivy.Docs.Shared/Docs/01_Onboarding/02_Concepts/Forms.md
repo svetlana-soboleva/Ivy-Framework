@@ -319,7 +319,7 @@ public class FormSubmissionExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
@@ -360,7 +360,7 @@ public class FormStatesExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
