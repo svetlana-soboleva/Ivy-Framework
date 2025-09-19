@@ -32,32 +32,19 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle';
 import { Sizes } from '@/types/sizes';
 import { cva } from 'class-variance-authority';
 
-const getInputSize = (size: Sizes) => {
-  switch (String(size)) {
-    case 'Small':
-      return 'Small';
-    case 'Medium':
-      return 'Medium';
-    case 'Large':
-      return 'Large';
-    default:
-      return 'Medium';
-  }
-};
-
 // variants for SelectInputWidget container
 const selectContainerVariants = cva(
   'relative border border-input bg-transparent rounded-md shadow-sm focus-within:ring-1 focus-within:ring-ring',
   {
     variants: {
       size: {
-        [Sizes[Sizes.Small]]: 'px-2 py-1',
-        [Sizes[Sizes.Medium]]: 'px-3 py-2',
-        [Sizes[Sizes.Large]]: 'px-4 py-3',
+        Small: 'px-2 py-1',
+        Medium: 'px-3 py-2',
+        Large: 'px-4 py-3',
       },
     },
     defaultVariants: {
-      size: Sizes[Sizes.Medium],
+      size: 'Medium',
     },
   }
 );
@@ -237,7 +224,7 @@ const ToggleOptionItem: React.FC<{
       aria-label={option.label}
       className={cn(
         'hover:text-foreground',
-        sizeClasses[getInputSize(size)],
+        sizeClasses[size],
         isInvalid
           ? cn(
               inputStyles.invalidInput,
@@ -469,7 +456,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                     id={`${id}-${option.value}`}
                     className={cn(
                       'border-input text-input',
-                      CircleSize[getInputSize(size)],
+                      CircleSize[size],
                       stringValue === option.value.toString() && !invalid
                         ? 'border-primary text-primary'
                         : undefined,
@@ -482,7 +469,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                     htmlFor={`${id}-${option.value}`}
                     className={cn(
                       'cursor-pointer',
-                      selectTextVariants[getInputSize(size)],
+                      selectTextVariants[size],
                       stringValue === option.value.toString() && invalid
                         ? inputStyles.invalidInput
                         : undefined
@@ -644,7 +631,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                             className={cn(
                               inputStyles.invalidInput,
                               'bg-destructive/10 border-destructive text-destructive',
-                              selectTextVariants[getInputSize(size)]
+                              selectTextVariants[size]
                             )}
                           />
                         </TooltipTrigger>
@@ -663,7 +650,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                       disabled={disabled}
                       className={cn(
                         'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
-                        selectTextVariants[getInputSize(size)],
+                        selectTextVariants[size],
                         isSelected
                           ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
                           : undefined
@@ -674,7 +661,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                     htmlFor={`${id}-${option.value}`}
                     className={cn(
                       'flex-1 cursor-pointer',
-                      selectTextVariants[getInputSize(size)],
+                      selectTextVariants[size],
                       isInvalid ? inputStyles.invalidInput : undefined
                     )}
                   >

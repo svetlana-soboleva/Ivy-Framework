@@ -13,13 +13,13 @@ const multipleSelectorVariants = cva(
   {
     variants: {
       size: {
-        [Sizes[Sizes.Small]]: 'px-2 py-1 text-xs',
-        [Sizes[Sizes.Medium]]: 'px-3 py-2 text-sm',
-        [Sizes[Sizes.Large]]: 'px-4 py-3 text-base',
+        Small: 'px-2 py-1 text-xs',
+        Medium: 'px-3 py-2 text-sm',
+        Large: 'px-4 py-3 text-base',
       },
     },
     defaultVariants: {
-      size: Sizes[Sizes.Medium],
+      size: 'Medium',
     },
   }
 );
@@ -28,13 +28,13 @@ const multipleSelectorVariants = cva(
 const menuItemVariants = cva('cursor-pointer', {
   variants: {
     size: {
-      [Sizes[Sizes.Small]]: 'px-2 py-1 text-xs',
-      [Sizes[Sizes.Medium]]: 'px-3 py-2 text-sm',
-      [Sizes[Sizes.Large]]: 'px-4 py-3 text-base',
+      Small: 'px-2 py-1 text-xs',
+      Medium: 'px-3 py-2 text-sm',
+      Large: 'px-4 py-3 text-base',
     },
   },
   defaultVariants: {
-    size: Sizes[Sizes.Medium],
+    size: 'Medium',
   },
 });
 
@@ -42,13 +42,13 @@ const menuItemVariants = cva('cursor-pointer', {
 const badgeVariants = cva('hover:bg-secondary', {
   variants: {
     size: {
-      [Sizes[Sizes.Small]]: 'text-xs',
-      [Sizes[Sizes.Medium]]: 'text-sm',
-      [Sizes[Sizes.Large]]: 'text-base',
+      Small: 'text-xs',
+      Medium: 'text-sm',
+      Large: 'text-base',
     },
   },
   defaultVariants: {
-    size: Sizes[Sizes.Medium],
+    size: 'Medium',
   },
 });
 
@@ -56,13 +56,13 @@ const badgeVariants = cva('hover:bg-secondary', {
 const closeIconVariants = cva('text-muted-foreground hover:text-foreground', {
   variants: {
     size: {
-      [Sizes[Sizes.Small]]: 'h-3 w-3',
-      [Sizes[Sizes.Medium]]: 'h-4 w-4',
-      [Sizes[Sizes.Large]]: 'h-5 w-5',
+      Small: 'h-3 w-3',
+      Medium: 'h-4 w-4',
+      Large: 'h-5 w-5',
     },
   },
   defaultVariants: {
-    size: Sizes[Sizes.Medium],
+    size: 'Medium',
   },
 });
 
