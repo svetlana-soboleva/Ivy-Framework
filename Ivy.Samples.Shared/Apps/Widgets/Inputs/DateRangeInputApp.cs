@@ -46,6 +46,9 @@ public class DateRangeInputApp : SampleBase
                 .TestId("daterange-input-dateonly-nullable-binding")
             | Text.InlineCode($"({nullableDateOnlyRangeState.Value.Item1?.ToString("yyyy-MM-dd") ?? "null"}, {nullableDateOnlyRangeState.Value.Item2?.ToString("yyyy-MM-dd") ?? "null"})");
 
+        // Labels and descriptions section
+        var labelsAndDescriptions = CreateLabelsAndDescriptionsSection();
+
         // Current values section
         var currentValues = Layout.Vertical()
             | Text.H3("Current Values")
@@ -58,6 +61,39 @@ public class DateRangeInputApp : SampleBase
             | variantsGrid
             | Text.H2("Data Binding")
             | dataBindingGrid
+            | Text.H2("Labels and Descriptions")
+            | labelsAndDescriptions
             | currentValues;
+    }
+
+    private object CreateLabelsAndDescriptionsSection()
+    {
+        var vacationRangeState = UseState<(DateOnly?, DateOnly?)>(() => (null, null));
+        var projectRangeState = UseState<(DateOnly, DateOnly)>(() => (DateOnly.FromDateTime(DateTime.Today.AddDays(-7)), DateOnly.FromDateTime(DateTime.Today)));
+        var reportRangeState = UseState<(DateOnly?, DateOnly?)>(() => (null, null));
+        var eventRangeState = UseState<(DateOnly, DateOnly)>(() => (DateOnly.FromDateTime(DateTime.Today), DateOnly.FromDateTime(DateTime.Today.AddDays(3))));
+
+        return Layout.Vertical()
+               | (Layout.Vertical()
+                  | vacationRangeState.ToDateRangeInput()
+                    .Label("Vacation Period")
+                    .Description("Select your vacation start and end dates. You can choose up to 30 consecutive days")
+                    .Placeholder("Choose vacation dates")
+
+                  | projectRangeState.ToDateRangeInput()
+                    .Label("Project Timeline")
+                    .Description("Define the project start and end dates. This will be used for milestone planning and resource allocation")
+                    .Placeholder("Select project duration")
+
+                  | reportRangeState.ToDateRangeInput()
+                    .Label("Report Date Range")
+                    .Description("Choose the date range for generating the monthly report. Leave empty to use default range")
+                    .Placeholder("Select report period")
+
+                  | eventRangeState.ToDateRangeInput()
+                    .Label("Event Duration")
+                    .Description("Set the start and end dates for your event. Minimum duration is 1 day")
+                    .Placeholder("Choose event dates")
+               );
     }
 }
