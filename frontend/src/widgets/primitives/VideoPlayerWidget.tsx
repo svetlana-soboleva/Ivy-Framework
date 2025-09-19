@@ -102,9 +102,8 @@ export const VideoPlayerWidget: React.FC<VideoPlayerWidgetProps> = ({
       <iframe
         id={id}
         style={styles}
-        src={embedUrl + '?' + params.toString()}
+        src={`${embedUrl}?${params.toString()}`}
         title="YouTube video player"
-        frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         className="w-full rounded"
