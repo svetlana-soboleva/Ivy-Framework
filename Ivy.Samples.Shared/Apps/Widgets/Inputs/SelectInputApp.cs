@@ -311,7 +311,8 @@ public class SelectInputApp : SampleBase
         var colorStateSelect = UseState<Colors[]>([]);
         var colorStateList = UseState<Colors[]>([]);
         var colorStateToggle = UseState<Colors[]>([]);
-        var colorState = UseState((Colors?)null);
+        var colorState = UseState(Colors.Red);
+        var colorStateSelectList = UseState(Colors.Red);
         var colorOptions = typeof(Colors).ToOptions();
 
         return Layout.Grid().Columns(4)
@@ -328,6 +329,19 @@ public class SelectInputApp : SampleBase
                     .ToSelectInput(colorOptions)
                | colorState
                     .ToSelectInput(colorOptions)
+                    .Large()
+
+               | Text.InlineCode("SelectInputs")
+               | colorStateSelectList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+                    .Small()
+               | colorStateSelectList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
+               | colorStateSelectList
+                    .ToSelectInput(colorOptions)
+                    .Variant(SelectInputs.List)
                     .Large()
 
                | Text.InlineCode("SelectInputs.Select")
