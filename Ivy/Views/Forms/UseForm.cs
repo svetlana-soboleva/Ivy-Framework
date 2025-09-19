@@ -106,5 +106,6 @@ public static class UseFormExtensions
                 ).Width(width ?? Dialog.DefaultWidth);
             }
         );
+
     }
 }
