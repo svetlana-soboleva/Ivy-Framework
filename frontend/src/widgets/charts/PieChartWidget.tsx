@@ -1,18 +1,12 @@
 import React from 'react';
-import {
-  Legend,
-  LegendProps,
-  Pie,
-  PieChart,
-  Cell,
-  LabelList,
-  Label,
-} from 'recharts';
+import { LegendProps, Pie, PieChart, Cell, LabelList, Label } from 'recharts';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from '@/components/ui/chart';
 import {
   ColorScheme,
@@ -70,7 +64,15 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
         accessibilityLayer
       >
-        {legend && <Legend {...generateLegendProps(legend)} />}
+        {legend && (
+          <ChartLegend
+            {...generateLegendProps(legend)}
+            verticalAlign="bottom"
+            align="center"
+            layout="horizontal"
+            content={<ChartLegendContent splitThreshold={6} />}
+          />
+        )}
 
         {tooltip && (
           <ChartTooltip
