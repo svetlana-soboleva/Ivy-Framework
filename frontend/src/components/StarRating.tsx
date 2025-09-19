@@ -14,8 +14,6 @@ interface StarRatingProps {
   className?: string;
   disabled?: boolean;
   invalid?: string;
-  label?: string;
-  description?: string;
 }
 
 export function StarRating({
@@ -26,8 +24,6 @@ export function StarRating({
   className,
   disabled = false,
   invalid,
-  label,
-  description,
 }: StarRatingProps) {
   const [hover, setHover] = useState(0);
 
@@ -42,7 +38,7 @@ export function StarRating({
     lg: 'h-8 w-8',
   };
 
-  const starElement = (
+  return (
     <div className="flex items-center gap-2">
       <div
         className={cn(
@@ -92,26 +88,6 @@ export function StarRating({
         )}
       </div>
       {invalid && <InvalidIcon message={invalid} />}
-    </div>
-  );
-
-  // If no label or description, return just the stars
-  if (!label && !description) {
-    return starElement;
-  }
-
-  // Otherwise, wrap with label and description structure
-  return (
-    <div className="flex flex-col gap-2 flex-1 min-w-0">
-      {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {label}
-        </label>
-      )}
-      {starElement}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
     </div>
   );
 }

@@ -34,8 +34,6 @@ const TYPE_LIMITS = {
 
 interface NumberInputBaseProps {
   id: string;
-  label?: string;
-  description?: string;
   placeholder?: string;
   value: number | null;
   formatStyle?: FormatStyle;
@@ -117,8 +115,6 @@ const SliderVariant = memo(
     currency,
     size = Sizes.Medium,
     onValueChange,
-    label,
-    description,
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     // Local state for live feedback (optional, fallback to prop value)
@@ -150,7 +146,7 @@ const SliderVariant = memo(
     // For slider, we need a numeric value - use 0 as fallback for null
     const sliderValue = localValue ?? 0;
 
-    const sliderElement = (
+    return (
       <div className="relative w-full flex-1 flex flex-col gap-1 pt-6 pb-2 my-auto justify-center">
         <Slider
           min={min}
@@ -182,26 +178,6 @@ const SliderVariant = memo(
         )}
       </div>
     );
-
-    // If no label or description, return just the slider
-    if (!label && !description) {
-      return sliderElement;
-    }
-
-    // Otherwise, wrap with label and description structure
-    return (
-      <div className="flex flex-col gap-2 flex-1 min-w-0">
-        {label && (
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            {label}
-          </label>
-        )}
-        {sliderElement}
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-      </div>
-    );
   }
 );
 
@@ -222,8 +198,6 @@ const NumberVariant = memo(
     onValueChange,
     currency,
     size = Sizes.Medium,
-    label,
-    description,
     'data-testid': dataTestId,
   }: NumberInputBaseProps) => {
     const formatConfig = useMemo(
@@ -250,7 +224,7 @@ const NumberVariant = memo(
       [onValueChange, nullable]
     );
 
-    const numberElement = (
+    return (
       <div className="relative w-full flex-1">
         <NumberInput
           min={min}
@@ -287,26 +261,6 @@ const NumberVariant = memo(
             {/* Invalid icon - rightmost */}
             {invalid && <InvalidIcon message={invalid} />}
           </div>
-        )}
-      </div>
-    );
-
-    // If no label or description, return just the number input
-    if (!label && !description) {
-      return numberElement;
-    }
-
-    // Otherwise, wrap with label and description structure
-    return (
-      <div className="flex flex-col gap-2 flex-1 min-w-0">
-        {label && (
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            {label}
-          </label>
-        )}
-        {numberElement}
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
         )}
       </div>
     );

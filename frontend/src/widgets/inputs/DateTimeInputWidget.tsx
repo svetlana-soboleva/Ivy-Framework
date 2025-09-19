@@ -19,8 +19,6 @@ type VariantType = 'Date' | 'DateTime' | 'Time';
 
 interface DateTimeInputWidgetProps {
   id: string;
-  label?: string;
-  description?: string;
   value?: string;
   placeholder?: string;
   disabled: boolean;
@@ -33,8 +31,6 @@ interface DateTimeInputWidgetProps {
 
 interface BaseVariantProps {
   id: string;
-  label?: string;
-  description?: string;
   value?: string;
   placeholder?: string;
   disabled: boolean;
@@ -477,8 +473,6 @@ const VariantComponents = {
 
 export const DateTimeInputWidget: React.FC<DateTimeInputWidgetProps> = ({
   id,
-  label,
-  description,
   value,
   placeholder,
   disabled = false,
@@ -523,7 +517,7 @@ export const DateTimeInputWidget: React.FC<DateTimeInputWidgetProps> = ({
 
   const VariantComponent = useMemo(() => VariantComponents[variant], [variant]);
 
-  const dateTimeElement = (
+  return (
     <VariantComponent
       id={id}
       value={normalizedValue}
@@ -536,25 +530,5 @@ export const DateTimeInputWidget: React.FC<DateTimeInputWidgetProps> = ({
       onTimeChange={handleTimeChange}
       data-testid={dataTestId}
     />
-  );
-
-  // If no label or description, return just the date/time input
-  if (!label && !description) {
-    return dateTimeElement;
-  }
-
-  // Otherwise, wrap with label and description structure
-  return (
-    <div className="flex flex-col gap-2 flex-1 min-w-0">
-      {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {label}
-        </label>
-      )}
-      {dateTimeElement}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
-    </div>
   );
 };
