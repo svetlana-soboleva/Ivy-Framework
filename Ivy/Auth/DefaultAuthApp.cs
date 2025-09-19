@@ -72,7 +72,7 @@ public class PasswordEmailFlowView(IState<string?> errorMessage) : ViewBase
         var auth = this.UseService<IAuthService>();
         var client = this.UseService<IClientProvider>();
 
-        async void Login()
+        async ValueTask Login()
         {
             try
             {
