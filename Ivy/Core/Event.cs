@@ -30,32 +30,3 @@ public class Event<TSender, TValue>(string eventName, TSender sender, TValue val
     /// </summary>
     public TValue Value { get; } = value;
 }
-
-/// <summary>
-/// Provides extension methods for converting action handlers to event handlers.
-/// </summary>
-public static class EventExtensions
-{
-    /// <summary>
-    /// Converts a simple action handler to an event handler that ignores the event details.
-    /// </summary>
-    /// <typeparam name="TSender">The type of the event sender.</typeparam>
-    /// <param name="handler">The action handler to convert, or null if no handler is needed.</param>
-    /// <returns>An event handler that invokes the original action when called.</returns>
-    public static Action<Event<TSender>> ToEventHandler<TSender>(this Action? handler)
-    {
-        return _ => handler?.Invoke();
-    }
-
-    /// <summary>
-    /// Converts a value-based action handler to an event handler that extracts the value.
-    /// </summary>
-    /// <typeparam name="TSender">The type of the event sender.</typeparam>
-    /// <typeparam name="TValue">The type of the event value.</typeparam>
-    /// <param name="handler">The value-based action handler to convert.</param>
-    /// <returns>An event handler that extracts the value and invokes the original action.</returns>
-    public static Action<Event<TSender, TValue>> ToEventHandler<TSender, TValue>(this Action<TValue> handler)
-    {
-        return e => handler(e.Value);
-    }
-}

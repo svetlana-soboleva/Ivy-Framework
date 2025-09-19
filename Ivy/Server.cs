@@ -1,6 +1,4 @@
 using Ivy.Helpers;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,7 +7,6 @@ using Ivy.Auth;
 using Ivy.Chrome;
 using Ivy.Connections;
 using Ivy.Core;
-using Ivy.Hooks;
 using Ivy.Themes;
 using Ivy.Views;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +32,7 @@ public record ServerArgs
     public string? Args { get; set; } = null;
     public string? DefaultAppId { get; set; } = null;
     public bool Silent { get; set; } = false;
+    public bool Describe { get; set; } = false;
     public string? MetaTitle { get; set; } = null;
     public string? MetaDescription { get; set; } = null;
     public Assembly? AssetAssembly { get; set; } = null;
@@ -250,18 +248,24 @@ public class Server
             cts.Cancel();
         };
 
+        if (!_args.Verbose)
+        {
+            // In production mode, prevent termination from unhandled exceptions
+            AppDomain.CurrentDomain.SetData("HACK_SKIP_THROW_UNOBSERVED_TASK_EXCEPTIONS", true);
+        }
+
         // Handle unobserved task exceptions to prevent process termination
         TaskScheduler.UnobservedTaskException += (sender, e) =>
         {
-            Console.WriteLine($"[ERROR] Unobserved task exception: {e.Exception}");
+            Console.WriteLine($@"[CRITICAL] Unobserved Task Exception: {e.Exception}");
             e.SetObserved(); // Prevents process termination
         };
 
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
             var ex = (Exception)e.ExceptionObject;
-            Console.WriteLine($"[CRITICAL] Unhandled domain exception - IsTerminating: {e.IsTerminating}");
-            Console.WriteLine($"[CRITICAL] Exception: {ex}");
+            Console.WriteLine($@"[CRITICAL] Unhandled Domain Exception - IsTerminating: {e.IsTerminating}");
+            Console.WriteLine($@"[CRITICAL] Exception: {ex}");
         };
 
 #if (DEBUG)
@@ -339,19 +343,22 @@ public class Server
 
         builder.WebHost.UseUrls($"http://*:{_args.Port}");
 
-        builder.Services.AddSignalR();
+        builder.Services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = _args.Verbose;
+        });
         builder.Services.AddSingleton(this);
         builder.Services.AddSingleton<IClientNotifier, ClientNotifier>();
         builder.Services.AddControllers()
             .AddApplicationPart(Assembly.Load("Ivy"))
             .AddControllersAsServices();
-        builder.Services.AddSingleton<IContentBuilder>(_contentBuilder ?? new DefaultContentBuilder());
+        builder.Services.AddSingleton(_contentBuilder ?? new DefaultContentBuilder());
         builder.Services.AddSingleton(sessionStore);
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddHealthChecks();
 
         // Register theme service if not already registered
-        if (!Services.Any(s => s.ServiceType == typeof(IThemeService)))
+        if (Services.All(s => s.ServiceType != typeof(IThemeService)))
         {
             Services.AddSingleton<IThemeService, ThemeService>();
         }
@@ -454,6 +461,13 @@ public class Server
             }
         });
 
+        if (_args.Describe)
+        {
+            var description = ServerDescription.Gather(this, app.Services);
+            Console.WriteLine(description.ToYaml());
+            return;
+        }
+
         try
         {
             await app.StartAsync(cts.Token);
@@ -486,14 +500,14 @@ public static class WebApplicationExtensions
 
                 //Inject IVY_LICENSE:
                 var configuration = app.Services.GetRequiredService<IConfiguration>();
-                var ivyLicense = configuration["IVY_LICENSE"] ?? "";
+                var ivyLicense = configuration["Ivy:License"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicense))
                 {
                     var ivyLicenseTag = $"<meta name=\"ivy-license\" content=\"{ivyLicense}\" />";
                     html = html.Replace("</head>", $"  {ivyLicenseTag}\n</head>");
                 }
 #if DEBUG
-                var ivyLicensePublicKey = configuration["IVY_LICENSE_PUBLIC_KEY"] ?? "";
+                var ivyLicensePublicKey = configuration["Ivy:LicensePublicKey"] ?? "";
                 if (!string.IsNullOrEmpty(ivyLicensePublicKey))
                 {
                     var ivyLicensePublicKeyTag =
@@ -604,7 +618,8 @@ public static class IvyServerUtils
             Browse = parser.GetValue(parsedArgs, "browse", false),
             Args = parser.GetValue<string?>(parsedArgs, "args", null),
             DefaultAppId = parser.GetValue<string?>(parsedArgs, "app", null),
-            Silent = parser.GetValue(parsedArgs, "silent", false)
+            Silent = parser.GetValue(parsedArgs, "silent", false),
+            Describe = parser.GetValue(parsedArgs, "describe", false)
         };
 #if DEBUG
         serverArgs = serverArgs with { FindAvailablePort = parser.GetValue(parsedArgs, "find-available-port", true) };

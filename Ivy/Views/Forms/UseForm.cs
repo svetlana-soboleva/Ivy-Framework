@@ -38,7 +38,7 @@ public static class UseFormExtensions
 
                 if (!isOpen.Value) return null; //shouldn't happen
 
-                async void HandleSubmit()
+                async ValueTask HandleSubmit()
                 {
                     if (await onSubmit())
                     {
@@ -48,7 +48,7 @@ public static class UseFormExtensions
 
                 var layout = new FooterLayout(
                     Layout.Horizontal().Gap(2)
-                        | new Button(submitTitle ?? formBuilder.SubmitTitle).HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                        | new Button(submitTitle ?? formBuilder.SubmitTitle).HandleClick(_ => HandleSubmit())
                             .Loading(loading).Disabled(loading)
                         | new Button("Cancel").Variant(ButtonVariant.Outline).HandleClick(_ => isOpen.Set(false))
                         | validationView,
@@ -81,7 +81,7 @@ public static class UseFormExtensions
 
                 if (!isOpen.Value) return null; //shouldn't happen
 
-                async void HandleSubmit()
+                async ValueTask HandleSubmit()
                 {
                     if (await onSubmit())
                     {
@@ -100,11 +100,12 @@ public static class UseFormExtensions
                     new DialogFooter(
                         validationView,
                         new Button("Cancel", _ => isOpen.Value = false, variant: ButtonVariant.Outline),
-                        new Button(submitTitle ?? formBuilder.SubmitTitle).HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                        new Button(submitTitle ?? formBuilder.SubmitTitle).HandleClick(_ => HandleSubmit())
                             .Loading(loading).Disabled(loading)
                     )
                 ).Width(width ?? Dialog.DefaultWidth);
             }
         );
+
     }
 }

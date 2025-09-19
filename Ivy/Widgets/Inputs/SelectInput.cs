@@ -74,6 +74,7 @@ public record SelectInput<TValue> : SelectInputBase, IInput<TValue>, IAnySelectI
     /// <summary>
     /// Initializes a new select input bound to a state object for automatic value synchronization.
     /// </summary>
+    /// <param name="state">The state object to bind the select input to.</param>
     /// <param name="options">The collection of options available for selection.</param>
     /// <param name="placeholder">Optional placeholder text displayed when no option is selected.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
@@ -165,7 +166,7 @@ public static class SelectInputExtensions
     /// Creates a select input from a state object with automatic type detection and intelligent defaults.
     /// </summary>
     /// <param name="state">The state object to bind to.</param>
-    /// <param name="options">Optional collection of options; if null, attempts automatic generation for enums and collections.
+    /// <param name="options">Optional collection of options; if null, attempts automatic generation for enums and collections.</param>
     /// <param name="placeholder">Optional placeholder text displayed when no option is selected.</param>
     /// <param name="disabled">Whether the input should be disabled initially.</param>
     /// <param name="variant">The visual variant of the select input.</param>

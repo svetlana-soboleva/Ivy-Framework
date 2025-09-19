@@ -1,4 +1,4 @@
-﻿using Ivy.Charts;
+using Ivy.Charts;
 using Ivy.Shared;
 using Ivy.Views.Charts;
 

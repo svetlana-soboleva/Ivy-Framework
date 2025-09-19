@@ -30,11 +30,11 @@ public class BasicAuthProvider : IAuthProvider
             .AddUserSecrets(Assembly.GetEntryAssembly()!)
             .Build();
 
-        _secret = configuration["JWT_SECRET"] ?? throw new Exception("JWT_SECRET is required");
-        _issuer = configuration["JWT_ISSUER"] ?? "ivy";
-        _audience = configuration["JWT_AUDIENCE"] ?? "ivy-app";
+        _secret = configuration["BasicAuth:JwtSecret"] ?? throw new Exception("BasicAuth:JwtSecret is required");
+        _issuer = configuration["BasicAuth:JwtIssuer"] ?? "ivy";
+        _audience = configuration["BasicAuth:JwtAudience"] ?? "ivy-app";
 
-        var users = configuration.GetSection("USERS").Value ?? throw new Exception("USERS is required");
+        var users = configuration.GetSection("BasicAuth:Users").Value ?? throw new Exception("BasicAuth:Users is required");
         foreach (var user in users.Split(';'))
         {
             var parts = user.Split(':');

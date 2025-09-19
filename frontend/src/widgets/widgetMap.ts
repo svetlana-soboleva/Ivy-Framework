@@ -41,7 +41,7 @@ export const widgetMap = {
   'Ivy.Spacer': Primitives.SpacerWidget,
   'Ivy.Loading': Primitives.LoadingWidget,
   'Ivy.AppHost': Primitives.AppHostWidget,
-  'Ivy.Audio': Primitives.AudioWidget,
+  'Ivy.Audio': Primitives.AudioPlayerWidget,
 
   // Widgets
   'Ivy.Article': Widgets.ArticleWidget,
@@ -90,7 +90,7 @@ export const widgetMap = {
     () => import('@/widgets/inputs/code/CodeInputWidget')
   ),
   'Ivy.AudioRecorder': React.lazy(
-    () => import('@/widgets/AudioRecorderWidget')
+    () => import('@/widgets/inputs/AudioRecorderWidget')
   ),
 
   // Forms

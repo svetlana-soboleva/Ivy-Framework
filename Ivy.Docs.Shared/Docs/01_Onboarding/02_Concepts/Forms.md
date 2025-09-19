@@ -172,9 +172,9 @@ public class LayoutControlExample : ViewBase
         var address = UseState(() => new AddressModel("", "", "", "", ""));
         
         return address.ToForm()
-            .Place(m => m.Street)                    // First column
-            .Place(1, m => m.City, m => m.State)    // Second column, same row
-            .Place(1, m => m.ZipCode, m => m.Country) // Second column, same row
+            .Place(m => m.Street)                    // Single field spans full width
+            .Place(true, m => m.City, m => m.State)  // Two fields side-by-side, sharing row width
+            .Place(true, m => m.ZipCode, m => m.Country) // Two fields side-by-side, sharing row width
             .Label(m => m.Street, "Street Address")
             .Label(m => m.City, "City")
             .Label(m => m.State, "State/Province")
@@ -319,7 +319,7 @@ public class FormSubmissionExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
@@ -331,7 +331,7 @@ public class FormSubmissionExample : ViewBase
         return Layout.Vertical()
             | formView
             | Layout.Horizontal()
-                | new Button("Send Message").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                | new Button("Send Message").HandleClick(_ => HandleSubmit())
                     .Loading(loading).Disabled(loading)
                 | validationView;
     }
@@ -360,7 +360,7 @@ public class FormStatesExample : ViewBase
         
         var (onSubmit, formView, validationView, loading) = formBuilder.UseForm(this.Context);
         
-        async void HandleSubmit()
+        async ValueTask HandleSubmit()
         {
             if (await onSubmit())
             {
@@ -372,7 +372,7 @@ public class FormStatesExample : ViewBase
         return Layout.Vertical()
             | formView
             | Layout.Horizontal()
-                | new Button("Create Order").HandleClick(new Action(HandleSubmit).ToEventHandler<Button>())
+                | new Button("Create Order").HandleClick(_ => HandleSubmit())
                     .Loading(loading).Disabled(loading)
                 | validationView
             | Text.Block($"Total: ${order.Value.Quantity * order.Value.UnitPrice:F2}");

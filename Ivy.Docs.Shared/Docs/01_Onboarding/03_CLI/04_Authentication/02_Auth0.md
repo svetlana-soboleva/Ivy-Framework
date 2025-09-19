@@ -53,6 +53,7 @@ In your application settings, copy these values from the Basic Information secti
 You'll need to enable the specific authentication options you want to use in your Auth0 tenant:
 
 #### Email and Password
+
 1. **Go to Authentication > Database** in the Auth0 Dashboard: ![Auth0 Database](assets/auth0_database.webp "Auth0 Database")
 2. **Click on the "Username-Password-Authentication" connection**: ![Auth0 Database Connections](assets/auth0_database_connections.webp "Auth0 Database Connections")
 3. **Go to the "Applications" tab and ensure that the connection is enabled on your application**: ![Auth0 Connection Enabled](assets/auth0_connection_enabled.webp "Auth0 Connection Enabled")
@@ -63,6 +64,7 @@ You'll need to enable the specific authentication options you want to use in you
 ##### Adding Users for Email and Password Authentication
 
 Once you've enabled the "Username-Password-Authentication" connection, you'll need to add users. The simplest way to do this is in the Auth0 Dashboard:
+
 1. **Go to User Management > Users** in the Auth0 Dashboard
 2. **Click "Create User"**, then click **"Create via UI"** in the dropdown that appears
 3. **Select the "Username-Password-Authentication" connection**
@@ -73,12 +75,15 @@ Once you've enabled the "Username-Password-Authentication" connection, you'll ne
 For more information about user creation and management, see Auth0's [Manage Users documentation](https://auth0.com/docs/manage-users).
 
 #### Google
+
 First, go to Authentication > Social in the Auth0 Dashboard. If "google-oauth2" is already listed, configure it:
+
 1. **Enter your Google Client ID and Client Secret** (from Google Cloud Console)
 2. **Enable "Offline Access"** if you want to allow users to remain logged in for an extended period of time
 3. **Enable the connection** for your application in the "Applications" tab
 
 Otherwise, create and configure the connection:
+
 1. **Click "Create Connection"**
 2. **Select "Google / Gmail" from the list of social providers**
 3. **Click "Continue"**
@@ -91,6 +96,7 @@ Otherwise, create and configure the connection:
 For more information on setting up Google authentication, see Auth0's [Google documentation](https://marketplace.auth0.com/integrations/google-social-connection).
 
 #### GitHub
+
 1. **Go to Authentication > Social** in the Auth0 Dashboard
 2. **Click "Create Connection"**
 3. **Select "GitHub" from the list of social providers**
@@ -105,6 +111,7 @@ For more information on setting up Google authentication, see Auth0's [Google do
 For more information on setting up GitHub authentication, see Auth0's [GitHub documentation](https://marketplace.auth0.com/integrations/github-social-connection).
 
 #### Microsoft
+
 1. **Go to Authentication > Social** in the Auth0 Dashboard
 2. **Click "Create Connection"**
 3. **Select "Microsoft Account" from the list of social providers**
@@ -119,6 +126,7 @@ For more information on setting up GitHub authentication, see Auth0's [GitHub do
 For more information on setting up Microsoft authentication, see Auth0's [Microsoft documentation](https://marketplace.auth0.com/integrations/microsoft-account-social-connection).
 
 #### Apple
+
 1. **Go to Authentication > Social** in the Auth0 Dashboard
 2. **Click "Create Connection"**
 3. **Select "Apple" from the list of social providers**
@@ -133,6 +141,7 @@ For more information on setting up Microsoft authentication, see Auth0's [Micros
 For more information on setting up Apple authentication, see Auth0's [Apple documentation](https://marketplace.auth0.com/integrations/apple-social-connection).
 
 #### Twitter/X
+
 1. **Go to Authentication > Social** in the Auth0 Dashboard
 2. **Click "Create Connection"**
 3. **Select "Twitter" from the list of social providers**
@@ -161,6 +170,7 @@ You will be prompted to provide the following Auth0 configuration:
 - **Audience**: API identifier for securing API access
 
 Your credentials will be stored securely in .NET user secrets. You will then be prompted to choose one or more authentication options to support, from the following list:
+
 - **E-mail and password**
 - **Google**
 - **GitHub**
@@ -176,41 +186,46 @@ Ivy then finishes configuring your application automatically:
 2. Dynamically generates and adds the appropriate `UseAuth<Auth0AuthProvider>()` call to your `Program.cs` based on your selected options (e.g., if you select Email/Password and Google, it generates: `server.UseAuth<Auth0AuthProvider>(c => c.UseEmailPassword().UseGoogle());`).
 3. Adds `Ivy.Auth.Auth0` to your global usings.
 
-### Connection String Format
+### Advanced Configuration
 
-To skip the interactive prompts, you can provide configuration via a connection string parameter:
+#### Connection Strings
+
+To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
 >ivy auth add --provider Auth0 --connection-string "AUTH0_DOMAIN=your-domain.auth0.com;AUTH0_CLIENT_ID=your-client-id;AUTH0_CLIENT_SECRET=your-client-secret"
 ```
 
-The connection string uses the following parameters:
+For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
+
+#### Manual Configuration
+
+When deploying an Ivy project without using `ivy deploy`, your local .NET user secrets are not automatically transferred. In that case, you can configure basic auth by setting environment variables or .NET user secrets. See [Configuration Parameters](#configuration-parameters) below.
+
+> **Note:** If configuration is present in both .NET user secrets and environment variables, Ivy will use the values in **.NET user secrets over environment variables**.
+
+For more information, see [Authentication Overview](Overview.md).
+
+#### Configuration Parameters
+
+The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
 - **AUTH0_DOMAIN**: Required. Your Auth0 tenant domain.
 - **AUTH0_CLIENT_ID**: Required. Your Auth0 application's client ID.
 - **AUTH0_CLIENT_SECRET**: Required. Your Auth0 application's client secret.
 - **AUTH0_AUDIENCE**: Required. API identifier for securing API access.
 
-### Advanced Configuration
-
-The following parameters can be manually set via .NET user secrets or environment variables:
-
-- **AUTH0_DOMAIN**: Your Auth0 tenant domain. Set by `ivy auth add`.
-- **AUTH0_CLIENT_ID**: Your Auth0 application's client ID. Set by `ivy auth add`.
-- **AUTH0_CLIENT_SECRET**: Your Auth0 application's client secret. Set by `ivy auth add`.
-- **AUTH0_AUDIENCE**: API identifier for API authentication. Set by `ivy auth add`.
-
-If configuration is present in both .NET user secrets and environment variables, Ivy will use the values in .NET user secrets. For more information, see [Authentication Overview](Overview.md).
-
 ## Authentication Flow
 
 ### Email/Password Flow
+
 1. User enters email and password directly in your Ivy application
 2. Ivy sends credentials to Auth0 for validation
 3. Auth0 validates credentials and returns access tokens
 4. User is authenticated and can access your Ivy application
 
 ### Social Login Flow
+
 1. User clicks a social login button in your application
 2. User is redirected to the social provider (Google, Apple, etc.)
 3. User authenticates with the social provider
@@ -237,21 +252,25 @@ Key features of the Auth0 provider:
 ### Common Issues
 
 **Invalid Client Credentials**
+
 - Verify Client ID, Client Secret and other required values are correct in your Auth0 configuration
 - Check that credentials haven't been regenerated in Auth0 Dashboard
 - If using connection strings, ensure the format is correct
 
 **Callback URL Mismatch**
+
 - Verify Allowed Callback URLs in Auth0 Dashboard include your application's callback URL
 - Check that the callback URL matches your application URL exactly
 - Ensure HTTPS is used in production
 
 **Authentication Failed**
+
 - Check that your Auth0 application is properly configured
 - Verify social connections are enabled and configured in Auth0 Dashboard
 - Ensure users exist and are not blocked in Auth0 Dashboard
 
 **Token Issues**
+
 - Verify audience and issuer claims
 - Ensure refresh tokens are working properly for seamless session management
 
