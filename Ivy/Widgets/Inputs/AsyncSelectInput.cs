@@ -371,7 +371,7 @@ public static class AsyncSelectInputViewExtensions
     /// <param name="widget">The async select input to configure.</param>
     /// <param name="label">The label text to display.</param>
     /// <returns>A new async select input.</returns>
-    public static IAnyAsyncSelectInputBase Label(this IAnyAsyncSelectInputBase widget, string? label)
+    public static IAnyAsyncSelectInputBase Label(this IAnyAsyncSelectInputBase widget, string label)
     {
         if (widget is AsyncSelectInputView<object> typedWidget)
         {
@@ -399,7 +399,7 @@ public static class AsyncSelectInputViewExtensions
     /// <param name="widget">The async select input to configure.</param>
     /// <param name="description">The description text to display.</param>
     /// <returns>A new async select input.</returns>
-    public static IAnyAsyncSelectInputBase Description(this IAnyAsyncSelectInputBase widget, string? description)
+    public static IAnyAsyncSelectInputBase Description(this IAnyAsyncSelectInputBase widget, string description)
     {
         if (widget is AsyncSelectInputView<object> typedWidget)
         {

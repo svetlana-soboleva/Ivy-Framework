@@ -296,7 +296,7 @@ public static class ColorInputExtensions
     /// <summary>Sets the label text for the color input.</summary>
     /// <param name="widget">The color input to configure.</param>
     /// <param name="label">The label text to display.</param>
-    public static ColorInputBase Label(this ColorInputBase widget, string? label)
+    public static ColorInputBase Label(this ColorInputBase widget, string label)
     {
         return widget with { Label = label };
     }
@@ -304,7 +304,7 @@ public static class ColorInputExtensions
     /// <summary>Sets the description text for the color input.</summary>
     /// <param name="widget">The color input to configure.</param>
     /// <param name="description">The description text to display.</param>
-    public static ColorInputBase Description(this ColorInputBase widget, string? description)
+    public static ColorInputBase Description(this ColorInputBase widget, string description)
     {
         return widget with { Description = description };
     }

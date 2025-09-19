@@ -258,7 +258,7 @@ public static class CodeInputExtensions
     /// <summary>Sets the label text for the code input.</summary>
     /// <param name="widget">The code input to configure.</param>
     /// <param name="label">The label text to display.</param>
-    public static CodeInputBase Label(this CodeInputBase widget, string? label)
+    public static CodeInputBase Label(this CodeInputBase widget, string label)
     {
         return widget with { Label = label };
     }
@@ -266,7 +266,7 @@ public static class CodeInputExtensions
     /// <summary>Sets the description text for the code input.</summary>
     /// <param name="widget">The code input to configure.</param>
     /// <param name="description">The description text to display.</param>
-    public static CodeInputBase Description(this CodeInputBase widget, string? description)
+    public static CodeInputBase Description(this CodeInputBase widget, string description)
     {
         return widget with { Description = description };
     }
