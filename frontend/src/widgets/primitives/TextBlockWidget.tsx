@@ -92,13 +92,16 @@ const variantMap: VariantMap = {
       };
     }, [children, style]);
     return (
-      <div className={cn('flex items-center text-sm', className)} style={style}>
+      <div
+        className={cn('flex items-center text-sm min-w-0', className)}
+        style={style}
+      >
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <span
                 ref={spanRef}
-                className="overflow-hidden text-ellipsis"
+                className="overflow-hidden text-ellipsis whitespace-nowrap block"
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
               >
