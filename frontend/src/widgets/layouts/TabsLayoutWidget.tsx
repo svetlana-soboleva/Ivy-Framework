@@ -856,8 +856,7 @@ export const TabsLayoutWidget = ({
               <TabsList
                 ref={tabsListRef}
                 useRadix={useRadix}
-                className="relative h-auto w-full gap-0.5 bg-transparent p-0 flex justify-start flex-nowrap"
-                style={{ marginTop: '16px' }}
+                className="relative h-auto w-full gap-0.5 mt-2.5 bg-transparent p-0 flex justify-start flex-nowrap"
               >
                 {orderedTabWidgets.map(tabWidget => {
                   if (!React.isValidElement(tabWidget)) return null;
