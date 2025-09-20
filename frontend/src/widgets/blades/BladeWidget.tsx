@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { X, RotateCw } from 'lucide-react';
 import { useEventHandler } from '@/components/event-handler';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { getWidth } from '@/lib/styles';
 
 interface BladeWidgetProps {
@@ -68,8 +69,13 @@ export function BladeWidget({
           )}
         </div>
       </div>
-      <div className="bg-background h-full overflow-auto">
-        <div className="p-4">{children}</div>
+      <div className="bg-background h-full">
+        <ScrollArea
+          type="hover"
+          className="blade-container h-full [&>div>div[style]]:!block"
+        >
+          <div className="p-4">{children}</div>
+        </ScrollArea>
       </div>
     </div>
   );
