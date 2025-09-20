@@ -60,10 +60,10 @@ export function createIvyCodeTheme(): Extension {
       borderColor: 'var(--ring)',
     },
     '.cm-activeLine': {
-      backgroundColor: 'var(--accent)',
+      backgroundColor: 'transparent',
     },
     '.cm-activeLineGutter': {
-      backgroundColor: 'var(--accent)',
+      backgroundColor: 'transparent',
     },
     '.cm-activeLineGutter .cm-gutterElement': {
       color: 'var(--foreground)',
