@@ -181,9 +181,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       {showToggleButton && mainAppSidebar && (
         <button
           onClick={handleManualToggle}
-          className="absolute top-3 z-50 p-2 rounded-md bg-background hover:bg-sidebar-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
+          className="absolute top-2 z-50 p-2 rounded-md bg-background hover:bg-sidebar-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
           style={{
-            left: isSidebarOpen ? 'calc(16rem + 9px)' : '9px',
+            left: isSidebarOpen ? 'calc(16rem + 8px)' : '8px',
             transition: 'left 300ms ease-in-out',
             transform: 'translateX(0)', // Ensure button moves with its parent sidebar
           }}
