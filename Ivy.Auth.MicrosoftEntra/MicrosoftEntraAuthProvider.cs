@@ -46,7 +46,7 @@ public class MicrosoftEntraAuthProvider : IAuthProvider
 
         _tenantId = configuration.GetValue<string>("MicrosoftEntra:TenantId") ?? throw new Exception("MicrosoftEntra:TenantId is required");
         _clientId = configuration.GetValue<string>("MicrosoftEntra:ClientId") ?? throw new Exception("MicrosoftEntra:ClientId is required");
-        _clientSecret = configuration.GetValue<string>("MicrosoftEntra:Secret") ?? throw new Exception("MicrosoftEntra:Secret is required");
+        _clientSecret = configuration.GetValue<string>("MicrosoftEntra:ClientSecret") ?? throw new Exception("MicrosoftEntra:ClientSecret is required");
     }
 
     public void SetHttpContext(HttpContext context) => _httpContext = context;

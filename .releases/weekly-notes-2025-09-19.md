@@ -75,7 +75,7 @@ SUPABASE_API_KEY → Supabase:ApiKey
 # Microsoft Entra
 MICROSOFT_ENTRA_TENANT_ID → MicrosoftEntra:TenantId
 MICROSOFT_ENTRA_CLIENT_ID → MicrosoftEntra:ClientId
-MICROSOFT_ENTRA_CLIENT_SECRET → MicrosoftEntra:Secret
+MICROSOFT_ENTRA_CLIENT_SECRET → MicrosoftEntra:ClientSecret
 
 # Authelia
 AUTHELIA_URL → Authelia:Url
