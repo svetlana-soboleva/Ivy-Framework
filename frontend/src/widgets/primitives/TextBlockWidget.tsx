@@ -101,7 +101,7 @@ const variantMap: VariantMap = {
             <TooltipTrigger asChild>
               <span
                 ref={spanRef}
-                className="overflow-hidden text-ellipsis whitespace-nowrap block"
+                className="overflow-hidden text-ellipsis"
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
               >
