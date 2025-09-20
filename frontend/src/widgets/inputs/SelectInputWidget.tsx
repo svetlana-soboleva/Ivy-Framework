@@ -55,6 +55,12 @@ const selectTextVariants = {
   Large: 'text-base',
 };
 
+const circleSizeVariants = {
+  Small: 'h-3 w-3',
+  Medium: 'h-4 w-4',
+  Large: 'h-5 w-5',
+};
+
 export type NullableSelectValue =
   | string
   | number
@@ -448,12 +454,6 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
             data-testid={dataTestId}
           >
             {validOptions.map(option => {
-              const CircleSize = {
-                Small: 'h-3 w-3',
-                Medium: 'h-4 w-4',
-                Large: 'h-5 w-5',
-              };
-
               return (
                 <div key={option.value} className="flex items-center space-x-2">
                   <RadioGroupItem
@@ -461,7 +461,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
                     id={`${id}-${option.value}`}
                     className={cn(
                       'border-input text-input',
-                      CircleSize[size],
+                      circleSizeVariants[size],
                       stringValue === option.value.toString() && !invalid
                         ? 'border-primary text-primary'
                         : undefined,
