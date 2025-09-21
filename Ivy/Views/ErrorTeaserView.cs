@@ -18,6 +18,11 @@ public class ErrorTeaserView(Exception ex) : ViewBase
     /// to access full error details.</returns>
     public override object? Build()
     {
+        if (ex is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
+        {
+            ex = aggregateException.InnerExceptions[0];
+        }
+
         return Layout.Vertical()
                | Text.Muted(ex.Message)
                | new Button("Read More").Variant(ButtonVariant.Primary).WithSheet(() => new ErrorView(ex), width: Size.Half());
