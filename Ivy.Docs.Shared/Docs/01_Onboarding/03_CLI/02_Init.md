@@ -210,7 +210,42 @@ After initializing your project:
 
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
+**Build Errors** - If you encounter build errors, you can use the `ivy fix` command to automatically resolve common issues:
+Use default AI debugging
+
+```terminal
+>ivy fix
+```
+
+Use **Claude Code** for debugging
+
+```terminal
+>ivy fix --use-claude-code
+```
+
+**Set environment** variable for Claude Code
+
+```terminal
+>export IVY_FIX_USE_CLAUDE_CODE=true
+>ivy fix
+```
+
+**Enable telemetry upload**
+
+```terminal
+>export IVY_FIX_UPLOAD_TELEMETRY=true
+>ivy fix
+```
+
+**Debug commands** to manage settings
+
+```terminal
+>ivy debug enable-ivy-fix-upload-telemetry
+>ivy debug disable-ivy-fix-upload-telemetry
+```
+
 ### App Removal Command
+
 **Remove a specific app by name**
 
 ```terminal
