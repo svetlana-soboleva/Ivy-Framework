@@ -1,8 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Ivy.Core;
+using Ivy.Core.Docs;
 using Ivy.Core.Helpers;
 using Ivy.Core.Hooks;
+using Ivy.Shared;
 using Ivy.Widgets.Inputs;
 
 // ReSharper disable once CheckNamespace
@@ -49,6 +51,9 @@ public abstract record SelectInputBase : WidgetBase<SelectInputBase>, IAnySelect
 
     /// <summary>Gets or sets the visual variant of the select input.</summary>
     [Prop] public SelectInputs Variant { get; set; }
+
+    /// <summary>Gets or sets the size of the select input.</summary>
+    [Prop] public Sizes Size { get; set; }
 
     /// <summary>Gets or sets whether multiple options can be selected simultaneously.</summary>
     [Prop] public bool SelectMany { get; set; } = false;
@@ -227,6 +232,32 @@ public static class SelectInputExtensions
     public static SelectInputBase Variant(this SelectInputBase widget, SelectInputs variant)
     {
         return widget with { Variant = variant };
+    }
+
+    /// <summary>Sets the size of the select input.</summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <param name="size">The size of the select input.</param>
+    public static SelectInputBase Size(this SelectInputBase widget, Sizes size)
+    {
+        return widget with { Size = size };
+    }
+
+    /// <summary>Sets the select input size to large for prominent display.</summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <returns>A new SelectInputBase instance with large size applied.</returns>
+    [RelatedTo(nameof(SelectInputBase.Size))]
+    public static SelectInputBase Large(this SelectInputBase widget)
+    {
+        return widget.Size(Sizes.Large);
+    }
+
+    /// <summary>Sets the select input size to small for compact display.</summary>
+    /// <param name="widget">The select input to configure.</param>
+    /// <returns>A new SelectInputBase instance with small size applied.</returns>
+    [RelatedTo(nameof(SelectInputBase.Size))]
+    public static SelectInputBase Small(this SelectInputBase widget)
+    {
+        return widget.Size(Sizes.Small);
     }
 
     /// <summary>Sets the validation error message for the select input.</summary>
