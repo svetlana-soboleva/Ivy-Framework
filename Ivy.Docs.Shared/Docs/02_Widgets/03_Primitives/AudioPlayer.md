@@ -49,27 +49,3 @@ Layout.Vertical().Gap(4)
 ```
 
 <WidgetDocs Type="Ivy.Audio" ExtensionTypes="Ivy.AudioExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Primitives/Audio.cs"/>
-
-## Examples
-
-<Details>
-<Summary>
-Advanced Configuration Options
-</Summary>
-<Body>
-The Audio widget provides additional configuration options for custom sizing and control visibility. These features allow you to tailor the audio player to specific use cases and design requirements.
-
-```csharp demo-tabs
-Layout.Vertical().Gap(4)
-| Text.Small("Custom Width (50%)")
-| new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
-    .Width(Size.Fraction(0.5f))
-
-| Text.Small("No Controls (Hidden)")
-| new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
-    .Controls(false)
-    .Muted(true)
-```
-
-</Body>
-</Details>
