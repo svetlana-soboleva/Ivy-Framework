@@ -211,7 +211,7 @@ After initializing your project:
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
 **Build Errors** - If you encounter build errors, you can use the `ivy fix` command to automatically resolve common issues:
-Use default AI debugging
+To use the default AI debugging mode, run:
 
 ```terminal
 >ivy fix
