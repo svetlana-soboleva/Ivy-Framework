@@ -12,6 +12,7 @@ import { sql } from '@codemirror/lang-sql';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { json } from '@codemirror/lang-json';
+import { markdown } from '@codemirror/lang-markdown';
 import { useEventHandler } from '@/components/event-handler';
 import { cn } from '@/lib/utils';
 import { getHeight, getWidth, inputStyles } from '@/lib/styles';
@@ -48,6 +49,7 @@ const languageExtensions = {
   Css: css,
   Json: json,
   Dbml: dbml,
+  Markdown: markdown,
   Text: undefined,
 };
 
