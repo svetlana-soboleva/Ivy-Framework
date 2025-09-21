@@ -29,6 +29,8 @@ public enum Languages
     Json,
     /// <summary>DBML (Database Markup Language) for database schema definitions.</summary>
     Dbml,
+    /// <summary>Markdown lightweight markup language with formatting and structure highlighting.</summary>
+    Markdown,
     /// <summary>Plain text without syntax highlighting, displayed in monospace font.</summary>
     Text,
 }
