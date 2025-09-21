@@ -29,6 +29,37 @@ import {
   Option as MultiSelectOption,
 } from '@/components/ui/multiselect';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle';
+import { Sizes } from '@/types/sizes';
+import { cva } from 'class-variance-authority';
+
+// variants for SelectInputWidget container
+const selectContainerVariants = cva(
+  'relative border border-input bg-transparent rounded-md shadow-sm focus-within:ring-1 focus-within:ring-ring',
+  {
+    variants: {
+      size: {
+        Small: 'px-2 py-1',
+        Medium: 'px-3 py-2',
+        Large: 'px-4 py-3',
+      },
+    },
+    defaultVariants: {
+      size: 'Medium',
+    },
+  }
+);
+
+const selectTextVariants = {
+  Small: 'text-xs',
+  Medium: 'text-sm',
+  Large: 'text-base',
+};
+
+const circleSizeVariants = {
+  Small: 'h-3 w-3',
+  Medium: 'h-4 w-4',
+  Large: 'h-5 w-5',
+};
 
 export type NullableSelectValue =
   | string
@@ -57,6 +88,7 @@ interface SelectInputWidgetProps {
   selectMany: boolean;
   separator: string;
   'data-testid'?: string;
+  size?: Sizes;
 }
 
 // Helper function to convert string values back to their original types
@@ -182,8 +214,15 @@ const ToggleOptionItem: React.FC<{
   option: Option;
   isSelected: boolean;
   invalid?: string;
-}> = ({ option, isSelected, invalid }) => {
+  size?: Sizes;
+}> = ({ option, isSelected, invalid, size = Sizes.Medium }) => {
   const isInvalid = !!invalid && isSelected;
+
+  const sizeClasses = {
+    Small: 'px-1 py-1 text-xs',
+    Medium: 'px-3 py-2 text-sm',
+    Large: 'px-5 py-3 text-base',
+  };
 
   const toggleItem = (
     <ToggleGroupItem
@@ -191,7 +230,8 @@ const ToggleOptionItem: React.FC<{
       value={option.value.toString()}
       aria-label={option.label}
       className={cn(
-        'px-3 py-2 hover:text-foreground',
+        'hover:text-foreground',
+        sizeClasses[size],
         isInvalid
           ? cn(
               inputStyles.invalidInput,
@@ -232,6 +272,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   selectMany = false,
   separator = ',',
   nullable = false,
+  size = Sizes.Medium,
   'data-testid': dataTestId,
 }) => {
   const validOptions = useMemo(
@@ -278,7 +319,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -301,6 +342,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                     option={option}
                     isSelected={isSelected}
                     invalid={invalid}
+                    size={size}
                   />
                 );
               })}
@@ -312,7 +354,6 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
               onValueChange={handleValueChange}
               disabled={disabled}
               className="flex flex-wrap gap-2"
-              data-testid={dataTestId}
             >
               {validOptions.map(option => {
                 const isSelected =
@@ -323,6 +364,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
                     option={option}
                     isSelected={isSelected}
                     invalid={invalid}
+                    size={size}
                   />
                 );
               })}
@@ -374,6 +416,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   options = [],
   eventHandler,
   nullable = false,
+  size = Sizes.Medium,
   'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
@@ -397,7 +440,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   const container = (
     <div
       className={cn(
-        'relative border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
+        selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
     >
@@ -410,34 +453,38 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
             className="flex flex-col gap-4"
             data-testid={dataTestId}
           >
-            {validOptions.map(option => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value={option.value.toString()}
-                  id={`${id}-${option.value}`}
-                  className={cn(
-                    'border-input text-input',
-                    stringValue === option.value.toString() && !invalid
-                      ? 'border-primary text-primary'
-                      : undefined,
-                    stringValue === option.value.toString() && invalid
-                      ? inputStyles.invalidInput
-                      : undefined
-                  )}
-                />
-                <Label
-                  htmlFor={`${id}-${option.value}`}
-                  className={cn(
-                    'cursor-pointer',
-                    stringValue === option.value.toString() && invalid
-                      ? inputStyles.invalidInput
-                      : undefined
-                  )}
-                >
-                  {option.label}
-                </Label>
-              </div>
-            ))}
+            {validOptions.map(option => {
+              return (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={option.value.toString()}
+                    id={`${id}-${option.value}`}
+                    className={cn(
+                      'border-input text-input',
+                      circleSizeVariants[size],
+                      stringValue === option.value.toString() && !invalid
+                        ? 'border-primary text-primary'
+                        : undefined,
+                      stringValue === option.value.toString() && invalid
+                        ? inputStyles.invalidInput
+                        : undefined
+                    )}
+                  />
+                  <Label
+                    htmlFor={`${id}-${option.value}`}
+                    className={cn(
+                      'cursor-pointer',
+                      selectTextVariants[size],
+                      stringValue === option.value.toString() && invalid
+                        ? inputStyles.invalidInput
+                        : undefined
+                    )}
+                  >
+                    {option.label}
+                  </Label>
+                </div>
+              );
+            })}
           </RadioGroup>
         </div>
         {((nullable && hasValue && !disabled) || invalid) && (
@@ -479,6 +526,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   eventHandler,
   separator = ',',
   nullable = false,
+  size = Sizes.Medium,
   'data-testid': dataTestId,
 }) => {
   const validOptions = useMemo(
@@ -588,7 +636,8 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                             disabled={disabled}
                             className={cn(
                               inputStyles.invalidInput,
-                              'bg-destructive/10 border-destructive text-destructive'
+                              'bg-destructive/10 border-destructive text-destructive',
+                              selectTextVariants[size]
                             )}
                           />
                         </TooltipTrigger>
@@ -607,6 +656,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                       disabled={disabled}
                       className={cn(
                         'data-[state=unchecked]:bg-transparent data-[state=unchecked]:border-border',
+                        selectTextVariants[size],
                         isSelected
                           ? 'data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground'
                           : undefined
@@ -617,6 +667,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
                     htmlFor={`${id}-${option.value}`}
                     className={cn(
                       'flex-1 cursor-pointer',
+                      selectTextVariants[size],
                       isInvalid ? inputStyles.invalidInput : undefined
                     )}
                   >
@@ -669,6 +720,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   eventHandler,
   nullable = false,
   selectMany = false,
+  size = Sizes.Medium,
   'data-testid': dataTestId,
 }) => {
   const validOptions = options.filter(
@@ -761,6 +813,8 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
             invalid={!!invalid}
             hideClearAllButton={!nullable}
             hidePlaceholderWhenSelected
+            size={size}
+            data-testid={dataTestId}
             emptyIndicator={
               <p className="text-center text-large-body">No results found</p>
             }
@@ -807,6 +861,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
         >
           <SelectTrigger
             className={cn('relative', invalid && inputStyles.invalidInput)}
+            size={size}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
@@ -851,7 +906,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
               )}
             </div>
           ) : null}
-          <SelectContent>
+          <SelectContent size={size}>
             {Object.entries(groupedOptions).map(([group, options]) => (
               <SelectGroup key={group}>
                 {group !== 'default' && <SelectLabel>{group}</SelectLabel>}
@@ -859,6 +914,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
                   <SelectItem
                     key={option.value}
                     value={option.value.toString()}
+                    size={size}
                   >
                     {option.label}
                   </SelectItem>

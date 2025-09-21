@@ -157,7 +157,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
         }`}
       >
         {hasContent(slots?.SidebarHeader) && (
-          <div className="flex flex-col shrink-0 border-b p-2 space-y-4">
+          <div className="flex flex-col shrink-0 p-2 space-y-4">
             {slots?.SidebarHeader}
           </div>
         )}
@@ -169,7 +169,7 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
           </div>
         )}
         {hasContent(slots?.SidebarFooter) && (
-          <div className="flex flex-col shrink-0 border-t">
+          <div className="flex flex-col shrink-0">
             <div className="flex flex-col px-4 py-3 gap-4 min-h-0">
               {slots?.SidebarFooter}
             </div>
@@ -181,9 +181,9 @@ export const SidebarLayoutWidget: React.FC<SidebarLayoutWidgetProps> = ({
       {showToggleButton && mainAppSidebar && (
         <button
           onClick={handleManualToggle}
-          className="absolute top-3 z-50 p-2 rounded-md bg-background hover:bg-sidebar-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
+          className="absolute top-2 z-50 p-2 rounded-md bg-background hover:bg-sidebar-accent hover:text-accent-foreground cursor-pointer transition-all duration-200"
           style={{
-            left: isSidebarOpen ? 'calc(16rem + 9px)' : '9px',
+            left: isSidebarOpen ? 'calc(16rem + 8px)' : '8px',
             transition: 'left 300ms ease-in-out',
             transform: 'translateX(0)', // Ensure button moves with its parent sidebar
           }}

@@ -6,7 +6,7 @@ export const inputVariants = cva(
   {
     variants: {
       size: {
-        [Sizes[Sizes.Medium]]: 'h-9 px-3 py-1 text-base',
+        [Sizes[Sizes.Medium]]: 'h-9 px-3 py-1 text-sm',
         [Sizes[Sizes.Small]]: 'h-7 px-2 py-1 text-xs leading-tight',
         [Sizes[Sizes.Large]]: 'h-11 px-4 py-2 text-xl leading-relaxed',
       },

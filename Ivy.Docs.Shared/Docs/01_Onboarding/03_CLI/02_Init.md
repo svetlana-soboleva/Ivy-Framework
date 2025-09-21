@@ -210,9 +210,68 @@ After initializing your project:
 
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
+**Build Errors** - If you encounter build errors, you can use the `ivy fix` command to automatically resolve common issues:
+To use the default AI debugging mode, run:
+
+```terminal
+>ivy fix
+```
+
+Use **Claude Code** for debugging:
+
+```terminal
+>ivy fix --use-claude-code
+```
+
+**Set environment** variable for Claude Code
+
+```terminal
+>export IVY_FIX_USE_CLAUDE_CODE=true
+>ivy fix
+```
+
+**Enable telemetry upload**
+
+<Callout Type="Warning">
+Telemetry Upload Details: When telemetry upload is enabled, the `ivy fix` command will upload an anonymized snapshot of your project (excluding .git, bin, and obj folders) for analysis. This helps the Ivy team understand common build issues and improve the fix command's effectiveness. The telemetry upload only includes source code files, has a 50MB size limit, and is completely optional and disabled by default.
+</Callout>
+
+```terminal
+>export IVY_FIX_UPLOAD_TELEMETRY=true
+>ivy fix
+```
+
+**Debug commands** to manage settings
+
+```terminal
+>ivy debug enable-ivy-fix-upload-telemetry
+>ivy debug disable-ivy-fix-upload-telemetry
+```
+
+### App Removal Command
+
+**Remove a specific app by name**
+
+```terminal
+>ivy app remove --name MyApp
+```
+
+**Interactive mode** - select from a list of existing apps
+
+```terminal
+>ivy app remove
+```
+
+**Remove all** apps at once
+
+```terminal
+>ivy app remove --all
+```
+
 ### Related Commands
 
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
 - `ivy app create` - Create apps
+- `ivy app remove` - Remove apps
 - `ivy deploy` - Deploy your project
