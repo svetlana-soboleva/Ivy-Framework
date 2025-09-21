@@ -217,7 +217,7 @@ To use the default AI debugging mode, run:
 >ivy fix
 ```
 
-Use **Claude Code** for debugging
+Use **Claude Code** for debugging:
 
 ```terminal
 >ivy fix --use-claude-code
