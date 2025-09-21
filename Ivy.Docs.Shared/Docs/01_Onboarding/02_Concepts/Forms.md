@@ -267,7 +267,7 @@ public class FieldManagementExample : ViewBase
 
 ### Custom Submit Text
 
-Change the text of the submit button by passing it as parameter of the `.toForm()` method
+Change the text of the submit button by passing it as a parameter of the `.toForm()` method
 
 ```csharp demo-tabs
 public class CustomSubmitTitleFormExample : ViewBase
