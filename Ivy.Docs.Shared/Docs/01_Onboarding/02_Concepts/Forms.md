@@ -265,6 +265,25 @@ public class FieldManagementExample : ViewBase
 
 ## Validation
 
+### Custom Submit Text
+
+Change the text of the submit button by passing it as a parameter of the `.ToForm()` method
+
+```csharp demo-tabs
+public class CustomSubmitTitleFormExample : ViewBase
+{
+    public record UserModel(string Name, string Email, bool IsActive, int Age);
+
+    public override object? Build()
+    {
+        var user = UseState(() => new UserModel("", "", false, 25));
+        
+        return user.ToForm("Create new user");
+    }
+}
+```
+
+
 ### Custom Validation
 
 Add custom validation logic using `.Validate()` method.

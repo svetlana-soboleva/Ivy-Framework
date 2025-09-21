@@ -118,16 +118,18 @@ public class FormBuilder<TModel> : ViewBase
     private readonly IState<TModel> _model;
 
     /// <summary>The text displayed on the form's submit button.</summary>
-    public readonly string SubmitTitle = "Save";
+    public readonly string SubmitTitle;
 
     /// <summary>The list of group names that have been defined for organizing fields.</summary>
     private readonly List<string> _groups = new();
 
     /// <summary>Initializes form builder for specified model state with automatic field scaffolding.</summary>
     /// <param name="model">Reactive state containing model object to be edited by form.</param>
-    public FormBuilder(IState<TModel> model)
+    /// <param name="submitTitle">The text displayed on the form's submit button. Default is "Save".</param>
+    public FormBuilder(IState<TModel> model, string submitTitle = "Save")
     {
         _model = model;
+        SubmitTitle = submitTitle;
         _fields = new Dictionary<string, FormBuilderField<TModel>>();
         _Scaffold();
     }
