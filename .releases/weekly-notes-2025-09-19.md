@@ -60,7 +60,6 @@ All configuration keys have been standardized to use colon-separated format inst
 
 Update your configuration keys using the new format:
 
-#### Authentication Providers
 ```bash
 # Auth0 (OLD → NEW)
 AUTH0_DOMAIN → Auth0:Domain
@@ -85,20 +84,13 @@ USERS → BasicAuth:Users
 JWT_SECRET → BasicAuth:JwtSecret
 JWT_ISSUER → BasicAuth:JwtIssuer
 JWT_AUDIENCE → BasicAuth:JwtAudience
-```
 
-#### Other Configuration
-```bash
 # License
 IVY_LICENSE → Ivy:License
 
 # Sliplane Deployment
 SLIPLANE_API_KEY → Sliplane:ApiKey
 SLIPLANE_ORG_ID → Sliplane:OrgId
-
-# OpenAPI Connections
-CONNECTION_NAME_HOST_URL → ConnectionName:HostUrl
-CONNECTION_NAME_API_KEY → ConnectionName:ApiKey
 ```
 
 ### Database Connection Strings
