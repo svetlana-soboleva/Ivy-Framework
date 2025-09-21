@@ -210,9 +210,29 @@ After initializing your project:
 
 **Git Issues** - If Git is not installed or configured, Ivy will still create the project but may skip some Git-related operations.
 
+### App Removal Command
+**Remove a specific app by name**
+
+```terminal
+>ivy app remove --name MyApp
+```
+
+**Interactive mode** - select from a list of existing apps
+
+```terminal
+>ivy app remove
+```
+
+**Remove all** apps at once
+
+```terminal
+>ivy app remove --all
+```
+
 ### Related Commands
 
 - `ivy db add` - Add database connections
 - `ivy auth add` - Add authentication providers
 - `ivy app create` - Create apps
+- `ivy app remove` - Remove apps
 - `ivy deploy` - Deploy your project
