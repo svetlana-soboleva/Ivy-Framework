@@ -232,6 +232,10 @@ Use **Claude Code** for debugging:
 
 **Enable telemetry upload**
 
+<Callout Type="Warning">
+Telemetry Upload Details: When telemetry upload is enabled, the `ivy fix` command will upload an anonymized snapshot of your project (excluding .git, bin, and obj folders) for analysis. This helps the Ivy team understand common build issues and improve the fix command's effectiveness. The telemetry upload only includes source code files, has a 50MB size limit, and is completely optional and disabled by default.
+</Callout>
+
 ```terminal
 >export IVY_FIX_UPLOAD_TELEMETRY=true
 >ivy fix
