@@ -81,7 +81,7 @@ Your credentials will be stored securely in .NET user secrets. Ivy then finishes
 To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
->ivy auth add --provider Supabase --connection-string "SUPABASE_URL=https://your-project.supabase.co;SUPABASE_API_KEY=your-anon-key"
+>ivy auth add --provider Supabase --connection-string "Supabase:Url=https://your-project.supabase.co;Supabase:ApiKey=your-anon-key"
 ```
 
 For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
