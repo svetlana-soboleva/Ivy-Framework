@@ -590,6 +590,23 @@ public static class Utils
         return exception;
     }
 
+    /// <summary>
+    /// Unwraps an AggregateException to return the single inner exception if it contains only one.
+    /// If the exception is not an AggregateException or contains multiple inner exceptions,
+    /// it is returned as-is.
+    /// </summary>
+    /// <param name="e">The exception to unwrap.</param>
+    /// <returns>The unwrapped exception, or the original exception if it cannot be unwrapped.</returns>
+    public static Exception UnwrapAggregate(this Exception e)
+    {
+        if (e is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
+        {
+            e = aggregateException.InnerExceptions[0];
+        }
+
+        return e;
+    }
+
     public static void KillProcessUsingPort(int port)
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)

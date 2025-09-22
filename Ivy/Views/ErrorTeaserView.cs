@@ -18,10 +18,7 @@ public class ErrorTeaserView(Exception ex) : ViewBase
     /// to access full error details.</returns>
     public override object? Build()
     {
-        if (ex is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
-        {
-            ex = aggregateException.InnerExceptions[0];
-        }
+        ex = ex.UnwrapAggregate();
 
         return Layout.Vertical()
                | Text.Muted(ex.Message)

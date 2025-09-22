@@ -16,10 +16,7 @@ public class ErrorView(System.Exception e) : ViewBase, IStateless
     /// <returns>An Error widget containing the exception type, message, and stack trace.</returns>
     public override object? Build()
     {
-        if (e is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
-        {
-            e = aggregateException.InnerExceptions[0];
-        }
+        e = e.UnwrapAggregate();
 
         return new Error(e.GetType().Name, e.Message, e.StackTrace);
     }
