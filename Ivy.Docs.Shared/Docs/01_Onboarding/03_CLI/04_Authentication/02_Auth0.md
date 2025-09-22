@@ -193,7 +193,7 @@ Ivy then finishes configuring your application automatically:
 To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
->ivy auth add --provider Auth0 --connection-string "AUTH0_DOMAIN=your-domain.auth0.com;AUTH0_CLIENT_ID=your-client-id;AUTH0_CLIENT_SECRET=your-client-secret"
+>ivy auth add --provider Auth0 --connection-string "Auth0:Domain=your-domain.auth0.com;Auth0:ClientId=your-client-id;Auth0:ClientSecret=your-client-secret"
 ```
 
 For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
