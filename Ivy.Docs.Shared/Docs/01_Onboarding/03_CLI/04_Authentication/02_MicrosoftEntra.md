@@ -115,9 +115,9 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **MICROSOFT_ENTRA_TENANT_ID**: Required. Your Microsoft Entra tenant ID.
-- **MICROSOFT_ENTRA_CLIENT_ID**: Required. Your application's client ID.
-- **MICROSOFT_ENTRA_CLIENT_SECRET**: Required. Your application's client secret.
+- **MicrosoftEntra:TenantId**: Required. Your Microsoft Entra tenant ID.
+- **MicrosoftEntra:ClientId**: Required. Your application's client ID.
+- **MicrosoftEntra:ClientSecret**: Required. Your application's client secret.
 
 ## Authentication Flow
 

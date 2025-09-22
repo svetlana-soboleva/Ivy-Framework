@@ -58,7 +58,7 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **AUTHELIA_URL**: Required. The base URL of your Authelia instance.
+- **Authelia:Url**: Required. The base URL of your Authelia instance.
 
 ## Authentication Flow
 

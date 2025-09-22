@@ -98,8 +98,8 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **SUPABASE_URL**: Required. Your Supabase project URL.
-- **SUPABASE_API_KEY**: Required. Your Supabase project's anonymous key.
+- **Supabase:Url**: Required. Your Supabase project URL.
+- **Supabase:ApiKey**: Required. Your Supabase project's anonymous key.
 
 ## Authentication Flow
 

@@ -210,10 +210,10 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **AUTH0_DOMAIN**: Required. Your Auth0 tenant domain.
-- **AUTH0_CLIENT_ID**: Required. Your Auth0 application's client ID.
-- **AUTH0_CLIENT_SECRET**: Required. Your Auth0 application's client secret.
-- **AUTH0_AUDIENCE**: Required. API identifier for securing API access.
+- **Auth0:Domain**: Required. Your Auth0 tenant domain.
+- **Auth0:ClientId**: Required. Your Auth0 application's client ID.
+- **Auth0:ClientSecret**: Required. Your Auth0 application's client secret.
+- **Auth0:Audience**: Required. API identifier for securing API access.
 
 ## Authentication Flow
 
