@@ -17,6 +17,7 @@ public static class FormExtensions
     /// </summary>
     /// <typeparam name="T">The type of the model object contained in the state.</typeparam>
     /// <param name="obj">The reactive state object containing the model to be edited by the form.</param>
+    /// <param name="submitTitle">The text displayed on the form's submit button. Default is "Save".</param>
     /// <returns>A new FormBuilder instance configured for the specified model type with automatic field discovery.</returns>
     /// <remarks>
     /// <para>This extension method provides a fluent entry point for form creation by converting
@@ -51,8 +52,8 @@ public static class FormExtensions
     /// maintaining the convenience of automatic scaffolding for rapid development.</para>
     /// </remarks>
     /// <seealso cref="FormBuilder{T}"/>
-    public static FormBuilder<T> ToForm<T>(this IState<T> obj)
+    public static FormBuilder<T> ToForm<T>(this IState<T> obj, string submitTitle = "Save")
     {
-        return new FormBuilder<T>(obj);
+        return new FormBuilder<T>(obj, submitTitle);
     }
 }

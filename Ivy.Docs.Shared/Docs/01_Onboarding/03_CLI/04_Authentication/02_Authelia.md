@@ -41,7 +41,7 @@ Your configuration will be stored securely in .NET user secrets. Ivy then finish
 To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
->ivy auth add --provider Authelia --connection-string "AUTHELIA_URL=https://auth.yourdomain.com"
+>ivy auth add --provider Authelia --connection-string "Authelia:Url=https://auth.yourdomain.com"
 ```
 
 For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
@@ -58,7 +58,7 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **AUTHELIA_URL**: Required. The base URL of your Authelia instance.
+- **Authelia:Url**: Required. The base URL of your Authelia instance.
 
 ## Authentication Flow
 

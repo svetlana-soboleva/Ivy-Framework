@@ -34,7 +34,7 @@ Your credentials will be stored securely in .NET user secrets, along with an aut
 To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
->ivy auth add --provider Basic --connection-string "USERS=\"user1:password1;user2:password2\""
+>ivy auth add --provider Basic --connection-string "BasicAuth:Users=\"user1:password1;user2:password2\""
 ```
 
 For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
@@ -52,9 +52,9 @@ For more information, see [Authentication Overview](Overview.md).
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
 - **USERS**: Required. A semicolon-separated list of `username:password` pairs.
-- **JWT_SECRET**: Optional. A custom secret key for token generation. Must be at least 128 bits (or 16 bytes) long. If not provided, one will be generated automatically.
-- **JWT_ISSUER**: Optional. Used as the issuer of generated tokens. Default value: `ivy`.
-- **JWT_AUDIENCE**: Optional. Used as the audience of generated tokens. Default value: `ivy-app`.
+- **JwtSecret**: Optional. A custom secret key for token generation. Must be at least 128 bits (or 16 bytes) long. If not provided, one will be generated automatically.
+- **JwtIssuer**: Optional. Used as the issuer of generated tokens. Default value: `ivy`.
+- **JwtAudience**: Optional. Used as the audience of generated tokens. Default value: `ivy-app`.
 
 ## Authentication Flow
 

@@ -16,6 +16,8 @@ public class ErrorView(System.Exception e) : ViewBase, IStateless
     /// <returns>An Error widget containing the exception type, message, and stack trace.</returns>
     public override object? Build()
     {
+        e = e.UnwrapAggregate();
+
         return new Error(e.GetType().Name, e.Message, e.StackTrace);
     }
 }

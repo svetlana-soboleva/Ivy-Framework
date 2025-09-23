@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { InvalidIcon } from '@/components/InvalidIcon';
 import { cn } from '@/lib/utils';
-import { inputStyles } from '@/lib/styles';
+import { getWidth, inputStyles } from '@/lib/styles';
 import {
   Tooltip,
   TooltipProvider,
@@ -89,6 +89,7 @@ interface SelectInputWidgetProps {
   separator: string;
   'data-testid'?: string;
   size?: Sizes;
+  width?: string;
 }
 
 // Helper function to convert string values back to their original types
@@ -274,6 +275,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
   nullable = false,
   size = Sizes.Medium,
   'data-testid': dataTestId,
+  width,
 }) => {
   const validOptions = useMemo(
     () =>
@@ -315,6 +317,9 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
     eventHandler,
     selectMany
   );
+  const styles: React.CSSProperties = {
+    ...getWidth(width),
+  };
 
   const container = (
     <div
@@ -322,6 +327,7 @@ const ToggleVariant: React.FC<SelectInputWidgetProps> = ({
         selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
+      style={styles}
     >
       <div className="flex items-center gap-2">
         <div className="flex-1">
@@ -418,6 +424,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
   nullable = false,
   size = Sizes.Medium,
   'data-testid': dataTestId,
+  width,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -436,6 +443,9 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
     eventHandler,
     false // Always single select for RadioVariant
   );
+  const styles: React.CSSProperties = {
+    ...getWidth(width),
+  };
 
   const container = (
     <div
@@ -443,6 +453,7 @@ const RadioVariant: React.FC<SelectInputWidgetProps> = ({
         selectContainerVariants({ size }),
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
+      style={styles}
     >
       <div className="flex items-center gap-4">
         <div className="flex-1">
@@ -528,6 +539,7 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
   nullable = false,
   size = Sizes.Medium,
   'data-testid': dataTestId,
+  width,
 }) => {
   const validOptions = useMemo(
     () =>
@@ -597,12 +609,16 @@ const CheckboxVariant: React.FC<SelectInputWidgetProps> = ({
 
   const hasValues = selectedValues.length > 0;
 
+  const styles: React.CSSProperties = {
+    ...getWidth(width),
+  };
   const container = (
     <div
       className={cn(
         'relative w-full border border-input bg-transparent rounded-md shadow-sm px-3 py-2 focus-within:ring-1 focus-within:ring-ring',
         invalid && 'border-destructive focus-within:ring-destructive'
       )}
+      style={styles}
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
@@ -722,6 +738,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   selectMany = false,
   size = Sizes.Medium,
   'data-testid': dataTestId,
+  width,
 }) => {
   const validOptions = options.filter(
     option => option.value != null && option.value.toString().trim() !== ''
@@ -785,6 +802,10 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     [selectedValues, optionsLookup]
   );
 
+  const styles: React.CSSProperties = {
+    ...getWidth(width),
+  };
+
   // Handle multiselect case
   if (selectMany) {
     const handleMultiSelectChange = (
@@ -801,7 +822,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
     };
 
     return (
-      <div className="flex items-center gap-2 w-full">
+      <div className="flex items-center gap-2 w-full" style={styles}>
         <div className="flex-1 relative w-full">
           <MultipleSelector
             value={selectedMultiSelectOptions}
@@ -850,7 +871,7 @@ const SelectVariant: React.FC<SelectInputWidgetProps> = ({
   const hasValue = stringValue !== undefined;
 
   return (
-    <div className="flex items-center gap-2 w-full">
+    <div className="flex items-center gap-2 w-full" style={styles}>
       <div className="flex-1 relative w-full">
         <Select
           key={`${id}-${stringValue ?? 'null'}`}
