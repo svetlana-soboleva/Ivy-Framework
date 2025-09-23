@@ -98,7 +98,7 @@ Your credentials will be stored securely in .NET user secrets. Ivy then finishes
 To skip the interactive prompts, you can provide configuration via a connection string:
 
 ```terminal
->ivy auth add --provider MicrosoftEntra --connection-string "MICROSOFT_ENTRA_TENANT_ID=your-tenant-id;MICROSOFT_ENTRA_CLIENT_ID=your-client-id;MICROSOFT_ENTRA_CLIENT_SECRET=your-client-secret"
+>ivy auth add --provider MicrosoftEntra --connection-string "MicrosoftEntra:TenantId=your-tenant-id;MicrosoftEntra:ClientId=your-client-id;MicrosoftEntra:ClientSecret=your-client-secret"
 ```
 
 For a list of connection string parameters, see [Configuration Parameters](#configuration-parameters) below.
@@ -115,9 +115,9 @@ For more information, see [Authentication Overview](Overview.md).
 
 The following parameters are supported via connection string, environment variables, or .NET user secrets:
 
-- **MICROSOFT_ENTRA_TENANT_ID**: Required. Your Microsoft Entra tenant ID.
-- **MICROSOFT_ENTRA_CLIENT_ID**: Required. Your application's client ID.
-- **MICROSOFT_ENTRA_CLIENT_SECRET**: Required. Your application's client secret.
+- **MicrosoftEntra:TenantId**: Required. Your Microsoft Entra tenant ID.
+- **MicrosoftEntra:ClientId**: Required. Your application's client ID.
+- **MicrosoftEntra:ClientSecret**: Required. Your application's client secret.
 
 ## Authentication Flow
 
