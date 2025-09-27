@@ -51,7 +51,7 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-xs overflow-hidden [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex items-center aspect-video justify-center mx-auto text-xs overflow-hidden [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className
         )}
         style={{
@@ -275,10 +275,18 @@ const ChartLegendContent = React.forwardRef<
     verticalAlign?: string;
     hideIcon?: boolean;
     nameKey?: string;
+    splitThreshold?: number;
   }
 >(
   (
-    { className, hideIcon = false, payload, verticalAlign = 'bottom', nameKey },
+    {
+      className,
+      hideIcon = false,
+      payload,
+      verticalAlign = 'bottom',
+      nameKey,
+      splitThreshold = 6,
+    },
     ref
   ) => {
     const { config } = useChart();
@@ -287,40 +295,71 @@ const ChartLegendContent = React.forwardRef<
       return null;
     }
 
+    const items = payload;
+    const many = items.length > splitThreshold;
+    const half = many ? Math.ceil(items.length / 2) : items.length;
+
+    const renderItem = (item: Payload<number, string>) => {
+      const key = `${nameKey || item.dataKey || 'value'}`;
+      const itemConfig = getPayloadConfigFromPayload(config, item, key);
+      const labelText =
+        (typeof itemConfig?.label === 'string'
+          ? itemConfig.label
+          : undefined) ||
+        (typeof item.value === 'string' ? item.value : undefined) ||
+        (item.dataKey ? String(item.dataKey) : 'value');
+
+      const elementKey = `${String(item.dataKey)}-${String(item.value)}`;
+
+      return (
+        <div
+          key={elementKey}
+          className={cn(
+            'flex items-center gap-1.5 py-1 px-1 flex-none [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'
+          )}
+        >
+          {itemConfig?.icon && !hideIcon ? (
+            <itemConfig.icon />
+          ) : (
+            <div
+              className="h-2 w-2 shrink-0 rounded-[2px]"
+              style={{
+                backgroundColor: item.color || `var(--color-${key})`,
+              }}
+            />
+          )}
+          <span className="text-muted-foreground whitespace-nowrap leading-normal">
+            {labelText}
+          </span>
+        </div>
+      );
+    };
+
     return (
       <div
         ref={ref}
         className={cn(
-          'flex items-center justify-center gap-4',
+          'w-full flex flex-col',
           verticalAlign === 'top' ? 'pb-3' : 'pt-3',
           className
         )}
       >
-        {payload.map(item => {
-          const key = `${nameKey || item.dataKey || 'value'}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item, key);
-
-          return (
-            <div
-              key={item.value}
-              className={cn(
-                'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'
-              )}
-            >
-              {itemConfig?.icon && !hideIcon ? (
-                <itemConfig.icon />
-              ) : (
-                <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color || `var(--color-${key})`,
-                  }}
-                />
-              )}
-              {itemConfig?.label}
+        {!many ? (
+          <div className="flex w-full items-center justify-center gap-x-4 gap-y-2 flex-wrap">
+            {items.map(renderItem)}
+          </div>
+        ) : (
+          <div className="w-full overflow-x-auto">
+            <div className="flex w-max flex-col gap-2">
+              <div className="flex items-center justify-start gap-x-4 flex-nowrap">
+                {items.slice(0, half).map(renderItem)}
+              </div>
+              <div className="flex items-center justify-start gap-x-4 flex-nowrap">
+                {items.slice(half).map(renderItem)}
+              </div>
             </div>
-          );
-        })}
+          </div>
+        )}
       </div>
     );
   }
