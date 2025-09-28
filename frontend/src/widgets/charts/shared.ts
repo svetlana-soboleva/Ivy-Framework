@@ -17,6 +17,14 @@ import DataFormatter from 'excel-style-dataformatter';
 
 export type ColorScheme = 'Default' | 'Rainbow';
 
+//colors for echart
+const defaultColorsEChart = [
+  'oklch(0.75 0.16 164.07)',
+  'oklch(0.69 0.2 23.69)',
+  'oklch(0.45 0.31 264.05)',
+  'oklch(0.89 0.19 106.02)',
+  'oklch(0.49 0.19 309.75)',
+];
 const defaultColors = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'];
 const rainbowColors = [
   'blue',
@@ -57,6 +65,23 @@ export const getColorGenerator = (
   }
 };
 
+export const getColorGeneratorEChart = (
+  scheme: ColorScheme,
+  length: number
+): string[] => {
+  switch (scheme) {
+    case 'Rainbow':
+      return Array.from(
+        { length },
+        (_, i) => rainbowColors[i % rainbowColors.length]
+      );
+    default:
+      return Array.from(
+        { length },
+        (_, i) => defaultColorsEChart[i % defaultColorsEChart.length]
+      );
+  }
+};
 export interface ExtendedXAxisProps extends XAxisProps {
   domainStart: number | string;
   domainEnd: number | string;
