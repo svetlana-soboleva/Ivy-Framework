@@ -5,8 +5,14 @@ import {
   ExtendedTooltipProps,
   // generateBarProps,
   // generateLabelListProps,
-  getColorGeneratorEChart,
 } from './shared';
+import {
+  applyHorizontalStackRounding,
+  generateDataProps,
+  generateEChartGrid,
+  generateEChartLegend,
+  getColorGeneratorEChart,
+} from './sharedUtils';
 import {
   ExtendedXAxisProps,
   ExtendedYAxisProps,
@@ -18,6 +24,7 @@ import { getHeight, getWidth } from '@/lib/styles';
 import { StackOffsetType } from 'recharts/types/util/types';
 //import { camelCase } from 'lodash';
 import ReactECharts from 'echarts-for-react';
+import { CartesianGridProps, LegendProps } from './chartTypes';
 
 interface BarChartWidgetProps {
   id: string;
@@ -25,11 +32,11 @@ interface BarChartWidgetProps {
   width?: string;
   height?: string;
   bars?: ExtendedBarProps[];
-  cartesianGrid?: unknown;
+  cartesianGrid?: CartesianGridProps;
   xAxis?: ExtendedXAxisProps[];
   yAxis?: ExtendedYAxisProps[];
   tooltip?: ExtendedTooltipProps;
-  legend?: unknown;
+  legend?: LegendProps;
   referenceLines?: unknown;
   referenceAreas?: unknown;
   referenceDots?: unknown;
@@ -47,11 +54,11 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   width,
   height,
   bars,
-  // cartesianGrid,
+  cartesianGrid,
   //xAxis,
   //yAxis,
   tooltip,
-  //legend,
+  legend,
   // referenceLines,
   // referenceAreas,
   // referenceDots,
@@ -68,17 +75,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     ...getHeight(height),
     minHeight: 300,
   };
-
-  const categoryKey = Object.keys(data[0]).find(
-    k => typeof data[0][k] === 'string'
-  )!;
-
-  //  categories for x-axis (only for Category type)
-  const categories = data.map(d => d[categoryKey.toLowerCase()]);
-
-  const valueKeys = Object.keys(data[0]).filter(
-    k => typeof data[0][k] === 'number'
-  );
+  const { categories, valueKeys } = generateDataProps(data);
   const allStackOne = bars?.every(b => b.stackId === 1);
   const hasDifferentStacks = bars && !allStackOne;
   const colors = getColorGeneratorEChart(
@@ -91,9 +88,12 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     data: data.map(d => d[key]),
     stack: hasDifferentStacks ? String(bars?.[i]?.stackId) : undefined,
   }));
-
   const isVertical = layout?.toLowerCase() === 'vertical';
+  if (!isVertical) {
+    applyHorizontalStackRounding(series);
+  }
   const option = {
+    grid: generateEChartGrid(cartesianGrid),
     color: colors,
     xAxis: isVertical
       ? { type: 'value' }
@@ -102,33 +102,18 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
       ? { type: 'category', data: categories }
       : { type: 'value' },
     series,
-    tooltip: tooltip
-      ? { show: true, trigger: 'axis', animation: tooltip.animated ?? true }
-      : undefined,
-    legend: { show: true },
+    legend: generateEChartLegend(legend),
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        shadowStyle: {
+          opacity: 0.5,
+        },
+        type: 'shadow',
+        animated: tooltip?.animated ?? true,
+      },
+    },
   };
-
-  //log all the props to debug
-  //console.log('data:', JSON.stringify(data));
-  //console.log('width:', String(width));
-  //console.log('height:', String(height));
-  //console.log('layout:', String(layout));
-  //console.log('bars:', JSON.stringify(bars));
-  //console.log('cartesianGrid:', JSON.stringify(cartesianGrid));
-  //console.log('xAxis:', JSON.stringify(xAxis));
-  //console.log('yAxis:', JSON.stringify(yAxis));
-  // console.log('tooltip:', JSON.stringify(tooltip));
-  //console.log('legend:', JSON.stringify(legend));
-  // console.log('referenceLines:', JSON.stringify(referenceLines));
-  // console.log('referenceAreas:', JSON.stringify(referenceAreas));
-  // console.log('referenceDots:', JSON.stringify(referenceDots));
-  // console.log('colorScheme:', String(colorScheme));
-  //console.log('stackOffset:', String(stackOffset));
-  // console.log('barGap:', String(barGap));
-  // console.log('barCategoryGap:', String(barCategoryGap));
-  // console.log('maxBarSize:', String(maxBarSize));
-  // console.log('reverseStackOrder:', String(reverseStackOrder));
-  // console.log('layout:', String(layout));
 
   return (
     <div style={styles}>
