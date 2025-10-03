@@ -1,3 +1,57 @@
+export type ColorScheme = 'Default' | 'Rainbow';
+
+export type YAxisProps = {
+  allowDataOverflow: boolean;
+  allowDecimals: boolean;
+  allowDuplicatedCategory: boolean;
+  angle: number;
+  axisLine: boolean;
+  dataKey: string;
+  domainStart: 'auto' | number;
+  domainEnd: 'auto' | number;
+  hide: boolean;
+  includeHidden: boolean;
+  label: null;
+  minTickGap: number;
+  mirror: boolean;
+  name: null;
+  orientation: string;
+  reversed: boolean;
+  scale: string;
+  tickCount: number;
+  tickLine: boolean;
+  tickSize: number;
+  type: string;
+  unit: null;
+  width: number;
+};
+
+export interface XAxisProps {
+  allowDataOverflow?: boolean;
+  allowDecimals?: boolean;
+  allowDuplicatedCategory?: boolean;
+  angle?: number;
+  axisLine?: boolean;
+  dataKey?: string;
+  domainStart?: number | 'auto';
+  domainEnd?: number | 'auto';
+  height?: number;
+  hide?: boolean;
+  includeHidden?: boolean;
+  label?: string | null;
+  minTickGap?: number;
+  mirror?: boolean;
+  name?: string | null;
+  orientation?: 'Top' | 'Bottom';
+  reversed?: boolean;
+  scale?: 'Auto' | 'Linear' | 'Log' | 'Time' | 'Ordinal';
+  tickCount?: number;
+  tickLine?: boolean;
+  tickSize?: number;
+  type?: 'Category' | 'Number' | 'Time';
+  unit?: string | null;
+}
+
 export type CartesianGridProps = {
   fill: string | null;
   fillOpacity: number | null;
@@ -17,3 +71,102 @@ export type LegendProps = {
   layout?: 'Horizontal' | 'Vertical';
   verticalAlign?: 'Top' | 'Middle' | 'Bottom';
 };
+
+export interface MarkLine {
+  silent?: boolean;
+  symbol?: string | [string, string];
+  symbolSize?: number | [number, number];
+  symbolOffset?: number | [number, number];
+  precision?: number;
+  label?: {
+    show?: boolean;
+    position?: 'start' | 'middle' | 'end';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formatter?: string | ((params: any) => string);
+    color?: string;
+    fontSize?: number;
+    fontWeight?: string | number;
+  };
+  lineStyle?: {
+    color?: string;
+    width?: number;
+    type?: 'solid' | 'dashed' | 'dotted';
+    opacity?: number;
+  };
+  emphasis?: {
+    disabled?: boolean;
+    label?: Partial<MarkLine['label']>;
+    lineStyle?: Partial<MarkLine['lineStyle']>;
+  };
+  blur?: {
+    label?: Partial<MarkLine['label']>;
+    lineStyle?: Partial<MarkLine['lineStyle']>;
+  };
+  data: Array<{
+    type?: 'min' | 'max' | 'average';
+    name?: string;
+    xAxis?: number | string;
+    yAxis?: number;
+    coords?: [[number, number], [number, number]];
+    value?: number;
+  }>;
+  z?: number;
+  animation?: boolean;
+  animationThreshold?: number;
+  animationDuration?: number;
+  animationEasing?: string;
+  animationDelay?: number;
+  animationDurationUpdate?: number;
+  animationEasingUpdate?: string;
+  animationDelayUpdate?: number;
+}
+
+type LabelPosition =
+  | 'inside'
+  | 'insideTop'
+  | 'insideBottom'
+  | 'insideLeft'
+  | 'insideRight'
+  | 'insideTopLeft'
+  | 'insideTopRight'
+  | 'insideBottomLeft'
+  | 'insideBottomRight'
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right';
+
+export interface MarkArea {
+  zlevel?: number;
+  z?: number;
+  silent?: boolean;
+  animation?: boolean;
+  animationThreshold?: number;
+  animationDuration?: number;
+  animationEasing?: string;
+  animationDelay?: number;
+  animationDurationUpdate?: number;
+  animationEasingUpdate?: string;
+  animationDelayUpdate?: number;
+  label?: {
+    show?: boolean;
+    position?: LabelPosition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formatter?: string | ((params: any) => string);
+    color?: string;
+    fontSize?: number;
+    fontWeight?: string | number;
+  };
+  itemStyle?: {
+    color?: string;
+    borderColor?: string;
+    borderWidth?: number;
+    opacity?: number;
+  };
+  data: Array<
+    [
+      { xAxis?: number | string; yAxis?: number | string; name?: string },
+      { xAxis?: number | string; yAxis?: number | string; name?: string },
+    ]
+  >;
+}

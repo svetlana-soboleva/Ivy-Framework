@@ -1,30 +1,22 @@
 import React from 'react';
+import { ColorScheme, ExtendedBarProps, ExtendedTooltipProps } from './shared';
 import {
-  ColorScheme,
-  ExtendedBarProps,
-  ExtendedTooltipProps,
-  // generateBarProps,
-  // generateLabelListProps,
-} from './shared';
-import {
-  applyHorizontalStackRounding,
   generateDataProps,
   generateEChartGrid,
   generateEChartLegend,
-  getColorGeneratorEChart,
+  getColors,
 } from './sharedUtils';
-import {
-  ExtendedXAxisProps,
-  ExtendedYAxisProps,
-  // generateXAxisProps,
-  // generateYAxisProps,
-  // generateLegendProps,
-} from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
 import { StackOffsetType } from 'recharts/types/util/types';
-//import { camelCase } from 'lodash';
 import ReactECharts from 'echarts-for-react';
-import { CartesianGridProps, LegendProps } from './chartTypes';
+import {
+  CartesianGridProps,
+  LegendProps,
+  MarkArea,
+  MarkLine,
+  XAxisProps,
+  YAxisProps,
+} from './chartTypes';
 
 interface BarChartWidgetProps {
   id: string;
@@ -33,12 +25,12 @@ interface BarChartWidgetProps {
   height?: string;
   bars?: ExtendedBarProps[];
   cartesianGrid?: CartesianGridProps;
-  xAxis?: ExtendedXAxisProps[];
-  yAxis?: ExtendedYAxisProps[];
+  xAxis?: XAxisProps[];
+  yAxis?: YAxisProps[];
   tooltip?: ExtendedTooltipProps;
   legend?: LegendProps;
-  referenceLines?: unknown;
-  referenceAreas?: unknown;
+  referenceLines?: MarkLine[];
+  referenceAreas?: MarkArea[];
   referenceDots?: unknown;
   colorScheme: ColorScheme;
   stackOffset: StackOffsetType;
@@ -55,19 +47,19 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   height,
   bars,
   cartesianGrid,
-  //xAxis,
-  //yAxis,
+  xAxis,
+  yAxis,
   tooltip,
   legend,
-  // referenceLines,
-  // referenceAreas,
-  // referenceDots,
+  //referenceLines,
+  //referenceAreas,
+  //referenceDots,
   colorScheme,
   //stackOffset,
-  // barGap,
-  // barCategoryGap,
-  // maxBarSize,
-  // reverseStackOrder,
+  barGap,
+  barCategoryGap,
+  maxBarSize,
+  reverseStackOrder,
   layout,
 }) => {
   const styles: React.CSSProperties = {
@@ -75,32 +67,44 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     ...getHeight(height),
     minHeight: 300,
   };
+
   const { categories, valueKeys } = generateDataProps(data);
-  const allStackOne = bars?.every(b => b.stackId === 1);
-  const hasDifferentStacks = bars && !allStackOne;
-  const colors = getColorGeneratorEChart(
-    colorScheme ?? 'Default',
-    valueKeys.length
-  );
+  const colors = getColors(colorScheme);
   const series = valueKeys.map((key, i) => ({
     name: key,
     type: 'bar',
     data: data.map(d => d[key]),
-    stack: hasDifferentStacks ? String(bars?.[i]?.stackId) : undefined,
+    stack: bars
+      ? bars.every(b => b.stackId === 1)
+        ? undefined
+        : String(bars[i]?.stackId)
+      : undefined,
+    barGap: barGap ? `${barGap}%` : '0%',
+    barCategoryGap: barCategoryGap ? `${barCategoryGap}%` : '0%',
+    maxBarSize: maxBarSize || undefined,
+    stackOrder: reverseStackOrder ? 'seriesDesc' : 'seriesAsc',
   }));
   const isVertical = layout?.toLowerCase() === 'vertical';
-  if (!isVertical) {
-    applyHorizontalStackRounding(series);
-  }
+
+  const xAxisOption = {
+    type: isVertical ? 'value' : 'category',
+    data: isVertical ? undefined : categories,
+    position:
+      xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
+  };
+
+  const yAxisOption = {
+    type: isVertical ? 'category' : 'value',
+    data: isVertical ? categories : undefined,
+    position:
+      yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
+  };
+
   const option = {
     grid: generateEChartGrid(cartesianGrid),
     color: colors,
-    xAxis: isVertical
-      ? { type: 'value' }
-      : { type: 'category', data: categories },
-    yAxis: isVertical
-      ? { type: 'category', data: categories }
-      : { type: 'value' },
+    xAxis: xAxisOption,
+    yAxis: yAxisOption,
     series,
     legend: generateEChartLegend(legend),
     tooltip: {
