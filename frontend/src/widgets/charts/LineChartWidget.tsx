@@ -1,38 +1,22 @@
 import React from 'react';
-import {
-  LineChart,
-  CartesianGrid,
-  Line,
-  XAxis,
-  YAxis,
-  ReferenceArea,
-  ReferenceLine,
-  ReferenceDot,
-  CartesianGridProps,
-  ReferenceLineProps,
-  ReferenceAreaProps,
-  ReferenceDotProps,
-  LegendProps,
-} from 'recharts';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-} from '@/components/ui/chart';
-import { ColorScheme, ExtendedTooltipProps, getColorGenerator } from './shared';
-import {
-  ExtendedXAxisProps,
-  ExtendedYAxisProps,
-  ExtendedLineProps,
-  generateXAxisProps,
-  generateYAxisProps,
-  generateLegendProps,
-  generateLineProps,
-} from './shared';
+import ReactECharts from 'echarts-for-react';
+import { ColorScheme, ExtendedLineProps, ExtendedTooltipProps } from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
+import {
+  generateDataProps,
+  generateEChartGrid,
+  generateEChartLegend,
+  getColors,
+} from './sharedUtils';
+import {
+  CartesianGridProps,
+  ChartType,
+  LegendProps,
+  MarkArea,
+  MarkLine,
+  XAxisProps,
+  YAxisProps,
+} from './chartTypes';
 
 interface LineChartData {
   [key: string]: string | number;
@@ -45,13 +29,13 @@ interface LineChartWidgetProps {
   height?: string;
   lines?: ExtendedLineProps[];
   cartesianGrid?: CartesianGridProps;
-  xAxis?: ExtendedXAxisProps[];
-  yAxis?: ExtendedYAxisProps[];
+  xAxis?: XAxisProps[];
+  yAxis?: YAxisProps[];
   tooltip?: ExtendedTooltipProps;
   legend?: LegendProps;
-  referenceLines?: ReferenceLineProps[];
-  referenceAreas?: ReferenceAreaProps[];
-  referenceDots?: ReferenceDotProps[];
+  referenceLines?: MarkLine[];
+  referenceAreas?: MarkArea[];
+  referenceDots?: unknown;
   colorScheme: ColorScheme;
 }
 
@@ -59,81 +43,71 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   data,
   width,
   height,
-  lines,
+  //lines,
   cartesianGrid,
-  xAxis,
-  yAxis,
+  //xAxis,
+  //yAxis,
   tooltip,
   legend,
-  referenceLines,
-  referenceAreas,
-  referenceDots,
+  //referenceLines,
+  //referenceAreas,
+  //referenceDots,
   colorScheme,
 }) => {
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    minHeight: 300,
   };
 
-  const chartConfig = {} satisfies ChartConfig;
-  const [colorGenerator] = getColorGenerator(colorScheme);
+  const colors = getColors(colorScheme);
 
+  const { categories, valueKeys } = generateDataProps(data);
+
+  const option = {
+    grid: generateEChartGrid(cartesianGrid),
+    xAxis: {
+      type: 'category',
+      data: categories,
+      axisLabel: {
+        formatter: (value: string) =>
+          value.length > 10 ? value.match(/.{1,10}/g)?.join('\n') : value,
+        interval: 'auto',
+      },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: (value: number) => {
+          if (Math.abs(value) >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+          if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+          if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(1) + 'K';
+          return value;
+        },
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        shadowStyle: {
+          opacity: 0.5,
+        },
+        type: 'shadow',
+        animated: tooltip?.animated ?? true,
+      },
+    },
+    legend: generateEChartLegend(legend),
+    color: colors,
+    series: valueKeys.map(key => ({
+      name: key,
+      type: ChartType.Line,
+      data: data.map(d => d[key]),
+    })),
+  };
   return (
-    <ChartContainer
-      config={chartConfig}
-      style={styles}
-      className="w-full max-w-[800px]"
-    >
-      <LineChart
-        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-        accessibilityLayer
-        data={data}
-      >
-        {cartesianGrid && <CartesianGrid {...cartesianGrid} />}
-
-        {xAxis?.map((props, index) => (
-          <XAxis key={`xaxis${index}`} {...generateXAxisProps(props)} />
-        ))}
-
-        {yAxis?.map((props, index) => (
-          <YAxis key={`yaxis${index}`} {...generateYAxisProps(props)} />
-        ))}
-
-        {legend && (
-          <ChartLegend
-            {...generateLegendProps(legend)}
-            content={<ChartLegendContent splitThreshold={6} />}
-          />
-        )}
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {referenceAreas?.map(({ ref, ...props }, index) => (
-          <ReferenceArea key={`refArea${index}`} {...props} />
-        ))}
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {referenceLines?.map(({ ref, ...props }, index) => (
-          <ReferenceLine key={`refLine${index}`} {...props} />
-        ))}
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {referenceDots?.map(({ ref, ...props }, index) => (
-          <ReferenceDot key={`refDot${index}`} {...props} />
-        ))}
-
-        {lines?.map((props, index) => (
-          <Line
-            key={`line${index}`}
-            {...generateLineProps(props, index, colorGenerator)}
-          />
-        ))}
-
-        {tooltip && (
-          <ChartTooltip
-            cursor={false}
-            isAnimationActive={tooltip?.animated}
-            content={<ChartTooltipContent />}
-          />
-        )}
-      </LineChart>
-    </ChartContainer>
+    <div>
+      <ReactECharts option={option} style={{ ...styles, minHeight: 300 }} />
+    </div>
   );
 };
 

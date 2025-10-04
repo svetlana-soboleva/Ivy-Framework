@@ -11,6 +11,7 @@ import { StackOffsetType } from 'recharts/types/util/types';
 import ReactECharts from 'echarts-for-react';
 import {
   CartesianGridProps,
+  ChartType,
   LegendProps,
   MarkArea,
   MarkLine,
@@ -72,7 +73,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   const colors = getColors(colorScheme);
   const series = valueKeys.map((key, i) => ({
     name: key,
-    type: 'bar',
+    type: ChartType.Bar,
     data: data.map(d => d[key]),
     stack: bars
       ? bars.every(b => b.stackId === 1)

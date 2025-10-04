@@ -1,5 +1,10 @@
 export type ColorScheme = 'Default' | 'Rainbow';
 
+export enum ChartType {
+  Bar = 'bar',
+  Line = 'line',
+}
+
 export type YAxisProps = {
   allowDataOverflow: boolean;
   allowDecimals: boolean;

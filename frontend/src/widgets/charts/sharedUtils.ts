@@ -81,5 +81,6 @@ export function generateEChartLegend(legend?: LegendProps) {
     orient: legend.layout?.toLowerCase(),
     bottom: legend.verticalAlign?.toLowerCase() === 'bottom' ? 0 : undefined,
     top: legend.verticalAlign?.toLowerCase() === 'top' ? 0 : undefined,
+    type: 'scroll',
   };
 }
