@@ -75,11 +75,10 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     name: key,
     type: ChartType.Bar,
     data: data.map(d => d[key]),
-    stack: bars
-      ? bars.every(b => b.stackId === 1)
-        ? undefined
-        : String(bars[i]?.stackId)
-      : undefined,
+    stack:
+      bars && bars[i]?.stackId !== undefined
+        ? String(bars[i].stackId)
+        : undefined,
     barGap: barGap ? `${barGap}%` : '0%',
     barCategoryGap: barCategoryGap ? `${barCategoryGap}%` : '0%',
     maxBarSize: maxBarSize || undefined,

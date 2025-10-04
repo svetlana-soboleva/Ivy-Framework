@@ -175,3 +175,18 @@ export interface MarkArea {
     ]
   >;
 }
+
+export interface LinesProps {
+  animated?: boolean;
+  connectNulls?: boolean;
+  curveType?: string;
+  dataKey: string;
+  label?: string | null;
+  legendType?: string;
+  name?: string;
+  scale?: string;
+  stroke?: string | null;
+  strokeDashArray?: string | null;
+  strokeWidth?: number;
+  unit?: string | null;
+}

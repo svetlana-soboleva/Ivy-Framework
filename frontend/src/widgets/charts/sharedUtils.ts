@@ -38,10 +38,16 @@ export const getColors = (scheme: ColorScheme): string[] => {
 };
 
 export const generateDataProps = (data: Record<string, unknown>[]) => {
+  if (data.length === 0) {
+    return { categoryKey: '', categories: [], valueKeys: [] };
+  }
   const categoryKey = Object.keys(data[0]).find(
     k => typeof data[0][k] === 'string'
-  )!;
-  const categories = data.map(d => d[categoryKey.toLowerCase()]);
+  );
+  if (!categoryKey) {
+    return { categoryKey: '', categories: [], valueKeys: [] };
+  }
+  const categories = data.map(d => d[categoryKey]);
   const valueKeys = Object.keys(data[0]).filter(
     k => typeof data[0][k] === 'number'
   );

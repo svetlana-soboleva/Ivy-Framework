@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
-import { ColorScheme, ExtendedLineProps, ExtendedTooltipProps } from './shared';
+import { ColorScheme, ExtendedTooltipProps } from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
 import {
   generateDataProps,
@@ -12,6 +12,7 @@ import {
   CartesianGridProps,
   ChartType,
   LegendProps,
+  LinesProps,
   MarkArea,
   MarkLine,
   XAxisProps,
@@ -27,7 +28,7 @@ interface LineChartWidgetProps {
   data: LineChartData[];
   width?: string;
   height?: string;
-  lines?: ExtendedLineProps[];
+  lines?: LinesProps[];
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
@@ -43,10 +44,10 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   data,
   width,
   height,
-  //lines,
+  lines,
   cartesianGrid,
-  //xAxis,
-  //yAxis,
+  xAxis,
+  yAxis,
   tooltip,
   legend,
   //referenceLines,
@@ -61,12 +62,21 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   };
 
   const colors = getColors(colorScheme);
-
   const { categories, valueKeys } = generateDataProps(data);
+
+  const series = valueKeys.map(key => ({
+    name: key,
+    type: ChartType.Line,
+    data: data.map(d => Number(d[key])),
+    step: lines?.find(l => l.curveType === 'Step') ? 'middle' : false,
+    smooth: lines?.find(l => l.curveType === 'Natural') ? true : false,
+  }));
 
   const option = {
     grid: generateEChartGrid(cartesianGrid),
     xAxis: {
+      position:
+        xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
       type: 'category',
       data: categories,
       axisLabel: {
@@ -85,6 +95,8 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
           return value;
         },
       },
+      position:
+        yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
     },
     tooltip: {
       trigger: 'axis',
@@ -98,11 +110,7 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
     },
     legend: generateEChartLegend(legend),
     color: colors,
-    series: valueKeys.map(key => ({
-      name: key,
-      type: ChartType.Line,
-      data: data.map(d => d[key]),
-    })),
+    series: series,
   };
   return (
     <div>
