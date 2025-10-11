@@ -1,3 +1,6 @@
+import { LineChartData } from './LineChartWidget';
+import { ExtendedTooltipProps } from './shared';
+
 export type ColorScheme = 'Default' | 'Rainbow';
 
 export enum ChartType {
@@ -189,4 +192,21 @@ export interface LinesProps {
   strokeDashArray?: string | null;
   strokeWidth?: number;
   unit?: string | null;
+}
+
+export interface LineChartWidgetProps {
+  id: string;
+  data: LineChartData[];
+  width?: string;
+  height?: string;
+  lines?: LinesProps[];
+  cartesianGrid?: CartesianGridProps;
+  xAxis?: XAxisProps[];
+  yAxis?: YAxisProps[];
+  tooltip?: ExtendedTooltipProps;
+  legend?: LegendProps;
+  referenceLines?: MarkLine[];
+  referenceAreas?: MarkArea[];
+  referenceDots?: unknown;
+  colorScheme: ColorScheme;
 }

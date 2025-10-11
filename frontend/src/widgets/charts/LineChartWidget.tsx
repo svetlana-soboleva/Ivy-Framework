@@ -6,11 +6,15 @@ import {
   generateDataProps,
   generateEChartGrid,
   generateEChartLegend,
+  generateSeries,
+  generateTooltip,
+  generateXAxis,
+  generateYAxis,
   getColors,
+  getTransformValueFn,
 } from './sharedUtils';
 import {
   CartesianGridProps,
-  ChartType,
   LegendProps,
   LinesProps,
   MarkArea,
@@ -19,7 +23,7 @@ import {
   YAxisProps,
 } from './chartTypes';
 
-interface LineChartData {
+export interface LineChartData {
   [key: string]: string | number;
 }
 
@@ -63,60 +67,20 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
 
   const colors = getColors(colorScheme);
   const { categories, valueKeys } = generateDataProps(data);
-
-  const series = valueKeys.map(key => ({
-    name: key,
-    type: ChartType.Line,
-    data: data.map(d => Number(d[key])),
-    step: lines?.find(l => l.curveType === 'Step') ? 'middle' : false,
-    smooth: lines?.find(l => l.curveType === 'Natural') ? true : false,
-  }));
+  const { transform, largeSpread, minValue, maxValue } =
+    getTransformValueFn(data);
 
   const option = {
     grid: generateEChartGrid(cartesianGrid),
-    xAxis: {
-      position:
-        xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
-      type: 'category',
-      data: categories,
-      axisLabel: {
-        formatter: (value: string) =>
-          value.length > 10 ? value.match(/.{1,10}/g)?.join('\n') : value,
-        interval: 'auto',
-      },
-    },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        formatter: (value: number) => {
-          if (Math.abs(value) >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-          if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-          if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(1) + 'K';
-          return value;
-        },
-      },
-      position:
-        yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        shadowStyle: {
-          opacity: 0.5,
-        },
-        type: 'shadow',
-        animated: tooltip?.animated ?? true,
-      },
-    },
+    xAxis: generateXAxis(categories as string[], xAxis),
+    yAxis: generateYAxis(largeSpread, transform, minValue, maxValue, yAxis),
+    tooltip: generateTooltip(tooltip),
     legend: generateEChartLegend(legend),
     color: colors,
-    series: series,
+    series: generateSeries(data, valueKeys, lines, transform),
   };
-  return (
-    <div>
-      <ReactECharts option={option} style={{ ...styles, minHeight: 300 }} />
-    </div>
-  );
+
+  return <ReactECharts option={option} style={styles} />;
 };
 
 export default LineChartWidget;
