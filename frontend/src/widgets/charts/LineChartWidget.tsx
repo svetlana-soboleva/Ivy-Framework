@@ -74,8 +74,9 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
     grid: generateEChartGrid(cartesianGrid),
     xAxis: generateXAxis(categories as string[], xAxis),
     yAxis: generateYAxis(largeSpread, transform, minValue, maxValue, yAxis),
-    tooltip: generateTooltip(tooltip),
+    tooltip: generateTooltip(tooltip, 'shadow'),
     legend: generateEChartLegend(legend),
+
     color: colors,
     series: generateSeries(data, valueKeys, lines, transform),
   };

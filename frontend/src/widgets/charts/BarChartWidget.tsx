@@ -105,6 +105,11 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     color: colors,
     xAxis: xAxisOption,
     yAxis: yAxisOption,
+    toolbox: {
+      feature: {
+        saveAsImage: {},
+      },
+    },
     series,
     legend: generateEChartLegend(legend),
     tooltip: {

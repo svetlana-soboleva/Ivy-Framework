@@ -182,16 +182,20 @@ export const generateYAxis = (
       return value;
     },
   },
+  // splitnumber? multiple ticks in the transformed space can map to the same unscaled value, causing duplicates
   min: largeSpread ? transformValue(minValue) : 'dataMin',
   max: largeSpread ? transformValue(maxValue) : 'dataMax',
   position:
     yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
 });
 
-export const generateTooltip = (tooltip?: ExtendedTooltipProps) => ({
+export const generateTooltip = (
+  tooltip?: ExtendedTooltipProps,
+  type?: string
+) => ({
   trigger: 'axis',
   axisPointer: {
-    type: 'shadow',
+    type: type ?? 'cross',
     animated: tooltip?.animated ?? true,
     shadowStyle: { opacity: 0.5 },
   },

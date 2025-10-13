@@ -188,6 +188,7 @@ export interface LinesProps {
   legendType?: string;
   name?: string;
   scale?: string;
+  stackId?: string | number;
   stroke?: string | null;
   strokeDashArray?: string | null;
   strokeWidth?: number;
@@ -209,4 +210,10 @@ export interface LineChartWidgetProps {
   referenceAreas?: MarkArea[];
   referenceDots?: unknown;
   colorScheme: ColorScheme;
+}
+
+export interface ReferenceDot {
+  x: number;
+  y: number;
+  label?: string;
 }
