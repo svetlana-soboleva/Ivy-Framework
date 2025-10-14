@@ -67,6 +67,7 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   };
 
   const { categories, valueKeys } = generateDataProps(data);
+
   const colors = getColors(colorScheme);
   const { transform, largeSpread, minValue, maxValue } =
     getTransformValueFn(data);

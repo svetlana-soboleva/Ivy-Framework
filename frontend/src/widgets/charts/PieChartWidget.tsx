@@ -1,24 +1,15 @@
 import React from 'react';
-import { LegendProps, Pie, PieChart, Cell, LabelList, Label } from 'recharts';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-} from '@/components/ui/chart';
-import {
-  ColorScheme,
-  ExtendedPieProps,
-  ExtendedTooltipProps,
-  generatePieProps,
-  getColorGenerator,
-  generateLegendProps,
-  generateLabelListProps,
-} from './shared';
+import { ColorScheme } from './shared';
 import { getHeight, getWidth } from '@/lib/styles';
-import { calculateCenterLabelLayout } from './utils';
+import ReactECharts from 'echarts-for-react';
+import { getColors } from './sharedUtils';
+import {
+  ChartType,
+  PieLegendProps,
+  PieProps,
+  ToolTipProps,
+} from './chartTypes';
+import { generateDataProps } from './sharedUtils';
 
 interface PieChartTotalProps {
   formattedValue: string;
@@ -34,9 +25,9 @@ interface PieChartWidgetProps {
   data: PieChartData[];
   width?: string;
   height?: string;
-  pies?: ExtendedPieProps[];
-  tooltip?: ExtendedTooltipProps;
-  legend?: LegendProps;
+  pies?: PieProps[];
+  tooltip?: ToolTipProps;
+  legend?: PieLegendProps;
   colorScheme: ColorScheme;
   total?: PieChartTotalProps;
 }
@@ -54,135 +45,108 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    minHeight: 300,
   };
 
-  const chartConfig = {} satisfies ChartConfig;
-  const [colorGenerator] = getColorGenerator(colorScheme);
+  const { valueKeys } = generateDataProps(data);
+
+  const colors = getColors(colorScheme);
+
+  const newData = data.map(d => {
+    return { value: d.measure, name: d.dimension as string };
+  });
+
+  const series = valueKeys.map(key => {
+    const pieProperties = pies?.find(a => a.dataKey.toLowerCase() === key);
+
+    return {
+      name: key.charAt(0).toUpperCase() + key.slice(1),
+      type: ChartType.Pie,
+      radius: [
+        pieProperties?.innerRadius ?? '40%',
+        pieProperties?.outerRadius ?? '70%',
+      ],
+      center: [pieProperties?.cx ?? '50%', pieProperties?.cy ?? '50%'],
+      startAngle: pieProperties?.startAngle ?? 90,
+      endAngle: pieProperties?.endAngle ?? 450,
+      animation: pieProperties?.animated ?? true,
+      avoidLabelOverlap: false,
+      label: {
+        show: false,
+        position: 'center',
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: 'bold',
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      itemStyle: {
+        color: pieProperties?.fill ?? undefined,
+        opacity: pieProperties?.fillOpacity ?? undefined,
+        borderColor: pieProperties?.stroke ?? undefined,
+        borderWidth: pieProperties?.strokeWidth ?? undefined,
+      },
+      data: newData,
+    };
+  });
+
+  const option = {
+    color: colors,
+    ...(legend && {
+      legend: {
+        orient:
+          legend.layout?.toLowerCase() === 'vertical'
+            ? 'vertical'
+            : 'horizontal',
+        left:
+          legend.align?.toLowerCase() === 'left'
+            ? 'left'
+            : legend.align?.toLowerCase() === 'right'
+              ? 'right'
+              : 'center',
+        top:
+          legend.verticalAlign?.toLowerCase() === 'top'
+            ? 'top'
+            : legend.verticalAlign?.toLowerCase() === 'middle'
+              ? 'middle'
+              : 'bottom',
+        icon: legend.iconType ?? 'circle',
+        itemWidth: legend.iconSize ?? 12,
+        itemHeight: legend.iconSize ?? 12,
+        type: 'scroll',
+      },
+    }),
+    textStyle: {
+      color: 'var(--text-primary, #333)',
+      fontSize: 12,
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)',
+      animated: tooltip?.animated ?? true,
+      textStyle: {
+        fontSize: 12,
+        fontWeight: 'normal',
+      },
+    },
+    series: series,
+  };
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      style={styles}
-      className="aspect-square w-full"
-    >
-      <PieChart
-        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-        accessibilityLayer
-      >
-        {legend && (
-          <ChartLegend
-            {...generateLegendProps(legend)}
-            verticalAlign="bottom"
-            align="center"
-            layout="horizontal"
-            content={<ChartLegendContent splitThreshold={6} />}
-          />
-        )}
-
-        {tooltip && (
-          <ChartTooltip
-            cursor={false}
-            isAnimationActive={tooltip?.animated}
-            content={<ChartTooltipContent />}
-          />
-        )}
-
-        {pies?.map((props, pieIndex) => {
-          const isDonut = !!props.innerRadius;
-          const manySlices = Array.isArray(data) && data.length > 6;
-          const basePieProps = generatePieProps(props);
-          const pieOverrides =
-            isDonut && manySlices
-              ? { labelLine: false, minAngle: 8, cx: '50%', cy: '50%' }
-              : { cx: '50%', cy: '50%' };
-          return (
-            <Pie
-              data={data}
-              key={`pie${pieIndex}`}
-              {...basePieProps}
-              {...pieOverrides}
-            >
-              {data.map((_, dataIndex) => (
-                <Cell
-                  key={`cell-${dataIndex}`}
-                  fill={colorGenerator(dataIndex)}
-                />
-              ))}
-
-              {props.labelLists
-                ?.filter(ll => {
-                  // For donuts, drop inside labels; keep outside only.
-                  const pos = (ll.position as unknown as string) || '';
-                  return !isDonut || pos.toString().toLowerCase() !== 'inside';
-                })
-                .map((labelList, labelListIndex) => (
-                  <LabelList
-                    key={`labelList-${labelListIndex}`}
-                    {...generateLabelListProps(labelList)}
-                  />
-                ))}
-
-              {(() => {
-                // Backward-compatible display logic for total label.
-                // Prefer explicit per-pie flag: props.showTotal === true
-                // Fallback to legacy behavior: first pie shows total when provided
-                const showTotal: boolean =
-                  (props as unknown as { showTotal?: boolean })?.showTotal ??
-                  pieIndex === 0;
-                return showTotal && total;
-              })() && (
-                <Label
-                  position="center"
-                  content={({ viewBox }) => {
-                    const layout = calculateCenterLabelLayout(
-                      viewBox as Record<string, unknown> | undefined,
-                      basePieProps,
-                      total!
-                    );
-                    if (!layout) return null;
-                    const { cx, cy, text, valueFont, labelFont, gap } = layout;
-                    return (
-                      <g pointerEvents="none">
-                        <text
-                          x={cx}
-                          y={cy}
-                          textAnchor="middle"
-                          dominantBaseline="central"
-                          alignmentBaseline="middle"
-                        >
-                          <tspan
-                            x={cx}
-                            y={cy}
-                            style={{
-                              fontSize: `${valueFont}px`,
-                              lineHeight: 1,
-                            }}
-                            className="fill-foreground font-bold"
-                          >
-                            {text}
-                          </tspan>
-                          <tspan
-                            x={cx}
-                            y={cy + gap}
-                            style={{
-                              fontSize: `${labelFont}px`,
-                              lineHeight: 1,
-                            }}
-                            className="fill-muted-foreground"
-                          >
-                            {total!.label}
-                          </tspan>
-                        </text>
-                      </g>
-                    );
-                  }}
-                />
-              )}
-            </Pie>
-          );
-        })}
-      </PieChart>
-    </ChartContainer>
+    <div>
+      {total && (
+        <div style={{ textAlign: 'center', marginBottom: 12 }}>
+          <span>{total.label}</span>
+          <span>{total.formattedValue}</span>
+        </div>
+      )}
+      <ReactECharts option={option} style={styles} />
+    </div>
   );
 };
 

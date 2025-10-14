@@ -6,6 +6,7 @@ export type ColorScheme = 'Default' | 'Rainbow';
 export enum ChartType {
   Bar = 'bar',
   Line = 'line',
+  Pie = 'pie',
 }
 
 export type YAxisProps = {
@@ -216,4 +217,35 @@ export interface ReferenceDot {
   x: number;
   y: number;
   label?: string;
+}
+
+export type PieProps = {
+  animated?: boolean;
+  cx?: number | null;
+  cy?: number | null;
+  dataKey: string;
+  endAngle?: number;
+  fill?: string | null;
+  fillOpacity?: number | null;
+  innerRadius?: string | number;
+  labelLists?: string[];
+  legendType?: string;
+  nameKey: string;
+  outerRadius?: string | number;
+  startAngle?: number;
+  stroke?: string | null;
+  strokeDashArray?: string | null;
+  strokeWidth?: number;
+};
+
+export interface ToolTipProps {
+  animated?: boolean;
+}
+
+export interface PieLegendProps {
+  align?: string;
+  iconSize?: number;
+  iconType?: string | null;
+  layout?: string;
+  verticalAlign?: string;
 }
