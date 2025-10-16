@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorScheme } from './shared';
+import { ColorScheme } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import ReactECharts from 'echarts-for-react';
 import { getColors } from './sharedUtils';

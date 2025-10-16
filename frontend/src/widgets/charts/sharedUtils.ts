@@ -3,12 +3,13 @@ import {
   ChartType,
   LegendProps,
   LinesProps,
+  ToolTipProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
 import { LineChartData } from './LineChartWidget';
-import { ColorScheme, ExtendedTooltipProps } from './shared';
 
+export type ColorScheme = 'Default' | 'Rainbow';
 const defaultColors = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'];
 const rainbowColors = [
   'blue',
@@ -189,10 +190,7 @@ export const generateYAxis = (
     yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
 });
 
-export const generateTooltip = (
-  tooltip?: ExtendedTooltipProps,
-  type?: string
-) => ({
+export const generateTooltip = (tooltip?: ToolTipProps, type?: string) => ({
   trigger: 'axis',
   axisPointer: {
     type: type ?? 'cross',

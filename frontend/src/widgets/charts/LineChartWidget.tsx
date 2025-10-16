@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
-import { ColorScheme, ExtendedTooltipProps } from './shared';
+import { ColorScheme } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import {
   generateDataProps,
@@ -19,6 +19,7 @@ import {
   LinesProps,
   MarkArea,
   MarkLine,
+  ToolTipProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
@@ -36,7 +37,7 @@ interface LineChartWidgetProps {
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
-  tooltip?: ExtendedTooltipProps;
+  tooltip?: ToolTipProps;
   legend?: LegendProps;
   referenceLines?: MarkLine[];
   referenceAreas?: MarkArea[];

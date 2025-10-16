@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorScheme, ExtendedTooltipProps } from './shared';
+import { ColorScheme } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import { StackOffsetType } from 'recharts/types/util/types';
 import ReactECharts from 'echarts-for-react';
@@ -21,6 +21,7 @@ import {
   MarkArea,
   LegendProps,
   CartesianGridProps,
+  ToolTipProps,
 } from './chartTypes';
 import { LineChartData } from './LineChartWidget';
 import { getTransformValueFn } from './sharedUtils';
@@ -35,7 +36,7 @@ interface AreaChartWidgetProps {
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
-  tooltip?: ExtendedTooltipProps;
+  tooltip?: ToolTipProps;
   legend?: LegendProps;
   referenceLines?: MarkLine[];
   referenceAreas?: MarkArea[];

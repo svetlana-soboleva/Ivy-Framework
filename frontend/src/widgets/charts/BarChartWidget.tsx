@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorScheme, ExtendedBarProps, ExtendedTooltipProps } from './shared';
+import { ColorScheme } from './sharedUtils';
 import {
   generateDataProps,
   generateEChartGrid,
@@ -10,11 +10,13 @@ import { getHeight, getWidth } from '@/lib/styles';
 import { StackOffsetType } from 'recharts/types/util/types';
 import ReactECharts from 'echarts-for-react';
 import {
+  BarProps,
   CartesianGridProps,
   ChartType,
   LegendProps,
   MarkArea,
   MarkLine,
+  ToolTipProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
@@ -24,11 +26,11 @@ interface BarChartWidgetProps {
   data: Record<string, unknown>[];
   width?: string;
   height?: string;
-  bars?: ExtendedBarProps[];
+  bars?: BarProps[];
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
-  tooltip?: ExtendedTooltipProps;
+  tooltip?: ToolTipProps;
   legend?: LegendProps;
   referenceLines?: MarkLine[];
   referenceAreas?: MarkArea[];

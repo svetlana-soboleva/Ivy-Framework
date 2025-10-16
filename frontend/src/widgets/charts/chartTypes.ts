@@ -1,5 +1,4 @@
 import { LineChartData } from './LineChartWidget';
-import { ExtendedTooltipProps } from './shared';
 
 export type ColorScheme = 'Default' | 'Rainbow';
 
@@ -8,6 +7,22 @@ export enum ChartType {
   Line = 'line',
   Pie = 'pie',
 }
+
+export type BarProps = {
+  animated?: boolean;
+  dataKey: string;
+  fill?: string | null;
+  fillOpacity?: number | null;
+  labelLists?: string[];
+  legendType?: string;
+  name: string;
+  radius?: number[];
+  stackId?: string | number;
+  stroke?: string | null;
+  strokeDashArray?: string | null;
+  strokeWidth?: number;
+  unit?: string | null;
+};
 
 export type YAxisProps = {
   allowDataOverflow: boolean;
@@ -205,7 +220,7 @@ export interface LineChartWidgetProps {
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
-  tooltip?: ExtendedTooltipProps;
+  tooltip?: unknown; //fix it
   legend?: LegendProps;
   referenceLines?: MarkLine[];
   referenceAreas?: MarkArea[];
