@@ -1,5 +1,12 @@
 ---
 title: SQLite
+searchHints:
+  - sqlite
+  - database
+  - file-based
+  - embedded
+  - local
+  - db
 ---
 
 # SQLite Database Provider
@@ -41,6 +48,31 @@ See [Database Integration Overview](Overview.md) for more information on adding 
 ## Configuration
 
 Ivy automatically configures the **Microsoft.EntityFrameworkCore.Sqlite** package for SQLite connections.
+
+## Database Initialization
+
+The Database Generator for SQLite projects includes automatic database initialization and improved logging capabilities:
+
+- **Automatic Database Creation**: The generated DbContextFactory automatically creates the SQLite database file on first use
+- **Thread-Safe Initialization**: Uses semaphore locking for safe concurrent access
+- **Flexible Storage**: Supports custom storage volumes with a default location in the user's local application data folder
+- **Better Logging**: Entity Framework logs are properly routed through the application's logging infrastructure
+
+The generated factory accepts optional volume and logger parameters for enhanced configuration:
+
+```csharp
+public MyDbContextFactory(
+    ServerArgs args,
+    IVolume? volume = null,
+    ILogger? logger = null
+)
+```
+
+<Callout Type="info">
+The `IVolume` parameter allows custom storage locations for your SQLite database, defaulting to the user's local application data folder. Inject your custom `IVolume` implementation through dependency injection for production deployments, containerized applications, or multi-tenant scenarios.
+</Callout>
+
+For more details on volume configuration, see the [Volume documentation](../../02_Concepts/Volume.md).
 
 ## SQLite-Specific Features
 

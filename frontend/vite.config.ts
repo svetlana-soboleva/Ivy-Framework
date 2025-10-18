@@ -80,7 +80,7 @@ export default defineConfig(({ mode }) => ({
         // Fine-grained vendor chunking to keep initial payloads small and improve caching
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('@radix-ui'))
+            if (id.includes('react') && !id.includes('recharts'))
               return 'vendor-react';
             if (
               id.includes('codemirror') ||
@@ -95,8 +95,6 @@ export default defineConfig(({ mode }) => ({
             )
               return 'vendor-markdown';
             if (id.includes('mermaid')) return 'vendor-mermaid';
-            if (id.includes('recharts') || id.includes('d3'))
-              return 'vendor-charts';
             if (id.includes('reactflow')) return 'vendor-reactflow';
             if (id.includes('framer-motion')) return 'vendor-motion';
             if (id.includes('katex')) return 'vendor-katex';

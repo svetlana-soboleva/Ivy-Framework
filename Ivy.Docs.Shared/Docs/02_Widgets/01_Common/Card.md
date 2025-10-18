@@ -1,6 +1,13 @@
 ﻿---
 prepare: |
   var client = this.UseService<IClientProvider>();
+searchHints:
+  - container
+  - panel
+  - box
+  - section
+  - wrapper
+  - border
 ---
 
 # Card
@@ -20,6 +27,19 @@ new Card(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc",
     new Button("Sign Me Up", _ => client.Toast("You have signed up!"))
 ).Title("Card App").Description("This is a card app.").Width(Size.Units(100))
+```
+
+## Click Listener
+
+HandleClick attaches an event listener and makes the card clickable.
+
+```csharp demo-below
+new Card(
+    "This card is clickable."
+).Title("Clickable Card")
+ .Description("Demonstrating click and mouse hover.")
+ .HandleClick(_ => client.Toast("Card clicked!"))
+ .Width(Size.Units(100))
 ```
 
 ## Border Customization
@@ -56,6 +76,6 @@ new MetricView(
 )
 ```
 
-The `MetricView` automatically handles loading states, error handling, and displays trend arrows with color-coded indicators for performance tracking.
+The `MetricView` automatically handles loading states, error handling, and displays trend arrows with color-coded indicators for performance tracking. See the [MetricView documentation](MetricView.md) for more details.
 
 <WidgetDocs Type="Ivy.Card" ExtensionTypes="Ivy.CardExtensions" SourceUrl="https://github.com/Ivy-Interactive/Ivy-Framework/blob/main/Ivy/Widgets/Card.cs"/>
