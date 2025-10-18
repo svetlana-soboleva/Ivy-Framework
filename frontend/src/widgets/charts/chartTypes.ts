@@ -1,5 +1,3 @@
-import { LineChartData } from './LineChartWidget';
-
 export type ColorScheme = 'Default' | 'Rainbow';
 
 export enum ChartType {
@@ -8,6 +6,9 @@ export enum ChartType {
   Pie = 'pie',
 }
 
+export interface ChartData {
+  [key: string]: string | number;
+}
 export type BarProps = {
   animated?: boolean;
   dataKey: string;
@@ -23,6 +24,23 @@ export type BarProps = {
   strokeWidth?: number;
   unit?: string | null;
 };
+
+interface PieChartTotalProps {
+  formattedValue: string;
+  label: string;
+}
+
+export interface PieChartWidgetProps {
+  id: string;
+  data: ChartData[];
+  width?: string;
+  height?: string;
+  pies?: PieProps[];
+  tooltip?: ToolTipProps;
+  legend?: PieLegendProps;
+  colorScheme: ColorScheme;
+  total?: PieChartTotalProps;
+}
 
 export type YAxisProps = {
   allowDataOverflow: boolean;
@@ -213,18 +231,18 @@ export interface LinesProps {
 
 export interface LineChartWidgetProps {
   id: string;
-  data: LineChartData[];
+  data: ChartData[];
   width?: string;
   height?: string;
   lines?: LinesProps[];
   cartesianGrid?: CartesianGridProps;
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
-  tooltip?: unknown; //fix it
+  tooltip?: ToolTipProps;
   legend?: LegendProps;
-  referenceLines?: MarkLine[];
-  referenceAreas?: MarkArea[];
-  referenceDots?: unknown;
+  referenceLines?: MarkLine;
+  referenceAreas?: MarkArea;
+  referenceDots?: ReferenceDot;
   colorScheme: ColorScheme;
 }
 

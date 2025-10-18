@@ -1,36 +1,9 @@
 import React from 'react';
-import { ColorScheme } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import ReactECharts from 'echarts-for-react';
 import { getColors } from './sharedUtils';
-import {
-  ChartType,
-  PieLegendProps,
-  PieProps,
-  ToolTipProps,
-} from './chartTypes';
+import { ChartType, PieChartWidgetProps } from './chartTypes';
 import { generateDataProps } from './sharedUtils';
-
-interface PieChartTotalProps {
-  formattedValue: string;
-  label: string;
-}
-
-interface PieChartData {
-  [key: string]: string | number;
-}
-
-interface PieChartWidgetProps {
-  id: string;
-  data: PieChartData[];
-  width?: string;
-  height?: string;
-  pies?: PieProps[];
-  tooltip?: ToolTipProps;
-  legend?: PieLegendProps;
-  colorScheme: ColorScheme;
-  total?: PieChartTotalProps;
-}
 
 const PieChartWidget: React.FC<PieChartWidgetProps> = ({
   data,

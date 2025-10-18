@@ -23,13 +23,13 @@ import {
   CartesianGridProps,
   ToolTipProps,
 } from './chartTypes';
-import { LineChartData } from './LineChartWidget';
+import { ChartData } from './chartTypes';
 import { getTransformValueFn } from './sharedUtils';
 import { ReferenceDot } from './chartTypes';
 
 interface AreaChartWidgetProps {
   id: string;
-  data: LineChartData[];
+  data: ChartData[];
   width?: string;
   height?: string;
   areas?: LinesProps[];
@@ -38,9 +38,9 @@ interface AreaChartWidgetProps {
   yAxis?: YAxisProps[];
   tooltip?: ToolTipProps;
   legend?: LegendProps;
-  referenceLines?: MarkLine[];
-  referenceAreas?: MarkArea[];
-  referenceDots?: ReferenceDot[];
+  referenceLines?: MarkLine;
+  referenceAreas?: MarkArea;
+  referenceDots?: ReferenceDot;
   colorScheme: ColorScheme;
   stackOffset: StackOffsetType;
 }
@@ -72,7 +72,7 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   const colors = getColors(colorScheme);
   const { transform, largeSpread, minValue, maxValue } =
     getTransformValueFn(data);
-  //precompute
+  // precompute
   const gradientColors = colors.map(color => ({
     opacity: 0.4,
     type: 'linear',
@@ -100,9 +100,11 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
       },
       showSymbol: false,
       areaStyle: gradientColors[i],
-      emphasis: { focus: 'series', disabled: true }, //Disable hover animation only for area, keep axisPointer
+      emphasis: { focus: 'series' }, // Disable hover animation only for area, keep axisPointer
       data: data.map(d => d[key]),
-      markPoint: referenceDots?.length ? { data: referenceDots } : undefined,
+      markPoint: referenceDots ?? {},
+      markLine: referenceLines ?? {},
+      markArea: referenceAreas ?? {},
     };
   });
 
@@ -119,8 +121,6 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
     xAxis: generateXAxis(categories as string[], xAxis),
     yAxis: generateYAxis(largeSpread, transform, minValue, maxValue, yAxis),
     series: series,
-    markLine: referenceLines ?? [],
-    markArea: referenceAreas ?? [],
   };
 
   return <ReactECharts option={option} style={styles} />;

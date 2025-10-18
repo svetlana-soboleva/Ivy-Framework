@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorScheme } from './sharedUtils';
+import { ColorScheme, generateYAxis } from './sharedUtils';
 import {
   generateDataProps,
   generateEChartGrid,
@@ -16,14 +16,16 @@ import {
   LegendProps,
   MarkArea,
   MarkLine,
+  ReferenceDot,
   ToolTipProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
+import { ChartData } from './chartTypes';
 
 interface BarChartWidgetProps {
   id: string;
-  data: Record<string, unknown>[];
+  data: ChartData[];
   width?: string;
   height?: string;
   bars?: BarProps[];
@@ -32,9 +34,9 @@ interface BarChartWidgetProps {
   yAxis?: YAxisProps[];
   tooltip?: ToolTipProps;
   legend?: LegendProps;
-  referenceLines?: MarkLine[];
-  referenceAreas?: MarkArea[];
-  referenceDots?: unknown;
+  referenceLines?: MarkLine;
+  referenceAreas?: MarkArea;
+  referenceDots?: ReferenceDot;
   colorScheme: ColorScheme;
   stackOffset: StackOffsetType;
   barGap?: number;
@@ -54,9 +56,9 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   yAxis,
   tooltip,
   legend,
-  //referenceLines,
-  //referenceAreas,
-  //referenceDots,
+  referenceLines,
+  referenceAreas,
+  referenceDots,
   colorScheme,
   //stackOffset,
   barGap,
@@ -71,7 +73,9 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     minHeight: 300,
   };
 
-  const { categories, valueKeys } = generateDataProps(data);
+  const { categories, valueKeys, transform, largeSpread, minValue, maxValue } =
+    generateDataProps(data);
+
   const colors = getColors(colorScheme);
   const series = valueKeys.map((key, i) => ({
     name: key,
@@ -83,30 +87,37 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
         : undefined,
     barGap: barGap ? `${barGap}%` : '0%',
     barCategoryGap: barCategoryGap ? `${barCategoryGap}%` : '0%',
-    maxBarSize: maxBarSize || undefined,
+    barMaxWidth: maxBarSize,
     stackOrder: reverseStackOrder ? 'seriesDesc' : 'seriesAsc',
+    markPoint: {
+      label: {
+        show: referenceDots ? true : false,
+      },
+    },
+    markLine: referenceLines ?? {},
+    markArea: referenceAreas ?? {},
   }));
   const isVertical = layout?.toLowerCase() === 'vertical';
 
   const xAxisOption = {
     type: isVertical ? 'value' : 'category',
     data: isVertical ? undefined : categories,
-    position:
-      xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
-  };
-
-  const yAxisOption = {
-    type: isVertical ? 'category' : 'value',
-    data: isVertical ? categories : undefined,
-    position:
-      yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
+    position: xAxis?.[0]?.orientation === 'Top' ? 'top' : 'bottom',
   };
 
   const option = {
     grid: generateEChartGrid(cartesianGrid),
     color: colors,
     xAxis: xAxisOption,
-    yAxis: yAxisOption,
+    yAxis: generateYAxis(
+      largeSpread,
+      transform,
+      minValue,
+      maxValue,
+      yAxis,
+      isVertical,
+      categories
+    ),
     toolbox: {
       feature: {
         saveAsImage: {},

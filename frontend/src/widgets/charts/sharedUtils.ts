@@ -3,11 +3,14 @@ import {
   ChartType,
   LegendProps,
   LinesProps,
+  MarkArea,
+  MarkLine,
+  ReferenceDot,
   ToolTipProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
-import { LineChartData } from './LineChartWidget';
+import { ChartData } from './chartTypes';
 
 export type ColorScheme = 'Default' | 'Rainbow';
 const defaultColors = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'];
@@ -56,14 +59,31 @@ export const generateDataProps = (data: Record<string, unknown>[]) => {
   if (!categoryKey) {
     return { categoryKey: '', categories: [], valueKeys: [] };
   }
-  const categories = data.map(d => d[categoryKey]);
+  const categories = data.map(d => d[categoryKey] as string);
   const valueKeys = Object.keys(data[0]).filter(
     k => typeof data[0][k] === 'number'
   );
+  const allValues = data.flatMap(d =>
+    Object.values(d).filter(v => typeof v === 'number')
+  ) as number[];
+  const minValue = Math.min(...allValues);
+  const maxValue = Math.max(...allValues);
+  const largeSpread =
+    Math.abs(maxValue / (minValue === 0 ? 1 : minValue)) > 1e5;
+
+  const transform = (v: number) => {
+    if (!largeSpread) return v;
+    const sign = Math.sign(v);
+    return sign * Math.log10(Math.abs(v) + 1);
+  };
   return {
     categoryKey,
     categories,
     valueKeys,
+    transform,
+    largeSpread,
+    minValue,
+    maxValue,
   };
 };
 
@@ -80,12 +100,12 @@ export function generateEChartGrid(cartesianGrid?: CartesianGridProps) {
   if (!cartesianGrid) return defaultGrid;
 
   return {
+    ...defaultGrid,
     show: cartesianGrid.vertical || cartesianGrid.horizontal,
     ...(cartesianGrid.width != null && { width: cartesianGrid.width }),
     ...(cartesianGrid.height != null && { height: cartesianGrid.height }),
     ...(cartesianGrid.x != null && { x: cartesianGrid.x }),
     ...(cartesianGrid.y != null && { y: cartesianGrid.y }),
-    defaultGrid,
   };
 }
 
@@ -105,13 +125,14 @@ export function generateEChartLegend(legend?: LegendProps) {
   };
 }
 
-export const getTransformValueFn = (data: LineChartData[]) => {
+export const getTransformValueFn = (data: ChartData[]) => {
   const allValues = data.flatMap(d =>
     Object.values(d).filter(v => typeof v === 'number')
   ) as number[];
   const minValue = Math.min(...allValues);
   const maxValue = Math.max(...allValues);
-  const largeSpread = Math.abs(maxValue / (minValue || 1)) > 1e5;
+  const largeSpread =
+    Math.abs(maxValue / (minValue === 0 ? 1 : minValue)) > 1e5;
 
   const transform = (v: number) => {
     if (!largeSpread) return v;
@@ -123,31 +144,41 @@ export const getTransformValueFn = (data: LineChartData[]) => {
 };
 
 export const generateSeries = (
-  data: LineChartData[],
+  data: ChartData[],
   valueKeys: string[],
   lines?: LinesProps[],
-  transform?: (v: number) => number
+  transform?: (v: number) => number,
+  referenceDots?: ReferenceDot,
+  referenceLines?: MarkLine,
+  referenceAreas?: MarkArea
 ) => {
-  return valueKeys.map(key => ({
-    name: key,
-    type: ChartType.Line,
-    data: data.map(d =>
-      transform ? transform(Number(d[key] ?? 0)) : Number(d[key] ?? 0)
-    ),
-    step: lines?.find(l => l.curveType === 'Step') ? 'middle' : false,
-    smooth: lines?.find(l => l.curveType === 'Natural') ? true : false,
-    showSymbol: true,
-    symbolSize: 6,
-    lineStyle: { width: 2, opacity: 0.9 },
-    emphasis: {
-      focus: 'self',
-      lineStyle: { width: 3, opacity: 1 },
-      itemStyle: { borderWidth: 2, borderColor: '#fff' },
-    },
-    blur: { lineStyle: { opacity: 0.6 } },
-    animation: true,
-    animationDuration: 800,
-  }));
+  return valueKeys.map((key, i) => {
+    const lineConfig = lines?.[i];
+
+    return {
+      name: key,
+      type: ChartType.Line,
+      data: data.map(d =>
+        transform ? transform(Number(d[key] ?? 0)) : Number(d[key] ?? 0)
+      ),
+      step: lineConfig?.curveType === 'Step' ? 'middle' : false,
+      smooth: lineConfig?.curveType === 'Natural' ? true : false,
+      showSymbol: true,
+      symbolSize: 6,
+      lineStyle: { width: 2, opacity: 0.9 },
+      emphasis: {
+        focus: 'self',
+        lineStyle: { width: 3, opacity: 1 },
+        itemStyle: { borderWidth: 2, borderColor: '#fff' },
+      },
+      blur: { lineStyle: { opacity: 0.6 } },
+      animation: true,
+      animationDuration: 800,
+      markPoint: referenceDots ?? {},
+      markLine: referenceLines ?? {},
+      markArea: referenceAreas ?? {},
+    };
+  });
 };
 
 export const generateXAxis = (categories: string[], xAxis?: XAxisProps[]) => ({
@@ -162,33 +193,43 @@ export const generateXAxis = (categories: string[], xAxis?: XAxisProps[]) => ({
 });
 
 export const generateYAxis = (
-  largeSpread: boolean,
-  transformValue: (v: number) => number,
-  minValue: number,
-  maxValue: number,
-  yAxis?: YAxisProps[]
-) => ({
-  axisLabel: {
-    formatter: (value: number) => {
-      if (largeSpread) {
-        const unscaled = Math.sign(value) * (10 ** Math.abs(value) - 1);
-        if (Math.abs(unscaled) >= 1e9) return (unscaled / 1e9).toFixed(0) + 'B';
-        if (Math.abs(unscaled) >= 1e6) return (unscaled / 1e6).toFixed(0) + 'M';
-        if (Math.abs(unscaled) >= 1e3) return (unscaled / 1e3).toFixed(0) + 'K';
-        return unscaled.toFixed(0);
-      }
-      if (Math.abs(value) >= 1e9) return (value / 1e9).toFixed(0) + 'B';
-      if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(0) + 'M';
-      if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(0) + 'K';
-      return value;
+  largeSpread: boolean = false,
+  transformValue?: (v: number) => number,
+  minValue: number = 0,
+  maxValue: number = 100,
+  yAxis?: YAxisProps[],
+  isVertical: boolean = false,
+  categories?: string[]
+) => {
+  const safeTransform = transformValue ?? ((v: number) => v);
+
+  return {
+    type: isVertical ? 'category' : 'value',
+    data: isVertical ? categories : undefined,
+    axisLabel: {
+      formatter: (value: number) => {
+        if (largeSpread) {
+          const unscaled = Math.sign(value) * (10 ** Math.abs(value) - 1);
+          if (Math.abs(unscaled) >= 1e9)
+            return (unscaled / 1e9).toFixed(0) + 'B';
+          if (Math.abs(unscaled) >= 1e6)
+            return (unscaled / 1e6).toFixed(0) + 'M';
+          if (Math.abs(unscaled) >= 1e3)
+            return (unscaled / 1e3).toFixed(0) + 'K';
+          return unscaled.toFixed(0);
+        }
+        if (Math.abs(value) >= 1e9) return (value / 1e9).toFixed(0) + 'B';
+        if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(0) + 'M';
+        if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(0) + 'K';
+        return value;
+      },
     },
-  },
-  // splitnumber? multiple ticks in the transformed space can map to the same unscaled value, causing duplicates
-  min: largeSpread ? transformValue(minValue) : 'dataMin',
-  max: largeSpread ? transformValue(maxValue) : 'dataMax',
-  position:
-    yAxis?.[0]?.orientation?.toLowerCase() === 'right' ? 'right' : 'left',
-});
+    splitNumber: largeSpread ? 3 : 5,
+    min: largeSpread ? safeTransform(minValue) : 0,
+    max: largeSpread ? safeTransform(maxValue) : 'dataMax',
+    position: yAxis?.[0]?.orientation === 'Right' ? 'right' : 'left',
+  };
+};
 
 export const generateTooltip = (tooltip?: ToolTipProps, type?: string) => ({
   trigger: 'axis',

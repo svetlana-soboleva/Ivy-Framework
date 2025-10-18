@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
-import { ColorScheme } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import {
   generateDataProps,
@@ -13,37 +12,7 @@ import {
   getColors,
   getTransformValueFn,
 } from './sharedUtils';
-import {
-  CartesianGridProps,
-  LegendProps,
-  LinesProps,
-  MarkArea,
-  MarkLine,
-  ToolTipProps,
-  XAxisProps,
-  YAxisProps,
-} from './chartTypes';
-
-export interface LineChartData {
-  [key: string]: string | number;
-}
-
-interface LineChartWidgetProps {
-  id: string;
-  data: LineChartData[];
-  width?: string;
-  height?: string;
-  lines?: LinesProps[];
-  cartesianGrid?: CartesianGridProps;
-  xAxis?: XAxisProps[];
-  yAxis?: YAxisProps[];
-  tooltip?: ToolTipProps;
-  legend?: LegendProps;
-  referenceLines?: MarkLine[];
-  referenceAreas?: MarkArea[];
-  referenceDots?: unknown;
-  colorScheme: ColorScheme;
-}
+import { LineChartWidgetProps } from './chartTypes';
 
 const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   data,
@@ -55,9 +24,9 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   yAxis,
   tooltip,
   legend,
-  //referenceLines,
-  //referenceAreas,
-  //referenceDots,
+  referenceLines,
+  referenceAreas,
+  referenceDots,
   colorScheme,
 }) => {
   const styles: React.CSSProperties = {
@@ -79,7 +48,15 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
     legend: generateEChartLegend(legend),
 
     color: colors,
-    series: generateSeries(data, valueKeys, lines, transform),
+    series: generateSeries(
+      data,
+      valueKeys,
+      lines,
+      transform,
+      referenceDots,
+      referenceLines,
+      referenceAreas
+    ),
   };
 
   return <ReactECharts option={option} style={styles} />;
