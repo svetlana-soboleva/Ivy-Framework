@@ -1,5 +1,10 @@
 import React from 'react';
-import { ColorScheme, generateYAxis } from './sharedUtils';
+import {
+  ColorScheme,
+  generateTooltip,
+  generateXAxis,
+  generateYAxis,
+} from './sharedUtils';
 import {
   generateDataProps,
   generateEChartGrid,
@@ -75,18 +80,19 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
 
   const { categories, valueKeys, transform, largeSpread, minValue, maxValue } =
     generateDataProps(data);
-
   const colors = getColors(colorScheme);
   const series = valueKeys.map((key, i) => ({
     name: key,
     type: ChartType.Bar,
+    legendHoverLink: true,
+    showBackground: true,
     data: data.map(d => d[key]),
     stack:
       bars && bars[i]?.stackId !== undefined
         ? String(bars[i].stackId)
         : undefined,
-    barGap: barGap ? `${barGap}%` : '0%',
-    barCategoryGap: barCategoryGap ? `${barCategoryGap}%` : '0%',
+    barGap: barGap ? `${barGap}%` : '4%',
+    barCategoryGap: barCategoryGap ? `${barCategoryGap}%` : '10%',
     barMaxWidth: maxBarSize,
     stackOrder: reverseStackOrder ? 'seriesDesc' : 'seriesAsc',
     markPoint: {
@@ -99,16 +105,10 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   }));
   const isVertical = layout?.toLowerCase() === 'vertical';
 
-  const xAxisOption = {
-    type: isVertical ? 'value' : 'category',
-    data: isVertical ? undefined : categories,
-    position: xAxis?.[0]?.orientation === 'Top' ? 'top' : 'bottom',
-  };
-
   const option = {
     grid: generateEChartGrid(cartesianGrid),
     color: colors,
-    xAxis: xAxisOption,
+    xAxis: generateXAxis(categories, xAxis, isVertical),
     yAxis: generateYAxis(
       largeSpread,
       transform,
@@ -118,23 +118,25 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
       isVertical,
       categories
     ),
-    toolbox: {
-      feature: {
-        saveAsImage: {},
-      },
-    },
+    toolbox: !isVertical
+      ? {
+          top: legend?.verticalAlign === 'Top' ? 'bottom' : 'top',
+          feature: {
+            dataView: {
+              show: true,
+            },
+            magicType: {
+              type: ['line', 'bar'],
+            },
+            saveAsImage: {
+              type: 'png',
+            },
+          },
+        }
+      : {},
     series,
     legend: generateEChartLegend(legend),
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        shadowStyle: {
-          opacity: 0.5,
-        },
-        type: 'shadow',
-        animated: tooltip?.animated ?? true,
-      },
-    },
+    tooltip: generateTooltip(tooltip, 'shadow'),
   };
 
   return (

@@ -119,8 +119,7 @@ export function generateEChartLegend(legend?: LegendProps) {
     itemHeight: legend.iconSize ?? 14,
     itemGap: 16,
     orient: legend.layout?.toLowerCase(),
-    bottom: legend.verticalAlign?.toLowerCase() === 'bottom' ? 0 : undefined,
-    top: legend.verticalAlign?.toLowerCase() === 'top' ? 0 : undefined,
+    top: legend.verticalAlign === 'Bottom' ? 'bottom' : 'top',
     type: 'scroll',
   };
 }
@@ -181,10 +180,14 @@ export const generateSeries = (
   });
 };
 
-export const generateXAxis = (categories: string[], xAxis?: XAxisProps[]) => ({
+export const generateXAxis = (
+  categories: string[],
+  xAxis?: XAxisProps[],
+  isVertical?: boolean
+) => ({
   position: xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
-  type: 'category',
-  data: categories,
+  type: isVertical ? 'value' : 'category',
+  data: isVertical ? undefined : categories,
   axisLabel: {
     formatter: (value: string) =>
       value.length > 10 ? value.match(/.{1,10}/g)?.join('\n') : value,
