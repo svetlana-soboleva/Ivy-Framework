@@ -49,6 +49,10 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
         position: 'center',
       },
       emphasis: {
+        disabled: false,
+        scale: true,
+        scaleSize: 5,
+        focus: 'none',
         label: {
           show: true,
           fontSize: 40,

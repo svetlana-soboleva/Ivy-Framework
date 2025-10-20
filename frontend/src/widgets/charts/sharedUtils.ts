@@ -166,7 +166,8 @@ export const generateSeries = (
       symbolSize: 6,
       lineStyle: { width: 2, opacity: 0.9 },
       emphasis: {
-        focus: 'self',
+        focus: 'series',
+        disabled: true,
         lineStyle: { width: 3, opacity: 1 },
         itemStyle: { borderWidth: 2, borderColor: '#fff' },
       },
