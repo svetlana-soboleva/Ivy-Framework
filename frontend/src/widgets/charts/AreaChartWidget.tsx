@@ -108,7 +108,6 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
-    //minHeight: 300,
   };
 
   const { categories, valueKeys } = generateDataProps(data);
