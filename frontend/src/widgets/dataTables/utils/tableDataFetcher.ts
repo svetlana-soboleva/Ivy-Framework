@@ -4,10 +4,36 @@ import {
   SortOrder,
   TableQuery,
   grpcTableService,
+  ParseFilterResult,
 } from '@/services/grpcTableService';
 import * as arrow from 'apache-arrow';
 import { DataColumn, DataRow, DataTableConnection } from '../types/types';
 import { convertArrowTableToData } from './tableDataMapper';
+import { logger } from '@/lib/logger';
+
+export const parseInvalidQuery = async (
+  invalidQuery: string,
+  connection?: DataTableConnection
+): Promise<ParseFilterResult> => {
+  try {
+    const backendUrl = new URL(getIvyHost());
+    const serverUrl = `${backendUrl.protocol}//${backendUrl.hostname}:${connection?.port}`;
+
+    const result = await grpcTableService.parseFilter(
+      {
+        payload: invalidQuery,
+        connectionId: connection?.connectionId,
+        sourceId: connection?.sourceId,
+      },
+      serverUrl
+    );
+
+    return result;
+  } catch (error) {
+    logger.error('Failed to parse invalid query:', error);
+    throw error;
+  }
+};
 
 export const fetchTableData = async (
   connection: DataTableConnection,
@@ -17,7 +43,13 @@ export const fetchTableData = async (
   sort?: SortOrder[] | null
 ): Promise<{ columns: DataColumn[]; rows: DataRow[]; hasMore: boolean }> => {
   const backendUrl = new URL(getIvyHost());
-  const serverUrl = `${backendUrl.protocol}//${backendUrl.hostname}:${connection.port}`;
+
+  // Use environment variable for robust environment detection
+  // In development, use the connection port; in production, use the current host
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const serverUrl = isDevelopment
+    ? `${backendUrl.protocol}//${backendUrl.hostname}:${connection.port}`
+    : `${backendUrl.protocol}//${backendUrl.hostname}`;
 
   const query: TableQuery = {
     limit: count,
