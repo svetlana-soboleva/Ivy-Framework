@@ -7,6 +7,8 @@ import {
   MarkLine,
   ReferenceDot,
   ToolTipProps,
+  ToolboxFeatures,
+  ToolboxProps,
   XAxisProps,
   YAxisProps,
 } from './chartTypes';
@@ -290,3 +292,65 @@ export const generateTooltip = (
   borderColor: themeColors?.foreground || '#000',
   borderWidth: 1,
 });
+
+export const generateEChartToolbox = (toolbox?: ToolboxProps) => {
+  if (!toolbox || toolbox.enabled === false) {
+    return { show: false };
+  }
+
+  const features: ToolboxFeatures = {};
+
+  if (toolbox.dataView !== false) {
+    features.dataView = {
+      show: true,
+      readOnly: false,
+    };
+  }
+
+  if (toolbox.magicType !== false) {
+    features.magicType = {
+      show: true,
+      type: ['line', 'bar'],
+    };
+  }
+
+  if (toolbox.restore !== false) {
+    features.restore = {
+      show: true,
+    };
+  }
+
+  if (toolbox.saveAsImage !== false) {
+    features.saveAsImage = {
+      show: true,
+    };
+  }
+
+  return {
+    show: true,
+    orient:
+      toolbox.orientation?.toLowerCase() === 'vertical'
+        ? 'vertical'
+        : 'horizontal',
+    left:
+      toolbox.align?.toLowerCase() === 'left'
+        ? 'left'
+        : toolbox.align?.toLowerCase() === 'center'
+          ? 'center'
+          : 'right',
+    top:
+      toolbox.verticalAlign?.toLowerCase() === 'top'
+        ? 'top'
+        : toolbox.verticalAlign?.toLowerCase() === 'middle'
+          ? 'middle'
+          : 'bottom',
+    feature: features,
+    emphasis: {
+      iconStyle: {
+        color: null,
+        borderColor: null,
+        textFill: 'rgba(119, 126, 133, 1)',
+      },
+    },
+  };
+};

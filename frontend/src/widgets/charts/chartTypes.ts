@@ -114,6 +114,29 @@ export type LegendProps = {
   verticalAlign?: 'Top' | 'Middle' | 'Bottom';
 };
 
+type ToolboxFeatureDataView = { show?: boolean; readOnly?: boolean };
+type ToolboxFeatureMagicType = { show?: boolean; type?: string[] };
+type ToolboxFeatureRestore = { show?: boolean };
+type ToolboxFeatureSaveAsImage = { show?: boolean };
+
+export type ToolboxFeatures = {
+  dataView?: ToolboxFeatureDataView;
+  magicType?: ToolboxFeatureMagicType;
+  restore?: ToolboxFeatureRestore;
+  saveAsImage?: ToolboxFeatureSaveAsImage;
+};
+
+export type ToolboxProps = {
+  enabled?: boolean;
+  orientation?: 'Horizontal' | 'Vertical';
+  align?: 'Left' | 'Center' | 'Right';
+  verticalAlign?: 'Top' | 'Middle' | 'Bottom';
+  saveAsImage?: boolean;
+  restore?: boolean;
+  dataView?: boolean;
+  magicType?: boolean;
+};
+
 export interface MarkLine {
   silent?: boolean;
   symbol?: string | [string, string];
