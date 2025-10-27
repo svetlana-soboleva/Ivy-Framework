@@ -81,6 +81,8 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   const colors = getColors(colorScheme);

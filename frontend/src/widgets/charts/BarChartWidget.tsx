@@ -124,6 +124,8 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   const { categories, valueKeys, transform, largeSpread, minValue, maxValue } =
@@ -154,7 +156,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   const isVertical = layout?.toLowerCase() === 'vertical';
 
   const option = {
-    grid: generateEChartGrid(cartesianGrid),
+    grid: generateEChartGrid(cartesianGrid, !!legend),
     color: colors,
     textStyle: generateTextStyle(themeColors.foreground, themeColors.fontSans),
     xAxis: generateXAxis(ChartType.Bar, categories, xAxis, isVertical, {

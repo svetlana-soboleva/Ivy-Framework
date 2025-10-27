@@ -111,6 +111,8 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   const styles: React.CSSProperties = {
     ...getWidth(width),
     ...getHeight(height),
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   const { categories, valueKeys } = generateDataProps(data);
@@ -154,7 +156,7 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   });
 
   const option = {
-    grid: generateEChartGrid(cartesianGrid),
+    grid: generateEChartGrid(cartesianGrid, !!legend),
     color: colors,
     tooltip: generateTooltip(tooltip, 'cross', {
       foreground: themeColors.foreground,
