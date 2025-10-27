@@ -15,7 +15,7 @@ import {
   getTransformValueFn,
   generateEChartToolbox,
 } from './sharedUtils';
-import { LineChartWidgetProps } from './chartTypes';
+import { LineChartWidgetProps, ChartType } from './chartTypes';
 
 const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   data,
@@ -90,7 +90,7 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
 
   const option = {
     grid: generateEChartGrid(cartesianGrid),
-    xAxis: generateXAxis(categories as string[], xAxis, false, {
+    xAxis: generateXAxis(ChartType.Line, categories as string[], xAxis, false, {
       mutedForeground: themeColors.mutedForeground,
       fontSans: themeColors.fontSans,
     }),

@@ -81,7 +81,11 @@ public class DefaultAreaChartStyle<TSource> : IAreaChartStyle<TSource>
             .CartesianGrid(new CartesianGrid().Horizontal())
             .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             .Legend()
-        ;
+            .Toolbox(new Toolbox()
+            .Enabled(true)
+            .MagicType(false)
+            );
+
     }
 }
 

@@ -302,9 +302,9 @@ public static class LineChartExtensions
     /// <summary>
     /// Sets the toolbox configuration.
     /// </summary>
-    /// <param name="chart">The BarChart to configure.</param>
+    /// <param name="chart">The Linehart to configure.</param>
     /// <param name="toolbox">The Toolbox configuration to use, or null to disable toolbox.</param>
-    /// <returns>A new BarChart instance with the updated toolbox configuration.</returns>
+    /// <returns>A new LineChart instance with the updated toolbox configuration.</returns>
     public static LineChart Toolbox(this LineChart chart, Toolbox? toolbox)
     {
         return chart with { Toolbox = toolbox };
@@ -313,8 +313,8 @@ public static class LineChartExtensions
     /// <summary>
     /// Enables the toolbox.
     /// </summary>
-    /// <param name="chart">The BarChart to configure.</param>
-    /// <returns>A new BarChart instance with default toolbox enabled.</returns>
+    /// <param name="chart">The LineChart to configure.</param>
+    /// <returns>A new LineChart instance with default toolbox enabled.</returns>
     public static LineChart Toolbox(this LineChart chart)
     {
         return chart with { Toolbox = new Toolbox() };

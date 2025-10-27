@@ -157,7 +157,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     grid: generateEChartGrid(cartesianGrid),
     color: colors,
     textStyle: generateTextStyle(themeColors.foreground, themeColors.fontSans),
-    xAxis: generateXAxis(categories, xAxis, isVertical, {
+    xAxis: generateXAxis(ChartType.Bar, categories, xAxis, isVertical, {
       mutedForeground: themeColors.mutedForeground,
       fontSans: themeColors.fontSans,
     }),

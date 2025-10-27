@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ColorScheme } from './sharedUtils';
+import { ColorScheme, generateEChartToolbox } from './sharedUtils';
 import { getHeight, getWidth } from '@/lib/styles';
 import { useTheme } from '@/components/theme-provider';
 import ReactECharts from 'echarts-for-react';
@@ -23,6 +23,7 @@ import {
   LegendProps,
   CartesianGridProps,
   ToolTipProps,
+  ToolboxProps,
 } from './chartTypes';
 import { ChartData } from './chartTypes';
 import { getTransformValueFn } from './sharedUtils';
@@ -38,6 +39,7 @@ interface AreaChartWidgetProps {
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
   tooltip?: ToolTipProps;
+  toolbox: ToolboxProps;
   legend?: LegendProps;
   referenceLines?: MarkLine;
   referenceAreas?: MarkArea;
@@ -54,6 +56,7 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
   xAxis,
   yAxis,
   tooltip,
+  toolbox,
   legend,
   referenceLines,
   referenceAreas,
@@ -162,8 +165,9 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
       foreground: themeColors.foreground,
       fontSans: themeColors.fontSans,
     }),
+    toolbox: generateEChartToolbox(toolbox),
     textStyle: generateTextStyle(themeColors.foreground, themeColors.fontSans),
-    xAxis: generateXAxis(categories as string[], xAxis, false, {
+    xAxis: generateXAxis(ChartType.Line, categories as string[], xAxis, false, {
       mutedForeground: themeColors.mutedForeground,
       fontSans: themeColors.fontSans,
     }),

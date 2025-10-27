@@ -212,6 +212,7 @@ export const generateSeries = (
 };
 
 export const generateXAxis = (
+  chartType: string,
   categories: string[],
   xAxis?: XAxisProps[],
   isVertical?: boolean,
@@ -219,6 +220,7 @@ export const generateXAxis = (
 ) => ({
   position: xAxis?.[0]?.orientation?.toLowerCase() === 'top' ? 'top' : 'bottom',
   type: isVertical ? 'value' : 'category',
+  boundaryGap: chartType === 'bar' ? true : false,
   data: isVertical ? undefined : categories,
   axisLabel: {
     show: true,
