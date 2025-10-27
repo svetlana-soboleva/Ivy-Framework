@@ -40,6 +40,7 @@ export interface PieChartWidgetProps {
   legend?: PieLegendProps;
   colorScheme: ColorScheme;
   total?: PieChartTotalProps;
+  toolbox?: ToolboxProps;
 }
 
 export type YAxisProps = {

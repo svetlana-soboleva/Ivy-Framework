@@ -87,6 +87,10 @@ public class DefaultPieChartStyle<TSource> : IPieChartStyle<TSource>
                 .Layout(Legend.Layouts.Horizontal)
                 .Align(Legend.Alignments.Center)
                 .VerticalAlign(Legend.VerticalAlignments.Bottom)
+            )
+            .Toolbox(new Toolbox()
+            .Enabled(true)
+            .MagicType(false)
             );
     }
 }

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { getHeight, getWidth } from '@/lib/styles';
 import { useTheme } from '@/components/theme-provider';
 import ReactECharts from 'echarts-for-react';
-import { getColors, generateTextStyle } from './sharedUtils';
+import {
+  getColors,
+  generateTextStyle,
+  generateEChartToolbox,
+} from './sharedUtils';
 import { ChartType, PieChartWidgetProps } from './chartTypes';
 import { generateDataProps } from './sharedUtils';
 
@@ -12,6 +16,7 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
   height,
   pies,
   tooltip,
+  toolbox,
   legend,
   colorScheme,
   total,
@@ -153,6 +158,7 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
       borderWidth: 1,
     },
     series: series,
+    toolbox: generateEChartToolbox(toolbox),
   };
 
   return (
