@@ -13,6 +13,7 @@ import {
   generateYAxis,
   getColors,
   getTransformValueFn,
+  generateEChartToolbox,
 } from './sharedUtils';
 import { LineChartWidgetProps } from './chartTypes';
 
@@ -26,6 +27,7 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
   yAxis,
   tooltip,
   legend,
+  toolbox,
   referenceLines,
   referenceAreas,
   referenceDots,
@@ -110,6 +112,7 @@ const LineChartWidget: React.FC<LineChartWidgetProps> = ({
       fontSans: themeColors.fontSans,
       background: themeColors.background,
     }),
+    toolbox: generateEChartToolbox(toolbox),
     legend: generateEChartLegend(legend, {
       foreground: themeColors.foreground,
       fontSans: themeColors.fontSans,

@@ -122,6 +122,7 @@ export function generateEChartLegend(
       themeColors?.foreground,
       themeColors?.fontSans
     ),
+    top: 'bottom',
   };
   if (!legend) return defaultLegends;
 
@@ -314,12 +315,6 @@ export const generateEChartToolbox = (toolbox?: ToolboxProps) => {
     };
   }
 
-  if (toolbox.restore !== false) {
-    features.restore = {
-      show: true,
-    };
-  }
-
   if (toolbox.saveAsImage !== false) {
     features.saveAsImage = {
       show: true,
@@ -349,7 +344,9 @@ export const generateEChartToolbox = (toolbox?: ToolboxProps) => {
       iconStyle: {
         color: null,
         borderColor: null,
-        textFill: 'rgba(119, 126, 133, 1)',
+        textFill: getComputedStyle(document.documentElement)
+          .getPropertyValue('--toolbox')
+          .trim(),
       },
     },
   };

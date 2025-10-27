@@ -116,13 +116,11 @@ export type LegendProps = {
 
 type ToolboxFeatureDataView = { show?: boolean; readOnly?: boolean };
 type ToolboxFeatureMagicType = { show?: boolean; type?: string[] };
-type ToolboxFeatureRestore = { show?: boolean };
 type ToolboxFeatureSaveAsImage = { show?: boolean };
 
 export type ToolboxFeatures = {
   dataView?: ToolboxFeatureDataView;
   magicType?: ToolboxFeatureMagicType;
-  restore?: ToolboxFeatureRestore;
   saveAsImage?: ToolboxFeatureSaveAsImage;
 };
 
@@ -262,6 +260,7 @@ export interface LineChartWidgetProps {
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
   tooltip?: ToolTipProps;
+  toolbox: ToolboxProps;
   legend?: LegendProps;
   referenceLines?: MarkLine;
   referenceAreas?: MarkArea;

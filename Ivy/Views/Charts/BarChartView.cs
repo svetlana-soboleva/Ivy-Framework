@@ -92,7 +92,6 @@ public class DefaultBarChartStyle<TSource> : IBarChartStyle<TSource>
                 .Align(Toolbox.Alignments.Right)
                 .VerticalAlign(Toolbox.VerticalAlignments.Top)
                 .SaveAsImage(true)
-                .Restore(true)
                 .DataView(true)
                 .MagicType(true)
             )
