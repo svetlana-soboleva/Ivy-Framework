@@ -89,7 +89,6 @@ public class DefaultPieChartStyle<TSource> : IPieChartStyle<TSource>
                 .VerticalAlign(Legend.VerticalAlignments.Bottom)
             )
             .Toolbox(new Toolbox()
-            .Enabled(true)
             .MagicType(false)
             );
     }
@@ -122,7 +121,9 @@ public class DashboardPieChartStyle<TSource> : IPieChartStyle<TSource>
                     .VerticalAlign(Legend.VerticalAlignments.Bottom)
                 )
                 .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
-            ;
+                .Toolbox(new Toolbox()
+                .MagicType(false)
+            );
     }
 }
 

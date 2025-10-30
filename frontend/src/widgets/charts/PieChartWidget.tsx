@@ -27,7 +27,6 @@ const PieChartWidget: React.FC<PieChartWidgetProps> = ({
     fontSans: 'Geist, sans-serif',
     background: '#ffffff',
   });
-
   useEffect(() => {
     const getThemeColors = () => {
       const root = document.documentElement;

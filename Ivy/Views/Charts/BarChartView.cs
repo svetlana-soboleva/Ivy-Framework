@@ -87,7 +87,6 @@ public class DefaultBarChartStyle<TSource> : IBarChartStyle<TSource>
                 .VerticalAlign(Legend.VerticalAlignments.Bottom)
             )
             .Toolbox(new Toolbox()
-                .Enabled(true)
                 .Orientation(Toolbox.Orientations.Horizontal)
                 .Align(Toolbox.Alignments.Right)
                 .VerticalAlign(Toolbox.VerticalAlignments.Top)
@@ -126,9 +125,6 @@ public class DashboardBarChartStyle<TSource> : IBarChartStyle<TSource>
                 .YAxis(new YAxis(dimension.Name).Type(AxisTypes.Category).Hide())
                 .CartesianGrid(new CartesianGrid().Vertical())
                 .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
-                .Toolbox(new Toolbox()
-                    .Enabled(false)
-                )
         ;
     }
 }

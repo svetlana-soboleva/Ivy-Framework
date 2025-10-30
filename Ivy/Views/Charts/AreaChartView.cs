@@ -82,7 +82,6 @@ public class DefaultAreaChartStyle<TSource> : IAreaChartStyle<TSource>
             .Tooltip(new Ivy.Charts.Tooltip().Animated(true))
             .Legend()
             .Toolbox(new Toolbox()
-            .Enabled(true)
             .MagicType(false)
             );
 

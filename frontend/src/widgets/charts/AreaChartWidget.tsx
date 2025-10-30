@@ -39,7 +39,7 @@ interface AreaChartWidgetProps {
   xAxis?: XAxisProps[];
   yAxis?: YAxisProps[];
   tooltip?: ToolTipProps;
-  toolbox: ToolboxProps;
+  toolbox?: ToolboxProps;
   legend?: LegendProps;
   referenceLines?: MarkLine;
   referenceAreas?: MarkArea;

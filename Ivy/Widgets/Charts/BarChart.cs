@@ -61,7 +61,7 @@ public record BarChart : WidgetBase<BarChart>
     /// <summary>
     /// Gets or sets the toolbox configuration.
     /// </summary>
-    [Prop] public Toolbox? Toolbox { get; init; } = new Toolbox();
+    [Prop] public Toolbox? Toolbox { get; init; } = null;
 
     /// <summary>
     /// Gets or sets the array of X-axis configurations.
@@ -161,8 +161,7 @@ public static class BarChartExtensions
     {
         return chart with
         {
-            Layout = Layouts.Vertical,
-            Toolbox = new Toolbox().Enabled(false)
+            Layout = Layouts.Vertical
         };
     }
 
@@ -324,7 +323,7 @@ public static class BarChartExtensions
     /// <param name="chart">The BarChart to configure.</param>
     /// <param name="toolbox">The Toolbox configuration to use, or null to disable toolbox.</param>
     /// <returns>A new BarChart instance with the updated toolbox configuration.</returns>
-    public static BarChart Toolbox(this BarChart chart, Toolbox? toolbox)
+    public static BarChart Toolbox(this BarChart chart, Toolbox toolbox)
     {
         return chart with { Toolbox = toolbox };
     }

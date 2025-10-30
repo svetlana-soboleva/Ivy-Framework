@@ -46,7 +46,7 @@ public record PieChart : WidgetBase<PieChart>
     /// <summary>
     /// Gets or sets the toolbox configuration.
     /// </summary>
-    [Prop] public Toolbox? Toolbox { get; init; } = new Toolbox();
+    [Prop] public Toolbox? Toolbox { get; init; } = null;
 
 
     /// <summary>
@@ -146,7 +146,7 @@ public static class PieChartExtensions
     /// <param name="chart">The PieChart to configure.</param>
     /// <param name="toolbox">The Toolbox configuration to use, or null to disable toolbox.</param>
     /// <returns>A new PieChart instance with the updated toolbox configuration.</returns>
-    public static PieChart Toolbox(this PieChart chart, Toolbox? toolbox)
+    public static PieChart Toolbox(this PieChart chart, Toolbox toolbox)
     {
         return chart with { Toolbox = toolbox };
     }

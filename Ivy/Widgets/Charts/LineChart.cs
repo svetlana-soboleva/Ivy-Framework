@@ -155,7 +155,7 @@ public static class LineChartExtensions
         return chart with
         {
             Layout = Layouts.Vertical,
-            Toolbox = new Toolbox().Enabled(false)
+            Toolbox = new Toolbox()
         };
     }
 
@@ -302,7 +302,7 @@ public static class LineChartExtensions
     /// <summary>
     /// Sets the toolbox configuration.
     /// </summary>
-    /// <param name="chart">The Linehart to configure.</param>
+    /// <param name="chart">The LineChart to configure.</param>
     /// <param name="toolbox">The Toolbox configuration to use, or null to disable toolbox.</param>
     /// <returns>A new LineChart instance with the updated toolbox configuration.</returns>
     public static LineChart Toolbox(this LineChart chart, Toolbox? toolbox)

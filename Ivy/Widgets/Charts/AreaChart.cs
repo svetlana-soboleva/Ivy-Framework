@@ -62,7 +62,7 @@ public record AreaChart : WidgetBase<AreaChart>
     /// <summary>
     /// Gets or sets the toolbox configuration.
     /// </summary>
-    [Prop] public Toolbox? Toolbox { get; init; } = new Toolbox();
+    [Prop] public Toolbox? Toolbox { get; init; } = null;
     /// <summary>
     /// Gets or sets the array of X-axis configurations.
     /// </summary>

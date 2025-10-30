@@ -52,11 +52,6 @@ public record Toolbox
     }
 
     /// <summary>
-    /// Gets or sets whether the toolbox is enabled.
-    /// </summary>
-    public bool Enabled { get; set; } = true;
-
-    /// <summary>
     /// Gets or sets the orientation of the toolbox.
     /// </summary>
     public Orientations Orientation { get; set; } = Orientations.Horizontal;
@@ -97,16 +92,6 @@ public record Toolbox
 /// </summary>
 public static class ToolboxExtensions
 {
-    /// <summary>
-    /// Sets whether the toolbox is enabled.
-    /// </summary>
-    /// <param name="toolbox">The Toolbox to configure.</param>
-    /// <param name="enabled">True to enable the toolbox, false to disable.</param>
-    /// <returns>A new Toolbox instance with the updated enabled setting.</returns>
-    public static Toolbox Enabled(this Toolbox toolbox, bool enabled)
-    {
-        return toolbox with { Enabled = enabled };
-    }
 
     /// <summary>
     /// Sets the orientation of the toolbox.
