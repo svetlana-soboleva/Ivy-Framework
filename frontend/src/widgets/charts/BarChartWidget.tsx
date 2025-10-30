@@ -121,11 +121,22 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     };
   }, [theme]);
 
+  // When height is Full (100%), use flex to expand. Otherwise use explicit height.
+  const heightStyle = height ? getHeight(height) : {};
+  const isFull = height?.toLowerCase().startsWith('full');
+
   const styles: React.CSSProperties = {
     ...getWidth(width),
-    ...getHeight(height),
-    display: 'flex',
-    flexDirection: 'column',
+    ...(isFull
+      ? { display: 'flex', flexDirection: 'column', height: '100%' }
+      : {}),
+  };
+
+  const chartStyles: React.CSSProperties = {
+    ...(isFull
+      ? { flex: 1, minHeight: '200px' }
+      : { ...heightStyle, minHeight: '200px' }),
+    width: '100%',
   };
 
   const { categories, valueKeys, transform, largeSpread, minValue, maxValue } =
@@ -156,7 +167,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   const isVertical = layout?.toLowerCase() === 'vertical';
 
   const option = {
-    grid: generateEChartGrid(cartesianGrid, !!legend),
+    grid: generateEChartGrid(cartesianGrid),
     color: colors,
     textStyle: generateTextStyle(themeColors.foreground, themeColors.fontSans),
     xAxis: generateXAxis(ChartType.Bar, categories, xAxis, isVertical, {
@@ -191,7 +202,7 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
 
   return (
     <div style={styles}>
-      <ReactECharts key={theme} option={option} />
+      <ReactECharts key={theme} option={option} style={chartStyles} />
     </div>
   );
 };

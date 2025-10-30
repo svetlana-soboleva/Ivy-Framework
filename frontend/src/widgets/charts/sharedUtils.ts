@@ -95,8 +95,8 @@ export function generateEChartGrid(
 ) {
   const defaultGrid = {
     show: true,
-    left: 2,
-    right: 2,
+    left: '4%',
+    right: '4%',
     top: 30,
     bottom: hasLegend ? 60 : 30, // More space for legend
     containLabel: true,
