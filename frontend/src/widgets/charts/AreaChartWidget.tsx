@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { ColorScheme, generateEChartToolbox } from './sharedUtils';
-import { getWidth } from '@/lib/styles';
+import { getHeight, getWidth } from '@/lib/styles';
 import { useThemeWithMonitoring } from '@/components/theme-provider';
 import ReactECharts from 'echarts-for-react';
 import {
@@ -76,14 +76,9 @@ const AreaChartWidget: React.FC<AreaChartWidgetProps> = ({
     [colors, isDark]
   );
 
-  // When height is Full (100%), use flex to expand. Otherwise use explicit height.
-  const isFull = height?.toLowerCase().startsWith('full');
-
   const styles: React.CSSProperties = {
     ...getWidth(width),
-    ...(isFull
-      ? { display: 'flex', flexDirection: 'column', height: '100%' }
-      : {}),
+    ...getHeight(height),
   };
 
   const { categories, valueKeys } = generateDataProps(data);
