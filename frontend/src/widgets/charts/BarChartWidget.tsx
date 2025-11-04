@@ -14,7 +14,7 @@ import {
   getColors,
 } from './sharedUtils';
 import { useThemeWithMonitoring } from '@/components/theme-provider';
-import { getHeight, getWidth } from '@/lib/styles';
+import { getWidth } from '@/lib/styles';
 import ReactECharts from 'echarts-for-react';
 import { getChartThemeColors } from './styles';
 import {
@@ -90,7 +90,6 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   );
 
   // When height is Full (100%), use flex to expand. Otherwise use explicit height.
-  const heightStyle = height ? getHeight(height) : {};
   const isFull = height?.toLowerCase().startsWith('full');
 
   const styles: React.CSSProperties = {
@@ -98,13 +97,6 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     ...(isFull
       ? { display: 'flex', flexDirection: 'column', height: '100%' }
       : {}),
-  };
-
-  const chartStyles: React.CSSProperties = {
-    ...(isFull
-      ? { flex: 1, minHeight: '200px' }
-      : { ...heightStyle, minHeight: '200px' }),
-    width: '100%',
   };
 
   const { categories, valueKeys, transform, largeSpread, minValue, maxValue } =
@@ -218,7 +210,6 @@ const BarChartWidget: React.FC<BarChartWidgetProps> = ({
     <div style={styles}>
       <ReactECharts
         option={option}
-        style={chartStyles}
         notMerge={true} // Merge changes instead of full rebuild for better performance
         lazyUpdate={true}
       />
