@@ -110,7 +110,7 @@ public class DataTableBuilder<TModel> : ViewBase
                 align = Shared.Align.Center;
             }
 
-            var removed = field.Name.StartsWith("_") && field.Name.Length > 1;
+            var removed = field.Name.StartsWith("_") && field.Name.Length > 1 && char.IsLetter(field.Name[1]);
 
             _columns[field.Name] = new InternalColumn()
             {

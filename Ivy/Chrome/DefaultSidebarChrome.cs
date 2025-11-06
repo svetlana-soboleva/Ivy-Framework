@@ -32,6 +32,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
         var menuItems = UseState(() => appRepository.GetMenuItems());
         var args = UseService<AppArgs>();
         var navigate = Context.UseSignal<NavigateSignal, NavigateArgs, Unit>();
+        var navigator = this.UseNavigation();
 
         UseEffect(() =>
         {
@@ -110,7 +111,8 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                         }
                         return;
                     }
-                    else if (navigateArgs.Purpose is NavigationPurpose.HistoryTraversal)
+
+                    if (navigateArgs.Purpose is NavigationPurpose.HistoryTraversal)
                     {
                         client.Error(new InvalidOperationException("Tab no longer exists."));
                         return;
@@ -335,9 +337,10 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
 
         var commonMenuItems = new[]
         {
-            MenuItem.Default("Star on Github").Icon(Icons.Github)
+            MenuItem.Default("Star on Github").Tag("$github").Icon(Icons.Github)
                 .HandleSelect(() => client.OpenUrl(Resources.IvyGitHubUrl)),
             MenuItem.Default("Theme")
+                .Tag("$theme")
                 .Icon(Icons.SunMoon)
                 .Children(
                     MenuItem.Checkbox("Light").Icon(Icons.Sun).HandleSelect(() => client.SetThemeMode(ThemeMode.Light)),
@@ -383,9 +386,9 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                 }
             });
 
-            footer = footer.Items([
-                ..commonMenuItems, MenuItem.Default("Logout").Icon(Icons.LogOut).HandleSelect(onLogout)
-            ]);
+            footer = footer.Items(settings.FooterMenuItemsTransformer([
+                ..commonMenuItems, MenuItem.Default("Logout").Tag("$logout").Icon(Icons.LogOut).HandleSelect(onLogout)
+            ], navigator));
         }
         else
         {
@@ -402,7 +405,7 @@ public class DefaultSidebarChrome(ChromeSettings settings) : ViewBase
                     trigger)
                 .Top()
                 .Items(
-                    commonMenuItems
+                    settings.FooterMenuItemsTransformer(commonMenuItems, navigator)
                 );
         }
 

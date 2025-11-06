@@ -15,42 +15,6 @@ public enum ChromeNavigation
     Pages
 }
 
-public static class ChromeUtils
-{
-    private static bool IsWordMatch(string tag, string searchString)
-    {
-        var words = System.Text.RegularExpressions.Regex.Split(tag, @"[-_\s]+");
-        return words.Any(word => word.StartsWith(searchString, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public static int ItemMatchScore(MenuItem item, string searchString)
-    {
-        var label = item.Label ?? "";
-
-        // Exact match gets highest priority (score 3)
-        if (string.Equals(label, searchString, StringComparison.OrdinalIgnoreCase))
-        {
-            return 3;
-        }
-
-        // Label contains search string gets medium priority (score 2)
-        if (label.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-        {
-            return 2;
-        }
-
-        // Search hints match gets lowest priority (score 1)
-        if (item.SearchHints?.Any(tag => IsWordMatch(tag, searchString)) == true)
-        {
-            return 1;
-        }
-
-        // No match
-        return 0;
-    }
-}
-
-
 public record ChromeSettings
 {
     public object? Header { get; init; }
@@ -59,6 +23,7 @@ public record ChromeSettings
     public string? WallpaperAppId { get; init; }
     public bool PreventTabDuplicates { get; init; }
     public ChromeNavigation Navigation { get; init; }
+    public Func<IEnumerable<MenuItem>, INavigator, IEnumerable<MenuItem>> FooterMenuItemsTransformer { get; init; } = (items, _) => items;
 
     public static ChromeSettings Default() => new()
     {
@@ -88,6 +53,7 @@ public static class ChromeSettingsExtensions
     public static ChromeSettings Navigation(this ChromeSettings settings, ChromeNavigation navigation) => settings with { Navigation = navigation };
     public static ChromeSettings UseTabs(this ChromeSettings settings, bool preventDuplicates = false) => settings with { Navigation = ChromeNavigation.Tabs, PreventTabDuplicates = preventDuplicates };
     public static ChromeSettings UsePages(this ChromeSettings settings) => settings with { Navigation = ChromeNavigation.Pages };
+    public static ChromeSettings UseFooterMenuItemsTransformer(this ChromeSettings settings, Func<IEnumerable<MenuItem>, INavigator, IEnumerable<MenuItem>> transformer) => settings with { FooterMenuItemsTransformer = transformer };
 }
 
 [Signal(BroadcastType.Chrome)]
@@ -193,4 +159,8 @@ public interface INavigator
 {
     public void Navigate(Type type, object? appArgs = null);
     public void Navigate(string uri, object? appArgs = null);
+    public void Navigate<T>(object? appArgs = null)
+    {
+        Navigate(typeof(T), appArgs);
+    }
 }
