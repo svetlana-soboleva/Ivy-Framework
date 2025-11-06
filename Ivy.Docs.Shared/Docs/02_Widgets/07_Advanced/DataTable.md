@@ -48,6 +48,24 @@ sampleUsers.ToDataTable()
     .Height(Size.Units(100))
 ```
 
+## Table Sizing
+
+Control the overall dimensions of the DataTable using `Width()` and `Height()` methods:
+
+```csharp demo-tabs
+sampleUsers.ToDataTable()
+    .Header(u => u.Name, "Full Name")
+    .Header(u => u.Email, "Email Address")
+    .Header(u => u.Salary, "Salary")
+    .Width(Size.Px(800))
+    .Height(Size.Units(100))
+```
+
+**Table sizing methods:**
+
+- **Width** - Set the overall width of the table using `Size.Px()`, `Size.Units()`, `Size.Fraction()`, etc. For column-specific widths, use `Width(expression, size)`.
+- **Height** - Set the overall height of the table
+
 ## Column Configuration
 
 Customize column appearance and behavior with a fluent API:
