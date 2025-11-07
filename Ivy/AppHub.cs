@@ -31,7 +31,7 @@ public class AppHub(
     private static bool GetChromeParam(HttpContext httpContext)
     {
         bool chrome = true;
-        if (httpContext!.Request.Query.TryGetValue("chrome", out var chromeParam))
+        if (httpContext.Request.Query.TryGetValue("chrome", out var chromeParam))
         {
             chrome = !chromeParam.ToString().Equals("false", StringComparison.InvariantCultureIgnoreCase);
         }
@@ -230,11 +230,13 @@ public class AppHub(
                     if (appState.UpdateScheduled) return;
                     appState.UpdateScheduled = true;
 
-                    appState.EventQueue?.Enqueue(async () =>
+                    // Use Task.Run instead of EventQueue to prevent UI updates from being blocked by long-running event handlers
+                    _ = Task.Run(async () =>
                     {
-                        try { await Task.Delay(16); }
+                        try { await Task.Delay(16, connectionAborted); }
                         catch
                         {
+                            // ignored
                         }
 
                         try
@@ -339,7 +341,11 @@ public class AppHub(
                             cs.Dispose();
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignored
+                    }
+
                     appState.Dispose();
                 }
                 catch (Exception ex)

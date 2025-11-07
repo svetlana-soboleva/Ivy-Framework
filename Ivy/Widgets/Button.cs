@@ -206,6 +206,11 @@ public static class ButtonExtensions
         return button with { Loading = loading };
     }
 
+    public static Button Loading(this Button button, IState<bool> loading)
+    {
+        return button.Loading(loading.Value);
+    }
+
     public static Button HandleClick(this Button button, Func<Event<Button>, ValueTask> onClick)
     {
         return button with { OnClick = onClick };
