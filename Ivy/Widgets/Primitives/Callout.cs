@@ -22,7 +22,9 @@ public record Callout : WidgetBase<Callout>
 {
     /// <summary>Initializes callout.</summary>
     /// <param name="description">Content (string converts to Markdown).</param>
+    /// <param name="title">Optional title for the callout.</param>
     /// <param name="variant">Visual variant. Default: Info.</param>
+    /// <param name="icon">Optional icon to display.</param>
     public Callout(object? description = null, string? title = null, CalloutVariant variant = CalloutVariant.Info, Icons? icon = null)
     {
         var child = description switch
@@ -59,7 +61,6 @@ public record Callout : WidgetBase<Callout>
     public static Callout Success(string? description = null, string? title = null) => new(description, title, CalloutVariant.Success);
 }
 
-/// <summary>Extension methods for Callout widget configuration.</summary>
 public static class CalloutExtensions
 {
     public static Callout Title(this Callout callout, string title)
@@ -67,7 +68,6 @@ public static class CalloutExtensions
         return callout with { Title = title };
     }
 
-    /// <summary>Sets description (converts to Markdown).</summary>
     public static Callout Description(this Callout callout, string description)
     {
         return callout with { Children = [new Markdown(description)] };
